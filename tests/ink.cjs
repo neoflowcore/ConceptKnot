@@ -1,0 +1,15 @@
+const fs=require('fs'),vm=require('vm'),assert=require('node:assert/strict');
+const html=fs.readFileSync(require('path').join(__dirname,'../index.html'),'utf8');
+const code=html.slice(html.indexOf("let inkTool='pen'"),html.indexOf('function render(){'));
+const ctx={state:{ink:{},examQuestion:3},CHALK_COLORS:['#fffdf2'],chalkState:()=>({color:0}),esc:s=>s,document:{addEventListener(){}},window:{addEventListener(){}}};vm.createContext(ctx);vm.runInContext(code,ctx);
+const run=s=>vm.runInContext(s,ctx);
+assert.equal(run("inkPoint({clientX:50,clientY:30,pointerType:'pen',pressure:.8},{left:0,top:0,width:100,height:60}).p"),.8);
+assert.equal(run("inkPoint({clientX:50,clientY:30,pointerType:'mouse',pressure:0},{left:0,top:0,width:100,height:60}).x"),500);
+assert(run('inkThickness({width:4,pressure:true},.9)')>run('inkThickness({width:4,pressure:true},.1)'));
+assert.equal(run('inkThickness({width:4,pressure:false},.1)'),4);
+run("inkRecord('exam-2025-estate-1').push({points:[{x:1,y:2,p:.5}]})");assert.equal(run("inkRecord('exam-2025-estate-2').length"),0);
+assert(run("inkPad('exam-2025-estate-3',true)").includes('문제+필기 전체화면'));
+const ops=[];const c={setTransform(){},clearRect(){},beginPath(){},arc(){ops.push('dot')},fill(){},moveTo(){},lineTo(){ops.push('line')},stroke(){}};
+ctx.canvas={width:1000,height:600,getContext:()=>c};run("inkDraw(canvas,'exam-2025-estate-1',{tool:'eraser',width:10,pressure:false,points:[{x:0,y:0,p:.5},{x:5,y:5,p:.5}]})");assert(ops.includes('dot')&&ops.includes('line'));assert.equal(c.globalCompositeOperation,'source-over');
+assert(html.includes('setPointerCapture(pointer)'));assert(html.includes('getCoalescedEvents'));assert(html.includes("e.pointerType==='touch'&&!inkTouch"));
+console.log('PASS: pressure scaling, mouse fallback, normalized coordinates, question isolation, full-screen control, dot/stroke rendering, pointer capture and touch guard');
