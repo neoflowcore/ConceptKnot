@@ -1,0 +1,16 @@
+const fs=require('fs'),vm=require('vm'),assert=require('node:assert/strict');
+const html=fs.readFileSync(require('path').join(__dirname,'../index.html'),'utf8');
+const code=html.slice(html.indexOf('let memoryRevealed=false'),html.indexOf('function render(){'));
+const ctx={document:{addEventListener(){}},state:{view:'visual'},names:{visual:'그림으로 기억'},esc:s=>s};
+vm.createContext(ctx);vm.runInContext(code,ctx);
+const hidden=vm.runInContext('renderVisual()',ctx);
+for(const word of ['부동성','부증성','영속성','개별성'])assert(!hidden.includes(word),'answer leaked: '+word);
+assert.equal((hidden.match(/<svg /g)||[]).length,4);
+assert.equal((hidden.match(/role="img"/g)||[]).length,4);
+vm.runInContext('memoryRevealed=true',ctx);
+const shown=vm.runInContext('renderVisual()',ctx);
+for(const word of ['부동성','부증성','영속성','개별성'])assert(shown.includes(word));
+vm.runInContext('memoryPaused=true',ctx);assert(vm.runInContext('landPictures()',ctx).includes('memory-paused'));
+const frame=vm.runInContext('boardFrame("content")',ctx);assert(frame.includes('board-ticket'));assert(frame.includes('aria-current="page"'));assert(frame.includes('content'));
+assert(html.includes('prefers-reduced-motion:reduce'));
+console.log('PASS: four vector scenes, no answer words before reveal, explicit reveal, pause, persistent ticket, current navigation, reduced motion');
