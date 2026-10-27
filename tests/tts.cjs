@@ -1,0 +1,16 @@
+const fs=require('fs'),vm=require('vm'),assert=require('node:assert/strict');
+const html=fs.readFileSync(require('path').join(__dirname,'../index.html'),'utf8');
+const code=html.slice(html.indexOf('let ttsToken='),html.indexOf('function render(){'));
+const spoken=[],els={};for(const id of ['listen-bar','listen-now','listen-status'])els[id]={hidden:true,textContent:'',querySelector:()=>({textContent:''})};
+const synth={cancel(){},getVoices:()=>[{lang:'ko-KR',name:'Test Korean',voiceURI:'ko1'}],addEventListener(){},speak(u){spoken.push(u)}};
+const ctx={window:{speechSynthesis:synth,SpeechSynthesisUtterance:function(){} ,addEventListener(){}},SpeechSynthesisUtterance:function(text){this.text=text},state:{year:2023,subject:'estate',examQuestion:1,quizIndex:0,importedKeys:{},tts:{rate:1.5}},KEYS:{2023:[[2],[1,3],[1,2,3,4,5]]},normalKey:x=>Array.isArray(x)?x:[x],subject:()=>({label:'부동산학개론'}),quizzes:()=>[{q:'문제',a:['오답1','정답','오답3','오답4','오답5'],ok:2}],document:{addEventListener(){},getElementById:id=>els[id]},location:{protocol:'file:'},navigator:{},toast(){}};
+vm.createContext(ctx);vm.runInContext(code,ctx);const run=s=>vm.runInContext(s,ctx);
+assert.equal(run('ttsSettings().rate'),1.5);
+const segments=run('speechSegments([practiceSpeech()])').join(' ');assert(segments.includes('정답'));assert(!segments.includes('오답'));
+run("spokenStore()['2023-1']={question:'공식 문제',options:['오답1','정답지문','오답3','오답4','오답5'],verified:true}");assert.equal(run('officialSpeech(2023,1).answers[0]'),'정답지문');
+run("spokenStore()['2023-3']=spokenStore()['2023-1']");assert.throws(()=>run('officialSpeech(2023,3)'),/모두 정답/);
+assert.throws(()=>run('officialSpeech(2023,2)'),/대조 확인/);
+assert.equal(run("ttsParse('질문①가②나③다④라⑤마').options[4]"),'마');assert.throws(()=>run("ttsParse('질문①가③다')"));
+run('ttsPlay([practiceSpeech()])');assert.equal(spoken[0].rate,1.5);assert(spoken[0].text.includes('문제'));spoken[0].onend();assert(spoken[1].text.includes('정답'));const old=spoken[1];run('ttsStop(false)');old.onend();assert.equal(spoken.length,2);
+assert(html.includes('ttsStop(false);inkFlush()'));
+console.log('PASS: 1.5x default, no wrong options in speech, official-key mapping, all-answer and missing-data guards, parsing, sequential reading, stop token and navigation cancellation');

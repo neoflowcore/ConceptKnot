@@ -1,6 +1,6 @@
 const fs=require('fs'),vm=require('vm'),assert=require('node:assert/strict');
 const html=fs.readFileSync(require('path').join(__dirname,'../index.html'),'utf8');
-const code=html.slice(html.indexOf('const CHALK_COLORS='),html.indexOf('function render(){'));
+const code=html.slice(html.indexOf('const CHALK_COLORS='),html.indexOf('// S-Pen uses standard Pointer Events'));
 const ctx={state:{chalk:{color:0,notes:{},practice:{}},theoryIndex:0},theory:()=>[{id:'e1',t:'토지',fact:'토지는 영속한다.'}],esc:s=>s,subject:()=>({short:'학개론'}),document:{addEventListener(){}},window:{addEventListener(){}}};vm.createContext(ctx);vm.runInContext(code,ctx);
 const run=s=>vm.runInContext(s,ctx);
 assert.equal(JSON.stringify(run("chalkReconcile('가나','가다나',[0,1],2)")),'[0,2,1]');

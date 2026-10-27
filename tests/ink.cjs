@@ -1,6 +1,6 @@
 const fs=require('fs'),vm=require('vm'),assert=require('node:assert/strict');
 const html=fs.readFileSync(require('path').join(__dirname,'../index.html'),'utf8');
-const code=html.slice(html.indexOf("let inkTool='pen'"),html.indexOf('function render(){'));
+const code=html.slice(html.indexOf("let inkTool='pen'"),html.indexOf('let ttsToken='));
 const ctx={state:{ink:{},examQuestion:3},CHALK_COLORS:['#fffdf2'],chalkState:()=>({color:0}),esc:s=>s,document:{addEventListener(){}},window:{addEventListener(){}}};vm.createContext(ctx);vm.runInContext(code,ctx);
 const run=s=>vm.runInContext(s,ctx);
 assert.equal(run("inkPoint({clientX:50,clientY:30,pointerType:'pen',pressure:.8},{left:0,top:0,width:100,height:60}).p"),.8);
