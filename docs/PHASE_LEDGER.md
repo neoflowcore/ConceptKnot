@@ -83,3 +83,11 @@ S5의 음색은 기기 제공 한국어 음성에 따르므로 여성·연령·�
 - 테스트: keyboard/visual/typing/ink/tts 로직 검사 PASS. 실제 음색, S펜, 모바일 설치·백그라운드 오디오는 기기 실기 대기.
 - 추가 요청 5단계 코드 구현 5/5. 전체 제품의 공식 기출 콘텐츠·기기 실기 완료율을 의미하지 않음.
 - Vercel 정적 수동 배포 대상: neoflowcore's projects / conceptknot. Git 자동배포 비활성, GitHub Actions 없음, APK/ZIP 미생성.
+
+## 2026-10-27 실기 피드백 · 서재 색상 및 책 가림 수정
+
+- 책의 sticky 제거. 별도 grid rail + clip + 본문 하위 z-index로 레이아웃 분리. 스크롤 시 최대 76px 내려가고 축소/페이드하여 사라짐. 본문 위로 책이 따라오지 않음.
+- 탭별 13개 제목·안내·챕터 번호·4개 표지 배색. 진입 시 책 펼침 회전 및 본문 전환 애니메이션. 움직임 감소 설정 지원.
+- 첨부 네 번째 사진의 하늘색/크림/나무/연두/버건디 팔레트 사용. 손글씨 영역만 어두운 청색 칠판으로 유지하여 분필 대비 확보.
+- The Met Public Domain 렘브란트 3점: Self-Portrait (437397), Aristotle with a Bust of Homer (437394), Woman with a Pink (437402). 출처 링크를 책 아래 제공. 최적화 이미지 HTML 내장으로 로컬 HTML에서도 표지 표시.
+- 작품 메타데이터: assets/art-sources.json. `node tests/book.cjs` 및 기존 로직 검사 PASS. Vercel 수동 갱신 1회, 자동 Git 배포/Actions 비활성 유지.

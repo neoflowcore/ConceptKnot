@@ -1,0 +1,11 @@
+const fs=require('fs'),vm=require('vm'),assert=require('node:assert/strict');
+const html=fs.readFileSync(require('path').join(__dirname,'../index.html'),'utf8');
+const code=html.slice(html.indexOf('const BOOK_ART_IMAGES='),html.indexOf('\nfunction renderVisual'));
+let top=200,fn;const book={style:{removeProperty(){}}},rail={getBoundingClientRect:()=>({top}),querySelector:()=>book,classList:{toggle(){}}};
+const ctx={state:{view:'home'},esc:s=>s,chalkFooter:()=>'',window:{addEventListener(){},matchMedia:()=>({matches:false})},document:{querySelector:()=>rail},requestAnimationFrame:f=>(fn=f,1),cancelAnimationFrame(){}};
+vm.createContext(ctx);vm.runInContext(code,ctx);const run=s=>vm.runInContext(s,ctx);
+const home=run("boardFrame('lesson')");assert(home.includes('오늘의 공부를 펼치다'));assert(home.includes('book-rail'));assert(home.includes('data:image/jpeg;base64,'));
+ctx.state.view='theory';const theory=run("boardFrame('lesson')");assert(theory.includes('가리고, 다시 떠올리다'));assert.notEqual(home,theory);
+run('bookScroll()');fn();assert.equal(book.style.opacity,'1');top=-200;run('bookScroll()');fn();assert.equal(book.style.opacity,'0');assert(book.style.transform.includes('76px'));
+assert(html.includes('position:relative!important'));assert(html.includes('.book-rail{position:relative'));assert(html.includes('overflow:clip'));assert(html.includes('.board-content{position:relative;z-index:2'));
+console.log('PASS: tab-specific books, embedded paintings, visible-to-buried scroll, isolated layers, clipped book rail and non-sticky positioning');
