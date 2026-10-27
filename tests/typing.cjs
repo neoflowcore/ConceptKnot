@@ -1,0 +1,15 @@
+const fs=require('fs'),vm=require('vm'),assert=require('node:assert/strict');
+const html=fs.readFileSync(require('path').join(__dirname,'../index.html'),'utf8');
+const code=html.slice(html.indexOf('const CHALK_COLORS='),html.indexOf('function render(){'));
+const ctx={state:{chalk:{color:0,notes:{},practice:{}},theoryIndex:0},theory:()=>[{id:'e1',t:'토지',fact:'토지는 영속한다.'}],esc:s=>s,subject:()=>({short:'학개론'}),document:{addEventListener(){}},window:{addEventListener(){}}};vm.createContext(ctx);vm.runInContext(code,ctx);
+const run=s=>vm.runInContext(s,ctx);
+assert.equal(JSON.stringify(run("chalkReconcile('가나','가다나',[0,1],2)")),'[0,2,1]');
+assert.equal(JSON.stringify(run("chalkReconcile('가다나','가나',[0,2,1],3)")),'[0,1]');
+assert.equal(JSON.stringify(run("chalkReconcile('ㅎ','한',[0],2)")),'[2]');
+assert.equal(run("typingNormalize('토지는 영속한다. ' )"),run("typingNormalize('토지는영속한다')"));
+assert(run('renderTyping()').includes('토지는 영속한다.'));
+run('typingRecall=true');assert(!run('renderTyping()').includes('토지는 영속한다.'));
+run("chalkRecord('notes','estate').text='내 필기'");assert.equal(ctx.state.chalk.notes.estate.text,'내 필기');assert(!ctx.state.chalk.notes.civil);
+assert.equal((run('chalkPalette()').match(/data-chalk-color=/g)||[]).length,4);
+assert(html.includes('refreshTimerDisplay();chalkMount();'));
+console.log('PASS: color-preserving insert/delete, Korean composition replacement, normalization, hidden recall target, note isolation, four colors, editor mount');

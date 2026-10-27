@@ -1,7 +1,7 @@
 const fs=require('fs'),vm=require('vm'),assert=require('node:assert/strict');
 const html=fs.readFileSync(require('path').join(__dirname,'../index.html'),'utf8');
-const code=html.slice(html.indexOf('let memoryRevealed=false'),html.indexOf('function render(){'));
-const ctx={document:{addEventListener(){}},state:{view:'visual'},names:{visual:'그림으로 기억'},esc:s=>s};
+const code=html.slice(html.indexOf('let memoryRevealed=false'),html.indexOf('const CHALK_COLORS='));
+const ctx={window:{addEventListener(){}},document:{addEventListener(){}},state:{view:'visual'},names:{visual:'그림으로 기억'},esc:s=>s,chalkFooter:()=>''};
 vm.createContext(ctx);vm.runInContext(code,ctx);
 const hidden=vm.runInContext('renderVisual()',ctx);
 for(const word of ['부동성','부증성','영속성','개별성'])assert(!hidden.includes(word),'answer leaked: '+word);

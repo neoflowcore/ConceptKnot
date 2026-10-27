@@ -1,7 +1,7 @@
 // Local-only shortcut checks. No browser, build, network or CI required.
 const fs=require('fs'),vm=require('vm'),assert=require('node:assert/strict');
 const html=fs.readFileSync(require('path').join(__dirname,'../index.html'),'utf8');
-const script=html.slice(html.indexOf("document.addEventListener('keydown',e=>"),html.indexOf("\nwindow.addEventListener('beforeunload'"));
+const script=html.slice(html.indexOf("document.addEventListener('keydown',e=>{\n const target=e.target;"),html.indexOf("\nwindow.addEventListener('beforeunload'"));
 let handler,clicks=0,prevented=0,selector='';
 const button={disabled:false,getClientRects:()=>[{}],click:()=>clicks++};
 const state={view:'quiz'};
