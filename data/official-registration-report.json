@@ -1,0 +1,67 @@
+{
+  "registered": 400,
+  "practiceEligible": 395,
+  "allAccepted": 5,
+  "perYear": [
+    {
+      "year": 2025,
+      "count": 80,
+      "paperSha256": "30de17fc5cbd3d12301d49c8f290bf8a7626ed490ba853086c9d30edbebd1f11",
+      "answerSha256": "5a92223685d939ca2ce81bbc55abbfc4c4b044a6b9f9c74024c2fb6794dc6da7",
+      "originalUrl": "https://www.q-net.or.kr/cst003.do?artlSeq=5247125&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309"
+    },
+    {
+      "year": 2024,
+      "count": 80,
+      "paperSha256": "67d4c9e8cc7b84ebe04a1ca458d00dd7afdccc95e7f71a251684d2579c7ee095",
+      "answerSha256": "ef90456c5291e03964b718193ce9bd7d5060695872f8c81abf938716e0f58e55",
+      "originalUrl": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309"
+    },
+    {
+      "year": 2023,
+      "count": 80,
+      "paperSha256": "409cc7d23c7740c36bf2adf2b328e437cbf14a0ed553ca80f02adf4b29c90ba5",
+      "answerSha256": "1b0c9f8d847fa73da2d5ce55a65aa025f287a7a72de20fd0f157ca191cfe3b0a",
+      "originalUrl": "https://www.q-net.or.kr/cst003.do?artlSeq=5212459&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309"
+    },
+    {
+      "year": 2022,
+      "count": 80,
+      "paperSha256": "2c57a3b80e2cc53c506dd48b098f21e0641f82e37f98d270ca9d7a84953a33f5",
+      "answerSha256": "de10e6feaf5b563232e374066f3637fd2369e6f7148a7813c44989a97a0cd112",
+      "originalUrl": "https://www.q-net.or.kr/cst003.do?artlSeq=5211107&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309"
+    },
+    {
+      "year": 2021,
+      "count": 80,
+      "paperSha256": "2fe3e226deace024223afc58ae0f54e5b9119e5b127347ea8bf8dc074da71dec",
+      "answerSha256": "1a7768eacd48ebbad98f21e005d633b76d666298ebeaf12b0702ced65749e9e4",
+      "originalUrl": "https://www.q-net.or.kr/cst003.do?artlSeq=5209170&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309"
+    }
+  ],
+  "answerCheck": {
+    "ocrMatched": 394,
+    "visuallyCheckedCells": [
+      "2022-10",
+      "2022-12",
+      "2022-14",
+      "2022-17",
+      "2022-29",
+      "2023-34"
+    ]
+  },
+  "questionCheck": {
+    "pdfTextCompared": 320,
+    "scannedOcrCompared": 80,
+    "lowSimilarityVisualChecked": 17
+  },
+  "sourceAttribution": "한국산업인력공단 Q-Net · 공공누리 제1유형, 전사본 공인패스와 문제지 대조. 해설은 포함하지 않음.",
+  "nextYears": [
+    2020,
+    2019,
+    2018,
+    2017,
+    2016
+  ],
+  "lastUpdated": "2026-10-28"
+}
