@@ -91,3 +91,12 @@ S5의 음색은 기기 제공 한국어 음성에 따르므로 여성·연령·�
 - 첨부 네 번째 사진의 하늘색/크림/나무/연두/버건디 팔레트 사용. 손글씨 영역만 어두운 청색 칠판으로 유지하여 분필 대비 확보.
 - The Met Public Domain 렘브란트 3점: Self-Portrait (437397), Aristotle with a Bust of Homer (437394), Woman with a Pink (437402). 출처 링크를 책 아래 제공. 최적화 이미지 HTML 내장으로 로컬 HTML에서도 표지 표시.
 - 작품 메타데이터: assets/art-sources.json. `node tests/book.cjs` 및 기존 로직 검사 PASS. Vercel 수동 갱신 1회, 자동 Git 배포/Actions 비활성 유지.
+
+## 2026-10-28 타이핑 암기 및 음성 개선
+
+- 모네 The Japanese Footbridge (1899), NGA Public Domain 실제 소장품 이미지로 표지 교체. 그림 + 흰 설명지 카드. 기존 하늘색 팔레트 유지. Pretendard 1.3.9 온라인 웹폰트와 모든 UI 글꼴 지정.
+- typing.works의 희미한 원문→입력 강조 방식을 참고해 별도 구현. 질문과 정답 선지만 표시, 위치별 일치/오타 분홍 강조, 타수/분·정확도·시간·완주 기록(최대 200건 저장, 최근 20건 표시).
+- 10개년 공식 기출은 원문·정답이 검증 등록된 문항만 대상. 미등록 800문항을 완성했다고 표시하지 않음. 연습/공식/핵심이론 전환 제공.
+- Supertonic 3 온디바이스 여성 5음성 선택 및 사용자 요청 시 모델 준비 경로 추가. 약 380MB. 원본 코드·모델 라이선스 보존. 별도 유지보수 상태 및 선택 근거 docs/TTS_ENGINE_REVIEW.md 참고.
+- 배속 0.75 / 1 / 1.25 / 1.5 / 1.75 / 2 버튼과 슬라이더 제공.
+- typing/keyboard/tts/ink/visual/book 로직 검사 PASS. 실제 브라우저 합성 및 음질은 별도로 확인 필요. APK/ZIP/Actions 생성 없음.

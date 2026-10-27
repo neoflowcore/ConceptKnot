@@ -1,6 +1,6 @@
 const fs=require('fs'),vm=require('vm'),assert=require('node:assert/strict');
 const html=fs.readFileSync(require('path').join(__dirname,'../index.html'),'utf8');
-const code=html.slice(html.indexOf('const BOOK_ART_IMAGES='),html.indexOf('\nfunction renderVisual'));
+const code=html.slice(html.indexOf('const BOOK_LANDSCAPE='),html.indexOf('\nfunction renderVisual'));
 let top=200,fn;const book={style:{removeProperty(){}}},rail={getBoundingClientRect:()=>({top}),querySelector:()=>book,classList:{toggle(){}}};
 const ctx={state:{view:'home'},esc:s=>s,chalkFooter:()=>'',window:{addEventListener(){},matchMedia:()=>({matches:false})},document:{querySelector:()=>rail},requestAnimationFrame:f=>(fn=f,1),cancelAnimationFrame(){}};
 vm.createContext(ctx);vm.runInContext(code,ctx);const run=s=>vm.runInContext(s,ctx);
