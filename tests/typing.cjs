@@ -7,7 +7,7 @@ vm.createContext(ctx);vm.runInContext(code,ctx);const run=s=>vm.runInContext(s,c
 assert.equal(run('typingItems()[0].fact'),'질문\n\n정답');assert(!run('typingItems()[0].fact').includes('오답'));
 assert.equal(JSON.stringify(run("chalkReconcile('가나','가다나',[0,1],2)")),'[0,2,1]');
 const mirror={innerHTML:'',scrollHeight:250},area={style:{}};ctx.editor={dataset:{chalkKind:'practice'},style:{},querySelector:s=>s==='.chalk-mirror'?mirror:area};run('typingGhost(editor)');assert(mirror.innerHTML.includes('type-pending'));run("chalkRecord('practice','type-eq1').text='질'");run('typingGhost(editor)');assert(mirror.innerHTML.includes('type-correct'));
-run("chalkRecord('practice','type-eq1').started=Date.now()-60000;typingFeedback()");run("chalkRecord('practice','type-eq1').text='질문\\n\\n정답';typingFeedback()");assert.equal(ctx.state.typingHistory.length,1);run('typingFeedback()');assert.equal(ctx.state.typingHistory.length,1);
+run("chalkRecord('practice','type-eq1').started=Date.now()-60000;typingFeedback()");run("chalkRecord('practice','type-eq1').text='질문\\n\\n정답';typingFeedback()");assert.equal(ctx.state.typingHistory.length,1);const metrics=nodes['typing-metrics'].textContent;run("chalkRecord('practice','type-eq1').started=Date.now()-3600000;typingFeedback()");assert.equal(nodes['typing-metrics'].textContent,metrics);assert.equal(ctx.state.typingHistory.length,1);
 assert(nodes['typing-history-list'].innerHTML.includes('타수/분'));
 ctx.state.typingMode='theory';assert.equal(run('typingItems()[0].fact'),'이론');
 console.log('PASS: question and correct option only, ghost highlighting, color-preserving edit, one history row per completion, accuracy and speed metrics, source switching');
