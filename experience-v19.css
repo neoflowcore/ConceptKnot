@@ -1,0 +1,271 @@
+/* ConceptKnot v19 — complete dark-mode pass, night PDF, study sets and keyboard navigation.
+   Intentionally loaded LAST: older light card themes contain many !important rules. */
+:root{
+  --ck19-night-bg:#091b21;
+  --ck19-night-panel:#102a31;
+  --ck19-night-field:#0b232a;
+  --ck19-night-raised:#1a373c;
+  --ck19-night-active:#26564f;
+  --ck19-night-fg:#d7e1dd;
+  --ck19-night-muted:#a9bdb7;
+  --ck19-night-edge:rgba(191,226,213,.18);
+}
+html[data-ck-theme="dark"] body #main .ck-v7-content{
+ color:var(--ck19-night-fg)!important;
+ --ck15-dark-ink:var(--ck19-night-fg);
+ --ck15-dark-muted:var(--ck19-night-muted);
+}
+html[data-ck-theme="dark"] body #main .ck-v7-content :is(
+ .panel,.exam-sheet,.pdf-panel,.flash-card,.flash-answer,.flash-mask,
+ .concept-list,.concept-item,.registered-question,.reverse-queue,
+ .reverse-recall-card,.reverse-suggestion,.reverse-step,.reverse-concept,
+ .ck-v7-question,.ck-v7-typing-history,.ck-v7-stats,.ck-v7-stat,
+ .ck-v7-heatmap,.quiz-layout aside,.quiz-dots,.explanation,
+ .question-card,.option-list,.choice,.answer-box,.callout,.visual-sheet,
+ .neural-box,.neural-status,.registration-summary,.listen-form,.listen-status,
+ .typing-source-card,.typing-history,.score-result,.mistake-item,.wrong-item,
+ .study-row,.day-card,.ck10-paper,.ck11-page-count
+){
+ background:var(--ck19-night-panel)!important;
+ background-image:none!important;
+ color:var(--ck19-night-fg)!important;
+ -webkit-text-fill-color:var(--ck19-night-fg)!important;
+ border-color:var(--ck19-night-edge)!important;
+}
+html[data-ck-theme="dark"] body #main .ck-v7-content :is(
+ .concept-item,.reverse-queue .concept-item,.quiz-dot,
+ .flash-mask,.neural-box,.registration-summary,.ck-v7-stat,.flash-answer,
+ .typing-choices button,.chalk-plain-btn,.explanation,.ck10-paper input,.ck10-paper textarea
+){
+ background:var(--ck19-night-field)!important;
+ background-image:none!important;
+ color:var(--ck19-night-fg)!important;
+ -webkit-text-fill-color:var(--ck19-night-fg)!important;
+ border-color:var(--ck19-night-edge)!important;
+}
+html[data-ck-theme="dark"] body #main .ck-v7-content :is(
+ .concept-item.active,.concept-item[aria-current="true"],
+ .quiz-dot.active,.quiz-dot.done,.quiz-dot[aria-pressed="true"],
+ .rate-presets button[aria-pressed="true"],
+ .typing-choices button[aria-pressed="true"],.chalk-plain-btn[aria-pressed="true"]
+){
+ background:var(--ck19-night-active)!important;
+ background-image:none!important;
+ color:#e2ece7!important;
+ -webkit-text-fill-color:#e2ece7!important;
+ border-color:#57917e!important;
+}
+html[data-ck-theme="dark"] body #main .ck-v7-content .quiz-dots .quiz-dot{
+ background:var(--ck19-night-raised)!important;
+ color:var(--ck19-night-fg)!important;
+ -webkit-text-fill-color:var(--ck19-night-fg)!important;
+ border-color:#3d5b60!important;
+}
+html[data-ck-theme="dark"] body #main .ck-v7-content .quiz-dots .quiz-dot.active{
+ background:var(--ck19-night-active)!important;
+ box-shadow:inset 0 0 0 2px #78b7a5!important;
+}
+html[data-ck-theme="dark"] body #main .ck-v7-content .quiz-dots .quiz-dot.bad{
+ background:#473039!important;
+ color:#eac9cf!important;
+}
+html[data-ck-theme="dark"] body #main .ck-v7-content .concept-item:is(:hover,:focus-visible){
+ background:#22433f!important;
+}
+html[data-ck-theme="dark"] body #main .ck-v7-content :is(
+ .concept-item small,.concept-list small,.flash-mask,.flash-mask p,
+ .flash-answer p,.flash-answer strong,.neural-box strong,.neural-box p,
+ .neural-status,.listen-form h2,.listen-form h3,.listen-form label,
+ .listen-status,.listen-controls button,.registration-summary,
+ .question-count,.quiz-layout .panel-head h3,.quiz-layout aside h3,
+ .reverse-queue span,.reverse-queue small,.ck10-final-heading h1,
+ .ck10-final-guide,.ck10-page-label,.ck10-paper input,.ck10-paper textarea,
+ .typing-source-card,.typing-source-card p
+){
+ color:var(--ck19-night-fg)!important;
+ -webkit-text-fill-color:var(--ck19-night-fg)!important;
+}
+html[data-ck-theme="dark"] body #main .ck-v7-content :is(
+ .muted,.small.muted,.detail.muted,.concept-item small,
+ .registration-summary,.ck10-final-guide,.ck10-page-label,.neural-status
+){
+ color:var(--ck19-night-muted)!important;
+ -webkit-text-fill-color:var(--ck19-night-muted)!important;
+}
+html[data-ck-theme="dark"] body #main .ck-v7-content :is(
+ select,.field,.chalk-select,.listen-form select,.neural-box select,
+ .listen-form input:not([type="range"]),.neural-box input,
+ .rate-presets button,.listen-controls button,.typing-choices button,
+ .ck10-paper input,.ck10-paper textarea,.ck11-page-count select
+){
+ background:var(--ck19-night-field)!important;
+ background-image:none!important;
+ border:1px solid var(--ck19-night-edge)!important;
+ color:var(--ck19-night-fg)!important;
+ -webkit-text-fill-color:var(--ck19-night-fg)!important;
+ color-scheme:dark;
+}
+html[data-ck-theme="dark"] body #main .ck-v7-content .rate-presets button{
+ background:#20383d!important;
+ color:var(--ck19-night-fg)!important;
+ -webkit-text-fill-color:var(--ck19-night-fg)!important;
+}
+html[data-ck-theme="dark"] body #main .ck-v7-content .rate-presets button[aria-pressed="true"]{
+ background:#2c7360!important;
+ border-color:#4c9b85!important;
+ color:#e2eee7!important;
+ -webkit-text-fill-color:#e2eee7!important;
+}
+html[data-ck-theme="dark"] body #main .ck-v7-content .neural-box{
+ background:#152d32!important;
+ border:1px solid var(--ck19-night-edge)!important;
+ border-radius:12px;
+}
+html[data-ck-theme="dark"] body #main .ck-v7-content .neural-box :is(input,select,button){
+ background:#0e272d!important;color:var(--ck19-night-fg)!important;
+ -webkit-text-fill-color:var(--ck19-night-fg)!important;
+}
+html[data-ck-theme="dark"] body #main .ck-v7-content .neural-box button:disabled{
+ background:#182d31!important;color:#849a94!important;opacity:.7;
+}
+html[data-ck-theme="dark"] body #main .ck-v7-content .neural-box :is(p,.small,.muted,.neural-status){
+ color:var(--ck19-night-muted)!important;
+ -webkit-text-fill-color:var(--ck19-night-muted)!important;
+}
+/* Leave chalk input mirrors and their transparent native textarea alone. */
+html[data-ck-theme="dark"] body #main .ck-v7-content .ck-v7-input .chalk-editor textarea{
+ color:transparent!important;-webkit-text-fill-color:transparent!important;background:transparent!important;
+}
+html[data-ck-theme="dark"] body #main .ck-v7-content :is(
+ .ck10-final-actions button,.ck10-final-actions select,.ck11-page-count,
+ .ck10-paper,.ck10-paper input,.ck10-paper textarea
+){
+ background:#132d34!important;
+ color:var(--ck19-night-fg)!important;
+ -webkit-text-fill-color:var(--ck19-night-fg)!important;
+ border-color:var(--ck19-night-edge)!important;
+}
+html[data-ck-theme="dark"] body .ck4-pager,
+html[data-ck-theme="dark"] body .ck4-pager .ck4-pager-label{
+ background:#142d32!important;
+ color:var(--ck19-night-fg)!important;
+ -webkit-text-fill-color:var(--ck19-night-fg)!important;
+ border:1px solid #425a5b!important;
+}
+html[data-ck-theme="dark"] body .ck4-pager :is(button,.ck4-pager-count,.ck4-pager-label){
+ background:transparent!important;
+ color:var(--ck19-night-fg)!important;
+ -webkit-text-fill-color:var(--ck19-night-fg)!important;
+}
+html[data-ck-theme="dark"] body .ck4-pager .ck4-pager-label{
+ background:#142d32!important;
+}
+html[data-ck-theme="dark"] body .ck4-pager button:hover:not(:disabled){background:#254b4a!important}
+html[data-ck-theme="dark"] body .ck9-clock{
+ background:linear-gradient(130deg,#18383d,#0b2028)!important;
+ border:1px solid #58746e!important;
+ box-shadow:inset 0 1px #7faaa333,0 3px 9px #03101588!important;
+}
+html[data-ck-theme="dark"] body .ck9-clock::before{
+ border-color:#597f77!important;
+ background:conic-gradient(from 0deg,#799a8a80 0deg 2deg,transparent 2deg 90deg,#799a8a80 90deg 92deg,transparent 92deg 180deg,#799a8a80 180deg 182deg,transparent 182deg 270deg,#799a8a80 270deg 272deg,transparent 272deg)!important;
+}
+html[data-ck-theme="dark"] body .ck9-clock :is(.ck9-hour,.ck9-minute,.ck9-center){background:#c8dad3!important}
+html[data-ck-theme="dark"] body .ck9-clock .ck9-second{background:#e9aa93!important}
+html[data-ck-theme="dark"] body .ck-v7-date-pill :is(.ck14-pomo-launch,.ck14-theme-toggle,.ck17-display-launch){
+ background:#1a383c!important;color:var(--ck19-night-fg)!important;
+}
+
+/* Native PDF.js paper night-view: visual-only inversion. Stored inks and exported PDFs untouched.
+   Dark mode automatically applies it unless "PDF 원본" is selected. */
+:is(html[data-ck-theme="dark"]:not([data-ck19-pdf-view="paper"]),html[data-ck19-pdf-view="dark"]) body #main .ck-v7-content .ck15-pdf-page{
+ background:#101c22!important;
+ box-shadow:0 5px 24px #01080b99!important;
+}
+:is(html[data-ck-theme="dark"]:not([data-ck19-pdf-view="paper"]),html[data-ck19-pdf-view="dark"]) body #main .ck-v7-content .ck15-pdf-page canvas[data-ck15-page-canvas]{
+ filter:invert(1) hue-rotate(180deg) brightness(.88) contrast(1.08) saturate(.8)!important;
+ background:#fff!important;
+}
+:is(html[data-ck-theme="dark"]:not([data-ck19-pdf-view="paper"]),html[data-ck19-pdf-view="dark"]) body #main .ck-v7-content .ck15-pdf-page canvas[data-ck15-ink-canvas]{
+ filter:none!important;background:transparent!important;
+}
+:is(html[data-ck-theme="dark"]:not([data-ck19-pdf-view="paper"]),html[data-ck19-pdf-view="dark"]) body #main .ck-v7-content .ck15-pdf-fallback iframe{
+ filter:invert(1) hue-rotate(180deg) brightness(.88)!important;
+}
+html[data-ck19-pdf-view="paper"] body #main .ck-v7-content .ck15-pdf-page canvas[data-ck15-page-canvas],
+html[data-ck19-pdf-view="paper"] body #main .ck-v7-content .ck15-pdf-fallback iframe{
+ filter:none!important;
+}
+html[data-ck19-pdf-view="paper"] body #main .ck-v7-content .ck15-pdf-page{background:#fff!important}
+#main .ck15-pdf-tools [data-ck19-pdf-night]{min-width:34px;min-height:30px;padding:3px 7px}
+#main .ck15-pdf-tools [data-ck19-pdf-night][aria-pressed="true"]{
+ background:#2c7867!important;color:#e9f5ef!important;
+}
+/* Consecutive 1–5 study sets */
+.ck14-pomodoro{
+ width:min(480px,calc(100vw - 20px))!important;
+ max-height:calc(100dvh - 88px)!important;
+ overflow-y:auto!important;overscroll-behavior:contain;
+}
+.ck19-pomo-program{margin-top:14px;padding-top:14px;border-top:1px solid #a8c6ba77}
+.ck19-pomo-program-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:9px}
+.ck19-pomo-program-head strong{font-size:13px}
+.ck19-pomo-program-head label{display:flex;align-items:center;gap:5px;font-size:11px}
+.ck19-pomo-program-head select{padding:5px 8px;border:1px solid #7caaa06b;border-radius:8px;background:#e9f4ee;color:#1b514a;font-weight:750}
+.ck19-pomo-program-rows{display:grid;gap:6px}
+.ck19-pomo-program-row{
+ display:grid;grid-template-columns:62px 1fr 1fr;align-items:center;gap:7px;
+ border-radius:10px;padding:6px 9px;background:#eef6f0b8;font-size:12px;
+}
+.ck19-pomo-program-row[hidden]{display:none!important}
+.ck19-pomo-program-row>span{font-weight:780;font-size:12px}
+.ck19-pomo-program-row label{display:flex;align-items:center;justify-content:flex-end;gap:5px;margin:0}
+.ck19-pomo-program-row input{width:49px;min-width:0;padding:5px 3px;text-align:center;border:1px solid #9ab8aa;border-radius:6px;background:#fff;color:#1c5347;font-weight:700}
+.ck19-pomo-program-current{outline:2px solid #3d997c;outline-offset:-2px}
+.ck19-pomo-program-note{font-size:11px!important;line-height:1.5!important;margin:10px 2px!important}
+.ck19-pomo-program-actions{display:flex;gap:7px}
+.ck19-pomo-program-actions button{
+ flex:1;min-height:36px;padding:7px 10px;border-radius:9px;
+ border:1px solid #9bbcaf;background:#e2f3e9;color:#175144;font-weight:780;
+}
+.ck19-pomo-program-actions [data-ck19-program="start"]{background:#1c6755;color:#eff9f4;border-color:#1c6755}
+.ck19-pomo-program-actions button:disabled{opacity:.44;cursor:not-allowed}
+.ck19-pomo-program :is(input,select,button):focus-visible{outline:2px solid #16a58b;outline-offset:2px}
+html[data-ck-theme="dark"] body .ck19-pomo-program{border-color:#45665e!important;color:var(--ck19-night-fg)}
+html[data-ck-theme="dark"] body :is(.ck19-pomo-program-row,.ck19-pomo-program-head select){background:#18343a!important;color:var(--ck19-night-fg)!important}
+html[data-ck-theme="dark"] body .ck19-pomo-program-row input{background:#0d242c!important;color:var(--ck19-night-fg)!important;border-color:#476f67!important}
+html[data-ck-theme="dark"] body .ck19-pomo-program-note{color:var(--ck19-night-muted)!important}
+html[data-ck-theme="dark"] body .ck19-pomo-program-actions button{background:#1b4140!important;color:var(--ck19-night-fg)!important;border-color:#45675f!important}
+html[data-ck-theme="dark"] body .ck19-pomo-program-actions [data-ck19-program="start"]{background:#317363!important}
+@media(max-width:420px){
+ .ck19-pomo-program-row{grid-template-columns:48px 1fr 1fr;padding:5px}
+ .ck19-pomo-program-row label{font-size:10px;gap:2px}
+ .ck19-pomo-program-row input{width:43px}
+}
+
+/* Excel-style navigation tip overlay and spatial focus. */
+.ck19-keytip{display:none}
+body.ck19-keytip-mode #main .board-tabs .board-tab{position:relative!important}
+body.ck19-keytip-mode #main .board-tabs .board-tab .ck19-keytip{
+ display:inline-grid!important;place-items:center;
+ position:absolute;top:1px;right:1px;z-index:30;pointer-events:none;
+ width:17px;min-width:17px;height:15px;border:1px solid #326558;
+ border-radius:5px;background:#fff6c9;color:#153b37;
+ font:800 10px/1 Pretendard,sans-serif;box-shadow:0 1px 4px #062a3744;
+}
+#ck19-keytip-info{display:none}
+body.ck19-keytip-mode #ck19-keytip-info{
+ display:block;position:fixed;top:calc(var(--ck5-nav-height,53px) + 9px);right:16px;
+ z-index:1200;max-width:min(490px,calc(100vw - 28px));
+ background:#19383e;color:#e1eee8;padding:10px 14px;
+ border:1px solid #598b7b;border-radius:12px;
+ box-shadow:0 12px 35px #081b2180;font:700 12px/1.5 Pretendard,sans-serif;
+}
+.ck19-spatial-focus,.ck19-spatial-focus:focus-visible{
+ outline:3px solid #ffca70!important;outline-offset:3px!important;
+ box-shadow:0 0 0 6px #345d6d6b!important;
+}
+html[data-ck-theme="dark"] body.ck19-keytip-mode #main .board-tabs .board-tab .ck19-keytip{
+ background:#dbe8ce!important;color:#203732!important;border-color:#7a9a84!important;
+}
+@media(prefers-reduced-motion:reduce){.ck19-spatial-focus{transition:none!important}}

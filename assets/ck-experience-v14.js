@@ -33,10 +33,16 @@ function ensurePopover(){
  pop.innerHTML=[
   '<header class="ck14-pomo-head"><strong>뽀모도로</strong><button type="button" data-ck14-pomo-close aria-label="타이머 닫기">×</button></header>',
   '<div class="ck14-pomo-ring"><span data-ck14-pomo-phase>집중</span><strong data-ck14-pomo-time>25:00</strong><small data-ck14-pomo-completed>완료 0회</small></div>',
-  '<div class="ck14-pomo-config">',
+  '<div class="ck14-pomo-config" aria-label="단일 집중·휴식 시간">',
   ' <label>집중 <input type="number" data-ck14-pomo-minutes="focus" min="5" max="180" step="1" inputmode="numeric" value="25">분</label>',
   ' <label>휴식 <input type="number" data-ck14-pomo-minutes="break" min="1" max="60" step="1" inputmode="numeric" value="5">분</label>',
   '</div>',
+  '<section class="ck19-pomo-program" aria-labelledby="ck19-pomo-title">',
+  ' <div class="ck19-pomo-program-head"><strong id="ck19-pomo-title">연속 학습 세트</strong><label for="ck19-program-count">세트 수 <select id="ck19-program-count" data-ck19-program-count>'+Array.from({length:5},(_,i)=>'<option value="'+(i+1)+'">'+(i+1)+'세트</option>').join('')+'</select></label></div>',
+  ' <div class="ck19-pomo-program-rows" data-ck19-program-rows>'+Array.from({length:5},(_,i)=>'<div class="ck19-pomo-program-row" data-ck19-program-row="'+i+'"><span>'+(i+1)+'세트</span><label>집중 <input type="number" data-ck19-program-focus="'+i+'" min="5" max="180" step="1" value="50" aria-label="'+(i+1)+'세트 집중 시간(분)">분</label><label>휴식 <input type="number" data-ck19-program-rest="'+i+'" min="1" max="60" step="1" value="5" aria-label="'+(i+1)+'세트 휴식 시간(분)">분</label></div>').join('')+'</div>',
+  ' <p class="ck19-pomo-program-note" data-ck19-program-note aria-live="polite">세트별 집중·휴식을 설정하고 연속 시작하세요. 마지막 세트 후에는 휴식을 생략합니다.</p>',
+  ' <div class="ck19-pomo-program-actions"><button type="button" data-ck19-program="start">▶ 세트 연속 시작</button><button type="button" data-ck19-program="stop">세트 중지</button></div>',
+  '</section>',
   '<div class="ck14-pomo-actions">',
   ' <button type="button" data-ck14-pomo-action="toggle">집중 시작</button>',
   ' <button type="button" data-ck14-pomo-action="reset">초기화</button>',
@@ -83,12 +89,61 @@ function updateClock(){
  const toggle=pop.querySelector('[data-ck14-pomo-action="toggle"]');
  if(toggle)toggle.textContent=s.running?'일시정지':s.phase==='break'?'휴식 시작':'집중 시작';
  const circle=pop.querySelector('.ck14-pomo-ring');
+ renderPomoProgram(s);
  if(circle){
   const done=s.duration?Math.max(0,Math.min(1,1-s.remaining/s.duration)):0;
   circle.style.setProperty('--ck14-progress',(done*100).toFixed(2)+'%');
   circle.dataset.phase=s.phase;
  }
 }
+
+function renderPomoProgram(s){
+ if(!pop||!s.program)return;
+ const p=s.program;
+ const count=pop.querySelector('[data-ck19-program-count]');
+ if(count&&document.activeElement!==count)count.value=String(p.count);
+ if(count)count.disabled=p.active;
+ pop.querySelectorAll('[data-ck19-program-row]').forEach(row=>{
+  const idx=Number(row.dataset.ck19ProgramRow);
+  row.hidden=idx>=p.count;
+  row.classList.toggle('ck19-pomo-program-current',p.active&&idx===p.index);
+ });
+ for(let idx=0;idx<5;idx++){
+  const config=p.sets[idx]||{focus:50,rest:5};
+  for(const [kind,value] of [['focus',config.focus],['rest',config.rest]]){
+   const input=pop.querySelector('[data-ck19-program-'+kind+'="'+idx+'"]');
+   if(input){
+    input.disabled=p.active;
+    if(input!==document.activeElement)input.value=String(value);
+   }
+  }
+ }
+ const status=pop.querySelector('[data-ck19-program-note]');
+ if(status)status.textContent=p.active?
+  '진행 중 '+(p.index+1)+' / '+p.count+'세트 · '+(s.phase==='break'?'휴식':'집중')+' · 종료까지 자동 진행됩니다.':
+  p.finished?p.count+'세트 완료! 다음 학습을 시작할 때 새로 실행하세요.':
+  '최대 5세트. 각 세트의 집중·휴식 시간을 지정할 수 있습니다. 마지막 집중 뒤에는 휴식 없이 종료합니다.';
+ const start=pop.querySelector('[data-ck19-program="start"]');
+ const stop=pop.querySelector('[data-ck19-program="stop"]');
+ if(start)start.disabled=p.active;
+ if(stop)stop.disabled=!p.active;
+ const single=pop.querySelectorAll('[data-ck14-pomo-minutes]');
+ single.forEach(x=>x.disabled=p.active);
+ const phase=pop.querySelector('[data-ck14-pomo-phase]');
+ if(phase)phase.textContent=(s.phase==='break'?'휴식':'집중')+(p.active?' · '+(p.index+1)+'/'+p.count+'세트':'');
+}
+function savePomoProgramFromFields(){
+ const api=window.CKPomo;
+ const popover=ensurePopover();
+ const count=Number(popover.querySelector('[data-ck19-program-count]')?.value)||3;
+ const previous=api?.snapshot?.()?.program;
+ const sets=Array.from({length:5},(_,i)=>({
+  focus:Number(popover.querySelector('[data-ck19-program-focus="'+i+'"]')?.value)||previous?.sets?.[i]?.focus||50,
+  rest:Number(popover.querySelector('[data-ck19-program-rest="'+i+'"]')?.value)||previous?.sets?.[i]?.rest||5
+ }));
+ return api?.configureProgram?.(count,sets)===true;
+}
+
 function togglePopover(){
  const element=ensurePopover();
  element.hidden=!element.hidden;
@@ -190,6 +245,23 @@ document.addEventListener('change',event=>{
  if(!field)return;
  const type=field.dataset.ck14PomoMinutes;
  if(window.CKPomo?.configure?.(type,field.value))updateClock();
+});
+
+document.addEventListener('click',event=>{
+ const btn=event.target.closest?.('[data-ck19-program]');
+ if(!btn)return;
+ event.preventDefault();
+ if(btn.dataset.ck19Program==='start'){
+  if(!savePomoProgramFromFields())return;
+  window.CKPomo?.startProgram?.();
+ }else if(btn.dataset.ck19Program==='stop'){
+  window.CKPomo?.stopProgram?.();
+ }
+ updateClock();
+});
+document.addEventListener('change',event=>{
+ if(!event.target.matches?.('[data-ck19-program-count],[data-ck19-program-focus],[data-ck19-program-rest]'))return;
+ if(savePomoProgramFromFields())updateClock();
 });
 document.addEventListener('keydown',event=>{if(event.key==='Escape'&&pop&&!pop.hidden)closePopover()});
 for(const eventName of ['input','keyup','pointerup','focusin','click','compositionend']){

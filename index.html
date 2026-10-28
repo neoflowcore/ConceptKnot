@@ -95,6 +95,7 @@ body{font-family:Pretendard,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;bac
 <link rel="stylesheet" href="./experience-v15.css" media="all">
 <link rel="stylesheet" href="./experience-v16.css" media="all">
 <link rel="stylesheet" href="./experience-v17.css">
+<link rel="stylesheet" href="./experience-v19.css">
 <script src="./assets/ck-display-v17.js" defer></script>
 </head>
 <body>
@@ -235,7 +236,7 @@ const names={landing:'CONCEPTKNOT 첫 화면',listen:'문제·정답 듣기',typ
 const nav=[['home','▦'],['reverse','⚡'],['theory','◈'],['visual','◇'],['typing','⌨'],['listen','♫'],['quiz','✎'],['calc','÷'],['exam','▤'],['venn','◉'],['wrong','↻'],['plan','▣'],['final','▤']];
 const todayISO=()=>new Date().toLocaleDateString('sv-SE',{timeZone:'Asia/Seoul'});
 const dday=()=>Math.max(0,Math.ceil((new Date('2026-10-31T00:00:00+09:00').getTime()-Date.now())/DAY));
-const defaults={typingMode:'official',typingPick:0,typingYear:'all',typingHistory:[],tts:{rate:1.5,voice:''},spokenTexts:{},ink:{},chalk:{color:0,notes:{},practice:{}},view:'landing',reverseState:{mode:'practice',id:'',step:0,firstChoice:0,transferChoice:0,retryChoice:0,recallRating:null,year:2025,number:1,showOfficialKey:false},reverseProgress:{},officialLinks:{},subject:'estate',year:2025,examQuestion:1,answers:{},graded:{},importedKeys:{},quizIndex:0,quizAnswers:{},theoryIndex:0,flashShown:false,flashVisits:{},reviews:{},compare:'v1',mistakes:{},notes:{},timerRemaining:1500,timerRunning:false,timerEnd:0,pomodoros:0,pomodoroPhase:'focus',pomodoroFocusSeconds:1500,pomodoroBreakSeconds:300,dailyTotals:{},studySubject:{},topicFilter:'all',showPdf:true,showExamKey:false,showAllMarks:false,ck10FontSize:18,ck10CustomColor:'#8ee5ff',ck9SpenMode:false,ck9SpenTool:'pen',ck9SpenWidth:3.2};
+const defaults={typingMode:'official',typingPick:0,typingYear:'all',typingHistory:[],tts:{rate:1.5,voice:''},spokenTexts:{},ink:{},chalk:{color:0,notes:{},practice:{}},view:'landing',reverseState:{mode:'practice',id:'',step:0,firstChoice:0,transferChoice:0,retryChoice:0,recallRating:null,year:2025,number:1,showOfficialKey:false},reverseProgress:{},officialLinks:{},subject:'estate',year:2025,examQuestion:1,answers:{},graded:{},importedKeys:{},quizIndex:0,quizAnswers:{},theoryIndex:0,flashShown:false,flashVisits:{},reviews:{},compare:'v1',mistakes:{},notes:{},timerRemaining:1500,timerRunning:false,timerEnd:0,pomodoros:0,pomodoroPhase:'focus',pomodoroFocusSeconds:1500,pomodoroBreakSeconds:300,pomoProgram:null,dailyTotals:{},studySubject:{},topicFilter:'all',showPdf:true,showExamKey:false,showAllMarks:false,ck10FontSize:18,ck10CustomColor:'#8ee5ff',ck9SpenMode:false,ck9SpenTool:'pen',ck9SpenWidth:3.2};
 let state={...defaults};
 try{const p=JSON.parse(localStorage.getItem(STORAGE)||'{}');if(p && typeof p==='object'){for(const k in defaults){if(Object.prototype.hasOwnProperty.call(p,k))state[k]=p[k];}}}catch(e){console.warn('기존 학습기록을 읽지 못했습니다',e);}
 if(!['estate','civil'].includes(state.subject))state.subject='estate';
@@ -1007,43 +1008,109 @@ state.graded[`${yr}-${state.subject}`]=true;save();render();const score=examScor
 function timerLeft(){return state.timerRunning?Math.max(0,Math.ceil((state.timerEnd-Date.now())/1000)):Math.max(0,Number(state.timerRemaining)||0);}
 function clock(s){s=Math.max(0,s);return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;}
 function refreshTimerDisplay(){const t=$('#timer-display');if(t)t.textContent=clock(timerLeft());}
-function timerTick(){
- if(!state.timerRunning)return;
- refreshTimerDisplay();
- if(timerLeft()>0)return;
- const finishedPhase=state.pomodoroPhase==='break'?'break':'focus';
- state.timerRunning=false;state.timerEnd=0;
- if(finishedPhase==='focus'){
-   state.pomodoros=(Number(state.pomodoros)||0)+1;
-   state.dailyTotals[todayISO()]=(Number(state.dailyTotals[todayISO()])||0)+1;
-   state.pomodoroPhase='break';state.timerRemaining=pomodoroDuration('break');
- }else{
-   state.pomodoroPhase='focus';state.timerRemaining=pomodoroDuration('focus');
- }
- save();render();
- toast(finishedPhase==='focus'?'집중 완료 · 휴식 시작을 눌러 쉬세요.':'휴식 완료 · 다음 집중을 시작하세요.');
- window.dispatchEvent(new CustomEvent('ck:pomodoro-complete',{detail:{phase:finishedPhase}}));
+
+/* v19: consecutive focus/rest sets run on the same persisted clock as the home timer.
+   Five slots are user-configurable; no server, worker, or background job. */
+function pomoInt(value,lo,hi,fallback){
+ const number=Number(value);
+ return Number.isFinite(number)?Math.max(lo,Math.min(hi,Math.round(number))):fallback;
+}
+function normalizePomoProgram(p){
+ const o=p&&typeof p==='object'&&!Array.isArray(p)?p:{};
+ const list=Array.isArray(o.sets)?o.sets:[];
+ const sets=Array.from({length:5},(_,i)=>{
+  const old=list[i]&&typeof list[i]==='object'?list[i]:{};
+  return {focus:pomoInt(old.focus,5,180,50),rest:pomoInt(old.rest,1,60,5)};
+ });
+ const count=pomoInt(o.count,1,5,3);
+ return {count,sets,index:pomoInt(o.index,0,count-1,0),active:o.active===true,finished:o.finished===true};
+}
+function pomoProgram(){
+ state.pomoProgram=normalizePomoProgram(state.pomoProgram);
+ return state.pomoProgram;
 }
 function pomodoroDuration(phase){
+ const p=pomoProgram();
+ if(p.active){
+  const row=p.sets[p.index];
+  return (phase==='break'?row.rest:row.focus)*60;
+ }
  const v=Number(phase==='break'?state.pomodoroBreakSeconds:state.pomodoroFocusSeconds);
  const fallback=phase==='break'?300:1500;
  return Number.isFinite(v)&&v>0?Math.round(v):fallback;
 }
+function pomoStageDone(deadline,credited,autoAdvance){
+ const previous=state.pomodoroPhase==='break'?'break':'focus';
+ const p=pomoProgram();
+ state.timerRunning=false;state.timerEnd=0;
+ if(previous==='focus'&&credited){
+  state.pomodoros=(Number(state.pomodoros)||0)+1;
+  state.dailyTotals[todayISO()]=(Number(state.dailyTotals[todayISO()])||0)+1;
+ }
+ if(p.active){
+  if(previous==='focus'&&p.index===p.count-1){
+   p.active=false;p.finished=true;
+   state.pomodoroPhase='focus';
+   state.timerRemaining=p.sets[p.index].focus*60;
+   window.dispatchEvent(new CustomEvent('ck:pomodoro-complete',{detail:{phase:'focus',programFinished:true,set:p.index+1}}));
+   return '모든 '+p.count+'세트의 집중을 완료했습니다.';
+  }
+  if(previous==='focus'){
+   state.pomodoroPhase='break';
+   state.timerRemaining=p.sets[p.index].rest*60;
+  }else{
+   p.index=Math.min(p.count-1,p.index+1);
+   state.pomodoroPhase='focus';
+   state.timerRemaining=p.sets[p.index].focus*60;
+  }
+  if(autoAdvance){
+   state.timerRunning=true;
+   state.timerEnd=deadline+state.timerRemaining*1000;
+  }
+ }else{
+  state.pomodoroPhase=previous==='focus'?'break':'focus';
+  state.timerRemaining=pomodoroDuration(state.pomodoroPhase);
+ }
+ window.dispatchEvent(new CustomEvent('ck:pomodoro-complete',{
+  detail:{phase:previous,set:p.index+1,programActive:p.active,skipped:!credited}
+ }));
+ return previous==='focus'?'집중 종료 · 휴식 단계입니다.':'휴식 종료 · 집중 단계입니다.';
+}
+function timerTick(){
+ if(!state.timerRunning)return;
+ const now=Date.now();
+ refreshTimerDisplay();
+ if(timerLeft()>0)return;
+ let message='',transitions=0;
+ // Catch up through at most nine stages when a background tab was throttled.
+ while(state.timerRunning&&state.timerEnd<=now&&transitions<11){
+  const deadline=Number.isFinite(state.timerEnd)&&state.timerEnd>0?state.timerEnd:now;
+  message=pomoStageDone(deadline,true,true);
+  transitions++;
+ }
+ save();render();
+ toast(message||'타이머 단계가 완료되었습니다.');
+}
 window.CKPomo=Object.freeze({
- snapshot:()=>({
-  phase:state.pomodoroPhase==='break'?'break':'focus',
-  remaining:timerLeft(),running:!!state.timerRunning,
-  focusMinutes:Math.round(pomodoroDuration('focus')/60),
-  breakMinutes:Math.round(pomodoroDuration('break')/60),
-  completed:Number(state.pomodoros)||0,
-  duration:pomodoroDuration(state.pomodoroPhase==='break'?'break':'focus')
- }),
+ snapshot:()=>{
+  const p=pomoProgram();
+  return {
+   phase:state.pomodoroPhase==='break'?'break':'focus',
+   remaining:timerLeft(),running:!!state.timerRunning,
+   focusMinutes:Math.round(pomodoroDuration('focus')/60),
+   breakMinutes:Math.round(pomodoroDuration('break')/60),
+   completed:Number(state.pomodoros)||0,
+   duration:pomodoroDuration(state.pomodoroPhase==='break'?'break':'focus'),
+   program:{count:p.count,index:p.index,active:p.active,finished:p.finished,
+    sets:p.sets.map(x=>({focus:x.focus,rest:x.rest}))}
+  };
+ },
  toggle:()=>{
   if(state.timerRunning){
-    state.timerRemaining=timerLeft();state.timerRunning=false;state.timerEnd=0;
+   state.timerRemaining=timerLeft();state.timerRunning=false;state.timerEnd=0;
   }else{
-    if(!timerLeft())state.timerRemaining=pomodoroDuration(state.pomodoroPhase==='break'?'break':'focus');
-    state.timerEnd=Date.now()+state.timerRemaining*1000;state.timerRunning=true;
+   if(!timerLeft())state.timerRemaining=pomodoroDuration(state.pomodoroPhase==='break'?'break':'focus');
+   state.timerEnd=Date.now()+state.timerRemaining*1000;state.timerRunning=true;
   }
   save();refreshTimerDisplay();
  },
@@ -1053,18 +1120,44 @@ window.CKPomo=Object.freeze({
   save();refreshTimerDisplay();
  },
  skip:()=>{
-  state.timerRunning=false;state.timerEnd=0;
-  state.pomodoroPhase=state.pomodoroPhase==='break'?'focus':'break';
-  state.timerRemaining=pomodoroDuration(state.pomodoroPhase);
+  if(pomoProgram().active){
+   pomoStageDone(Date.now(),false,false);
+  }else{
+   state.timerRunning=false;state.timerEnd=0;
+   state.pomodoroPhase=state.pomodoroPhase==='break'?'focus':'break';
+   state.timerRemaining=pomodoroDuration(state.pomodoroPhase);
+  }
   save();refreshTimerDisplay();
  },
  configure:(phase,minutes)=>{
-  if(phase!=='focus'&&phase!=='break')return false;
+  if(phase!=='focus'&&phase!=='break'||pomoProgram().active)return false;
   const n=Number(minutes);if(!Number.isFinite(n))return false;
-  const val=Math.max(phase==='focus'?5:1,Math.min(phase==='focus'?180:60,Math.round(n)))*60;
+  const val=pomoInt(n,phase==='focus'?5:1,phase==='focus'?180:60,phase==='focus'?25:5)*60;
   if(phase==='focus')state.pomodoroFocusSeconds=val;else state.pomodoroBreakSeconds=val;
   if(!state.timerRunning&&(state.pomodoroPhase==='break'?'break':'focus')===phase)state.timerRemaining=val;
   save();refreshTimerDisplay();return true;
+ },
+ configureProgram:(count,sets)=>{
+  const current=pomoProgram();
+  if(current.active)return false;
+  const normalized=normalizePomoProgram({count,sets,index:0,active:false,finished:false});
+  state.pomoProgram=normalized;save();return true;
+ },
+ startProgram:()=>{
+  const p=pomoProgram();
+  p.active=true;p.index=0;p.finished=false;
+  state.pomodoroPhase='focus';
+  state.timerRemaining=p.sets[0].focus*60;
+  state.timerRunning=true;state.timerEnd=Date.now()+state.timerRemaining*1000;
+  save();refreshTimerDisplay();
+  return true;
+ },
+ stopProgram:()=>{
+  const p=pomoProgram();
+  state.timerRemaining=timerLeft();state.timerEnd=0;state.timerRunning=false;
+  p.active=false;p.finished=false;
+  save();refreshTimerDisplay();
+  return true;
  }
 });
 function importKeys(text){let toks=text.replace(/[,;|]+(?=\s)/g,' ').trim().split(/\s+/).filter(Boolean);if(toks.length===1&&/^[1-5]{80}$/.test(toks[0]))toks=toks[0].split('');if(toks.length!==80)throw new Error('정답은 80개여야 합니다. 현재 '+toks.length+'개입니다.');const vals=toks.map(x=>{if(!/^[1-5]([/,][1-5])*$/.test(x))throw new Error('정답 형식은 1~5 또는 2/4입니다. 잘못된 입력: '+x);return x.split(/[/,]/).map(Number);});state.importedKeys[state.year]=vals;state.graded[`${state.year}-${state.subject}`]=false;save();render();toast('80개 정답을 로컬에 저장했습니다. A형인지 확인하세요.');}
@@ -1077,7 +1170,7 @@ const qbtn=t.closest('[data-quiz]');if(qbtn){state.quizIndex=Number(qbtn.dataset
 const ch=t.closest('[data-choice]');if(ch){markQuiz(Number(ch.dataset.choice));return;}
 const q=t.closest('[data-exam-question]');if(q){state.examQuestion=Number(q.dataset.examQuestion);save();render();return;}
 const opt=t.closest('[data-exam-mark]');if(opt){state.answers[examMarkKey(state.examQuestion)]=Number(opt.dataset.examMark);state.graded[`${state.year}-${state.subject}`]=false;const [start,end]=examRange();if(state.examQuestion<end)state.examQuestion++;save();render();return;}
-const minutes=t.closest('[data-minutes]');if(minutes){state.timerRemaining=Number(minutes.dataset.minutes)*60;state.pomodoroFocusSeconds=state.timerRemaining;state.pomodoroPhase='focus';state.timerRunning=false;state.timerEnd=0;save();render();return;}
+const minutes=t.closest('[data-minutes]');if(minutes){if(pomoProgram().active)window.CKPomo.stopProgram();state.timerRemaining=Number(minutes.dataset.minutes)*60;state.pomodoroFocusSeconds=state.timerRemaining;state.pomodoroPhase='focus';state.timerRunning=false;state.timerEnd=0;save();render();return;}
 const action=t.closest('[data-action]');if(!action)return;const what=action.dataset.action;
 if(handleReverseClick(action))return;
 if(what==='menu'){$('.sidebar').classList.toggle('open');return;}
@@ -1095,8 +1188,8 @@ if(what==='key-import'){try{importKeys($('#key-import').value);}catch(e){toast(e
 if(what==='note-save'){const id=action.dataset.id;state.notes[id]=document.getElementById('note-'+id)?.value||'';save();toast('오답 메모가 저장되었습니다.');return;}
 if(what==='wrong-resolve'){const id=action.dataset.id;if(state.mistakes[id]){state.mistakes[id].resolved=true;state.mistakes[id].updated=Date.now();save();render();toast('복습 완료 표시');}return;}
 if(what==='review-concept'){const id=action.dataset.conceptId;state.view='theory';state.topicFilter='all';state.theoryIndex=theory().findIndex(x=>x.id===id);state.flashShown=false;save();render();window.scrollTo(0,0);return;}
-if(what==='timer-toggle'){if(state.timerRunning){state.timerRemaining=timerLeft();state.timerRunning=false;state.timerEnd=0;}else{if(!timerLeft())state.timerRemaining=pomodoroDuration(state.pomodoroPhase==='break'?'break':'focus');state.timerEnd=Date.now()+state.timerRemaining*1000;state.timerRunning=true;}save();render();return;}
-if(what==='timer-reset'){state.timerRunning=false;state.timerEnd=0;state.timerRemaining=pomodoroDuration(state.pomodoroPhase==='break'?'break':'focus');save();render();return;}
+if(what==='timer-toggle'){window.CKPomo.toggle();render();return;}
+if(what==='timer-reset'){window.CKPomo.reset();render();return;}
 if(what==='backup'){download('ConceptKnot_학습기록_'+todayISO()+'.json','application/json;charset=utf-8',JSON.stringify(state,null,2));toast('학습기록 백업 파일을 생성했습니다.');return;}
 if(what==='all-reset'){if(confirm('정말 전체 학습기록을 삭제하시겠습니까? 답안과 메모를 되돌릴 수 없습니다.')){state={...defaults,answers:{},graded:{},importedKeys:{},quizAnswers:{},flashVisits:{},reviews:{},mistakes:{},notes:{},dailyTotals:{},studySubject:{}};save();render();toast('이 브라우저의 학습기록이 초기화되었습니다.');}return;}
 }
@@ -2277,5 +2370,7 @@ render();setInterval(timerTick,500);
 <script src="./assets/ck-experience-v14.js" defer></script>
 <script src="./assets/ck-pdf-workspace-v15.js" defer></script>
 <script src="./assets/ck-layout-v16.js" defer></script>
+<script src="./assets/ck-pdf-night-v19.js" defer></script>
+<script src="./assets/ck-shortcuts-v19.js" defer></script>
 </body>
 </html>
