@@ -35,3 +35,113 @@ html[data-ck-theme="dark"] #ck17-display-dialog{background:#21332f;color:#e4eee7
 html body #main .ck-v7-board .ck-v7-toolrow{flex-wrap:wrap!important;min-width:0}
 html body #main .ck-v7-board .ck-v7-board-heading{overflow-wrap:anywhere}
 html body #main .ck-v7-board .ck-v7-board-overlay{min-width:0;padding-left:clamp(8px,1.3vw,24px)!important;padding-right:clamp(8px,1.3vw,24px)!important}
+
+/* v18: low-power study surfaces, strict spread layout, deep but readable dark theme. */
+body:not([data-ck-v8-tab="landing"]) #ck-v8-ambient .ck-3d-canvas{
+ visibility:hidden!important;opacity:0!important;
+}
+body:not([data-ck-v8-tab="landing"]) #ck-v8-ambient :is(.ck-v8-bird,.ck-v8-cloud,.ck-v8-tree,.ck-v8-art,.ck-v8-grass),
+body:not([data-ck-v8-tab="landing"]) #ck4-cover,
+body:not([data-ck-v8-tab="landing"]) #ck-v8-ambient *,
+body:not([data-ck-v8-tab="landing"]) #ck-v8-ambient *::before,
+body:not([data-ck-v8-tab="landing"]) #ck-v8-ambient *::after{
+ animation-play-state:paused!important;
+ transition:none!important;
+}
+body:not([data-ck-v8-tab="landing"]) #main .ck-v7-stage{
+ backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+}
+@media(min-width:851px){
+ html body #main .board-stage.ck-v7-stage,
+ html body #main .board-stage.ck-v7-stage.is-home{
+  grid-template-columns:minmax(86px,var(--ck-v7-left,33.333%)) var(--ck6-rail) minmax(90px,1fr)!important;
+ }
+ html body #main .board-stage.ck-v7-stage.ck6-swapped,
+ html body #main .board-stage.ck-v7-stage.is-home.ck6-swapped{
+  grid-template-columns:minmax(90px,1fr) var(--ck6-rail) minmax(86px,var(--ck-v7-left,33.333%))!important;
+ }
+}
+#main .ck-v7-content{min-width:0!important;overflow-wrap:anywhere}
+#main .ck-v7-content :is(.panel,.flash-card,.exam-sheet,.pdf-panel,.registered-question,.concept-list,.concept-item,.reverse-queue,.listen-grid,.listen-form,.quick-card,.ck10-paper,.quiz-dots,.bubble-grid,.registration-summary,.flash-mask,.flash-answer){
+ min-width:0!important;max-width:100%;overflow-wrap:anywhere;
+}
+#main .ck-v7-content :is(.concept-item,.quiz-dot,.rate-presets button,.ck15-pdf-tools button){white-space:normal}
+#main .ck-v7-content .ck16-split-grid{grid-template-columns:minmax(0,var(--ck16-left,55%)) 12px minmax(0,1fr)!important}
+#main .ck15-pdf-scroll.ck17-spread{display:flex!important;align-items:flex-start;justify-content:flex-start;gap:12px!important;overflow-x:auto;overflow-y:auto;min-width:0}
+#main .ck15-pdf-scroll.ck17-spread>.ck15-pdf-page{flex:0 0 auto!important;margin:12px 0!important}
+#main .ck15-pdf-scroll.ck17-spread>.ck17-second-page{display:block!important;position:relative;flex:0 0 auto!important;margin:12px 0!important}
+#main .ck15-pdf-scroll.ck17-spread>.ck17-second-page>.ck15-pdf-page{margin:0!important;position:relative}
+#main .ck15-pdf-scroll.ck17-spread :is([data-ck15-page-canvas],[data-ck15-ink-canvas]){max-width:none!important}
+@media(max-width:850px){
+ #main .ck15-pdf-scroll.ck17-spread{gap:8px!important}
+}
+html[data-ck-theme="dark"]{
+ --ck18-surface:rgba(11,29,35,.93);
+ --ck18-inset:rgba(7,21,26,.86);
+ --ck18-input:rgba(12,34,40,.94);
+ --ck18-border:rgba(194,220,215,.15);
+ --ck18-text:#d8e2df;
+ --ck18-muted:#acbdb9;
+}
+html[data-ck-theme="dark"] #main .ck-v7-content{
+ --ck15-dark-ink:var(--ck18-text);--ck15-dark-muted:var(--ck18-muted);
+ color:var(--ck18-text)!important;
+}
+html[data-ck-theme="dark"] body :is(.ck4-pager,.ck4-pager-label){
+ background:#152b31!important;color:#d4e1dd!important;border-color:#425c60!important;box-shadow:0 8px 22px #07151c88!important;
+}
+html[data-ck-theme="dark"] body :is(.ck4-pager button,.ck4-pager-count,.ck4-pager-label){
+ color:#d4e1dd!important;-webkit-text-fill-color:#d4e1dd!important;
+}
+html[data-ck-theme="dark"] body .ck4-pager button:hover:not(:disabled){background:#29454b!important}
+html[data-ck-theme="dark"] body :is(.ck-v7-date-pill,.ck-v7-date-pill svg,.ck14-pomo-launch,.ck14-theme-toggle){
+ color:#d8e2df!important;stroke:currentColor;
+}
+html[data-ck-theme="dark"] #main .ck-v7-content :is(
+ .flash-mask,.flash-answer,.flash-card,.flash-controls,.concept-list,.concept-item,.concept-item.active,.reverse-queue,
+ .reverse-step,.reverse-suggestion,.reverse-recall-card,.reverse-concept,.reverse-explain-options,
+ .registration-summary,.listen-form,.listen-grid,.neural-box,.rate-presets,.rate-presets button,.listen-controls button,
+ .quiz-dots,.quiz-dot,.metrics-row,.quiz-layout aside,.exam-nav,.exam-nav button,
+ .ck10-final-guide,.ck10-final-heading,.ck10-final-actions,.ck11-page-count,.ck10-page-label,
+ .ck10-paper,.ck10-paper input,.ck10-paper textarea,.final-summary,.final-card,
+ .ck-v7-question,.ck-v7-input,.ck-v7-heatmap,.ck-v7-stat,.ck-v7-stats,
+ .answer-box,.day-card,.plan-day,.memory-answer,.memory-tile
+ ){
+ background:var(--ck18-surface)!important;color:var(--ck18-text)!important;
+ -webkit-text-fill-color:var(--ck18-text)!important;
+ border-color:var(--ck18-border)!important;
+}
+html[data-ck-theme="dark"] #main .ck-v7-content :is(
+ .flash-mask,.flash-answer,.concept-item,.neural-box,.quiz-dot,.metrics-row,.registration-summary,.reverse-queue,
+ .rate-presets button,.ck10-final-guide
+ ){background:var(--ck18-inset)!important}
+html[data-ck-theme="dark"] #main .ck-v7-content :is(
+ .concept-item.active,.rate-presets button[aria-pressed="true"],.quiz-dot.active,.quiz-dot.done,.reverse-step.done
+ ){background:rgba(47,98,88,.9)!important;color:#dce9e4!important}
+html[data-ck-theme="dark"] #main .ck-v7-content :is(
+ .concept-item small,.concept-item span,.flash-mask p,.flash-answer p,.registration-summary,
+ .listen-form h2,.listen-form h3,.listen-form label,.listen-form p,.rate-presets button,
+ .ck10-final-heading h1,.ck10-final-heading span,.ck10-page-label,.ck11-page-count span,
+ .ck10-paper input,.ck10-paper textarea,.reverse-queue small,.quiz-dot
+ ){color:var(--ck18-text)!important;-webkit-text-fill-color:var(--ck18-text)!important}
+html[data-ck-theme="dark"] #main .ck-v7-content :is(
+ select,.field,.chalk-select,.exam-sheet textarea,.listen-form select,.ck11-page-count select,.ck10-paper input,.ck10-paper textarea
+ ){background-color:var(--ck18-input)!important;color:var(--ck18-text)!important;-webkit-text-fill-color:var(--ck18-text)!important;border-color:var(--ck18-border)!important;color-scheme:dark}
+html[data-ck-theme="dark"] #main .ck-v7-content :is(
+ .muted,.small.muted,.detail.muted,.ck10-final-guide,.ck10-page-label,.registration-summary
+ ){color:var(--ck18-muted)!important;-webkit-text-fill-color:var(--ck18-muted)!important}
+html[data-ck-theme="dark"] #main .ck-v7-content .ck10-paper{
+ box-shadow:0 15px 37px #050f1699!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+}
+html[data-ck-theme="dark"] #main .ck-v7-content .ck10-final-actions button,
+html[data-ck-theme="dark"] #main .ck-v7-content .ck11-page-count{
+ background:#19383b!important;color:var(--ck18-text)!important;border-color:var(--ck18-border)!important;
+}
+html[data-ck-theme="dark"] #main .ck-v7-content .ck15-pdf-page,
+html[data-ck-theme="dark"] #main .ck-v7-content .ck15-pdf-page canvas[data-ck15-page-canvas]{
+ background:#fff!important;color:#1c3333!important;filter:none!important;
+}
+html[data-ck-theme="dark"] #main .ck-v7-content .ck15-pdf-page canvas[data-ck15-ink-canvas]{background:transparent!important;filter:none!important}
+@media(prefers-reduced-motion:reduce){
+ #main .ck17-second-page,.ck15-pdf-scroll.ck17-spread{scroll-behavior:auto!important}
+}

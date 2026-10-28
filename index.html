@@ -1683,12 +1683,13 @@ window.addEventListener('beforeunload',()=>{if(localPdfUrl)URL.revokeObjectURL(l
   function setLeftWidth(px){
     const stage=document.querySelector('.ck-v7-stage');
     if(!stage)return;
-    const max=Math.max(132.5,stage.clientWidth-205-27);
-    const width=Math.round(Math.max(132.5,Math.min(max,px)));
+    const min=86;
+    const max=Math.max(min,stage.clientWidth-90-27);
+    const width=Math.round(Math.max(min,Math.min(max,px)));
     state.v7LeftWidth=width;
     stage.style.setProperty('--ck-v7-left',width+'px');
     const handle=stage.querySelector('[data-ck-v7-resize]');
-    if(handle){handle.setAttribute('aria-valuemin',String(Math.round(132.5/stage.clientWidth*100)));handle.setAttribute('aria-valuemax',String(Math.round(max/stage.clientWidth*100)));handle.setAttribute('aria-valuenow',String(Math.round(width/stage.clientWidth*100)));}
+    if(handle){handle.setAttribute('aria-valuemin',String(Math.round(86/stage.clientWidth*100)));handle.setAttribute('aria-valuemax',String(Math.round(max/stage.clientWidth*100)));handle.setAttribute('aria-valuenow',String(Math.round(width/stage.clientWidth*100)));}
   }
   let dragged=null;
   document.addEventListener('pointerdown',e=>{
@@ -1830,7 +1831,7 @@ window.addEventListener('beforeunload',()=>{if(localPdfUrl)URL.revokeObjectURL(l
   render=function(){
     previousRender();
     const stage=document.querySelector('.ck-v7-stage');
-    if(stage&&state.v7LeftWidth)stage.style.setProperty('--ck-v7-left',state.v7LeftWidth+'px');
+    if(stage&&state.v7LeftWidth)stage.style.setProperty('--ck-v7-left',Math.min(Math.max(86,state.v7LeftWidth),Math.max(86,stage.clientWidth-90-27))+'px');
     mountBoard();
     const r=state.view==='typing'?chalkRecord('practice',typingConcept().id):null;
     const typing=stage?.querySelector('.ck-v7-input .chalk-editor textarea');

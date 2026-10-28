@@ -22,6 +22,16 @@ const flowerColors = [0xffc44f, 0xff789b, 0xffe28a, 0x6db9f3, 0xff8753];
 let root, renderer, camera, scene, materialCache, clock, frameId = 0;
 let resizeObserver, last = 0, pointer = {x: 0, y: 0}, elapsed = 0, firstDraw = false;
 let resizeTimer = 0, playTime = 0;
+const isLanding=()=>document.body?.dataset?.ckV8Tab==='landing';
+const shouldAnimate=()=>isLanding()&&!document.hidden&&!REDUCED.matches;
+function synchronizeActivity(){
+ const active=shouldAnimate();
+ if(root)root.dataset.ck3dActive=String(active);
+ if(!active){if(frameId)cancelAnimationFrame(frameId);frameId=0;last=0;return}
+ if(!renderer){createRenderer();return}
+ if(!frameId){last=0;frameId=requestAnimationFrame(tick)}
+}
+
 
 function h(x, z) {
   // Soft, genuinely triangulated terrain. The far hills have separate ridges.
@@ -264,24 +274,24 @@ function bird() {
 }
 function createRenderer() {
   const host=document.getElementById(HOST_ID);
-  if(!host || QUALITY===0 || REDUCED.matches)return;
+  if(!host || QUALITY===0 || REDUCED.matches || !shouldAnimate() || renderer)return;
   // Fail back to the existing textured SVG. Never hide learning content on error.
   const canvas=document.createElement('canvas');
   canvas.className='ck-3d-canvas';canvas.setAttribute('aria-hidden','true');
   canvas.style.cssText='position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;z-index:0;';
-  const opts={canvas,alpha:false,antialias:!MOBILE.matches,powerPreference:'high-performance',stencil:false,depth:true};
+  const opts={canvas,alpha:false,antialias:!MOBILE.matches,powerPreference:'default',stencil:false,depth:true};
   try{renderer=new THREE.WebGLRenderer(opts);}catch(err){console.info('ConceptKnot uses SVG scenery fallback',err);return;}
   renderer.setClearColor(0x65c6e9,1);
   renderer.outputColorSpace=THREE.SRGBColorSpace;
   renderer.toneMapping=THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure=1.09;
-  renderer.shadowMap.enabled=true;
+  renderer.shadowMap.enabled=QUALITY>1;
   renderer.shadowMap.type=THREE.PCFSoftShadowMap;
   scene=new THREE.Scene();scene.fog=new THREE.FogExp2(0x72ac9f,.0064);
   const hemi=new THREE.HemisphereLight(0xc7eaff,0x345c43,1.25);scene.add(hemi);
   const sun=new THREE.DirectionalLight(0xffdb9e,2.85);
   sun.position.set(-23,46,12);sun.castShadow=true;
-  sun.shadow.mapSize.set(1024,1024);
+  sun.shadow.mapSize.set(QUALITY>1?768:512,QUALITY>1?768:512);
   sun.shadow.camera.left=-50;sun.shadow.camera.right=50;sun.shadow.camera.top=60;sun.shadow.camera.bottom=-40;
   sun.shadow.normalBias=.016;sun.shadow.bias=-.00025;
   scene.add(sun);
@@ -306,7 +316,7 @@ function createRenderer() {
   document.addEventListener('visibilitychange',onVisibility);
   window.addEventListener('pointermove',onPointer,{passive:true});
   window.addEventListener('pagehide',cleanup,{once:true});
-  if(!REDUCED.matches)frameId=requestAnimationFrame(tick);
+  synchronizeActivity();
 }
 function resize(){
   if(!renderer||!root||!camera)return;
@@ -320,20 +330,17 @@ function resize(){
   camera.fov=width<600?56:width<900?49:43;
   camera.position.z=width<850?30:26;
   camera.updateProjectionMatrix();
-  if(firstDraw)renderer.render(scene,camera);
+  if(firstDraw&&shouldAnimate())renderer.render(scene,camera);
 }
 function onPointer(e){
-  if(e.pointerType!=='mouse'||REDUCED.matches)return;
+  if(e.pointerType!=='mouse'||!shouldAnimate())return;
   pointer.x=clamp((e.clientX/window.innerWidth-.5)*2,-1,1);
   pointer.y=clamp((e.clientY/window.innerHeight-.5)*2,-1,1);
 }
 window.addEventListener('pointerleave',()=>{pointer.x=0;pointer.y=0;},{passive:true});
-function onVisibility(){
-  if(document.hidden){if(frameId)cancelAnimationFrame(frameId);frameId=0;return;}
-  last=0;if(!frameId&&!REDUCED.matches)frameId=requestAnimationFrame(tick);
-}
+function onVisibility(){synchronizeActivity()}
 function tick(ms){
-  frameId=0;if(!renderer||document.hidden)return;
+  frameId=0;if(!renderer||!shouldAnimate())return;
   const dt=last?Math.min(.05,(ms-last)/1000):0;last=ms;elapsed+=dt;
   const focused=Boolean(document.body?.classList.contains('ck-v8-study-focus'));
   const intensity=focused?.18:1;
@@ -373,12 +380,22 @@ function tick(ms){
   camera.position.x=lerp(camera.position.x,pointer.x*.32*intensity,1-Math.exp(-dt*1.2));
   camera.lookAt(0,6,-30);
   renderer.render(scene,camera);
-  frameId=requestAnimationFrame(tick);
+  if(shouldAnimate())frameId=requestAnimationFrame(tick);
 }
 function cleanup(){
   if(frameId)cancelAnimationFrame(frameId);frameId=0;
   resizeObserver?.disconnect();
   if(renderer){renderer.dispose();renderer=null;}
 }
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',createRenderer,{once:true});
-else createRenderer();
+function initialize(){
+ const main=document.getElementById('main');
+ if(main)new MutationObserver(synchronizeActivity).observe(main,{childList:true});
+ new MutationObserver(synchronizeActivity).observe(document.body,{attributes:true,attributeFilter:['data-ck-v8-tab']});
+ document.addEventListener('visibilitychange',synchronizeActivity);
+ window.addEventListener('pageshow',synchronizeActivity);
+ REDUCED.addEventListener?.('change',synchronizeActivity);
+ synchronizeActivity();
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initialize,{once:true});
+else initialize();
+window.CK3DPerformance=Object.freeze({getState:()=>({active:!!frameId,initialized:!!renderer,landing:isLanding(),hidden:document.hidden})});

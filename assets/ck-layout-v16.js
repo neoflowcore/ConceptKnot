@@ -9,7 +9,7 @@ const MIN_DESKTOP=940;
 const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
 let drag=null,scheduled=0;
 function read(k){
- try{const n=Number(localStorage.getItem(PREFIX+k));return Number.isFinite(n)&&n>=10&&n<=90?n:null}catch(e){return null}
+ try{const n=Number(localStorage.getItem(PREFIX+k));return Number.isFinite(n)&&n>=5&&n<=95?n:null}catch(e){return null}
 }
 function save(k,val){try{localStorage.setItem(PREFIX+k,String(val))}catch(e){}}
 function childrenOf(el){
@@ -21,9 +21,9 @@ function keyFor(layout,index){
 }
 function limits(el){
  const w=el.getBoundingClientRect().width;
- const other=el.matches('.exam-layout')?170:115;
- const lo=Math.max(13.5,Math.min(20,142.5/w*100));
- const hi=Math.min(87.5,Math.max(80,(w-other-12)/w*100));
+ const other=el.matches('.exam-layout')?90:65;
+ const lo=Math.max(5,Math.min(10,90/w*100));
+ const hi=Math.min(95,Math.max(85,(w-other-12)/w*100));
  return {lo:Math.min(lo,hi),hi:Math.max(lo,hi)};
 }
 function apply(layout,value,persist){
@@ -41,7 +41,7 @@ function eligible(layout){
  if(window.innerWidth<MIN_DESKTOP)return false;
  if(getComputedStyle(layout).display!=='grid')return false;
  const a=nodes[0].getBoundingClientRect(),b=nodes[1].getBoundingClientRect();
- return a.width>160&&b.width>160&&b.left>a.left+60&&Math.abs(b.top-a.top)<18;
+ return a.width>90&&b.width>90&&b.left>a.left+35&&Math.abs(b.top-a.top)<18;
 }
 function makeDivider(){
  const el=document.createElement('div');
