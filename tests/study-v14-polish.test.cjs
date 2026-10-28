@@ -9,7 +9,7 @@ test('core and v14 scripts parse, no package/CI automation',()=>{
  inline.forEach((m,i)=>new vm.Script(m[1],{filename:'inline'+i}));
  new vm.Script(js);
  assert.match(read('vercel.json'),/"deploymentEnabled": false/);
- assert.match(sw,/conceptknot-study-v15/);
+ assert.match(sw,/conceptknot-study-v16/);
  assert.match(sw,/experience-v14.css/);assert.match(sw,/ck-experience-v14.js/);
 });
 test('ribbon is 80% height, larger tab text, brand matches tab type size',()=>{
@@ -46,7 +46,7 @@ test('night mode persists locally and content transition is motion-safe',()=>{
  assert.match(js,/root\.dataset\.ckTheme=mode/);
  assert.match(css,/html\[data-ck-theme="dark"\]/);
  assert.match(css,/prefers-reduced-motion:reduce/);
- assert.match(html,/document\.startViewTransition\(commit\)/);
+ assert.match(html,/ck16-reveal/);
  assert.match(css,/::view-transition-old\(ck14-workspace\)/);
  assert.match(css,/::view-transition-new\(ck14-workspace\)/);
 });

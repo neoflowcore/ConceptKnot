@@ -3,7 +3,7 @@
 (function(){
   'use strict';
   const pages=[
-    ['home','오늘의 학습'],['theory','핵심 이론'],['visual','그림 연상'],
+    ['landing','CONCEPTKNOT'],['home','오늘의 학습'],['theory','핵심 이론'],['visual','그림 연상'],
     ['typing','분필 타이핑'],['listen','문제·정답'],['reverse','기출 → 이론'],
     ['quiz','문제 풀이'],['calc','계산 집중'],['exam','10개년 기출'],
     ['venn','비교 도형'],['wrong','오답 복습'],['plan','학습 계획'],['final','최종 정리본']
@@ -24,7 +24,8 @@
   const pageIndex=()=>Math.max(0,pages.findIndex(x=>x[0]===view()));
   const title=id=>pages.find(x=>x[0]===id)?.[1]||'오늘의 학습';
   function go(id,study=false){
-    const b=Array.from(main.querySelectorAll('.ck-v7-nav-pill .board-tab')).find(x=>x.dataset.go===id);
+    const b=id==='landing'?main.querySelector('.ck-v7-logo'):
+      Array.from(main.querySelectorAll('.ck-v7-nav-pill .board-tab')).find(x=>x.dataset.go===id);
     if(!b)return;
     homeToStudy=study;
     lockedUntil=performance.now()+850;wheelSum=0;
@@ -43,7 +44,7 @@
   }
   function updatePager(){
     const study=document.getElementById('ck4-study');
-    const coverVisible=view()==='home'&&Boolean(study)&&study.getBoundingClientRect().top>window.innerHeight*.58;
+    const coverVisible=view()==='landing';
     pager.hidden=view()==='settings'||coverVisible;
     if(pager.hidden)return;
     const i=pageIndex();
@@ -77,7 +78,7 @@
     if(date&&date.parentElement!==pill)pill.append(date);
     pill.classList.add('ck4-unified');
     const id=view();
-    if(id==='home'){
+    if(id==='landing'){
       const stage=frame.querySelector('.ck-v7-stage');
       if(stage){
         stage.id='ck4-study';
@@ -92,7 +93,7 @@
       main.classList.remove('ck4-changing');
       clearTimeout(animTimer);
       revealObserver?.disconnect();revealObserver=null;
-      if(id==='home')reveal();
+      // No intersection reveal on tab switch: the whole glass sheet rises once.
     }
     const current=pill.querySelector('.board-tab.active');
     if(current){
@@ -102,11 +103,7 @@
         strip.scrollTo({left:Math.max(0,pos),behavior:reduced()?'instant':'smooth'});
       }
     }
-    if(id==='home'&&homeToStudy){
-      homeToStudy=false;
-      requestAnimationFrame(()=>requestAnimationFrame(scrollStudy));
-    }
-    if(id!=='home')homeToStudy=false;
+    homeToStudy=false;
   }
   new MutationObserver(records=>{
     if(records.some(x=>x.target===main))sync();
@@ -126,12 +123,10 @@
       return;
     }
     if(e.target?.closest?.('.ck-v7-logo')){
-      e.preventDefault();e.stopPropagation();homeToStudy=false;
-      if(view()==='home')window.scrollTo({top:0,behavior:reduced()?'instant':'smooth'});
-      else go('home');
-      return;
+      // Native click still bubbles to the study router's data-go="landing".
+      // Never force a click on the "오늘의 학습" tab.
+      e.preventDefault();homeToStudy=false;return;
     }
-    if(e.isTrusted&&e.target?.closest?.('.ck-v7-nav-pill .board-tab[data-go="home"]'))homeToStudy=true;
     if(e.target?.closest?.('[data-ck4-prev]')){e.preventDefault();step(-1);}
     if(e.target?.closest?.('[data-ck4-next]')){e.preventDefault();step(1);}
   },true);
@@ -148,8 +143,14 @@
     }
     return false;
   }
-  // Desktop: NEVER hijack the wheel. The active study document is one natural
-  // continuous vertical scroll; tab changes happen ONLY on explicit tab clicks.
+  // Intro has no study cards. A deliberate downward gesture follows the
+  // pencil-press cue into "오늘의 학습". Every study page keeps natural scrolling.
+  window.addEventListener('wheel',e=>{
+    if(isMobile()||view()!=='landing'||e.ctrlKey||e.metaKey||e.deltaY<62||
+       performance.now()<lockedUntil)return;
+    go('home');
+  },{passive:true});
+  // Desktop study pages: never hijack wheel, except for the garden intro.
   // Narrow screens retain the deliberate page-by-page navigation behaviour.
   window.addEventListener('wheel',e=>{
     if(!isMobile())return;

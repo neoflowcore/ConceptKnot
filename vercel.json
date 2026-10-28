@@ -25,6 +25,65 @@
           "value": "no-cache"
         }
       ]
+    },
+    {
+      "source": "/exam-pdf/:year",
+      "headers": [
+        {
+          "key": "x-vercel-enable-rewrite-caching",
+          "value": "1"
+        },
+        {
+          "key": "CDN-Cache-Control",
+          "value": "public, max-age=3600"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=300"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/exam-pdf/2025",
+      "destination": "https://gosi24.com/wp-content/uploads/2026/10/2025-exam-2996-78fb20b4cdfb.pdf"
+    },
+    {
+      "source": "/exam-pdf/2024",
+      "destination": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf"
+    },
+    {
+      "source": "/exam-pdf/2023",
+      "destination": "https://gosi24.com/wp-content/uploads/2026/10/2023-exam-2996-e8775dd8b058.pdf"
+    },
+    {
+      "source": "/exam-pdf/2022",
+      "destination": "https://gosi24.com/wp-content/uploads/2026/10/2022-exam-2996-3e75d06e4d31.pdf"
+    },
+    {
+      "source": "/exam-pdf/2021",
+      "destination": "https://gosi24.com/wp-content/uploads/2026/10/2021-exam-2996-817ab1c7e992.pdf"
+    },
+    {
+      "source": "/exam-pdf/2020",
+      "destination": "https://gosi24.com/wp-content/uploads/2026/10/2020-exam-2996-e81707455fb1.pdf"
+    },
+    {
+      "source": "/exam-pdf/2019",
+      "destination": "https://gosi24.com/wp-content/uploads/2026/10/2019-exam-2996-761217194151.pdf"
+    },
+    {
+      "source": "/exam-pdf/2018",
+      "destination": "https://gosi24.com/wp-content/uploads/2026/10/2018-exam-2996-bd7bd037f621.pdf"
+    },
+    {
+      "source": "/exam-pdf/2017",
+      "destination": "https://gosi24.com/wp-content/uploads/2026/10/2017-exam-2996-e4d2d5d5fceb.pdf"
+    },
+    {
+      "source": "/exam-pdf/2016",
+      "destination": "https://gosi24.com/wp-content/uploads/2026/10/2016-exam-2996-02c9997c45d8.pdf"
     }
   ]
 }

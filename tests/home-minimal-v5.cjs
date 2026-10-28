@@ -4,7 +4,7 @@ const base=path.resolve(__dirname,'..'),read=p=>fs.readFileSync(path.join(base,p
 const html=read('index.html'),nav=read('assets/ck-navigation-v5.js'),css=read('home-scroll-v5.css'),sw=read('sw.js');
 assert.match(html,/home-scroll-v5\.css/);
 assert.match(html,/ck-navigation-v5\.js/);
-assert.match(html,/conceptknot-release" content="conceptknot-pdf-pencil-v15"/);
+assert.match(html,/conceptknot-release" content="conceptknot-garden-flow-v16"/);
 assert.match(html,/experience-v13\.css/);
 assert.doesNotMatch(nav,/한 문제씩, 매일\.|SCROLL TO EXPLORE|<aside class="ck4-note"/);
 assert.match(nav,/section\.replaceChildren\(\)/);
@@ -12,7 +12,7 @@ assert.match(nav,/scrollableChild/);
 assert.match(css,/\.ck4-cover/);
 assert.match(css,/background:transparent!important/);
 assert.match(css,/\.ck-v7-nav-pill\.ck4-unified/);
-assert.match(sw,/conceptknot-study-v15/);
+assert.match(sw,/conceptknot-study-v16/);
 assert.match(read('vercel.json'),/"deploymentEnabled": false/);
 new vm.Script(nav,{filename:'assets/ck-navigation-v5.js'});
-console.log('PASS: full-bleed animated garden, zero intro card, compact header and navigation');
+console.log('PASS: landing garden separated from Today cards; intro card removed');

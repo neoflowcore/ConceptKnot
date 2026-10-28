@@ -39,6 +39,6 @@ test('popup right third and multi-monitor geometry copied from LexLoom',()=>{
 });
 test('script syntax and cache revision are valid',()=>{
  assert.doesNotThrow(()=>new Function(script));
- assert.match(sw,/conceptknot-study-v15/);
- assert.match(html,/conceptknot-pdf-pencil-v15/);
+ assert.match(sw,/conceptknot-study-v16/);
+ assert.match(html,/conceptknot-garden-flow-v16/);
 });

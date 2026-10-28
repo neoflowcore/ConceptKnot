@@ -85,7 +85,7 @@ body{font-family:Pretendard,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;bac
 <link rel="stylesheet" href="./design-v2-glass.css" media="all">
 <link rel="stylesheet" href="./ui-fix-v3.css" media="all">
 <link rel="stylesheet" href="./home-scroll-v5.css" media="all">
-<meta name="conceptknot-release" content="conceptknot-pdf-pencil-v15">
+<meta name="conceptknot-release" content="conceptknot-garden-flow-v16">
 <link rel="stylesheet" href="./workspace-glass-v6.css" media="all">
 <link rel="stylesheet" href="./experience-v9.css" media="all">
 <link rel="stylesheet" href="./experience-v10.css" media="all">
@@ -93,6 +93,7 @@ body{font-family:Pretendard,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;bac
 <link rel="stylesheet" href="./experience-v13.css" media="all">
 <link rel="stylesheet" href="./experience-v14.css" media="all">
 <link rel="stylesheet" href="./experience-v15.css" media="all">
+<link rel="stylesheet" href="./experience-v16.css" media="all">
 </head>
 <body>
 <a href="#main" class="skip-link">본문으로 이동</a>
@@ -228,11 +229,11 @@ const CONTENT=window.RECALL_CONTENT, EXAMS=window.RECALL_EXAMS, KEYS=window.RECA
 if(!CONTENT || !EXAMS || !KEYS){document.getElementById('main').textContent='학습 데이터를 읽지 못했습니다. 파일을 다시 확인하세요.';return;}
 const STORAGE='recallgraph-first-exam-v1';
 const DAY=86400000;
-const names={listen:'문제·정답 듣기',typing:'분필 타이핑',visual:'그림으로 기억',calc:'계산문제 집중',home:'오늘의 학습',reverse:'기출→이론 학습',theory:'핵심이론·능동회상',quiz:'기출형 연습',exam:'10개년 기출',venn:'비교 다이어그램',wrong:'오답·복습',plan:'4일 학습계획',final:'시험 직전 최종 노트',settings:'내 데이터'};
+const names={landing:'CONCEPTKNOT 첫 화면',listen:'문제·정답 듣기',typing:'분필 타이핑',visual:'그림으로 기억',calc:'계산문제 집중',home:'오늘의 학습',reverse:'기출→이론 학습',theory:'핵심이론·능동회상',quiz:'기출형 연습',exam:'10개년 기출',venn:'비교 다이어그램',wrong:'오답·복습',plan:'4일 학습계획',final:'시험 직전 최종 노트',settings:'내 데이터'};
 const nav=[['home','▦'],['reverse','⚡'],['theory','◈'],['visual','◇'],['typing','⌨'],['listen','♫'],['quiz','✎'],['calc','÷'],['exam','▤'],['venn','◉'],['wrong','↻'],['plan','▣'],['final','▤']];
 const todayISO=()=>new Date().toLocaleDateString('sv-SE',{timeZone:'Asia/Seoul'});
 const dday=()=>Math.max(0,Math.ceil((new Date('2026-10-31T00:00:00+09:00').getTime()-Date.now())/DAY));
-const defaults={typingMode:'official',typingPick:0,typingYear:'all',typingHistory:[],tts:{rate:1.5,voice:''},spokenTexts:{},ink:{},chalk:{color:0,notes:{},practice:{}},view:'home',reverseState:{mode:'practice',id:'',step:0,firstChoice:0,transferChoice:0,retryChoice:0,recallRating:null,year:2025,number:1,showOfficialKey:false},reverseProgress:{},officialLinks:{},subject:'estate',year:2025,examQuestion:1,answers:{},graded:{},importedKeys:{},quizIndex:0,quizAnswers:{},theoryIndex:0,flashShown:false,flashVisits:{},reviews:{},compare:'v1',mistakes:{},notes:{},timerRemaining:1500,timerRunning:false,timerEnd:0,pomodoros:0,pomodoroPhase:'focus',pomodoroFocusSeconds:1500,pomodoroBreakSeconds:300,dailyTotals:{},studySubject:{},topicFilter:'all',showPdf:true,showExamKey:false,showAllMarks:false,ck10FontSize:18,ck10CustomColor:'#8ee5ff',ck9SpenMode:false,ck9SpenTool:'pen',ck9SpenWidth:3.2};
+const defaults={typingMode:'official',typingPick:0,typingYear:'all',typingHistory:[],tts:{rate:1.5,voice:''},spokenTexts:{},ink:{},chalk:{color:0,notes:{},practice:{}},view:'landing',reverseState:{mode:'practice',id:'',step:0,firstChoice:0,transferChoice:0,retryChoice:0,recallRating:null,year:2025,number:1,showOfficialKey:false},reverseProgress:{},officialLinks:{},subject:'estate',year:2025,examQuestion:1,answers:{},graded:{},importedKeys:{},quizIndex:0,quizAnswers:{},theoryIndex:0,flashShown:false,flashVisits:{},reviews:{},compare:'v1',mistakes:{},notes:{},timerRemaining:1500,timerRunning:false,timerEnd:0,pomodoros:0,pomodoroPhase:'focus',pomodoroFocusSeconds:1500,pomodoroBreakSeconds:300,dailyTotals:{},studySubject:{},topicFilter:'all',showPdf:true,showExamKey:false,showAllMarks:false,ck10FontSize:18,ck10CustomColor:'#8ee5ff',ck9SpenMode:false,ck9SpenTool:'pen',ck9SpenWidth:3.2};
 let state={...defaults};
 try{const p=JSON.parse(localStorage.getItem(STORAGE)||'{}');if(p && typeof p==='object'){for(const k in defaults){if(Object.prototype.hasOwnProperty.call(p,k))state[k]=p[k];}}}catch(e){console.warn('기존 학습기록을 읽지 못했습니다',e);}
 if(!['estate','civil'].includes(state.subject))state.subject='estate';
@@ -263,24 +264,25 @@ function tabs(){return `<div class="subject-tabs"><button class="subject-tab ${s
 function renderNav(){const el=$('#side-nav');el.innerHTML=nav.map(([view,icon])=>`<button class="nav-item ${state.view===view?'active':''}" data-go="${view}" aria-current="${state.view===view?'page':'false'}"><span class="nav-icon" aria-hidden="true">${icon}</span>${names[view]}${view==='exam'?'<span class="nav-new">10년</span>':''}</button>`).join('');$('#breadcrumb-page').textContent=names[state.view];$('#sidebar-dday').textContent=dday()?`D-${dday()}`:'시험일';$('#live-date').textContent=new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',month:'long',day:'numeric',weekday:'short'}).format(new Date());$('#mobile-subject-toggle').innerHTML=tabs();}
 function changeView(view){
  if(!names[view])return;
- if(view===state.view){window.scrollTo({top:0,behavior:'smooth'});return;}
- const commit=()=>{
-   state.view=view;save();render();
-   window.scrollTo({top:0,behavior:'instant'});
-   $('.sidebar').classList.remove('open');
- };
- const reduced=window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
- if(!reduced&&typeof document.startViewTransition==='function'){
-   document.documentElement.classList.add('ck15-transition');
-   try{
-     const transition=document.startViewTransition(commit);
-     transition.finished.then(()=>document.documentElement.classList.remove('ck15-transition'),
-       ()=>document.documentElement.classList.remove('ck15-transition'));
-     return;
-   }catch(e){document.documentElement.classList.remove('ck15-transition');}
+ if(view===state.view){
+  window.scrollTo({top:0,behavior:window.matchMedia?.('(prefers-reduced-motion:reduce)')?.matches?'instant':'smooth'});
+  return;
  }
- commit();
+ const reduced=Boolean(window.matchMedia?.('(prefers-reduced-motion:reduce)')?.matches);
+ const prior=state.view;
+ // Garden stays mounted. Stage cards animate upward on a Gaussian glass layer
+ // without ViewTransition's old/new full-background double flash.
+ document.documentElement.classList.remove('ck15-transition','ck16-reveal');
+ state.view=view;save();render();window.scrollTo({top:0,behavior:'instant'});
+ $('.sidebar')?.classList.remove('open');
+ document.body.dataset.ck16From=prior;
+ if(view!=='landing'&&!reduced){
+  document.documentElement.classList.add('ck16-reveal');
+  clearTimeout(window.__ck16TransitionTimer);
+  window.__ck16TransitionTimer=setTimeout(()=>document.documentElement.classList.remove('ck16-reveal'),570);
+ }
 }
+
 function filteredTheory(){return theory().filter(c=>state.topicFilter==='all'||c.topic===state.topicFilter);}
 function theoryStats(){const list=theory();return {total:list.length,done:list.filter(c=>state.flashVisits[c.id]?.correct).length,seen:list.filter(c=>state.flashVisits[c.id]).length};}
 function quizStats(){const list=quizzes();return {total:list.length,done:list.filter(q=>state.quizAnswers[q.id]!=null).length,correct:list.filter(q=>Number(state.quizAnswers[q.id])===q.ok).length};}
@@ -768,8 +770,8 @@ function renderExam(){const y=yearManifest(),[start,end]=examRange();if(state.ex
 return `${titleBlock('공식 기출 10개년 · 실전 답안지','기출 원문은 왼쪽 PDF에서, 답안은 오른쪽 OMR에 마킹하세요. A형 기준 최종정답을 사용합니다.','PAST EXAM / OFFICIAL PAPER')}${tabs()}
 <div class="year-row" role="group" aria-label="기출 연도">${EXAMS.map(ex=>`<button class="year-tab ${yr===ex.year?'active':''}" data-year="${ex.year}">${ex.year}${ex.autoGrade?' ✓':''}</button>`).join('')}</div>
 <div class="exam-label" style="margin-bottom:14px"><span class="pill ${key?'green':'orange'}">${yr} 제${y.round}회</span><span class="pill">${state.subject==='estate'?'1~40번 · 부동산학개론':'41~80번 · 민법'}</span><span>${key?'최종정답 자동채점 지원':'최종정답 수동입력 후 채점 지원'}</span></div>
-<div class="exam-layout"><section class="pdf-panel"><div class="pdf-panel-header"><div><strong>시험 문제 원문</strong><div class="small muted">${yr}년 1차 문제지 · 원문 페이지에서 A형 확인 필수</div></div><div class="flex" style="gap:9px;flex-wrap:wrap"><a class="btn secondary" href="${esc(y.pdf)}" target="_blank" rel="noopener noreferrer">↗ 원문 열기</a><button class="btn secondary" data-action="pdf-toggle">${state.showPdf?'PDF 접기':'PDF 보기'}</button></div></div>
-${state.showPdf?`<section class="ck15-pdf-host" data-ck15-pdf-year="${yr}" data-ck15-pdf-source="${esc(localPdfUrl&&lastPdfYear===yr?localPdfUrl:y.pdf)}" aria-label="${yr}년 시험 원문 PDF 필기 도구">
+<div class="exam-layout" data-ck16-split-grid="exam"><section class="pdf-panel"><div class="pdf-panel-header"><div><strong>시험 문제 원문</strong><div class="small muted">${yr}년 1차 문제지 · 원문 페이지에서 A형 확인 필수</div></div><div class="flex" style="gap:9px;flex-wrap:wrap"><a class="btn secondary" href="${esc(y.pdf)}" target="_blank" rel="noopener noreferrer">↗ 원문 열기</a><button class="btn secondary" data-action="pdf-toggle">${state.showPdf?'PDF 접기':'PDF 보기'}</button></div></div>
+${state.showPdf?`<section class="ck15-pdf-host" data-ck15-pdf-year="${yr}" data-ck15-pdf-source="${esc(localPdfUrl&&lastPdfYear===yr?localPdfUrl:`/exam-pdf/${yr}`)}" aria-label="${yr}년 시험 원문 PDF 필기 도구">
  <div class="ck15-pdf-tools" role="toolbar" aria-label="원문 PDF 확대·이동·필기">
   <div class="ck15-pdf-toolgroup"><button type="button" data-ck15-tool="hand" aria-pressed="true" title="마우스 드래그로 이동">이동</button><button type="button" data-ck15-tool="pen" aria-pressed="false" title="펜 또는 마우스 필기">✎ 펜</button><button type="button" data-ck15-tool="eraser" aria-pressed="false" title="획을 탭하여 지우기">지우개</button><label aria-label="펜 색상"><input type="color" data-ck15-color value="#e75b65"></label></div>
   <div class="ck15-pdf-toolgroup"><button type="button" data-ck15-zoom="-1" title="PDF 축소">−</button><output data-ck15-zoom-value>100%</output><button type="button" data-ck15-zoom="1" title="PDF 확대">＋</button><button type="button" data-ck15-fit title="가로 맞춤">맞춤</button></div>
@@ -782,8 +784,9 @@ ${state.showPdf?`<section class="ck15-pdf-host" data-ck15-pdf-year="${yr}" data-
  </div>
  <div class="ck15-pdf-fallback" data-ck15-fallback hidden><p>원격 PDF는 사이트의 접근 정책으로 직접 편집할 수 없을 수 있습니다. 아래에서 원문 파일을 선택하면 브라우저 안에서 필기할 수 있습니다.</p><div class="pdf-viewport"><iframe title="${yr}년 원문 PDF 기본 보기" src="${esc(localPdfUrl&&lastPdfYear===yr?localPdfUrl:y.pdf)}#toolbar=1" loading="lazy" referrerpolicy="no-referrer"></iframe></div></div>
  <div class="ck15-pdf-help">펜·S Pen으로 PDF 바로 필기 · 손가락 두 개로 확대 · 이동 도구에서 드래그 · 더블클릭 후 세로 드래그 확대/축소 · Ctrl + 휠 확대 · 필기는 로컬 저장</div>
-</section><div class="small muted" style="padding:10px 15px">원격 PDF가 바로 열리지 않으면 아래에서 공식 PDF 파일을 선택하세요. 선택한 파일은 서버에 업로드하지 않습니다.</div>`:''}
+</section><div class="small muted" style="padding:10px 15px">공식 기출은 우선 같은 사이트의 읽기 전용 경로로 연결합니다. 연결 실패 시 원문 PDF 파일을 선택해 필기하세요. 선택 파일은 서버에 업로드되지 않습니다.</div>`:''}
 <div style="padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap"><label class="small">직접 받은 PDF 열기 <input type="file" accept="application/pdf,.pdf" id="pdf-upload" style="max-width:230px;font-size:11px"></label><div class="flex" style="gap:10px"><a href="${esc(y.original)}" target="_blank" rel="noopener noreferrer" class="panel-link">Q-Net 원본 게시판 ↗</a><a href="${esc(y.answerPdf)}" target="_blank" rel="noopener noreferrer" class="panel-link">공개 정답 PDF ↗</a></div></div></section>
+<div class="ck16-column-divider" data-ck16-split aria-label="PDF와 OMR 카드 좌우 너비 조절" aria-orientation="vertical" role="separator" tabindex="0" aria-valuemin="30" aria-valuemax="75" aria-valuenow="55"><span aria-hidden="true" class="ck16-grip">⋮</span></div>
 <section class="exam-sheet">${officialInlineHtml(yr,n)}<div class="panel-head"><h3>실전 OMR · ${esc(subject().short)}</h3><span class="pill green">${done}/40 마킹</span></div><div class="progress-shell"><div class="progress-fill" style="width:${done/40*100}%"></div></div>
 <div class="bubble-grid">${Array.from({length:40},(_,i)=>start+i).map(i=>`<button class="bubble ${state.examQuestion===i?'current':''} ${state.answers[`${yr}-${i}`]!=null?'marked':''} ${graded&&key&&state.answers[`${yr}-${i}`]!=null?(isCorrect(i,state.answers[`${yr}-${i}`])?'correct':'incorrect'):''}" data-exam-question="${i}" title="${i}번">${i}</button>`).join('')}</div>
 <div class="answer-box"><div class="flex flex-between"><div class="answer-large">${n}번 문제</div><button class="btn secondary" data-tts-exam>문제·정답 듣기 설정</button><span class="muted small">${answer!=null?'선택 '+answer+'번':'아직 미선택'}</span></div><p class="small muted">왼쪽 문제지의 <strong>${n}번</strong>을 읽고 답을 선택하세요.</p><div class="bubble-options">${[1,2,3,4,5].map(i=>`<button class="bubble-opt ${answer===i?'picked':''}" data-exam-mark="${i}" aria-label="${i}번 선택">${i}</button>`).join('')}</div><div class="exam-nav"><button class="btn secondary" data-action="exam-prev" ${n===start?'disabled':''}>← 이전</button><span class="muted small">${n-start+1} / 40</span><button class="btn secondary" data-action="exam-next" ${n===end?'disabled':''}>다음 →</button></div></div>
@@ -993,7 +996,7 @@ document.addEventListener('click',e=>{const rate=e.target.closest('[data-rate-pr
 document.addEventListener('change',e=>{if(e.target.id==='neural-voice'){ttsSettings().neuralVoice=e.target.value;save();}});
 
 document.addEventListener('click',e=>{const b=e.target.closest('[data-typing-year]');if(b){state.typingYear=b.dataset.typingYear;state.typingPick=0;save();render();}});
-function render(){ttsStop(false);inkFlush();renderNav();const renderers={home:renderHome,reverse:renderReverse,theory:renderTheory,quiz:renderQuiz,exam:renderExam,venn:renderVenn,wrong:renderWrong,plan:renderPlan,final:()=>'<div id="ck10-final-root"></div>',settings:renderSettings,calc:renderCalc,visual:renderVisual,typing:renderTyping,listen:renderListen};$('#main').innerHTML=boardFrame(renderers[state.view]());refreshTimerDisplay();chalkMount();inkMount();ttsMount();bookScroll();}
+function render(){ttsStop(false);inkFlush();renderNav();const renderers={landing:()=>'',home:renderHome,reverse:renderReverse,theory:renderTheory,quiz:renderQuiz,exam:renderExam,venn:renderVenn,wrong:renderWrong,plan:renderPlan,final:()=>'<div id="ck10-final-root"></div>',settings:renderSettings,calc:renderCalc,visual:renderVisual,typing:renderTyping,listen:renderListen};$('#main').innerHTML=boardFrame(renderers[state.view]());refreshTimerDisplay();chalkMount();inkMount();ttsMount();bookScroll();}
 function setSubject(s){if(!CONTENT.subjects[s])return;state.subject=s;state.topicFilter='all';state.theoryIndex=0;state.flashShown=false;state.quizIndex=0;state.typingPick=0;state.examQuestion=s==='estate'?1:41;state.compare=venns()[0].id;rs().id='';rs().number=s==='estate'?1:41;rs().step=0;rs().firstChoice=0;rs().retryChoice=0;rs().transferChoice=0;save();render();}
 function markTheory(pass){const cs=filteredTheory();const c=cs[state.theoryIndex];if(!c)return;state.flashVisits[c.id]={correct:pass,at:Date.now()};state.reviews[c.id]=new Date(Date.now()+(pass?2*DAY:DAY)).toISOString();state.flashShown=false;if(state.theoryIndex<cs.length-1)state.theoryIndex++;save();render();toast(pass?'기억 완료 · 이틀 뒤 복습':'복습 예약 · 내일 다시 떠올리기');}
 function markQuiz(val){const q=quizzes()[state.quizIndex];state.quizAnswers[q.id]=val;const id='quiz-'+q.id;if(val===q.ok){if(state.mistakes[id])state.mistakes[id].resolved=true;}else{state.mistakes[id]={id,type:'quiz',s:state.subject,label:q.q,topic:q.topic,answer:val,correct:String(q.ok),why:q.why,updated:Date.now(),resolved:false};}save();render();}
@@ -1475,7 +1478,7 @@ window.addEventListener('beforeunload',()=>{if(localPdfUrl)URL.revokeObjectURL(l
     const ctx=context(),date=new Date().toLocaleDateString('ko-KR',{timeZone:'Asia/Seoul',month:'long',day:'numeric',weekday:'short'});
     return `<div class="ck-v7-mainframe"><header class="ck-v7-global-nav">
       <div class="ck-v7-nav-pill">
-        <a href="#main" class="ck-v7-logo" data-go="home" aria-label="ConceptKnot 오늘의 학습">Concept<b>Knot</b></a>
+        <a href="#main" class="ck-v7-logo" data-go="landing" aria-label="CONCEPTKNOT 정원 첫 화면">Concept<b>Knot</b></a>
         <nav class="board-tabs" aria-label="전체 학습 메뉴">
           ${designNav.map(([page,label])=>`<button type="button" class="board-tab ${page===state.view?'active':''}" data-go="${page}" aria-current="${page===state.view?'page':'false'}">${label}</button>`).join('')}
         </nav>
@@ -2270,5 +2273,6 @@ render();setInterval(timerTick,500);
 <script src="./assets/ck-study-extensions-v10.js" defer></script>
 <script src="./assets/ck-experience-v14.js" defer></script>
 <script src="./assets/ck-pdf-workspace-v15.js" defer></script>
+<script src="./assets/ck-layout-v16.js" defer></script>
 </body>
 </html>

@@ -26,13 +26,13 @@ test('dark theme covers visual scenes, quiz question text, stats, buttons, PDF a
  assert.match(css,/\.ck15-pdf-tools button/);
  assert.match(css,/html\[data-ck-theme="dark"\]/);
 });
-test('fast stage-only crossfade replaces legacy 650ms reveal',()=>{
- assert.match(html,/ck15-transition/);
- assert.match(css,/::view-transition-old\(ck15-stage\)/);
- assert.match(css,/::view-transition-new\(ck15-stage\)/);
- assert.match(css,/\.105s/);assert.match(css,/\.19s/);
+test('new Gaussian sheet rise replaces legacy stage crossfade and reveal',()=>{
+ assert.match(html,/ck16-reveal/);
+ assert.match(read('experience-v16.css'),/ck16-sheet-rise/);
+ assert.match(read('experience-v16.css'),/blur\(19px\)/);
+ assert.match(read('experience-v16.css'),/\.52s/);
  assert.doesNotMatch(nav,/main\.classList\.add\('ck4-changing'\)/);
- assert.match(nav,/if\(id==='home'\)reveal\(\)/);
+ assert.match(nav,/if\(id==='landing'\)/);
 });
 test('exam OMR follows registered question without duplicate freehand pad',()=>{
  const a=html.indexOf('function renderExam(){'),b=html.indexOf('function examScore(',a);
@@ -74,7 +74,7 @@ test('pointer hit testing uses actual page coordinates',()=>{
 test('all dynamic code parses, cache resources are current',()=>{
  for(const [i,m] of [...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)].entries())new vm.Script(m[1],{filename:'inline'+i});
  new vm.Script(nav);new vm.Script(tool);new vm.Script(caret);
- assert.match(sw,/conceptknot-study-v15/);
+ assert.match(sw,/conceptknot-study-v16/);
  assert.match(sw,/experience-v15\.css/);
  assert.match(sw,/ck-pdf-workspace-v15\.js/);
  assert.match(read('vercel.json'),/"deploymentEnabled": false/);

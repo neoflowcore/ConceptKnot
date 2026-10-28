@@ -1,6 +1,7 @@
 import * as THREE from '../vendor/three.module.min.js';
 import { buildStudyMachine } from './ck-kinetic-garden-v8.js';
 import { buildSleepingCub } from './ck-sleeping-cub-v9.js';
+import { buildPencilCub } from './ck-pointing-cub-v16.js';
 
 // ConceptKnot 3D Garden v3 — original procedural geometry, not a Clay.com asset.
 // Three.js is vendored (MIT) to avoid runtime CDN/network dependencies.
@@ -15,7 +16,7 @@ const rand = (() => { let seed = 20261028; return () => ((seed = (seed * 1664525
 const lerp = THREE.MathUtils.lerp;
 const clamp = THREE.MathUtils.clamp;
 const v3 = (x, y, z) => new THREE.Vector3(x, y, z);
-const scenes = { trees: [], clouds: [], bird: null, machine: null, cub:null };
+const scenes = { trees: [], clouds: [], bird: null, machine: null, cub:null, pressCub:null };
 const pastel = [0x3c9a55, 0x287a54, 0x76b939, 0x205f49, 0xe7bf47];
 const flowerColors = [0xffc44f, 0xff789b, 0xffe28a, 0x6db9f3, 0xff8753];
 let root, renderer, camera, scene, materialCache, clock, frameId = 0;
@@ -291,6 +292,7 @@ function createRenderer() {
   sky();ground();grass();flowers();diffuseClouds();trees();
    scenes.machine=buildStudyMachine(THREE,scene,h,QUALITY);
    scenes.cub=buildSleepingCub(THREE,scene,h,QUALITY);
+  scenes.pressCub=buildPencilCub(THREE,scene,h,QUALITY);
    bird();
   host.insertBefore(canvas,host.firstChild);
   root=host;
@@ -341,6 +343,7 @@ function tick(ms){
   // Time-locked ball passes animate before the bird's peck decisions.
   scenes.machine?.animate(playTime);
   scenes.cub?.animate(playTime);
+  scenes.pressCub?.animate(playTime);
   if(scenes.bird){
     const b=scenes.bird;
     const targetX=clamp(pointer.x*.16,-.16,.16)*intensity;
