@@ -1,4 +1,5 @@
 import * as THREE from '../vendor/three.module.min.js';
+import { buildStudyMachine } from './ck-kinetic-garden-v8.js';
 
 // ConceptKnot 3D Garden v3 — original procedural geometry, not a Clay.com asset.
 // Three.js is vendored (MIT) to avoid runtime CDN/network dependencies.
@@ -13,8 +14,8 @@ const rand = (() => { let seed = 20261028; return () => ((seed = (seed * 1664525
 const lerp = THREE.MathUtils.lerp;
 const clamp = THREE.MathUtils.clamp;
 const v3 = (x, y, z) => new THREE.Vector3(x, y, z);
-const scenes = { trees: [], clouds: [], bird: null, seesaw: null, rollingBalls: [] };
-const pastel = [0x75c957, 0x4eb65e, 0x2b9d74, 0x217f63, 0xc0d956];
+const scenes = { trees: [], clouds: [], bird: null, machine: null };
+const pastel = [0x3c9a55, 0x287a54, 0x76b939, 0x205f49, 0xe7bf47];
 const flowerColors = [0xffc44f, 0xff789b, 0xffe28a, 0x6db9f3, 0xff8753];
 let root, renderer, camera, scene, materialCache, clock, frameId = 0;
 let resizeObserver, last = 0, pointer = {x: 0, y: 0}, elapsed = 0, firstDraw = false;
@@ -55,9 +56,11 @@ function ground() {
     const x = pos.getX(i), z = pos.getZ(i), y = h(x, z);
     pos.setY(i, y);
     const nr = Math.sin(x * 1.32 + z * 2.17) * .045 + Math.cos(z * 1.59 - x * .62) * .038;
-    const brush = .93 + nr + .075 * Math.sin(x * .13 + z * .03) + .035*Math.sin(x*.41+z*.23);
+    const broad = .79 + .21*Math.sin(x*.13 + z*.027)**2;
+    const shade = .84 + .17*Math.cos(z*.094-x*.11) + nr*.42;
+    const brush = clamp(broad*shade + .055*Math.sin(x*.41+z*.23),.51,1.17);
     const t = clamp(((-z) - 23) / 120, 0, 1);
-    col.setRGB(lerp(.15, .33, t) * brush, lerp(.52, .66, t) * brush, lerp(.17, .25, t) * brush);
+    col.setRGB(lerp(.12,.27,t)*brush,lerp(.40,.57,t)*brush,lerp(.13,.22,t)*brush);
     colors.push(col.r, col.g, col.b);
   }
   geom.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
@@ -105,55 +108,77 @@ function diffuseClouds() {
     scene.add(cloud);
   }
 }
-function tree(x, z, size, paletteIndex, sways=true) {
-  const height = 4.6 * size;
-  const group = new THREE.Group();
-  group.position.set(x, h(x,z), z);
-  const bark = pbr(0x806a51,.92);
-  const barkHighlight = pbr(0x9e815c,.9);
-  const trunk = mesh(new THREE.CylinderGeometry(.24*size,.38*size,height,9,2),bark);
-  trunk.position.y=height/2;
-  group.add(trunk);
-  const crown = new THREE.Group();
-  crown.position.set(0,height*.85,0);
-  const sGeo = new THREE.IcosahedronGeometry(1,2);
-  const colors=[0x299d62,0x4db75c,0x7acb55,0x127d68,0x239d80,0xacd24a];
-  for(let i=0;i<9;i++){
-    const a=i*2.399, rr=.2+Math.sqrt(rand())*1.48;
-    const xx=Math.cos(a)*rr*size,zz=Math.sin(a)*rr*.56*size,yy=(.1+rand()*1.7)*size;
-    const leaf=pbr(colors[(paletteIndex+i)%colors.length],.93,{flatShading:false});
-    const blob=sphere(sGeo,leaf,xx,yy,zz,(.94+rand()*.42)*size,(.75+rand()*.46)*size,(.83+rand()*.30)*size);
-    crown.add(blob);
+
+function painterCone(radius,height,colorA,colorB,seed){
+  // Faceted polygons use per-triangle pigment variation: stronger light/shadow
+  // than smooth spheres and a subtly brushed, clay-painted silhouette.
+  const geometry=new THREE.ConeGeometry(radius,height,8,3).toNonIndexed();
+  const position=geometry.getAttribute('position');
+  const colors=new Float32Array(position.count*3);
+  const light=new THREE.Color(colorA),shadow=new THREE.Color(colorB),shade=new THREE.Color();
+  for(let i=0;i<position.count;i+=3){
+    const x=(position.getX(i)+position.getX(i+1)+position.getX(i+2))/3;
+    const z=(position.getZ(i)+position.getZ(i+1)+position.getZ(i+2))/3;
+    const patch=clamp(.47+.28*(x/(radius||1))+.12*Math.sin(seed+i*1.73+z*.7),.07,.92);
+    shade.copy(shadow).lerp(light,patch);
+    for(let j=0;j<3;j++){const index=(i+j)*3;colors[index]=shade.r;colors[index+1]=shade.g;colors[index+2]=shade.b;}
   }
-  // Small color-varied highlights approximate matte clay leaves / specular edges.
-  const highlights=pbr(0x9dd66e,.96,{transparent:true,opacity:.37});
-  for(let k=0;k<4;k++){
-    const a=k*2.1;
-    crown.add(sphere(sGeo,highlights,Math.sin(a)*1.05*size,(1.55+Math.sin(a)*.4)*size,Math.cos(a)*.56*size,.31*size,.24*size,.25*size));
+  geometry.setAttribute('color',new THREE.BufferAttribute(colors,3));
+  return mesh(geometry,new THREE.MeshStandardMaterial({vertexColors:true,roughness:.91,metalness:0,flatShading:true}));
+}
+function tree(x,z,size,paletteIndex,sways=true){
+  // A hexagonal colored pencil is the trunk. Layered cone needles make a
+  // recognizable pointed pine, not a round lollipop tree.
+  const group=new THREE.Group();
+  group.position.set(x,h(x,z),z);
+  const shaft=mesh(new THREE.CylinderGeometry(.19*size,.23*size,4.4*size,6),
+    pbr(paletteIndex%2?0xe6a041:0xf2bd4a,.71,{flatShading:true}));
+  shaft.position.y=2.55*size;
+  group.add(shaft);
+  const ferrule=mesh(new THREE.CylinderGeometry(.23*size,.23*size,.28*size,6),
+    pbr(0xc97b4c,.48,{flatShading:true}));
+  ferrule.position.y=.46*size;group.add(ferrule);
+  const graphite=mesh(new THREE.ConeGeometry(.23*size,.65*size,6),
+    pbr(0x263d41,.7,{flatShading:true}));
+  graphite.rotation.z=Math.PI;graphite.position.y=.19*size;group.add(graphite);
+  // Three colored flat facets on each crown layer vary with sun direction.
+  const crown=new THREE.Group();crown.position.y=3.15*size;
+  const palette=[[0x3c9b5b,0x153e38],[0x398f56,0x1d5943],[0x66a744,0x2a5841],[0x2c8e65,0x16454a]];
+  for(let tier=0;tier<4;tier++){
+    const radius=(1.81-tier*.35)*size;
+    const coneHeight=(3.65-tier*.42)*size;
+    const colors=palette[(paletteIndex+tier)%palette.length];
+    const cone=painterCone(radius,coneHeight,colors[0],colors[1],paletteIndex*11+tier*3);
+    cone.position.set(0,tier*.71*size,0);
+    cone.rotation.y=tier*.29;
+    crown.add(cone);
   }
+  // Bright needle edge inserts along the lit side, kept sparse.
+  const tip=painterCone(.54*size,1.55*size,0x89bd55,0x347e50,paletteIndex);
+  tip.position.y=2.37*size;tip.rotation.y=.21;
+  crown.add(tip);
   group.add(crown);
   scene.add(group);
-  if(sways)scenes.trees.push({crown,phase:rand()*Math.PI*2,tempo:5.2+rand()*4.2,amp:.015+rand()*.013});
+  if(sways)scenes.trees.push({crown,phase:rand()*Math.PI*2,tempo:6.3+rand()*4.6,amp:.01+rand()*.008});
   return group;
 }
-function trees() {
-  // Trees frame the educational props instead of filling the whole valley.
-  for(let i=0;i<14;i++){
-    const z=-19-rand()*97;
-    const side=i%2?-1:1;
-    const spread=20+rand()*32+(z<-70?10:0);
-    const x=side*spread;
-    const size=(.65+rand()*.93)*(z<-65?.79:1);
-    tree(x,z,size,i%6,true);
+function trees(){
+  // Pencil-pines frame both sides and avoid the center interaction track.
+  for(let i=0;i<12;i++){
+    const z=-23-rand()*96;
+    const side=i%2===0?-1:1;
+    const x=side*(25+rand()*32+(z<-68?7:0));
+    tree(x,z,(.72+rand()*.90)*(z<-75?.85:1),i%4,true);
   }
-  tree(-28,-4,1.92,2,true);
-  tree(29,-9,1.85,4,true);
+  tree(-27,-10,1.55,1,true);
+  tree(28,-13,1.72,2,true);
 }
+
 function grass() {
   const count = QUALITY ? 7900 : 2800;
   const geometry = new THREE.ConeGeometry(.045,.64,3);
   geometry.translate(0,.24,0);
-  const mat = pbr(0x5aae52,.96,{side:THREE.DoubleSide});
+  const mat = pbr(0x328b46,.95,{side:THREE.DoubleSide});
   const grass = new THREE.InstancedMesh(geometry,mat,count);
   grass.castShadow = false;grass.receiveShadow = true;
   const obj=new THREE.Object3D();const col=new THREE.Color();
@@ -164,7 +189,7 @@ function grass() {
     const s=.3+rand()*.7;
     obj.scale.set(s*.7,s*(.5+rand()*.9),s*.7);
     obj.updateMatrix();grass.setMatrixAt(i,obj.matrix);
-    col.setHex(pastel[Math.floor(rand()*pastel.length)]).multiplyScalar(.70+rand()*.4);
+    col.setHex(pastel[Math.floor(rand()*pastel.length)]).multiplyScalar(.58+rand()*.44);
     grass.setColorAt(i,col);
   }
   grass.instanceMatrix.needsUpdate=true;
@@ -201,149 +226,11 @@ function flowers() {
   const f=new THREE.Points(g,m);f.frustumCulled=false;
   scene.add(f);
 }
-function booksAndPencils() {
-  const shelf=new THREE.Group();
-  const bx=18,z=-6; shelf.position.set(bx,h(bx,z),z);
-  const colors=[0x2e83b5,0xef8a59,0x69a6a3];
-  for(let i=0;i<3;i++){
-    const book=mesh(new THREE.BoxGeometry(3.3,.64,2.0),pbr(colors[i],.53,{metalness:.02}));
-    book.position.set(i*.15,i*.68+.32,0);
-    book.rotation.y=i*.10;
-    shelf.add(book);
-    const pages=mesh(new THREE.BoxGeometry(2.95,.35,2.04),pbr(0xf0e8ce,.82));
-    pages.position.copy(book.position);pages.position.y-=.06;pages.position.x+=.15;
-    pages.rotation.copy(book.rotation);shelf.add(pages);
-  }
-  // No promotional slogan inside scenery. Simple wooden empty slate instead.
-  const slate=mesh(new THREE.BoxGeometry(3.2,2.8,.23),pbr(0x1c534e,.75));slate.position.set(4,2.75,0);
-  const border=mesh(new THREE.BoxGeometry(3.75,.21,.36),pbr(0xbb8050,.79));
-  for(const yy of [1.28,4.21]){const edge=border.clone();edge.position.set(4,yy,.14);shelf.add(edge);}
-  const edgeVert=mesh(new THREE.BoxGeometry(.22,3,.32),pbr(0xb77e4f,.78));
-  for(const xx of [2.27,5.73]){const edge=edgeVert.clone();edge.position.set(xx,2.75,.14);shelf.add(edge);}
-  shelf.add(slate);
-  scene.add(shelf);
-}
-
-function propFinish(color,roughness=.65) {
-  return new THREE.MeshPhysicalMaterial({
-    color,roughness,metalness:0,clearcoat:.22,clearcoatRoughness:.7
-  });
-}
-function place(x,z,offset=0){
-  const g=new THREE.Group();
-  g.position.set(x,h(x,z)+offset,z);
-  scene.add(g);
-  return g;
-}
-// Original tactile school objects modelled from geometry, never downloaded art.
-function learningPlayground(){
-  // Large hexagonal pencil near the left foreground.
-  const pencil=place(-19,-7,1.95);
-  pencil.rotation.set(.07,-.18,-1.13);
-  const yellow=propFinish(0xf9b433,.46);
-  const barrel=mesh(new THREE.CylinderGeometry(.4,.4,5.5,7),yellow);
-  pencil.add(barrel);
-  const wood=mesh(new THREE.ConeGeometry(.41,1.15,7),propFinish(0xffdf9b,.72));
-  wood.rotation.z=Math.PI;wood.position.y=-3.29;pencil.add(wood);
-  const graphite=mesh(new THREE.ConeGeometry(.14,.44,8),propFinish(0x344657,.52));
-  graphite.rotation.z=Math.PI;graphite.position.y=-3.94;pencil.add(graphite);
-  const band=mesh(new THREE.CylinderGeometry(.41,.41,.26,12),propFinish(0xe2a25a,.4));
-  band.position.y=2.84;pencil.add(band);
-  const eraser=mesh(new THREE.CylinderGeometry(.39,.39,.64,12),propFinish(0xef717e,.48));
-  eraser.position.y=3.28;pencil.add(eraser);
-
-  // Cream paper notebook with turquoise cover and discrete copper spiral binding.
-  const notebook=place(-25,-13,.6);
-  notebook.rotation.y=.34;
-  notebook.add(mesh(new THREE.BoxGeometry(4.7,.28,3.65),propFinish(0x2483a8,.6)));
-  const pages=mesh(new THREE.BoxGeometry(4.4,.12,3.42),propFinish(0xfff2d9,.83));
-  pages.position.y=.20;notebook.add(pages);
-  for(let k=0;k<6;k++){
-    const ring=mesh(new THREE.TorusGeometry(.18,.056,8,18),propFinish(0xeab768,.43));
-    ring.rotation.x=Math.PI/2;
-    ring.position.set(-2.05+k*.78,.31,-1.68);
-    notebook.add(ring);
-  }
-  for(let k=0;k<5;k++){
-    const line=mesh(new THREE.BoxGeometry(3.3,.014,.022),propFinish(0xa2cbd0,.9));
-    line.position.set(.15,.268,-.96+k*.46);notebook.add(line);
-  }
-
-  // A vertical memo sheet and check mark near the right perimeter.
-  const memo=place(28,-12,2.6);
-  memo.rotation.y=-.23;
-  const sheet=mesh(new THREE.BoxGeometry(3.5,4.4,.23),propFinish(0xffedc6,.8));
-  memo.add(sheet);
-  const edge=mesh(new THREE.BoxGeometry(3.5,.59,.3),propFinish(0xffb24a,.5));
-  edge.position.y=1.9;memo.add(edge);
-  for(const x of [-.89,.85]){
-    const ring=mesh(new THREE.TorusGeometry(.18,.075,8,20),propFinish(0xe37f31,.42));
-    ring.position.set(x,2.18,.2);
-    memo.add(ring);
-  }
-  for(let i=0;i<4;i++){
-    const scribble=mesh(new THREE.BoxGeometry(2.15,.035,.017),propFinish(i===1?0x73b6b1:0xc3b88d,.84));
-    scribble.position.set(.18,1.02-i*.68,.141);memo.add(scribble);
-  }
-
-  // Magnifier: physical ring, transparent lens and angled wooden handle.
-  const glass=place(24,-22,3.15);
-  glass.rotation.y=-.15;
-  const rim=mesh(new THREE.TorusGeometry(1.45,.19,12,42),propFinish(0xf2a543,.36));
-  glass.add(rim);
-  const lens=mesh(new THREE.CircleGeometry(1.39,42),
-    new THREE.MeshPhysicalMaterial({color:0x97d8f5,transparent:true,opacity:.21,depthWrite:false,metalness:0,roughness:.14,side:THREE.DoubleSide}));
-  lens.position.z=.07;glass.add(lens);
-  const grip=mesh(new THREE.CylinderGeometry(.26,.32,2.7,12),propFinish(0xef9c55,.55));
-  grip.position.set(1.45,-1.53,-.07);grip.rotation.z=-.74;glass.add(grip);
-
-  // Cheerful geometry blocks and golden triangular ruler.
-  const blocks=place(20,-4,.4);
-  const blockColors=[0x177cc7,0xfc854b,0xfed268];
-  for(let i=0;i<3;i++){
-    const b=mesh(new THREE.BoxGeometry(1.65-i*.2,1.2+i*.18,1.4),propFinish(blockColors[i],.56));
-    b.position.set(i*1.18,1.0+i*.34,-i*.33);
-    b.rotation.y=i*.15;blocks.add(b);
-  }
-  const ruler=place(27,-2,.3);
-  const rule=mesh(new THREE.BoxGeometry(5.6,.25,.95),propFinish(0xf3a944,.61));
-  rule.rotation.y=.58;ruler.add(rule);
-  for(let i=0;i<11;i++){
-    const tick=mesh(new THREE.BoxGeometry(.025,.018,i%5===0?.52:.25),propFinish(0x93612f,.86));
-    tick.position.set(-2.46+i*.49,.14,0);
-    ruler.add(tick);
-  }
-
-  // The seesaw carries a rolling, visibly striped coral ball.
-  const sx=-23,sz=-29;
-  const stand=place(sx,sz,.98);
-  stand.add(mesh(new THREE.ConeGeometry(.88,1.95,4),propFinish(0x1f9bb1,.55)));
-  const pivot=place(sx,sz,2.10);
-  const plank=mesh(new THREE.BoxGeometry(7.4,.3,1.18),propFinish(0xf7a73b,.53));
-  pivot.add(plank);
-  const ball=new THREE.Group();
-  ball.position.y=.89;
-  ball.add(mesh(new THREE.SphereGeometry(.72,24,16),propFinish(0xf35d55,.4)));
-  const stripe=mesh(new THREE.TorusGeometry(.712,.08,10,32),propFinish(0xffd8a2,.47));
-  stripe.rotation.y=.56;ball.add(stripe);
-  pivot.add(ball);
-  scenes.seesaw={pivot,ball,radius:.72};
-
-  // Blue ball rolls over the grass, following the actual triangulated surface.
-  const movingRoot=new THREE.Group();
-  const movingBody=new THREE.Group();
-  movingRoot.add(movingBody);
-  movingBody.add(mesh(new THREE.SphereGeometry(.7,24,16),propFinish(0x1984da,.39)));
-  const bandBlue=mesh(new THREE.TorusGeometry(.69,.064,10,32),propFinish(0xffd884,.48));
-  bandBlue.rotation.y=.35;movingBody.add(bandBlue);
-  scene.add(movingRoot);
-  scenes.rollingBalls.push({root:movingRoot,body:movingBody,center:19,z:-10,range:4.1,radius:.7,rate:.63,phase:1.3});
-}
-
 function bird() {
   const bird=new THREE.Group();
-  bird.position.set(-20.5,h(-20.5,1)+8.7,1);
-  bird.scale.setScalar(.95);
+  const bx=-3.4,bz=-16.7;
+  bird.position.set(bx,h(bx,bz)+6.1,bz);
+  bird.scale.setScalar(1.04);
   const teal=pbr(0x159eb5,.62),blue=pbr(0x137ebe,.52),white=pbr(0xf9f4e7,.92),beak=pbr(0xf3a54d,.58),black=pbr(0x092b3d,.28);
   const ball=new THREE.SphereGeometry(1,20,12);
   bird.add(sphere(ball,blue,0,0,0,.68,.93,.57));
@@ -371,7 +258,7 @@ function bird() {
   const perch=mesh(new THREE.CylinderGeometry(.115,.16,3.2,8),pbr(0x785942,.95));
   perch.rotation.z=Math.PI/2;perch.position.set(0,-1.25,0);bird.add(perch);
   scene.add(bird);
-  scenes.bird={group:bird,head};
+  scenes.bird={group:bird,head,baseY:bird.position.y};
 }
 function createRenderer() {
   const host=document.getElementById(HOST_ID);
@@ -385,22 +272,24 @@ function createRenderer() {
   renderer.setClearColor(0x65c6e9,1);
   renderer.outputColorSpace=THREE.SRGBColorSpace;
   renderer.toneMapping=THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure=1.24;
+  renderer.toneMappingExposure=1.09;
   renderer.shadowMap.enabled=true;
   renderer.shadowMap.type=THREE.PCFSoftShadowMap;
-  scene=new THREE.Scene();scene.fog=new THREE.FogExp2(0x9edac0,.0072);
-  const hemi=new THREE.HemisphereLight(0xd4f2ff,0x4a8f63,1.94);scene.add(hemi);
-  const sun=new THREE.DirectionalLight(0xfff0c6,2.4);
+  scene=new THREE.Scene();scene.fog=new THREE.FogExp2(0x72ac9f,.0064);
+  const hemi=new THREE.HemisphereLight(0xc7eaff,0x345c43,1.25);scene.add(hemi);
+  const sun=new THREE.DirectionalLight(0xffdb9e,2.85);
   sun.position.set(-23,46,12);sun.castShadow=true;
   sun.shadow.mapSize.set(1024,1024);
   sun.shadow.camera.left=-50;sun.shadow.camera.right=50;sun.shadow.camera.top=60;sun.shadow.camera.bottom=-40;
   sun.shadow.normalBias=.016;sun.shadow.bias=-.00025;
   scene.add(sun);
-  const ambience=new THREE.DirectionalLight(0x9beaff,.42);ambience.position.set(15,16,-20);scene.add(ambience);
+  const ambience=new THREE.DirectionalLight(0x77c4e5,.32);ambience.position.set(15,16,-20);scene.add(ambience);
   camera=new THREE.PerspectiveCamera(43,1,.1,480);
-  camera.position.set(0,10,25);
-  camera.lookAt(0,5,-35);
-  sky();ground();grass();flowers();diffuseClouds();trees();booksAndPencils();learningPlayground();bird();
+  camera.position.set(0,11,26);
+  camera.lookAt(0,6,-30);
+  sky();ground();grass();flowers();diffuseClouds();trees();
+   scenes.machine=buildStudyMachine(THREE,scene,h,QUALITY);
+   bird();
   host.insertBefore(canvas,host.firstChild);
   root=host;
   resize();
@@ -425,7 +314,7 @@ function resize(){
   camera.aspect=width/height;
   // Wider camera at portrait keeps the principal hillside and bird in the safe frame.
   camera.fov=width<600?56:width<900?49:43;
-  camera.position.z=width<850?30:25;
+  camera.position.z=width<850?30:26;
   camera.updateProjectionMatrix();
   if(firstDraw)renderer.render(scene,camera);
 }
@@ -454,22 +343,12 @@ function tick(ms){
     const head=scenes.bird.head;
     head.rotation.y=lerp(head.rotation.y,targetX,smooth);
     head.rotation.z=lerp(head.rotation.z,targetY+Math.sin(elapsed*.5)*.03*intensity,smooth);
-    scenes.bird.group.position.y+=Math.sin(elapsed*.55)*.0008*intensity;
+    scenes.bird.group.position.y=scenes.bird.baseY+Math.sin(elapsed*.67)*.052*intensity;
   }
-  if(scenes.seesaw){
-    const o=scenes.seesaw;
-    const travel=Math.sin(playTime*.86)*2.77;
-    o.pivot.rotation.z=Math.sin(playTime*.71)*.105;
-    o.ball.position.x=travel;
-    o.ball.rotation.z=-travel/o.radius;
-  }
-  for(const ball of scenes.rollingBalls){
-    const x=ball.center+Math.sin(playTime*ball.rate+ball.phase)*ball.range;
-    ball.root.position.set(x,h(x,ball.z)+ball.radius,ball.z);
-    ball.body.rotation.z=-(x-ball.center)/ball.radius;
-  }
+  // One shared rolling lap for all props; halted during study focus.
+  scenes.machine?.animate(playTime);
   camera.position.x=lerp(camera.position.x,pointer.x*.32*intensity,1-Math.exp(-dt*1.2));
-  camera.lookAt(0,5,-35);
+  camera.lookAt(0,6,-30);
   renderer.render(scene,camera);
   frameId=requestAnimationFrame(tick);
 }

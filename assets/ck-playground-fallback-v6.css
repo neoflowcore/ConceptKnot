@@ -1,22 +1,31 @@
-/* Color-rich, low-resource fallback. WebGL users receive the real rolling spheres. */
+/* Fallback for WebGL-denied/low-memory devices; v8 original central kinetic art. */
 .ck-v8-ambient:not(.ck-3d-ready) .ck-v8-art::after{
  content:"";position:absolute;inset:0;
- background:url('./assets/ck-playground-fallback-v6.svg') center center/cover no-repeat;
- pointer-events:none;z-index:2;opacity:.97;
+ background:url('./ck-playground-fallback-v6.svg') center center/cover no-repeat;
+ pointer-events:none;z-index:2;opacity:.99;
 }
 .ck-v8-ambient:not(.ck-3d-ready) .ck-v8-art::before{
- content:"";position:absolute;left:13%;bottom:23%;width:29px;height:29px;border-radius:50%;
- background:radial-gradient(circle at 28% 27%,#ffe9bd 0 9%,#fc8466 21%,#e65056 77%);
- box-shadow:0 7px 11px rgba(21,61,39,.28);pointer-events:none;z-index:3;
- animation:ck6-fallback-roll 6.8s ease-in-out infinite alternate;
+ content:"";position:absolute;left:0;top:0;z-index:3;
+ width:clamp(17px,2.1vw,31px);height:clamp(17px,2.1vw,31px);
+ border-radius:50%;pointer-events:none;
+ background:radial-gradient(circle at 24% 22%,#ffebc9 0 8%,#e74e57 24%,#a72d3c 93%);
+ box-shadow:0 5px 11px rgba(17,57,53,.34);
+ offset-path:ellipse(34% 20% at 51% 51%);
+ offset-distance:0%;
+ offset-rotate:auto;
+ animation:ck8-rolling-lap 17s linear infinite;
 }
-@keyframes ck6-fallback-roll{
- 0%{transform:translate3d(0,0,0) rotate(0deg)}
- 50%{transform:translate3d(105px,-26px,0) rotate(210deg)}
- 100%{transform:translate3d(185px,0,0) rotate(410deg)}
+@keyframes ck8-rolling-lap{
+ from{offset-distance:0%;rotate:0deg}
+ to{offset-distance:100%;rotate:2160deg}
 }
-@media(max-width:650px){
- .ck-v8-ambient:not(.ck-3d-ready) .ck-v8-art::after{background-size:auto 100%;background-position:center}
- .ck-v8-ambient:not(.ck-3d-ready) .ck-v8-art::before{bottom:17%;left:8%}
+@media(max-width:850px){
+ .ck-v8-ambient:not(.ck-3d-ready) .ck-v8-art::before{
+  offset-path:ellipse(31% 22% at 50% 49%);
+ }
 }
-@media(prefers-reduced-motion:reduce){.ck-v8-ambient:not(.ck-3d-ready) .ck-v8-art::before{animation:none!important}}
+@media(prefers-reduced-motion:reduce){
+ .ck-v8-ambient:not(.ck-3d-ready) .ck-v8-art::before{
+ animation:none!important;offset-distance:37%!important;
+ }
+}
