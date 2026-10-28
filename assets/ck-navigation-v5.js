@@ -37,14 +37,8 @@
     section.id='ck4-cover';
     section.className='ck4-cover';
     section.setAttribute('aria-label','ConceptKnot 정원 첫 화면');
-    section.innerHTML=[
-      '<aside class="ck4-note" aria-label="한 문제씩 매일">',
-      '<h2>한 문제씩, 매일.</h2>',
-      '</aside>',
-      '<button type="button" class="ck4-cue" data-ck4-target="study" aria-label="아래 오늘의 학습으로 이동">',
-      '<span>SCROLL TO EXPLORE</span><i aria-hidden="true">↓</i>',
-      '</button>'
-    ].join('');
+    // The first screen is the living landscape, without a message card.
+    section.replaceChildren();
     return section;
   }
   function updatePager(){
