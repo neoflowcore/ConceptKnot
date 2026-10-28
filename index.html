@@ -81,6 +81,7 @@ body{font-family:Pretendard,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;bac
 @media(max-width:700px){.typing-board{padding:16px}.typing-source-text{font-size:18px}.typing-source-card{padding:16px}}
 </style>
 <link rel="stylesheet" href="./clay-workspace.css" media="all">
+<link rel="stylesheet" href="./design-locked-v1.css" media="all">
 </head>
 <body>
 <a href="#main" class="skip-link">본문으로 이동</a>
@@ -1247,6 +1248,371 @@ window.addEventListener('beforeunload',()=>{if(localPdfUrl)URL.revokeObjectURL(l
     const next=e.key==='Home'?300:current+(e.key==='ArrowRight'?20:-20)*(kind==='right'?-1:1);
     setPanelSize(kind,next);save();
   });
+})();
+(function installLockedDesignV1(){
+  const designNav=[
+    ['home','오늘의 학습'],['theory','핵심 이론'],['visual','그림 연상'],
+    ['typing','분필 타이핑'],['listen','문제·정답'],['reverse','기출 → 이론'],
+    ['quiz','문제 풀이'],['calc','계산 집중'],['exam','10개년 기출'],
+    ['venn','비교 도형'],['wrong','오답 복습'],['plan','학습 계획']
+  ];
+  defaults.v7LeftWidth=null;
+  defaults.v7MigratedNotes={};
+  defaults.v7HistoryOpen=false;
+  // V6 registered questionNotes after the initial defaults-based restore.
+  // Rehydrate these fields explicitly before migrating the old note records.
+  try{
+    const saved=JSON.parse(localStorage.getItem(STORAGE)||'{}');
+    if(saved&&typeof saved==='object'){
+      for(const k of ['questionNotes','workspaceLayout','workspaceInputMode','v7LeftWidth','v7MigratedNotes','v7HistoryOpen']){
+        if(Object.prototype.hasOwnProperty.call(saved,k))state[k]=saved[k];
+      }
+    }
+  }catch(e){console.warn('보조 화면 상태 복원 실패',e);}
+  if(!state.questionNotes||typeof state.questionNotes!=='object'||Array.isArray(state.questionNotes))state.questionNotes={};
+  if(!state.v7MigratedNotes||typeof state.v7MigratedNotes!=='object'||Array.isArray(state.v7MigratedNotes))state.v7MigratedNotes={};
+  if(!Number.isFinite(Number(state.v7LeftWidth))||Number(state.v7LeftWidth)<260)state.v7LeftWidth=null;
+  state.v7HistoryOpen=Boolean(state.v7HistoryOpen);
+
+  function context(){
+    const v=state.view;
+    if(v==='typing'){
+      const c=typingConcept();
+      const official=/^official-(\d{4})-(\d+)$/.exec(c.id);
+      if(official)return {key:'official:'+official[1]+'-'+official[2],label:official[1]+'년 '+official[2]+'번'};
+      if(c.id.startsWith('type-'))return {key:'practice:'+c.id.slice(5),label:c.label||c.t};
+      return {key:'theory:'+c.id,label:c.label||c.t};
+    }
+    if(v==='reverse'&&rs().mode==='official')return {key:'official:'+rs().year+'-'+rs().number,label:rs().year+'년 '+rs().number+'번'};
+    if(v==='exam')return {key:'official:'+state.year+'-'+state.examQuestion,label:state.year+'년 '+state.examQuestion+'번'};
+    if(v==='quiz'){
+      const q=quizzes()[state.quizIndex];
+      return {key:'practice:'+(q?.id||'initial'),label:'연습 '+(state.quizIndex+1)+'번'};
+    }
+    if(v==='theory'){
+      const c=filteredTheory()[state.theoryIndex]||theory()[0];
+      return {key:'theory:'+(c?.id||state.subject),label:c?.t||subject().short};
+    }
+    if(v==='reverse'){
+      const q=reverseQuestion();
+      return {key:'practice:'+(q?.id||'initial'),label:'연습 '+(Math.max(0,availablePractice().indexOf(q))+1)+'번'};
+    }
+    if(v==='visual')return {key:'visual:'+state.subject,label:'그림 연상'};
+    if(v==='venn')return {key:'venn:'+state.compare,label:'비교 도형'};
+    if(v==='calc')return {key:'calc:'+calcIndex+'-'+state.subject,label:'계산 '+(calcIndex+1)+'번'};
+    if(v==='wrong')return {key:'wrong:'+state.subject,label:'오답 복습'};
+    return {key:'practice:'+(reverseQuestion()?.id||'initial'),label:state.view==='home'?'오늘의 학습':subject().short};
+  }
+  function migrateMemo(ctx){
+    const key=ctx.key, prior=String(state.questionNotes?.[key]?.text||'');
+    if(state.v7MigratedNotes[key])return;
+    if(prior){
+      const ink=chalkRecord('notes','workspace:'+key);
+      if(!ink.text.includes(prior)){
+        ink.text=[ink.text,prior].filter(Boolean).join('\n\n');
+        ink.colors=Array.from(ink.text).map(()=>chalkState().color);
+      }
+    }
+    state.v7MigratedNotes[key]=true;
+    if(prior)save();
+  }
+  function boardHtml(ctx){
+    migrateMemo(ctx);
+    const mode=chalkState().color;
+    return `<aside class="ck-v7-board-shell" aria-label="문항별 통합 메모·필기">
+      <section class="ck-v7-board" data-ck-v7-key="${esc(ctx.key)}">
+        <img class="ck-v7-art" src="${BOOK_LANDSCAPE}" alt="" aria-hidden="true">
+        <div class="ck-v7-art-shade"></div>
+        <div class="ck-v7-board-overlay">
+          <div class="ck-v7-board-caption"><span>CONCEPTKNOT / NOTE</span><span>● LOCAL</span></div>
+          <h2 class="ck-v7-board-heading">${esc(ctx.label)}</h2>
+          <div class="ck-v7-board-small" id="ck-v7-note-status">✓ 자동 저장</div>
+          <div class="ck-v7-writing-surface" data-ck-v7-surface title="키보드 입력 · S펜 직접 필기">
+            ${chalkEditor('notes','workspace:'+ctx.key,'현재 문항의 통합 학습 메모')}
+            <canvas class="ck-v7-pen-layer" role="img" aria-label="문항별 S펜 손글씨"></canvas>
+          </div>
+          <div class="ck-v7-toolrow" aria-label="분필과 필기 도구">
+            ${CHALK_COLORS.map((x,i)=>`<button class="ck-v7-dot" type="button" data-chalk-color="${i}" aria-label="${esc(CHALK_NAMES[i])} 분필" title="${esc(CHALK_NAMES[i])} 분필" aria-pressed="${i===mode?'true':'false'}" style="--dot-color:${x}"><i></i></button>`).join('')}
+            <span class="ck-v7-tool-spacer"></span>
+            <button type="button" data-ck-v7-command="undo" title="손글씨 되돌리기" aria-label="손글씨 되돌리기">↶</button>
+            <button type="button" data-ck-v7-command="redo" title="손글씨 다시하기" aria-label="손글씨 다시하기">↷</button>
+            <button type="button" data-ck-v7-command="clear" title="손글씨 지우기" aria-label="손글씨 지우기">⌫</button>
+            <button type="button" data-ck-v7-command="export" title="이 문항 JSON 저장" aria-label="이 문항 JSON 저장">⇩</button>
+          </div>
+        </div>
+      </section>
+    </aside>`;
+  }
+  boardFrame=function(content){
+    const ctx=context(),date=new Date().toLocaleDateString('ko-KR',{timeZone:'Asia/Seoul',month:'long',day:'numeric',weekday:'short'});
+    return `<div class="ck-v7-mainframe"><header class="ck-v7-global-nav">
+      <div class="ck-v7-nav-pill">
+        <a href="#main" class="ck-v7-logo" data-go="home" aria-label="ConceptKnot 오늘의 학습">Concept<b>Knot</b></a>
+        <nav class="board-tabs" aria-label="전체 학습 메뉴">
+          ${designNav.map(([page,label])=>`<button type="button" class="board-tab ${page===state.view?'active':''}" data-go="${page}" aria-current="${page===state.view?'page':'false'}">${label}</button>`).join('')}
+        </nav>
+      </div><div class="ck-v7-date-pill"><span>▦ ${esc(date)}</span><button type="button" data-go="settings" aria-label="내 데이터 및 설정">⚙</button></div></header>
+      <div class="board-stage ck-v7-stage ${state.view==='home'?'is-home':''}">
+        ${boardHtml(ctx)}
+        <div class="ck-v7-divider" data-ck-v7-resize role="separator" aria-label="메모판과 문제 영역 가로폭 조절" aria-orientation="vertical" aria-valuemin="25" aria-valuemax="55" aria-valuenow="${Math.round(state.v7LeftWidth||33)}" tabindex="0"></div>
+        <div class="board-content ck-v7-content">${content}</div>
+      </div></div>`;
+  };
+
+  function typingQuestionData(c){
+    const id=/^official-(\d{4})-(\d+)$/.exec(c.id);
+    if(id){
+      const r=spokenStore()[id[1]+'-'+id[2]]||window.RECALL_OFFICIAL?.[id[1]+'-'+id[2]]||{};
+      return {title:id[1]+'년 '+id[2]+'번',question:r.question||c.fact.split('\n\n')[0],options:Array.isArray(r.options)?r.options:[]};
+    }
+    if(c.id.startsWith('type-')){
+      const q=quizzes().find(x=>x.id===c.id.slice(5));
+      return {title:'연습 문제',question:q?.q||c.fact.split('\n\n')[0],options:q?.a||[]};
+    }
+    return {title:'핵심 이론',question:c.fact,options:[]};
+  }
+  function heatmapHtml(){
+    const hist=Array.isArray(state.typingHistory)?state.typingHistory:[];
+    const count={};
+    for(const x of hist){
+      if(x.subject!==state.subject||!Number.isFinite(x.at))continue;
+      const day=new Date(x.at).toLocaleDateString('sv-SE',{timeZone:'Asia/Seoul'});
+      count[day]=(count[day]||0)+1;
+    }
+    return `<div class="ck-v7-heatmap" aria-label="최근 91일 타이핑 완료 기록"><div class="ck-v7-heatmap-grid">${Array.from({length:91},(_,i)=>{
+      const d=new Date(Date.now()-(90-i)*86400000).toLocaleDateString('sv-SE',{timeZone:'Asia/Seoul'});
+      const n=count[d]||0;
+      return `<i data-l="${n?Math.min(3,n):0}" title="${d} · ${n}회"></i>`;
+    }).join('')}</div></div>`;
+  }
+  function typingOptions(q){
+    return q.options.length?`<ol class="ck-v7-options">${q.options.map((value,i)=>`<li><span class="ck-v7-option-num">${'①②③④⑤'[i]||i+1}</span>${esc(value)}</li>`).join('')}</ol>`:'';
+  }
+  renderTyping=function(){
+    const c=typingConcept(),items=typingItems(),rec=chalkRecord('practice',c.id),q=typingQuestionData(c);
+    const ss=typingStats(rec.text,c.fact,rec.started),length=Array.from(c.fact||'').length,entered=Array.from(rec.text||'').length;
+    const years=[['all','최근 5개년'],...[2025,2024,2023,2022,2021].map(y=>[String(y),y+'년'])];
+    return `<div class="ck-v7-typing" aria-label="타이핑 학습">
+      <div class="ck-v7-controls">
+        <div class="ck-v7-switch" role="group" aria-label="과목">
+          <button type="button" data-subject="estate" aria-pressed="${state.subject==='estate'}">부동산학개론</button>
+          <button type="button" data-subject="civil" aria-pressed="${state.subject==='civil'}">민법 및 민사특별법</button>
+        </div>
+        <div class="ck-v7-switch" role="group" aria-label="타이핑 자료">
+          ${[['quiz','기출형 연습'],['official','공식 기출'],['theory','핵심 이론']].map(([kind,label])=>`<button type="button" data-typing-source="${kind}" aria-pressed="${state.typingMode===kind}">${label}</button>`).join('')}
+        </div>
+      </div>
+      <div class="ck-v7-controls">
+        ${state.typingMode==='official'?`<div class="ck-v7-years" role="group" aria-label="기출 연도">${years.map(([year,label])=>`<button type="button" data-typing-year="${year}" aria-pressed="${String(state.typingYear||'all')===year}">${label}</button>`).join('')}</div>`:''}
+        <select id="typing-item" aria-label="타이핑 문항 선택" ${items.length?'':'disabled'}>${items.map((item,i)=>`<option value="${i}" ${i===state.typingPick?'selected':''}>${esc(item.label)}</option>`).join('')}</select>
+      </div>
+      <div class="ck-v7-stats">
+        <div class="ck-v7-stat"><span class="ck-v7-stat-icon">◷</span><div><span>시간</span><strong id="ck-v7-stat-time">${clock(ss.seconds)}</strong></div></div>
+        <div class="ck-v7-stat"><span class="ck-v7-stat-icon">⌨</span><div><span>타수(분)</span><strong id="ck-v7-stat-cpm">${ss.cpm}</strong></div></div>
+        <div class="ck-v7-stat"><span class="ck-v7-stat-icon">◎</span><div><span>정확도</span><strong id="ck-v7-stat-accuracy">${ss.accuracy}%</strong></div></div>
+        <div class="ck-v7-stat"><span class="ck-v7-stat-icon">▤</span><div><span>입력 수</span><strong id="ck-v7-stat-count">${Math.min(entered,length)}/${length}</strong></div></div>
+        ${heatmapHtml()}
+      </div>
+      <section class="ck-v7-question">
+        <header class="ck-v7-qhead"><span>▤ ${esc(q.title)} · ${esc(subject().short)}</span><button type="button" data-ck-v7-command="toggle-question" aria-expanded="true">접기 ⌃</button></header>
+        <div class="ck-v7-question-body"><p>${esc(q.question)}</p>${typingOptions(q)}</div>
+      </section>
+      <section class="ck-v7-input" aria-label="Typing.works형 고정 문장 입력">
+        <div class="ck-v7-ihead"><span>⌨ 타이핑</span><small><span id="ck-v7-typed-count">${entered}</span> / ${length}</small></div>
+        ${chalkEditor('practice',c.id,'문제와 정답 타이핑')}
+        <span class="ck-v7-board-status" id="typing-metrics" aria-live="off" style="display:none"></span>
+        <div class="chalk-feedback" id="typing-feedback" role="status"></div>
+      </section>
+      <div class="ck-v7-actions">
+        <div class="ck-v7-actions-left"><button class="ck-v7-pause" type="button" data-ck-v7-command="pause">${rec.pausedAt?'▶ 계속':'Ⅱ 일시정지'}</button><button type="button" data-typing-reset>↻ 다시하기</button><button type="button" data-typing-next>다음 문항 →</button></div>
+        <div class="ck-v7-actions-right"><button type="button" data-ck-v7-command="history">▥ 기록</button><button type="button" data-go="settings">⚙ 설정</button></div>
+      </div>
+      <div class="ck-v7-typing-history" id="ck-v7-history" ${state.v7HistoryOpen?'':'hidden'}>
+        <h2>타이핑 기록</h2><div id="typing-history-list">${typingHistoryHtml()}</div>
+      </div>
+    </div>`;
+  };
+
+  typingGhost=function(el){
+    const c=typingConcept(),r=chalkRecord('practice',c.id),mirror=el.querySelector('.chalk-mirror');
+    if(!mirror)return;
+    if(!c.fact){mirror.innerHTML='<span class="chalk-placeholder">등록된 문항 없음</span>';el.querySelector('textarea').disabled=true;return;}
+    const actual=Array.from(r.text.normalize('NFC')),target=Array.from(c.fact.normalize('NFC'));
+    mirror.innerHTML=target.map((ch,i)=>i>=actual.length?`<span class="type-pending">${esc(ch)}</span>`:`<span class="${actual[i]===ch?'type-correct':'type-wrong'}">${esc(actual[i])}</span>`).join('')+
+      actual.slice(target.length).map(ch=>`<span class="type-wrong">${esc(ch)}</span>`).join('')+'\n';
+    const area=el.querySelector('textarea'),height=Math.max(240,mirror.scrollHeight+20);
+    el.style.setProperty('min-height',height+'px','important');
+    area.style.height=height+'px';
+  };
+
+  const originalTypingStats=typingStats;
+  typingStats=function(input,target,started){
+    const out=originalTypingStats(input,target,started);
+    if(!started)return out;
+    const record=chalkRecord('practice',typingConcept().id);
+    if(record.started!==started)return out;
+    const elapsed=Math.max(1,((record.pausedAt||Date.now())-started-(record.pausedTotal||0))/1000);
+    out.seconds=Math.max(1,Math.round(elapsed));
+    out.cpm=Math.round(Array.from(input.normalize('NFC')).length*60/elapsed);
+    return out;
+  };
+
+  let boardResizeObserver=null;
+  function mountBoard(){
+    boardResizeObserver?.disconnect();
+    const board=document.querySelector('.ck-v7-board[data-ck-v7-key]');
+    if(!board)return;
+    const surface=board.querySelector('[data-ck-v7-surface]'),canvas=board.querySelector('canvas.ck-v7-pen-layer');
+    if(!surface||!canvas)return;
+    const key='workspace:'+board.dataset.ckV7Key;
+    let active=null,pointer=null,raf=0;
+    const draw=()=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(()=>inkDraw(canvas,key,active));};
+    const resize=()=>{
+      const r=surface.getBoundingClientRect(),d=Math.min(window.devicePixelRatio||1,2);
+      canvas.width=Math.max(1,Math.round(r.width*d));
+      canvas.height=Math.max(1,Math.round(r.height*d));
+      draw();
+    };
+    boardResizeObserver=new ResizeObserver(resize);boardResizeObserver.observe(surface);resize();
+    surface.__ckV7Draw=draw;
+    const status=board.querySelector('#ck-v7-note-status');
+    const finish=e=>{
+      if(pointer===null||e.pointerId!==pointer)return;
+      if(active){
+        inkRecord(key).push(active);inkRedo.set(key,[]);active=null;
+        const ok=save();
+        if(status)status.textContent=ok?'✓ 자동 저장':'저장 공간 부족 · JSON 백업 필요';
+      }
+      try{surface.releasePointerCapture(pointer)}catch{}
+      pointer=null;draw();
+    };
+    surface.addEventListener('pointerdown',e=>{
+      if(pointer!==null)return;
+      if(e.pointerType!=='pen'&&!(e.pointerType==='mouse'&&e.shiftKey))return;
+      e.preventDefault();e.stopPropagation();
+      pointer=e.pointerId;surface.setPointerCapture(e.pointerId);
+      const x=inkPoint(e,surface.getBoundingClientRect());
+      active={tool:'pen',width:3.2,color:CHALK_COLORS[chalkState().color],pressure:e.pointerType==='pen',points:[x]};
+      draw();
+    },true);
+    surface.addEventListener('pointermove',e=>{
+      if(pointer!==e.pointerId||!active)return;
+      e.preventDefault();
+      const rect=surface.getBoundingClientRect();
+      const events=e.getCoalescedEvents?.()||[e];
+      for(const sample of events.length?events:[e])active.points.push(inkPoint(sample,rect));
+      draw();
+    });
+    for(const name of ['pointerup','pointercancel','lostpointercapture'])surface.addEventListener(name,finish);
+    board.__ckV7Finish=()=>{if(pointer!==null)finish({pointerId:pointer});};
+    const ta=surface.querySelector('.chalk-editor textarea');
+    if(ta)ta.addEventListener('input',()=>{
+      if(status)status.textContent='✓ 자동 저장';
+    });
+  }
+  function setLeftWidth(px){
+    const stage=document.querySelector('.ck-v7-stage');
+    if(!stage)return;
+    const max=Math.max(265,Math.min(stage.clientWidth*.55,stage.clientWidth-410));
+    const width=Math.round(Math.max(265,Math.min(max,px)));
+    state.v7LeftWidth=width;
+    stage.style.setProperty('--ck-v7-left',width+'px');
+    const handle=stage.querySelector('[data-ck-v7-resize]');
+    if(handle)handle.setAttribute('aria-valuenow',String(Math.round(width/stage.clientWidth*100)));
+  }
+  let dragged=null;
+  document.addEventListener('pointerdown',e=>{
+    const handle=e.target.closest?.('[data-ck-v7-resize]');
+    if(!handle||!matchMedia('(min-width:851px)').matches)return;
+    e.preventDefault();e.stopPropagation();
+    const stage=handle.closest('.ck-v7-stage');
+    const start=stage.querySelector('.ck-v7-board-shell').getBoundingClientRect().width;
+    dragged={id:e.pointerId,startX:e.clientX,start,handle};
+    handle.setPointerCapture(e.pointerId);
+  },true);
+  document.addEventListener('pointermove',e=>{
+    if(!dragged||dragged.id!==e.pointerId)return;
+    e.preventDefault();
+    setLeftWidth(dragged.start+e.clientX-dragged.startX);
+  },true);
+  document.addEventListener('pointerup',e=>{
+    if(!dragged||dragged.id!==e.pointerId)return;
+    const h=dragged.handle;dragged=null;
+    try{h.releasePointerCapture(e.pointerId)}catch{}
+    save();
+  },true);
+  document.addEventListener('pointercancel',e=>{if(dragged?.id===e.pointerId){dragged=null;save();}},true);
+  document.addEventListener('keydown',e=>{
+    const handle=e.target.closest?.('[data-ck-v7-resize]');
+    if(!handle||!['ArrowLeft','ArrowRight','Home'].includes(e.key))return;
+    e.preventDefault();e.stopImmediatePropagation();
+    const stage=handle.closest('.ck-v7-stage');
+    const left=stage.querySelector('.ck-v7-board-shell').getBoundingClientRect().width;
+    setLeftWidth(e.key==='Home'?stage.clientWidth/3:left+(e.key==='ArrowRight'?22:-22));save();
+  },true);
+
+  function updateStats(){
+    if(state.view!=='typing')return;
+    const c=typingConcept(),r=chalkRecord('practice',c.id);
+    const s=typingStats(r.text,c.fact,r.started);
+    const n=Array.from(c.fact||'').length;
+    const pairs={
+      'ck-v7-stat-time':clock(s.seconds),'ck-v7-stat-cpm':String(s.cpm),
+      'ck-v7-stat-accuracy':s.accuracy+'%','ck-v7-stat-count':Math.min(Array.from(r.text).length,n)+'/'+n,
+      'ck-v7-typed-count':String(Array.from(r.text).length)
+    };
+    for(const [id,value] of Object.entries(pairs)){const el=document.getElementById(id);if(el&&el.textContent!==value)el.textContent=value;}
+  }
+  setInterval(updateStats,1000);
+  const previousRender=render;
+  render=function(){
+    previousRender();
+    const stage=document.querySelector('.ck-v7-stage');
+    if(stage&&state.v7LeftWidth)stage.style.setProperty('--ck-v7-left',state.v7LeftWidth+'px');
+    mountBoard();
+    const r=state.view==='typing'?chalkRecord('practice',typingConcept().id):null;
+    const typing=stage?.querySelector('.ck-v7-input .chalk-editor textarea');
+    if(typing&&r?.pausedAt)typing.readOnly=true;
+    updateStats();
+  };
+
+  document.addEventListener('click',e=>{
+    const action=e.target.closest?.('[data-ck-v7-command]');
+    if(!action)return;
+    e.preventDefault();e.stopImmediatePropagation();
+    const cmd=action.dataset.ckV7Command;
+    if(cmd==='toggle-question'){
+      const section=action.closest('.ck-v7-question');
+      const body=section?.querySelector('.ck-v7-question-body');
+      if(body){body.hidden=!body.hidden;action.setAttribute('aria-expanded',String(!body.hidden));action.textContent=body.hidden?'펼치기 ⌄':'접기 ⌃';}
+      return;
+    }
+    if(cmd==='history'){state.v7HistoryOpen=!state.v7HistoryOpen;save();const el=document.getElementById('ck-v7-history');if(el)el.hidden=!state.v7HistoryOpen;return;}
+    if(cmd==='pause'){
+      const r=chalkRecord('practice',typingConcept().id),area=document.querySelector('.ck-v7-input textarea');
+      if(r.pausedAt){r.pausedTotal=(r.pausedTotal||0)+(Date.now()-r.pausedAt);r.pausedAt=0;}
+      else r.pausedAt=Date.now();
+      if(area)area.readOnly=!!r.pausedAt;
+      action.textContent=r.pausedAt?'▶ 계속':'Ⅱ 일시정지';
+      save();updateStats();return;
+    }
+    const board=action.closest('.ck-v7-board');
+    if(!board)return;
+    board.__ckV7Finish?.();
+    const key='workspace:'+board.dataset.ckV7Key,list=inkRecord(key);
+    if(cmd==='undo'&&list.length){const redos=inkRedo.get(key)||[];redos.push(list.pop());inkRedo.set(key,redos);}
+    if(cmd==='redo'){const redos=inkRedo.get(key)||[];if(redos.length)list.push(redos.pop());}
+    if(cmd==='clear'){if(!list.length)return;if(!confirm('이 문항의 손글씨를 지울까요? 키보드 메모는 유지됩니다.'))return;state.ink[key]=[];inkRedo.set(key,[]);}
+    if(cmd==='export'){
+      const n=chalkRecord('notes',key),prior=state.questionNotes?.[board.dataset.ckV7Key]||{};
+      const payload={schema:'conceptknot-note-v1',questionKey:board.dataset.ckV7Key,exportedAt:new Date().toISOString(),text:n.text,colors:n.colors,strokes:list,legacyNote:prior.text||'',updated:Date.now()};
+      download('ConceptKnot_'+board.dataset.ckV7Key.replace(/[^a-zA-Z0-9가-힣_-]/g,'_')+'_메모.json','application/json;charset=utf-8',JSON.stringify(payload,null,2));
+      toast('현재 문항의 메모를 저장했습니다.');return;
+    }
+    board.querySelector('[data-ck-v7-surface]')?.__ckV7Draw?.();
+    save();
+  },true);
+  window.addEventListener('pagehide',()=>document.querySelector('.ck-v7-board')?.__ckV7Finish?.());
 })();
 render();setInterval(timerTick,500);
 })();
