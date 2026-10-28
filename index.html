@@ -83,6 +83,7 @@ body{font-family:Pretendard,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;bac
 <link rel="stylesheet" href="./clay-workspace.css" media="all">
 <link rel="stylesheet" href="./design-locked-v1.css" media="all">
 <link rel="stylesheet" href="./design-v2-glass.css" media="all">
+<link rel="stylesheet" href="./ui-fix-v3.css" media="all">
 </head>
 <body>
 <a href="#main" class="skip-link">본문으로 이동</a>
@@ -1556,11 +1557,12 @@ window.addEventListener('beforeunload',()=>{if(localPdfUrl)URL.revokeObjectURL(l
     if(state.view!=='typing')return;
     const c=typingConcept(),r=chalkRecord('practice',c.id);
     const s=typingStats(r.text,c.fact,r.started);
-    const n=Array.from(c.fact||'').length;
+    const countLetters=str=>Array.from(String(str||'').normalize('NFC')).filter(ch=>/^[\p{L}\p{M}\p{Nd}]$/u.test(ch)).length;
+    const n=countLetters(c.fact),entered=countLetters(r.text);
     const pairs={
       'ck-v7-stat-time':clock(s.seconds),'ck-v7-stat-cpm':String(s.cpm),
-      'ck-v7-stat-accuracy':s.accuracy+'%','ck-v7-stat-count':Math.min(Array.from(r.text).length,n)+'/'+n,
-      'ck-v7-typed-count':String(Array.from(r.text).length)
+      'ck-v7-stat-accuracy':s.accuracy+'%','ck-v7-stat-count':Math.min(entered,n)+'/'+n,
+      'ck-v7-typed-count':String(entered)
     };
     for(const [id,value] of Object.entries(pairs)){const el=document.getElementById(id);if(el&&el.textContent!==value)el.textContent=value;}
   }
@@ -1771,6 +1773,237 @@ window.addEventListener('beforeunload',()=>{if(localPdfUrl)URL.revokeObjectURL(l
     if(document.body)document.body.dataset.ckV8Tab=state.view;
     updateStudyFocus();
   };
+})();
+(function installTypingUIV3(){
+  // Typing comparator intentionally leaves original question/answer sources intact.
+  // Only the practice layer strips punctuation, numbers outside decimal digits,
+  // symbols and required whitespace from scoring.
+  const printable=/^[\p{L}\p{M}\p{Nd}]$/u;
+  function letters(text){return Array.from(String(text||'').normalize('NFC')).filter(ch=>printable.test(ch))}
+  function displayText(text){
+    return Array.from(String(text||'').normalize('NFC')).filter(ch=>printable.test(ch)||/\s/u.test(ch)).join('')
+      .replace(/[ \t]{2,}/g,' ').replace(/\n{3,}/g,'\n\n');
+  }
+  function completion(){
+    const items=typingItems();
+    const completed=new Set();
+    for(const x of Array.isArray(state.typingHistory)?state.typingHistory:[]){
+      if(x?.subject===state.subject&&x?.id)completed.add(x.id);
+    }
+    const records=chalkState().practice;
+    let done=0;
+    for(const x of items)if(completed.has(x.id)||records[x.id]?.recorded)done++;
+    return {done,total:items.length,percentage:items.length?Math.round(done/items.length*100):0};
+  }
+  function completionMarkup(){
+    const p=completion(),filled=Math.round(p.percentage*18/100);
+    return `<div class="ck-v3-completion" role="group" aria-label="현재 과목 문항 완료율 ${p.percentage}% · ${p.done}/${p.total}">
+      <span class="ck-v3-completion-summary"><span>완료</span> <strong id="ck-v3-completion-text">${p.done}/${p.total}</strong></span>
+      <span class="ck-v3-dot-row" id="ck-v3-completion-dots" role="img" aria-label="${p.percentage}% 완료">
+        ${Array.from({length:18},(_,i)=>`<i class="${i<filled?'ck-v3-done':'ck-v3-pending'}"></i>`).join('')}
+      </span></div>`;
+  }
+  // Replace the old full-height cards and activity heatmap; preserve the
+  // existing timestamp/pace/accuracy/count IDs for the old rendering engine.
+  const oldTypingRender=renderTyping;
+  renderTyping=function(){
+    let html=oldTypingRender();
+    const items=typingItems(),c=typingConcept(),r=chalkRecord('practice',c.id),s=typingStats(r.text,c.fact,r.started);
+    const total=letters(c.fact).length,entered=letters(r.text).length;
+    const metrics=`<div class="ck-v7-stats ck-v3-stats" aria-label="타이핑 통계">
+      <div class="ck-v7-stat"><span class="ck-v7-stat-icon">◷</span><div><span>시간</span><strong id="ck-v7-stat-time">${clock(s.seconds)}</strong></div></div>
+      <div class="ck-v7-stat"><span class="ck-v7-stat-icon">⌨</span><div><span>타수</span><strong id="ck-v7-stat-cpm">${s.cpm}</strong></div></div>
+      <div class="ck-v7-stat"><span class="ck-v7-stat-icon">◎</span><div><span>정확도</span><strong id="ck-v7-stat-accuracy">${s.accuracy}%</strong></div></div>
+      <div class="ck-v7-stat"><span class="ck-v7-stat-icon">▤</span><div><span>입력</span><strong id="ck-v7-stat-count">${Math.min(entered,total)}/${total}</strong></div></div>
+      ${completionMarkup()}
+    </div>`;
+    const left=html.indexOf('<div class="ck-v7-stats">'),right=html.indexOf('<section class="ck-v7-question">',left);
+    if(left>=0&&right>left)html=html.slice(0,left)+metrics+html.slice(right);
+    const isFirst=state.typingPick<=0,isLast=state.typingPick>=items.length-1;
+    html=html.replace(
+      '<button type="button" data-typing-reset>',
+      `<button type="button" data-typing-prev ${isFirst?'disabled':''} aria-label="이전 문항">← 이전 문항</button><button type="button" data-typing-reset>`
+    );
+    html=html.replace('data-typing-next>','data-typing-next '+(isLast?'disabled':'')+'>');
+    html=html.replace(
+      '<span id="ck-v7-typed-count">'+Array.from(r.text).length+'</span>',
+      '<span id="ck-v7-typed-count">'+entered+'</span>'
+    ).replace(
+      '</small></div>\n        <div class="chalk-editor"',
+      '</small></div><div class="ck-v3-typing-progress" aria-hidden="true"><span id="ck-v3-progress-fill" style="--ck-v3-progress:'+Math.min(100,total?entered/total*100:0).toFixed(2)+'%"></span></div>\n        <div class="chalk-editor"'
+    );
+    return html;
+  };
+
+  typingStats=function(input,target,started){
+    const a=letters(input),b=letters(target);
+    let hit=0;
+    for(let i=0;i<a.length;i++)if(a[i]===b[i])hit++;
+    const r=state.view==='typing'?chalkRecord('practice',typingConcept().id):null;
+    const rawEnd=r?.pausedAt||Date.now();
+    const elapsed=started?Math.max(1,(rawEnd-started-(r?.pausedTotal||0))/1000):0;
+    return {
+      hit,seconds:started?Math.round(elapsed):0,
+      cpm:elapsed?Math.round(a.length*60/elapsed):0,
+      accuracy:a.length?Math.round(hit/a.length*100):100
+    };
+  };
+
+  typingGhost=function(el){
+    const c=typingConcept(),r=chalkRecord('practice',c.id);
+    const mirror=el.querySelector('.chalk-mirror'),area=el.querySelector('textarea');
+    if(!mirror||!area)return;
+    if(!c.fact){
+      mirror.innerHTML='<span class="chalk-placeholder">연습 문항 없음</span>';
+      area.disabled=true;
+      return;
+    }
+    const targetDisplay=displayText(c.fact);
+    const a=letters(r.text),b=letters(targetDisplay),total=b.length;
+    let cursor=0;
+    const result=Array.from(targetDisplay).map(ch=>{
+      if(!printable.test(ch))return ch==='\n'?'\n':esc(ch);
+      const index=cursor++,actual=a[index],filled=index<a.length;
+      const status=filled?(actual===ch?'ck-v3-right':'ck-v3-wrong'):'ck-v3-pending';
+      const fresh=filled&&index===a.length-1?' ck-v3-just-typed':'';
+      const shown=filled?actual:ch;
+      return `<span class="ck-v3-unit ${status}${fresh}" data-ck-v3-index="${index}">${esc(shown)}</span>`;
+    });
+    if(a.length>total)result.push(...a.slice(total).map(ch=>`<span class="ck-v3-unit ck-v3-wrong">${esc(ch)}</span>`));
+    mirror.classList.add('ck-v3-line-active');
+    mirror.innerHTML=result.join('')+'<span class="ck-v3-caret" aria-hidden="true"></span>';
+    // Keep the *actual rendered* line highlighted, including soft wraps.
+    // Each glyph is a span; its box reveals the browser's line layout.
+    const target=mirror.querySelector('[data-ck-v3-index="'+Math.min(a.length,Math.max(0,total-1))+'"]');
+    if(target){
+      const rect=target.getBoundingClientRect(),parent=mirror.getBoundingClientRect();
+      const last=a.length>=total;
+      const caretX=Math.max(0,(last?rect.right:rect.left)-parent.left);
+      const caretY=Math.max(0,rect.top-parent.top);
+      const caretH=Math.max(18,rect.height||25);
+      mirror.style.setProperty('--ck-v3-caret-x',caretX.toFixed(2)+'px');
+      mirror.style.setProperty('--ck-v3-caret-y',caretY.toFixed(2)+'px');
+      mirror.style.setProperty('--ck-v3-caret-height',caretH.toFixed(2)+'px');
+      mirror.style.setProperty('--ck-v3-line-top',caretY.toFixed(2)+'px');
+      mirror.style.setProperty('--ck-v3-line-height',caretH.toFixed(2)+'px');
+    }
+    const h=Math.max(165,mirror.scrollHeight+18);
+    el.style.setProperty('min-height',h+'px','important');
+    area.style.height=Math.max(120,h-32)+'px';
+  };
+
+  function updateMetrics(){
+    if(state.view!=='typing')return;
+    const c=typingConcept(),r=chalkRecord('practice',c.id),s=typingStats(r.text,c.fact,r.started);
+    const total=letters(c.fact).length,entered=letters(r.text).length;
+    const pairs={
+      'ck-v7-stat-time':clock(s.seconds),'ck-v7-stat-cpm':String(s.cpm),
+      'ck-v7-stat-accuracy':s.accuracy+'%',
+      'ck-v7-stat-count':Math.min(entered,total)+'/'+total,
+      'ck-v7-typed-count':String(entered)
+    };
+    for(const [id,value]of Object.entries(pairs)){
+      const el=document.getElementById(id);if(el&&el.textContent!==value)el.textContent=value;
+    }
+    const fill=document.getElementById('ck-v3-progress-fill');
+    if(fill)fill.style.setProperty('--ck-v3-progress',Math.min(100,total?entered/total*100:0).toFixed(2)+'%');
+    const p=completion();
+    const label=document.getElementById('ck-v3-completion-text');
+    if(label)label.textContent=p.done+'/'+p.total;
+    const dots=document.getElementById('ck-v3-completion-dots');
+    if(dots){
+      dots.setAttribute('aria-label',p.percentage+'% 완료');
+      const count=Math.round(18*p.percentage/100);
+      Array.from(dots.children).forEach((dot,i)=>{dot.className=i<count?'ck-v3-done':'ck-v3-pending';});
+    }
+  }
+
+  typingFeedback=function(){
+    const el=document.getElementById('typing-feedback');if(!el||state.view!=='typing')return;
+    const c=typingConcept(),r=chalkRecord('practice',c.id);
+    if(!c.fact){el.textContent='연습할 문항 없음';return;}
+    const a=letters(r.text),b=letters(c.fact),stats=typingStats(r.text,c.fact,r.started);
+    r.entered=a.length;r.errors=a.length-stats.hit;r.committed=r.text;
+    const done=b.length>0&&a.length===b.length&&a.every((ch,i)=>ch===b[i]);
+    el.textContent=done?'✓ 완료 · 저장됨':`${Math.min(a.length,b.length)} / ${b.length}`;
+    if(done&&!r.recorded){
+      r.recorded=true;r.finalStats={...stats};
+      if(!Array.isArray(state.typingHistory))state.typingHistory=[];
+      state.typingHistory.push({id:c.id,label:c.t,subject:state.subject,at:Date.now(),...stats});
+      state.typingHistory=state.typingHistory.slice(-200);
+      save();
+      const hist=document.getElementById('typing-history-list');
+      if(hist)hist.innerHTML=typingHistoryHtml();
+    }
+    updateMetrics();
+  };
+
+  function navigate(delta){
+    const items=typingItems(),i=state.typingPick,selected=Math.min(Math.max(0,i+delta),Math.max(0,items.length-1));
+    if(!items.length||selected===i)return;
+    state.typingPick=selected;
+    save();render();
+    document.querySelector('.ck-v7-input .chalk-editor textarea')?.focus({preventScroll:true});
+  }
+  // Capture phase prevents the older "next" handler from wrapping from last to first.
+  document.addEventListener('click',e=>{
+    const prev=e.target.closest?.('[data-typing-prev]');
+    const next=e.target.closest?.('[data-typing-next]');
+    if(!prev&&!next)return;
+    e.preventDefault();e.stopImmediatePropagation();
+    if((prev||next).disabled)return;
+    navigate(prev?-1:1);
+  },true);
+  document.addEventListener('keydown',e=>{
+    if(state.view!=='typing'||e.isComposing||e.repeat||!e.altKey||e.ctrlKey||e.metaKey)return;
+    if(e.key==='ArrowLeft'||e.key==='ArrowRight'){
+      e.preventDefault();e.stopImmediatePropagation();
+      navigate(e.key==='ArrowLeft'?-1:1);
+    }else if(e.key.toLowerCase()==='r'){
+      e.preventDefault();e.stopImmediatePropagation();
+      document.querySelector('[data-typing-reset]')?.click();
+    }
+  },true);
+  // Sanitize punctuation before the existing input listener mutates the record.
+  // Do not modify in-progress Korean IME composition.
+  document.addEventListener('input',e=>{
+    if(e.isComposing||e.target?.tagName!=='TEXTAREA'||!e.target.closest?.('.ck-v7-input .chalk-editor'))return;
+    const field=e.target,raw=field.value,clean=displayText(raw);
+    if(raw!==clean){
+      const position=field.selectionStart||0;
+      const before=displayText(raw.slice(0,position)).length;
+      field.value=clean;
+      try{field.setSelectionRange(before,before)}catch{}
+    }
+  },true);
+  document.addEventListener('compositionend',e=>{
+    if(e.target?.tagName!=='TEXTAREA'||!e.target.closest?.('.ck-v7-input .chalk-editor'))return;
+    const field=e.target,clean=displayText(field.value);
+    if(clean!==field.value){
+      field.value=clean;
+      field.dispatchEvent(new Event('input',{bubbles:true}));
+    }
+  },true);
+  // If the user clicks the glass writing area instead of the actual textarea,
+  // focus the keyboard editor; stylus is handled by the existing capture listener.
+  document.addEventListener('click',e=>{
+    if(e.target?.closest?.('button,a,[data-ck-v7-resize]'))return;
+    const surface=e.target?.closest?.('.ck-v7-writing-surface');
+    if(surface){
+      const field=surface.querySelector('textarea');
+      if(field&&document.activeElement!==field)field.focus({preventScroll:true});
+    }
+  },true);
+  const previousRender=render;
+  render=function(){
+    previousRender();
+    updateMetrics();
+    if(state.view==='typing'){
+      const input=document.querySelector('.ck-v7-input .chalk-editor');
+      if(input)typingGhost(input);
+    }
+  };
+  setInterval(()=>{if(state.view==='typing')updateMetrics()},1700);
 })();
 render();setInterval(timerTick,500);
 })();
