@@ -1,0 +1,205 @@
+/* ConceptKnot · Clay-inspired editorial workspace / 2026-10-28
+   Applies to the app-wide palette; the Monet card is intentionally preserved.
+   Styling is original, not an asset or stylesheet copied from clay.com. */
+:root{
+  --ink:#202239;--muted:#606277;--soft:#fffaf0;--card:#ffffff;--line:#dbdbdc;
+  --primary:#395afa;--primary-dark:#273ec2;--mint:#eff9ee;--violet:#7652c5;
+  --violetsoft:#efe5ff;--orange:#ee796e;--warn:#fff5df;--red:#cf3c60;
+  --redsoft:#fff0ef;--shadow:0 8px 0 #2022390a,0 15px 38px #20223910;
+  --board:#fffaf0;--board-dark:#fffaf0;--cream:#fffaf0;--wood:#e2b57d;
+  --lime:#c6ef63;--oxblood:#e45b78;--sky:#e9f5ff;--chalk:#f7fffa;
+}
+html{background:#fffaf0}
+body{background:#fffaf0!important;background-image:none!important;color:var(--ink)!important;font-family:Pretendard,"Apple SD Gothic Neo","Malgun Gothic",sans-serif!important}
+.topbar{background:#fffaf0!important;border-bottom:1px solid #e9e6df!important;color:#22243b!important}
+.topbar .dot{background:#395afa!important}
+.breadcrumb,.breadcrumb strong,.breadcrumb-brand,.ghost-btn{color:#292b45!important}
+.today-chip{background:#edecff!important;color:#34375d!important}
+#main{max-width:1760px;padding:30px clamp(16px,3vw,52px) 72px!important}
+.atelier-heading{margin-bottom:21px}
+.atelier-wordmark{font-family:Pretendard,sans-serif!important;font-weight:850;font-size:clamp(28px,2.6vw,38px)!important;color:#202139!important;letter-spacing:-1.7px}
+.atelier-wordmark span{font-style:normal;color:#395afa}
+.atelier-wordmark small{font-family:inherit!important;font-size:10px;letter-spacing:.65px;color:#858397}
+.atelier-caption{color:#777a8a;letter-spacing:1.2px}
+.board-tabs{gap:7px;align-items:center;padding-bottom:14px;margin-bottom:26px;border-bottom:1px solid #e3e2e0}
+.board-tab{padding:12px 16px;border-radius:12px!important;border:1px solid transparent!important;background:transparent!important;color:#3e4055!important;font-size:12px;font-weight:750;min-height:44px}
+.board-tab:hover{background:#f3eeff!important;border-color:#e4dbfc!important}
+.board-tab.active{background:#395afa!important;border-color:#395afa!important;color:#fff!important;box-shadow:0 3px 0 #243aa6!important}
+.board-stage,.board-stage.is-home{grid-template-columns:clamp(240px,21vw,310px) minmax(0,1fr);gap:26px}
+.book-rail{overflow:visible;max-height:none;min-height:0;padding:0 6px 18px 0;perspective:none}
+.board-ticket,.board-stage.is-home .board-ticket{position:relative!important;top:auto!important;max-width:none!important;transform:none!important;opacity:1!important;animation:none!important;will-change:auto!important;box-shadow:0 4px 0 #d9dddf,0 14px 27px #26263b1d!important;border-radius:12px!important;background:white!important;pointer-events:none}
+.book-art{height:192px}
+.book-art img{object-position:center 40%}
+.book-art:after{background:linear-gradient(transparent 52%,#172039a8)}
+.book-paper,.book-burgundy .book-paper,.book-lime .book-paper,.book-wood .book-paper{background:#fff!important;color:#20243c!important;min-height:188px;padding:19px 19px 0!important}
+.book-paper h2,.board-ticket h2{font-family:Pretendard,sans-serif!important;font-size:clamp(20px,1.5vw,26px);font-weight:820;line-height:1.3;letter-spacing:-1.1px}
+.book-paper p{font-size:12px;color:#6a6d7d!important;opacity:1}
+.book-meta{color:#999bac!important}
+.book-collection{font-size:10px!important}
+.board-ticket .ticket-stub{color:#34364f!important;border-top:1px dashed #d5d8dd!important;margin:0 -19px!important;padding:14px 19px!important}
+.book-credit{font-size:10px!important;color:#6b6d7b!important;margin:13px 8px!important}
+.book-credit a{color:inherit}
+.board-content{animation:none!important}
+.board-content .page-intro h1{color:#202139!important;font-size:clamp(25px,2.3vw,36px)!important;font-weight:850}
+.board-content .page-intro p{color:#626579!important;font-size:13px}
+.board-content .eyebrow{color:#395afa!important;font-weight:850}
+.board-content .date-note{color:#8a8b97!important}
+.board-content .panel,.board-content .quick-card,.board-content .exam-sheet,.board-content .pdf-panel,.board-content .flash-card{
+  background:#fff!important;color:#25283f!important;border:1px solid #e9e7e3!important;
+  border-radius:17px!important;box-shadow:0 4px 0 #23264308,0 12px 32px #2627410b!important
+}
+.board-content .hero{background:#25233c!important;color:#fff!important;border:0!important;border-radius:22px!important;box-shadow:0 8px 0 #d7d1ef!important}
+.board-content .hero p,.board-content .hero h2{color:#fff!important}
+.board-content .hero:before{border-color:#8b67ef48}
+.board-content .hero:after{border-color:#86dfed44}
+.board-content .subject-tab{background:white!important;color:#3f425b!important;border:1px solid #dedff0!important;border-radius:11px!important}
+.board-content .subject-tab.active{background:#e9e6ff!important;color:#343fc5!important;border-color:#b4b9f9!important}
+.board-content .section-heading,.board-content .section-heading h2{color:#2a2942!important}
+.board-content .quick-card:nth-child(1){border-top:6px solid #ef7a72!important}
+.board-content .quick-card:nth-child(2){border-top:6px solid #a17aff!important}
+.board-content .quick-card:nth-child(3){border-top:6px solid #56baad!important}
+.btn,.board-content .btn{background:#395afa;border-color:#395afa;color:#fff;border-radius:11px;font-weight:750}
+.btn:hover,.board-content .btn:hover{filter:brightness(.96)}
+.btn.secondary,.board-content .btn.secondary{background:white;color:#292d4b;border-color:#ddddeb}
+.btn.tonal,.board-content .btn.tonal{background:#eff0ff;color:#313db1;border-color:#d2d5ff}
+.btn.danger,.board-content .btn.danger{background:#fff0f1;color:#ac364d;border-color:#ffc8cf}
+.btn.violet,.board-content .btn.violet{background:#7754c9;border-color:#7754c9}
+.panel-link,.board-content .panel-link{color:#3854d9!important}
+.pill.green{background:#eef8ef!important;color:#287a63!important}
+.progress-fill{background:#5878fd!important}
+.memory-entry{background:#d5f18e!important;border:1px solid #bbe268!important;color:#303851!important;border-radius:13px!important}
+.memory-entry span{color:#50643c!important}
+.board-content .source-footer,.board-content .source-footer a{color:#686b7d!important}
+.visual-sheet{background:#eef1ff!important;border:1px solid #d9dcff!important;border-radius:20px!important;box-shadow:0 8px 0 #dcd8fa!important;color:#303354!important}
+.visual-sheet p{color:#666780!important}
+.chalk-zone{background:#1c3447!important;border-top:6px solid #efbd76!important;border-radius:17px!important;box-shadow:0 10px 0 #dcdfe6!important;color:#f5fff9!important}
+.chalk-zone .chalk-zone{box-shadow:none!important}
+.chalk-zone label{color:#f3f7fa!important}
+.chalk-shortcut{color:#e7eafa!important}
+.chalk-swatch[aria-pressed=true]{border-color:#fde8a6}
+.ink-toolbar button,.ink-toolbar select{border-radius:8px}
+.chalk-plain-btn{border-radius:10px!important}
+.board-content .theory-layout,.board-content .quiz-layout,.board-content .exam-layout{gap:18px}
+.reverse-concept,.reverse-recall-card,.reverse-explain-options{border-radius:12px}
+.reverse-sidebar .concept-item.active{background:#e9edff;border-color:#cad1ff}
+.typing-choices [aria-pressed=true],.typing-years button[aria-pressed=true]{color:#3047c7!important;border-color:#7582fb!important;background:#eeefff!important}
+
+/* One study item = one notes-and-ink workspace, under the original Monet chapter card */
+.board-stage.ck-workspace-stage,.board-stage.ck-workspace-stage.is-home{
+  display:grid!important;grid-template-columns:minmax(238px,var(--ck-left,340px)) 12px minmax(0,1fr)!important;
+  column-gap:10px!important;align-items:start!important
+}
+.ck-workspace-stage .book-rail{width:100%;padding:0 1px 28px 0;overflow:visible!important}
+.ck-workspace-stage .book-credit{margin-bottom:18px!important}
+.ck-rail-workspace{display:grid;gap:15px;padding:3px 0 0}
+.ck-memo-card,.ck-slate-card{min-width:0;border:1px solid #e3e0e8;background:#fff;border-radius:18px;padding:17px;box-shadow:0 5px 0 #e8e5e4,0 13px 29px #22233a0c}
+.ck-memo-head,.ck-slate-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:11px}
+.ck-kicker{display:block;margin:0 0 5px;color:#676acb;font-size:10px;font-weight:850;letter-spacing:.9px}
+.ck-memo-card h3,.ck-slate-card h3{margin:0;color:#24243c;font-size:16px;font-weight:850;line-height:1.35}
+.ck-caption{font-size:11px;color:#696a7b;margin:8px 0 14px;line-height:1.55}
+.ck-memo-input{width:100%;min-height:178px;max-height:470px;resize:vertical;background:#f9f8ff;border:1px solid #e3e3f0;border-radius:12px;padding:14px;color:#29283d;line-height:1.75;font-size:13px;outline:none}
+.ck-memo-input:focus{border-color:#697afa;box-shadow:0 0 0 3px #395afa19}
+.ck-memo-input::placeholder{color:#9695a9}
+.ck-memo-foot{display:flex;align-items:center;justify-content:space-between;gap:7px;margin-top:10px}
+.ck-memo-status{font-size:10px;color:#5c6770}
+.ck-export-note{border:1px solid #d8d8ee;background:#f2f2ff;color:#333cc3;border-radius:8px;padding:8px 10px;font-weight:750;font-size:11px}
+.ck-note-nav{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:11px}
+.ck-note-nav button{border:1px solid #dddde7;background:#fff;color:#65677a;border-radius:8px;min-width:33px;min-height:30px;font-size:11px;font-weight:800}
+.ck-note-nav button[aria-pressed=true]{background:#395afa;border-color:#395afa;color:white}
+.ck-slate-card{background:#222b42;color:#f4f8ff;border-color:#242941;padding:13px;box-shadow:0 8px 0 #dde0e6}
+.ck-slate-card h3{color:#fff}
+.ck-slate-card .ck-kicker{color:#a8b8ff}
+.ck-slate-card .ck-caption{color:#bbc9dd}
+.ck-slate-switch{display:flex;gap:5px;background:#101a31;padding:4px;border-radius:12px;margin-bottom:12px}
+.ck-slate-switch button{flex:1;min-width:0;border:0;border-radius:9px;padding:10px 6px;background:transparent;color:#b7c0d5;font-size:12px;font-weight:800}
+.ck-slate-switch button[aria-pressed=true]{background:#d5ee79;color:#28313f}
+.ck-slate-card .chalk-toolbar{margin:7px 0 12px}
+.ck-slate-card .chalk-toolbar h2{color:#d6e2f2;font-size:12px}
+.ck-slate-card .chalk-shortcut{display:none}
+.ck-slate-card .chalk-editor{font-size:16px;line-height:1.72;letter-spacing:0;min-height:210px;border:1px solid #65708a;border-radius:10px;padding:12px;background:#132036}
+.ck-slate-card .chalk-mirror{line-height:inherit;min-height:200px}
+.ck-slate-card .chalk-editor textarea{line-height:inherit;inset:12px;width:calc(100% - 24px);height:calc(100% - 24px);padding:0}
+.ck-slate-card .ink-pad{padding:0!important;margin:0!important;color:#d8e4ed!important;background:transparent!important}
+.ck-slate-card .ink-toolbar{gap:5px}
+.ck-slate-card .ink-toolbar strong{width:100%;font-size:11px;color:#f2f7ff}
+.ck-slate-card .ink-toolbar button{font-size:10px;padding:6px 8px;min-height:30px;background:#3b4861;border-color:#687188}
+.ck-slate-card .ink-toolbar button[aria-pressed=true]{background:#d5ee79;color:#222b42}
+.ck-slate-card .ink-toolbar label{font-size:11px;color:#d3ddeb}
+.ck-slate-card .ink-toolbar input[type=range]{max-width:70px}
+.ck-slate-card .ink-help{font-size:10px;color:#b8c4d8}
+.ck-slate-card .ink-canvas{aspect-ratio:4/3;border:1px solid #5b6881;border-radius:10px;background:repeating-linear-gradient(transparent 0,transparent 36px,#ffffff11 36px,#ffffff11 37px),#111d31}
+.ck-slate-card .ink-status{color:#b7c6da}
+.ck-slate-pane[hidden]{display:none!important}
+.ck-slate-card .chalk-placeholder{color:#9da9b7}
+.ck-resize-handle{align-self:stretch;min-height:300px;width:12px;display:flex;align-items:center;justify-content:center;cursor:col-resize;touch-action:none;user-select:none;position:relative;color:#7b7ca8;font-size:22px;z-index:5;border-radius:10px}
+.ck-resize-handle:before{content:'';position:absolute;left:5px;top:0;bottom:0;width:2px;background:#dad8e9;border-radius:3px}
+.ck-resize-handle:after{content:'⋮';position:sticky;top:45vh;display:grid;place-items:center;width:14px;height:55px;border-radius:11px;border:1px solid #c9c9ee;background:#eff0ff;box-shadow:0 3px 7px #26304a18;color:#5d65c5}
+.ck-resize-handle:hover:after,.ck-resize-handle:focus-visible:after{background:#d4d9ff;border-color:#7c88ff}
+.ck-question-grid{display:grid!important;grid-template-columns:minmax(320px,1fr) 12px minmax(250px,var(--ck-right,300px))!important;gap:10px!important;align-items:start}
+.ck-question-grid > :first-child{min-width:0}
+.ck-question-grid > :last-child{min-width:0}
+.ck-question-grid .ck-right-handle{min-height:600px}
+.ck-workspace-stage .board-content{min-width:0}
+.ck-workspace-stage .board-content .theory-layout > .panel{min-width:0}
+.ck-workspace-stage .board-content .question{overflow-wrap:anywhere}
+.ck-workspace-stage .board-content .reverse-main{min-height:0}
+.ck-rail-workspace .chalk-feedback{font-size:10px;color:#c7d6e8}
+
+/* Typing tab: the supplied Monet-card editorial motif + Clay color system.
+   Original fixed sentence remains underneath the typed colored characters. */
+body:has(.chalk-practice) .board-content{min-width:0}
+.chalk-practice{background:#fff!important;border:1px solid #e9e3df;border-radius:22px;padding:26px!important;box-shadow:0 5px 0 #e6e3e4,0 15px 35px #34334d12;color:#252640}
+.chalk-practice h1{font-size:clamp(22px,2.3vw,33px)!important;color:#24243e!important;font-weight:850}
+.chalk-practice .ticket-line{color:#5265cc!important;font-weight:850}
+.chalk-practice > p{color:#707386!important}
+.chalk-practice .typing-choices,.chalk-practice .typing-years{margin-top:14px;margin-bottom:14px}
+.chalk-practice .typing-board{background:#1e3440!important;border:0!important;border-top:6px solid #f0c27c!important;border-radius:16px!important;box-shadow:0 7px 0 #c4d1d8!important;padding:clamp(15px,2.2vw,26px);color:#fff}
+.typing-board .typing-live{color:#f7f0d9;font-weight:800}
+.typing-board .typing-source-card{background:#fbf9ed;color:#293b44;border-radius:12px;border:1px solid #e7e0c9}
+.typing-board .typing-source-text{font-family:Pretendard,sans-serif;font-size:clamp(15px,1.5vw,20px);font-weight:650}
+.typing-board .chalk-editor{background:#142b34!important;border-radius:12px!important;border:1px solid #668b8a!important;font-family:Pretendard,sans-serif!important;font-size:clamp(17px,1.7vw,23px);line-height:1.9;letter-spacing:0;min-height:245px;overflow:hidden}
+.typing-board .chalk-mirror{position:relative;min-height:230px;white-space:pre-wrap;overflow-wrap:anywhere}
+.typing-board .chalk-editor textarea{position:absolute;inset:12px!important;width:calc(100% - 24px)!important;height:calc(100% - 24px)!important;padding:0 8px!important;z-index:2}
+.ck-ghost-underlay{display:block;color:#e4f2ee55;white-space:pre-wrap;overflow-wrap:anywhere;pointer-events:none}
+.ck-typed-overlay{position:absolute;left:8px;right:8px;top:0;white-space:pre-wrap;overflow-wrap:anywhere;pointer-events:none}
+.ck-typed-overlay .type-correct{font-weight:800}
+.ck-typed-overlay .type-wrong{background:#8b30469a;text-decoration:underline;text-decoration-color:#f8bfd0}
+.typing-board .chalk-feedback{color:#d3f1e3}
+.typing-history{border:1px solid #eee8df;border-radius:15px;padding:18px;background:#faf9ff}
+.typing-history h2{color:#262944!important}
+.typing-history table{background:white;border-radius:9px;overflow:hidden}
+@media(max-width:1250px){
+ .ck-question-grid{grid-template-columns:minmax(0,1fr)!important}
+ .ck-question-grid .ck-right-handle{display:none!important}
+ .ck-question-grid > :last-child{width:100%}
+}
+@media(max-width:950px){
+ .board-stage.ck-workspace-stage,.board-stage.ck-workspace-stage.is-home{grid-template-columns:minmax(0,1fr)!important;gap:18px!important}
+ .ck-workspace-stage .book-rail{display:grid;grid-template-columns:minmax(205px,.8fr) minmax(250px,1fr);gap:15px;align-items:start}
+ .ck-workspace-stage .book-rail>.board-ticket{grid-column:1}
+ .ck-workspace-stage .book-rail>.book-credit{grid-column:1;grid-row:2}
+ .ck-rail-workspace{grid-column:2;grid-row:1/span 3}
+ .ck-left-handle{display:none!important}
+ .book-rail{max-height:none!important;overflow:visible!important}
+}
+@media(max-width:650px){
+ #main{padding:17px 13px 46px!important}
+ .atelier-caption{display:none}
+ .board-tabs{flex-wrap:nowrap;overflow:auto;padding-bottom:12px}
+ .board-tab{font-size:11px;padding:10px 11px;min-height:40px}
+ .board-stage.ck-workspace-stage .book-rail{display:flex;flex-direction:column;gap:0}
+ .ck-workspace-stage .book-rail>.board-ticket{width:100%;max-width:450px!important;display:grid;grid-template-columns:40% minmax(0,1fr)}
+ .book-art{height:190px!important}
+ .book-paper{min-height:190px;padding:14px!important}
+ .board-ticket .ticket-stub{margin:0 -14px!important;padding:10px 14px!important}
+ .book-paper h2,.board-ticket h2{font-size:19px}
+ .ck-workspace-stage .book-rail>.book-credit{margin:9px 0 14px!important}
+ .ck-rail-workspace{width:100%;gap:13px}
+ .ck-memo-card,.ck-slate-card{padding:15px}
+ .ck-question-grid{display:flex!important;flex-direction:column!important;gap:15px!important}
+ .ck-question-grid>*{width:100%}
+ .board-content .page-intro{gap:8px}
+ .board-content .date-note{display:none}
+ .chalk-practice{padding:18px!important}
+}
+@media(prefers-reduced-motion:reduce){.board-ticket,.board-content,.ck-resize-handle{animation:none!important;transition:none!important}}

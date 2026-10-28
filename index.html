@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#087f8c">
+<meta name="theme-color" content="#fffaf0">
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="apple-touch-icon" href="./icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -80,6 +80,7 @@ body{font-family:Pretendard,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;bac
 .typing-board .chalk-editor textarea{inset:12px;width:calc(100% - 24px);height:calc(100% - 24px)}
 @media(max-width:700px){.typing-board{padding:16px}.typing-source-text{font-size:18px}.typing-source-card{padding:16px}}
 </style>
+<link rel="stylesheet" href="./clay-workspace.css" media="all">
 </head>
 <body>
 <a href="#main" class="skip-link">본문으로 이동</a>
@@ -1006,6 +1007,247 @@ document.addEventListener('keydown',e=>{
  }
 });
 window.addEventListener('beforeunload',()=>{if(localPdfUrl)URL.revokeObjectURL(localPdfUrl);});
+
+/* CLAY WORKSPACE V6 · PROBLEM-CENTRIC NOTES / DRAWING */
+(function installConceptKnotWorkspace() {
+  // New fields are part of the normal localStorage backup/import/reset schema.
+  defaults.questionNotes = {};
+  defaults.workspaceLayout = {left:300,right:300};
+  defaults.workspaceInputMode = 'type';
+  if (!state.questionNotes || typeof state.questionNotes !== 'object' || Array.isArray(state.questionNotes)) state.questionNotes = {};
+  if (!state.workspaceLayout || typeof state.workspaceLayout !== 'object') state.workspaceLayout = {left:300,right:300};
+  if (!Number.isFinite(Number(state.workspaceLayout.left))) state.workspaceLayout.left = 300;
+  if (!Number.isFinite(Number(state.workspaceLayout.right))) state.workspaceLayout.right = 300;
+  if (!['type','pen'].includes(state.workspaceInputMode)) state.workspaceInputMode = 'type';
+
+  function questionContext() {
+    const s = state.view;
+    if (s === 'reverse' && rs().mode === 'official') {
+      const y=rs().year,n=rs().number;
+      return {key:'official:'+y+'-'+n,label:y+'년 '+n+'번',kind:'official'};
+    }
+    if (s === 'exam') {
+      return {key:'official:'+state.year+'-'+state.examQuestion,label:state.year+'년 '+state.examQuestion+'번',kind:'official'};
+    }
+    if (s === 'typing') {
+      const c = typingConcept();
+      const official=/^official-(\d{4})-(\d+)$/.exec(c.id);
+      if (official) return {key:'official:'+official[1]+'-'+official[2],label:official[1]+'년 '+official[2]+'번',kind:'official'};
+      if (c.id.startsWith('type-')) return {key:'practice:'+c.id.slice(5),label:c.label||c.t,kind:'practice'};
+      return {key:'theory:'+c.id,label:c.label||c.t,kind:'theory'};
+    }
+    if (s === 'quiz') {
+      const q=quizzes()[state.quizIndex];
+      return {key:'practice:'+(q?.id||'first'),label:'연습 '+(state.quizIndex+1)+'번',kind:'quiz'};
+    }
+    const q=reverseQuestion();
+    const idx=availablePractice().findIndex(item=>item.id===q?.id);
+    return {key:'practice:'+(q?.id||'first'),label:'연습 '+(idx+1)+'번',kind:'practice',questionId:q?.id||''};
+  }
+  function questionNavigation(ctx) {
+    if (!ctx.questionId) return '';
+    const list=availablePractice(),active=Math.max(0,list.findIndex(q=>q.id===ctx.questionId));
+    const from=Math.max(0,Math.min(active-2,list.length-5));
+    const choices=list.slice(from,from+5).map((q,i)=>{
+      const num=from+i+1;
+      return `<button type="button" data-ck-question="${esc(q.id)}" aria-pressed="${q.id===ctx.questionId}" title="${esc(shortPhrase(q.q,64))}">${num}번</button>`;
+    }).join('');
+    return `<nav class="ck-note-nav" aria-label="연습 문항별 메모 선택">${choices}</nav>`;
+  }
+  function workspaceMarkup() {
+    const ctx=questionContext(),memo=state.questionNotes[ctx.key]||{},mode=state.workspaceInputMode,brush='workspace:'+ctx.key;
+    return `<div class="ck-rail-workspace" aria-label="문항별 학습 작업 공간">
+      <section class="ck-memo-card">
+        <div class="ck-memo-head"><div><span class="ck-kicker">MY STUDY NOTES / LOCAL JSON</span><h3>${esc(ctx.label)} · 학습 메모</h3></div></div>
+        ${questionNavigation(ctx)}
+        <p class="ck-caption">문제마다 별도의 메모가 저장됩니다. 문항을 바꾸면 해당 메모가 자동으로 열립니다.</p>
+        <textarea class="ck-memo-input" data-ck-memo="${esc(ctx.key)}" aria-label="${esc(ctx.label)} 학습 메모" rows="7" maxlength="10000" placeholder="이 문제에서 떠오른 개념, 오답 이유, 기억할 문장을 적어 보세요.">${esc(memo.text||'')}</textarea>
+        <div class="ck-memo-foot"><span class="ck-memo-status" role="status">● 브라우저에 자동 저장</span><button type="button" class="ck-export-note" data-ck-export="${esc(ctx.key)}" title="이 문항의 메모와 필기를 JSON으로 내보냅니다">JSON 저장 ↗</button></div>
+      </section>
+      <section class="ck-slate-card" aria-label="하나로 합친 키보드 및 S펜 칠판">
+        <div class="ck-slate-head"><div><span class="ck-kicker">ONE BOARD / TWO WAYS</span><h3>나의 문제별 칠판</h3></div></div>
+        <p class="ck-caption">키보드와 S펜이 같은 ${esc(ctx.label)} 기록에 연결됩니다.</p>
+        <div class="ck-slate-switch" role="group" aria-label="칠판 입력 방법">
+          <button type="button" data-ck-input-mode="type" aria-pressed="${mode==='type'}">⌨ 키보드</button>
+          <button type="button" data-ck-input-mode="pen" aria-pressed="${mode==='pen'}">✎ S펜 · 손글씨</button>
+        </div>
+        ${chalkPalette()}
+        <div class="ck-slate-pane" data-ck-slate-pane="type" ${mode==='type'?'':'hidden'}>
+          ${chalkEditor('notes',brush,'문항별 칠판 타이핑')}
+          <p class="ck-caption">분필 색과 입력 내용은 문항별로 보존됩니다.</p>
+        </div>
+        <div class="ck-slate-pane" data-ck-slate-pane="pen" ${mode==='pen'?'':'hidden'}>
+          ${inkPad(brush)}
+        </div>
+      </section>
+    </div>`;
+  }
+
+  const oldBoardFrame=boardFrame;
+  boardFrame=function(content) {
+    let html=oldBoardFrame(content);
+    if (!['home','reverse','quiz','exam','typing'].includes(state.view)) return html;
+    const target='</div><div class="board-content">';
+    html=html.replace('class="board-stage ', 'class="board-stage ck-workspace-stage ');
+    const i=html.indexOf(target);
+    if (i<0) return html;
+    html=html.slice(0,i)+workspaceMarkup()+'</div><div class="ck-resize-handle ck-left-handle" data-ck-resize="left" role="separator" tabindex="0" aria-orientation="vertical" aria-label="왼쪽 학습 작업 공간 폭 조절"></div><div class="board-content">'+html.slice(i+target.length);
+    // The old duplicated bottom keyboard and S-Pen editors remain in storage,
+    // but these problem-centric views show one unified workspace instead.
+    const duplicate=chalkFooter();
+    if (html.endsWith(duplicate)) html=html.slice(0,-duplicate.length);
+    return html;
+  };
+
+  const oldRender=render;
+  render=function(){
+    oldRender();
+    const stage=document.querySelector('.ck-workspace-stage');
+    if (!stage) return;
+    stage.style.setProperty('--ck-left',Math.max(238,Math.min(560,Number(state.workspaceLayout.left)||300))+'px');
+    if (state.view==='reverse') {
+      const grid=stage.querySelector('.board-content .theory-layout');
+      if (grid && grid.children.length===2) {
+        grid.classList.add('ck-question-grid');
+        const handle=document.createElement('div');
+        handle.className='ck-resize-handle ck-right-handle';
+        handle.dataset.ckResize='right';
+        handle.setAttribute('role','separator');
+        handle.setAttribute('tabindex','0');
+        handle.setAttribute('aria-orientation','vertical');
+        handle.setAttribute('aria-label','문제와 학습 경로 패널 폭 조절');
+        grid.insertBefore(handle,grid.children[1]);
+        grid.style.setProperty('--ck-right',Math.max(250,Math.min(520,Number(state.workspaceLayout.right)||300))+'px');
+      }
+    }
+  };
+
+  // Use a fixed, non-shifting underlay for the typing exercise. The typed
+  // layer is separate from the full target sentence and never moves it.
+  typingGhost=function(el){
+    const c=typingConcept(),r=chalkRecord('practice',c.id),mirror=el.querySelector('.chalk-mirror');
+    if (!mirror) return;
+    if (!c.fact) {
+      mirror.innerHTML='<span class="chalk-placeholder">등록된 문항이 없습니다. 다른 문항을 선택하세요.</span>';
+      el.querySelector('textarea').disabled=true;
+      return;
+    }
+    const a=Array.from(r.text.normalize('NFC')),b=Array.from(c.fact.normalize('NFC'));
+    let offset=0;
+    const filled=a.map((ch,i)=>{
+      const correct=ch===b[i],color=CHALK_COLORS[r.colors[offset]]||CHALK_COLORS[0];
+      offset+=ch.length;
+      return `<span class="${correct?'type-correct':'type-wrong'}" ${correct?`style="color:${color}"`:''}>${esc(ch)}</span>`;
+    }).join('');
+    mirror.innerHTML='<span class="ck-ghost-underlay">'+esc(c.fact.normalize('NFC'))+'</span><span class="ck-typed-overlay">'+filled+'</span>';
+    const area=el.querySelector('textarea');
+    const h=Math.max(250,mirror.scrollHeight);
+    el.style.minHeight=h+'px';
+    area.style.height=h+'px';
+  };
+
+  function exportQuestion(key) {
+    const entry=state.questionNotes[key]||{};
+    const strokes=inkRecord('workspace:'+key);
+    const keyboard=chalkRecord('notes','workspace:'+key);
+    const payload={
+      schema:'conceptknot-question-note-v1',questionKey:key,exportedAt:new Date().toISOString(),
+      note:{text:entry.text||'',updated:entry.updated||null},
+      board:{keyboard:{text:keyboard.text,colors:keyboard.colors},penStrokes:strokes}
+    };
+    download('ConceptKnot_'+key.replace(/[^a-zA-Z0-9가-힣_-]/g,'_')+'_학습메모.json','application/json;charset=utf-8',JSON.stringify(payload,null,2));
+    toast('현재 문제의 메모와 칠판 필기를 JSON으로 내보냈습니다.');
+  }
+
+  // Use capture phase to keep custom controls out of the old catch-all click handler.
+  document.addEventListener('click',e=>{
+    const mode=e.target.closest('[data-ck-input-mode]');
+    if (mode) {
+      e.preventDefault();e.stopImmediatePropagation();
+      state.workspaceInputMode=mode.dataset.ckInputMode==='pen'?'pen':'type';
+      const card=mode.closest('.ck-slate-card');
+      card?.querySelectorAll('[data-ck-input-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.ckInputMode===state.workspaceInputMode)));
+      card?.querySelectorAll('[data-ck-slate-pane]').forEach(p=>p.hidden=p.dataset.ckSlatePane!==state.workspaceInputMode);
+      save();
+      if(state.workspaceInputMode==='pen')requestAnimationFrame(()=>card?.querySelector('canvas.ink-canvas')?.__inkResize?.());
+      return;
+    }
+    const qbutton=e.target.closest('[data-ck-question]');
+    if (qbutton) {
+      e.preventDefault();e.stopImmediatePropagation();
+      const q=availablePractice().find(x=>x.id===qbutton.dataset.ckQuestion);
+      if (!q) return;
+      if (rs().id!==q.id) {
+        rs().id=q.id;rs().step=0;rs().firstChoice=0;rs().transferChoice=0;rs().retryChoice=0;rs().recallRating=null;
+      }
+      save();render();
+      return;
+    }
+    const exportButton=e.target.closest('[data-ck-export]');
+    if (exportButton) {
+      e.preventDefault();e.stopImmediatePropagation();
+      exportQuestion(exportButton.dataset.ckExport);
+    }
+  },true);
+
+  document.addEventListener('input',e=>{
+    const input=e.target.closest('[data-ck-memo]');
+    if (!input) return;
+    const key=input.dataset.ckMemo;
+    state.questionNotes[key]={text:input.value.slice(0,10000),updated:Date.now()};
+    const okay=save();
+    const status=input.closest('.ck-memo-card')?.querySelector('.ck-memo-status');
+    if(status)status.textContent=okay?'✓ 문항별 로컬 저장 완료':'저장 실패 · JSON 백업 후 저장 공간을 확보하세요';
+  });
+
+  let drag=null;
+  function setPanelSize(type,width) {
+    const stage=document.querySelector('.ck-workspace-stage');
+    if(!stage)return;
+    const grid=stage.querySelector('.ck-question-grid');
+    if (type==='left') {
+      const limit=Math.max(238,Math.min(560,stage.clientWidth-620));
+      const pixels=Math.round(Math.max(238,Math.min(limit,width)));
+      state.workspaceLayout.left=pixels;
+      stage.style.setProperty('--ck-left',pixels+'px');
+    } else if(grid) {
+      const limit=Math.max(250,Math.min(520,grid.clientWidth-345));
+      const pixels=Math.round(Math.max(250,Math.min(limit,width)));
+      state.workspaceLayout.right=pixels;
+      grid.style.setProperty('--ck-right',pixels+'px');
+    }
+  }
+  document.addEventListener('pointerdown',e=>{
+    const handle=e.target.closest('[data-ck-resize]');
+    if (!handle || !window.matchMedia('(min-width:951px)').matches) return;
+    if(handle.dataset.ckResize==='right'&&!window.matchMedia('(min-width:1251px)').matches)return;
+    e.preventDefault();
+    drag={pointer:e.pointerId,kind:handle.dataset.ckResize,startX:e.clientX,initial:Number(state.workspaceLayout[handle.dataset.ckResize])||300,handle};
+    handle.setPointerCapture?.(e.pointerId);
+  });
+  document.addEventListener('pointermove',e=>{
+    if(!drag||e.pointerId!==drag.pointer)return;
+    const delta=e.clientX-drag.startX;
+    setPanelSize(drag.kind,drag.initial+(drag.kind==='right'?-delta:delta));
+    e.preventDefault();
+  });
+  function stopDrag(e) {
+    if (!drag || e.pointerId!==drag.pointer) return;
+    try{drag.handle.releasePointerCapture?.(e.pointerId);}catch{}
+    drag=null;save();
+  }
+  document.addEventListener('pointerup',stopDrag);
+  document.addEventListener('pointercancel',stopDrag);
+  document.addEventListener('keydown',e=>{
+    const handle=e.target.closest?.('[data-ck-resize]');
+    if (!handle||!['ArrowLeft','ArrowRight','Home'].includes(e.key))return;
+    e.preventDefault();
+    const kind=handle.dataset.ckResize;
+    const current=Number(state.workspaceLayout[kind])||300;
+    const next=e.key==='Home'?300:current+(e.key==='ArrowRight'?20:-20)*(kind==='right'?-1:1);
+    setPanelSize(kind,next);save();
+  });
+})();
 render();setInterval(timerTick,500);
 })();
 
