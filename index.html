@@ -85,7 +85,9 @@ body{font-family:Pretendard,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;bac
 <link rel="stylesheet" href="./design-v2-glass.css" media="all">
 <link rel="stylesheet" href="./ui-fix-v3.css" media="all">
 <link rel="stylesheet" href="./home-scroll-v5.css" media="all">
-<meta name="conceptknot-release" content="garden-hero-v5">
+<meta name="conceptknot-release" content="glass-playground-v6">
+<link rel="stylesheet" href="./workspace-glass-v6.css" media="all">
+<link rel="stylesheet" href="./assets/ck-playground-fallback-v6.css" media="all">
 </head>
 <body>
 <a href="#main" class="skip-link">본문으로 이동</a>
@@ -1261,6 +1263,7 @@ window.addEventListener('beforeunload',()=>{if(localPdfUrl)URL.revokeObjectURL(l
     ['venn','비교 도형'],['wrong','오답 복습'],['plan','학습 계획']
   ];
   defaults.v7LeftWidth=null;
+  defaults.ck6Swapped=false;
   defaults.v7MigratedNotes={};
   defaults.v7HistoryOpen=false;
   // V6 registered questionNotes after the initial defaults-based restore.
@@ -1268,7 +1271,7 @@ window.addEventListener('beforeunload',()=>{if(localPdfUrl)URL.revokeObjectURL(l
   try{
     const saved=JSON.parse(localStorage.getItem(STORAGE)||'{}');
     if(saved&&typeof saved==='object'){
-      for(const k of ['questionNotes','workspaceLayout','workspaceInputMode','v7LeftWidth','v7MigratedNotes','v7HistoryOpen']){
+      for(const k of ['questionNotes','workspaceLayout','workspaceInputMode','v7LeftWidth','v7MigratedNotes','v7HistoryOpen','ck6Swapped']){
         if(Object.prototype.hasOwnProperty.call(saved,k))state[k]=saved[k];
       }
     }
@@ -1277,6 +1280,7 @@ window.addEventListener('beforeunload',()=>{if(localPdfUrl)URL.revokeObjectURL(l
   if(!state.v7MigratedNotes||typeof state.v7MigratedNotes!=='object'||Array.isArray(state.v7MigratedNotes))state.v7MigratedNotes={};
   if(!Number.isFinite(Number(state.v7LeftWidth))||Number(state.v7LeftWidth)<260)state.v7LeftWidth=null;
   state.v7HistoryOpen=Boolean(state.v7HistoryOpen);
+  state.ck6Swapped=Boolean(state.ck6Swapped);
 
   function context(){
     const v=state.view;
@@ -1356,9 +1360,12 @@ window.addEventListener('beforeunload',()=>{if(localPdfUrl)URL.revokeObjectURL(l
           ${designNav.map(([page,label])=>`<button type="button" class="board-tab ${page===state.view?'active':''}" data-go="${page}" aria-current="${page===state.view?'page':'false'}">${label}</button>`).join('')}
         </nav>
       </div><div class="ck-v7-date-pill"><span>▦ ${esc(date)}</span><button type="button" data-go="settings" aria-label="내 데이터 및 설정">⚙</button></div></header>
-      <div class="board-stage ck-v7-stage ${state.view==='home'?'is-home':''}">
+      <div class="board-stage ck-v7-stage ${state.view==='home'?'is-home':''} ${state.ck6Swapped?'ck6-swapped':''}">
         ${boardHtml(ctx)}
-        <div class="ck-v7-divider" data-ck-v7-resize role="separator" aria-label="메모판과 문제 영역 가로폭 조절" aria-orientation="vertical" aria-valuemin="25" aria-valuemax="55" aria-valuenow="${Math.round(state.v7LeftWidth||33)}" tabindex="0"></div>
+        <div class="ck6-center-rail" aria-label="학습 화면 배치 도구"><div class="ck6-rail-controls">
+          <div class="ck-v7-divider" data-ck-v7-resize role="separator" aria-label="메모판 크기 조절" aria-orientation="vertical" aria-valuemin="25" aria-valuemax="55" aria-valuenow="${Math.round(state.v7LeftWidth||33)}" tabindex="0" title="드래그 또는 방향키로 너비 조절"></div>
+          <button type="button" class="ck6-swap-btn" data-ck6-swap aria-label="칠판과 본문 위치 좌우 교환" aria-pressed="${state.ck6Swapped?'true':'false'}" title="칠판과 본문 좌우 위치 바꾸기"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h16m0 0-4-4m4 4-4 4M20 16H4m0 0 4-4m-4 4 4 4"/></svg></button>
+        </div></div>
         <div class="board-content ck-v7-content">${content}</div>
       </div></div>`;
   };
@@ -1531,13 +1538,13 @@ window.addEventListener('beforeunload',()=>{if(localPdfUrl)URL.revokeObjectURL(l
     e.preventDefault();e.stopPropagation();
     const stage=handle.closest('.ck-v7-stage');
     const start=stage.querySelector('.ck-v7-board-shell').getBoundingClientRect().width;
-    dragged={id:e.pointerId,startX:e.clientX,start,handle};
+    dragged={id:e.pointerId,startX:e.clientX,start,handle,swapped:stage.classList.contains('ck6-swapped')};
     handle.setPointerCapture(e.pointerId);
   },true);
   document.addEventListener('pointermove',e=>{
     if(!dragged||dragged.id!==e.pointerId)return;
     e.preventDefault();
-    setLeftWidth(dragged.start+e.clientX-dragged.startX);
+    setLeftWidth(dragged.start+(dragged.swapped?-1:1)*(e.clientX-dragged.startX));
   },true);
   document.addEventListener('pointerup',e=>{
     if(!dragged||dragged.id!==e.pointerId)return;
@@ -1552,7 +1559,39 @@ window.addEventListener('beforeunload',()=>{if(localPdfUrl)URL.revokeObjectURL(l
     e.preventDefault();e.stopImmediatePropagation();
     const stage=handle.closest('.ck-v7-stage');
     const left=stage.querySelector('.ck-v7-board-shell').getBoundingClientRect().width;
-    setLeftWidth(e.key==='Home'?stage.clientWidth/3:left+(e.key==='ArrowRight'?22:-22));save();
+    const direction=stage.classList.contains('ck6-swapped')?-1:1;
+    setLeftWidth(e.key==='Home'?stage.clientWidth/3:left+(e.key==='ArrowRight'?22:-22)*direction);save();
+  },true);
+
+
+  // Swap existing nodes in CSS grid rather than calling render() so that the
+  // active textarea, IME composition, pen strokes and autosave mounts survive.
+  document.addEventListener('click',e=>{
+    const button=e.target.closest?.('[data-ck6-swap]');
+    if(!button)return;
+    e.preventDefault();e.stopImmediatePropagation();
+    const stage=button.closest('.ck-v7-stage');
+    const board=stage?.querySelector('.ck-v7-board-shell');
+    const content=stage?.querySelector('.ck-v7-content');
+    if(!stage||!board||!content)return;
+    const before=[board.getBoundingClientRect(),content.getBoundingClientRect()];
+    state.ck6Swapped=!state.ck6Swapped;
+    stage.classList.toggle('ck6-swapped',state.ck6Swapped);
+    button.setAttribute('aria-pressed',String(state.ck6Swapped));
+    const after=[board.getBoundingClientRect(),content.getBoundingClientRect()];
+    if(matchMedia('(min-width:851px) and (prefers-reduced-motion: no-preference)').matches){
+      [board,content].forEach((el,i)=>{
+        const dx=before[i].left-after[i].left;
+        if(Math.abs(dx)<2)return;
+        el.getAnimations().forEach(a=>{if(a.effect?.getTiming?.().duration===340)a.cancel();});
+        el.animate([
+          {transform:'translate3d('+dx.toFixed(1)+'px,0,0)',opacity:.87},
+          {transform:'translate3d(0,0,0)',opacity:1}
+        ],{duration:340,easing:'cubic-bezier(.2,.72,.22,1)'});
+      });
+    }
+    save();
+    toast(state.ck6Swapped?'칠판을 오른쪽으로 옮겼습니다.':'칠판을 왼쪽으로 옮겼습니다.');
   },true);
 
   function updateStats(){

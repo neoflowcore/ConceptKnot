@@ -1,0 +1,22 @@
+/* Color-rich, low-resource fallback. WebGL users receive the real rolling spheres. */
+.ck-v8-ambient:not(.ck-3d-ready) .ck-v8-art::after{
+ content:"";position:absolute;inset:0;
+ background:url('./assets/ck-playground-fallback-v6.svg') center center/cover no-repeat;
+ pointer-events:none;z-index:2;opacity:.97;
+}
+.ck-v8-ambient:not(.ck-3d-ready) .ck-v8-art::before{
+ content:"";position:absolute;left:13%;bottom:23%;width:29px;height:29px;border-radius:50%;
+ background:radial-gradient(circle at 28% 27%,#ffe9bd 0 9%,#fc8466 21%,#e65056 77%);
+ box-shadow:0 7px 11px rgba(21,61,39,.28);pointer-events:none;z-index:3;
+ animation:ck6-fallback-roll 6.8s ease-in-out infinite alternate;
+}
+@keyframes ck6-fallback-roll{
+ 0%{transform:translate3d(0,0,0) rotate(0deg)}
+ 50%{transform:translate3d(105px,-26px,0) rotate(210deg)}
+ 100%{transform:translate3d(185px,0,0) rotate(410deg)}
+}
+@media(max-width:650px){
+ .ck-v8-ambient:not(.ck-3d-ready) .ck-v8-art::after{background-size:auto 100%;background-position:center}
+ .ck-v8-ambient:not(.ck-3d-ready) .ck-v8-art::before{bottom:17%;left:8%}
+}
+@media(prefers-reduced-motion:reduce){.ck-v8-ambient:not(.ck-3d-ready) .ck-v8-art::before{animation:none!important}}
