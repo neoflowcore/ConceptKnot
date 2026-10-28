@@ -1,0 +1,108 @@
+/* v9 analogue clock, slim glass controls, Galaxy-style S Pen workspace. */
+.ck9-clock-host{display:flex!important;gap:9px!important;align-items:center!important}
+.ck9-clock{
+  position:relative;display:block;flex:none;
+  width:34px;height:34px;border-radius:50%;
+  border:1px solid rgba(34,81,68,.15);
+  background:linear-gradient(135deg,rgba(255,255,255,.97),rgba(228,243,234,.75));
+  box-shadow:0 2px 7px rgba(17,79,59,.09),inset 0 1px rgba(255,255,255,.95);
+}
+.ck9-clock::before{
+  content:"";position:absolute;inset:3px;border:1px solid rgba(28,93,69,.11);border-radius:50%;
+  background:conic-gradient(from 0deg,rgba(22,91,70,.25) 0deg 2deg,transparent 2deg 90deg,rgba(22,91,70,.25) 90deg 92deg,transparent 92deg 180deg,rgba(22,91,70,.25) 180deg 182deg,transparent 182deg 270deg,rgba(22,91,70,.25) 270deg 272deg,transparent 272deg);
+}
+.ck9-hour,.ck9-minute,.ck9-second{
+  position:absolute;left:50%;bottom:50%;border-radius:999px;transform-origin:50% 100%;
+  transform:translateX(-50%) rotate(0deg);
+}
+.ck9-hour{width:2.5px;height:8.3px;background:#204938;z-index:2}
+.ck9-minute{width:1.8px;height:11.3px;background:#246c51;z-index:3}
+.ck9-second{width:1px;height:13.0px;background:#ef7153;z-index:4}
+.ck9-center{position:absolute;left:50%;top:50%;width:4px;height:4px;
+  margin:-2px 0 0 -2px;border-radius:50%;background:#204938;z-index:5}
+.ck9-clock-reader{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;
+  clip:rect(0,0,0,0)!important;white-space:nowrap!important}
+
+/* Same miniature size for both resize control and round swap marker.
+   Invisible hit area gives fingers a forgiving touch target. */
+:root{--ck9-handle-width:19px}
+.ck-v7-stage .ck6-center-rail .ck-v7-divider{
+ width:var(--ck9-handle-width)!important;min-width:var(--ck9-handle-width)!important;height:39px!important;min-height:39px!important;
+ border:1px solid rgba(254,255,255,.4)!important;
+ background:rgba(247,255,255,.27)!important;
+ box-shadow:0 2px 5px rgba(23,68,60,.09)!important;
+ backdrop-filter:blur(9px)!important;
+}
+.ck-v7-stage .ck6-center-rail .ck-v7-divider::after{
+ width:1px!important;height:20px!important;min-width:1px!important;
+ background:#5a9b89!important;box-shadow:3px 0 rgba(83,158,133,.23),-3px 0 rgba(83,158,133,.23)!important;
+}
+.ck6-center-rail .ck6-rail-controls{gap:5px}
+.ck6-swap-btn,.ck6-center-rail .ck6-swap-btn{
+ width:var(--ck9-handle-width)!important;height:var(--ck9-handle-width)!important;min-height:var(--ck9-handle-width)!important;
+ padding:0!important;border-radius:50%!important;background:rgba(252,255,249,.55)!important;
+ border:1px solid rgba(255,255,255,.78)!important;box-shadow:0 2px 6px rgba(18,75,65,.1)!important;
+}
+.ck6-swap-btn::after{content:"";position:absolute;inset:-13px!important;transform:none!important;
+ width:auto!important;height:auto!important;background:transparent!important;border:0;border-radius:50%;pointer-events:auto}
+.ck6-swap-btn svg{width:12px!important;height:12px!important;stroke-width:1.4!important}
+.ck6-swap-btn:focus-visible{outline:2px solid #246ec9;outline-offset:5px}
+.ck9-spen-strip{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:7px 0 9px;padding:3px 0}
+.ck9-spen-toggle{display:inline-flex;align-items:center;gap:7px;min-height:31px;padding:6px 11px;border-radius:999px;
+  border:1px solid rgba(202,239,225,.6);background:rgba(15,78,72,.28);
+  color:#effcef;font-size:11px;font-weight:760;cursor:pointer}
+.ck9-spen-toggle[aria-pressed=true]{background:#c4f0dc;color:#145a44;border-color:#a8e7c7}
+.ck9-spen-hint{color:#d5e9e0;font-size:10px;opacity:.8}
+.ck9-spen-toolbar[hidden]{display:none!important}
+.ck9-spen-toolbar{display:flex;align-items:center;gap:7px;flex-wrap:wrap;
+  padding:9px;border:1px solid rgba(214,255,239,.27);
+  background:rgba(16,73,71,.25);border-radius:12px;margin:0 0 9px}
+.ck9-spen-toolbar>div{display:flex;gap:4px;align-items:center}
+.ck9-spen-toolbar button{border:1px solid rgba(237,255,246,.38);border-radius:8px;background:rgba(252,255,251,.13);
+  color:#eafbf3;min-width:30px;min-height:31px;padding:6px 9px;font-weight:720;font-size:11px;cursor:pointer}
+.ck9-spen-toolbar button[aria-pressed=true]{background:#c9f3da;color:#165740;border-color:#c4f4dd}
+.ck9-spen-toolbar label{font-size:11px;display:flex;align-items:center;gap:6px;color:#e8faf2;font-weight:720}
+.ck9-spen-toolbar input[type=range]{width:92px;accent-color:#e1d48d;min-height:31px}
+.ck9-spen-active .ck-v7-writing-surface{
+ min-height:clamp(370px,53svh,710px)!important;touch-action:pan-y;
+ border:1px solid rgba(231,255,251,.26)!important;
+ cursor:crosshair;
+}
+.ck9-spen-active .ck-v7-writing-surface textarea{
+  opacity:0!important;pointer-events:none!important;user-select:none!important;
+}
+.ck9-spen-active .ck-v7-writing-surface .chalk-mirror{opacity:.16}
+.ck9-spen-active .ck-v7-pen-layer{opacity:1;pointer-events:none}
+.ck9-spen-fullscreen{
+ position:fixed!important;inset:7px!important;z-index:9999!important;width:auto!important;height:auto!important;
+ max-width:none!important;overflow:auto!important;padding:clamp(10px,2vw,20px)!important;
+ background:linear-gradient(155deg,#185e59,#123e39)!important;
+ border:1px solid #b9e2d3!important;border-radius:18px!important;
+}
+body.ck9-spen-overlay{overflow:hidden!important}
+.ck9-spen-fullscreen .ck-v7-writing-surface{min-height:65svh!important}
+.ck9-spen-fullscreen .ck-v7-art,.ck9-spen-fullscreen .ck-v7-art-shade{opacity:.12!important}
+@media(max-width:850px){
+ :root{--ck9-handle-width:19px}
+ .ck-v7-stage>.ck6-center-rail{width:100%!important;height:26px!important;min-height:26px!important;align-self:stretch!important}
+ .ck6-center-rail::before{content:"";position:absolute;left:50%;top:13px;transform:translateX(-50%);
+    width:88px;height:1px;border-radius:1px;background:rgba(236,255,247,.62);pointer-events:none}
+ .ck6-rail-controls{display:flex!important;justify-content:center!important;align-items:center!important;
+    flex-direction:row!important;width:100%!important;min-width:0!important;height:26px!important}
+ .ck6-center-rail .ck6-swap-btn{width:var(--ck9-handle-width)!important;height:var(--ck9-handle-width)!important;
+    background:rgba(255,255,249,.89)!important;z-index:2}
+ .ck6-swap-btn svg{transform:rotate(90deg)}
+ .ck9-spen-hint{font-size:10px}
+ .ck9-spen-toolbar{gap:6px}
+ .ck9-spen-toolbar button{min-height:35px}
+ .ck9-spen-active .ck-v7-writing-surface{min-height:clamp(400px,58svh,760px)!important}
+}
+@media(max-width:420px){
+ .ck9-clock{width:30px;height:30px}
+ .ck9-clock-host{gap:5px!important}
+ .ck9-hour{height:7px}.ck9-minute{height:10px}.ck9-second{height:12px}
+ .ck9-spen-strip{gap:5px}.ck9-spen-hint{font-size:9px}
+}
+@media(prefers-reduced-motion:reduce){
+ .ck6-swap-btn,.ck9-spen-toggle,.ck9-spen-toolbar button{transition:none!important}
+}

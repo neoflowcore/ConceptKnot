@@ -145,6 +145,19 @@ export function buildStudyMachine(THREE, scene, terrain, quality) {
     }
     ring.rotation.z=twopi*phase;
   }
+  function nearestBall(world){
+    // Center has translation only; samples are already updated by animate().
+    let best=Infinity,index=-1;
+    for(let i=0;i<balls.length;i++){
+      const p=balls[i].carrier.position;
+      const dx=p.x+center.position.x-world.x;
+      const dy=p.y+center.position.y-world.y;
+      const dz=p.z+center.position.z-world.z;
+      const distance=Math.hypot(dx,dy,dz);
+      if(distance<best){best=distance;index=i;}
+    }
+    return {index,distance:best};
+  }
   animate(0);
-  return {animate,lapSeconds,ballCount:count,trackClosed:path.closed};
+  return {animate,nearestBall,lapSeconds,ballCount:count,trackClosed:path.closed};
 }

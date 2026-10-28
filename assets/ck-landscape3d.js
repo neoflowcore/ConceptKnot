@@ -1,5 +1,6 @@
 import * as THREE from '../vendor/three.module.min.js';
 import { buildStudyMachine } from './ck-kinetic-garden-v8.js';
+import { buildSleepingCub } from './ck-sleeping-cub-v9.js';
 
 // ConceptKnot 3D Garden v3 — original procedural geometry, not a Clay.com asset.
 // Three.js is vendored (MIT) to avoid runtime CDN/network dependencies.
@@ -14,7 +15,7 @@ const rand = (() => { let seed = 20261028; return () => ((seed = (seed * 1664525
 const lerp = THREE.MathUtils.lerp;
 const clamp = THREE.MathUtils.clamp;
 const v3 = (x, y, z) => new THREE.Vector3(x, y, z);
-const scenes = { trees: [], clouds: [], bird: null, machine: null };
+const scenes = { trees: [], clouds: [], bird: null, machine: null, cub:null };
 const pastel = [0x3c9a55, 0x287a54, 0x76b939, 0x205f49, 0xe7bf47];
 const flowerColors = [0xffc44f, 0xff789b, 0xffe28a, 0x6db9f3, 0xff8753];
 let root, renderer, camera, scene, materialCache, clock, frameId = 0;
@@ -228,8 +229,8 @@ function flowers() {
 }
 function bird() {
   const bird=new THREE.Group();
-  const bx=-3.4,bz=-16.7;
-  bird.position.set(bx,h(bx,bz)+6.1,bz);
+  const bx=-5.55,bz=-21.8;
+  bird.position.set(bx,h(bx,bz)+5.85,bz);
   bird.scale.setScalar(1.04);
   const teal=pbr(0x159eb5,.62),blue=pbr(0x137ebe,.52),white=pbr(0xf9f4e7,.92),beak=pbr(0xf3a54d,.58),black=pbr(0x092b3d,.28);
   const ball=new THREE.SphereGeometry(1,20,12);
@@ -258,7 +259,7 @@ function bird() {
   const perch=mesh(new THREE.CylinderGeometry(.115,.16,3.2,8),pbr(0x785942,.95));
   perch.rotation.z=Math.PI/2;perch.position.set(0,-1.25,0);bird.add(perch);
   scene.add(bird);
-  scenes.bird={group:bird,head,baseY:bird.position.y};
+  scenes.bird={group:bird,head,baseY:bird.position.y,peckStarted:-100,peckIndex:-1,beakWorld:{x:bx+.91,y:bird.position.y+.72,z:bz+.18}};
 }
 function createRenderer() {
   const host=document.getElementById(HOST_ID);
@@ -289,6 +290,7 @@ function createRenderer() {
   camera.lookAt(0,6,-30);
   sky();ground();grass();flowers();diffuseClouds();trees();
    scenes.machine=buildStudyMachine(THREE,scene,h,QUALITY);
+   scenes.cub=buildSleepingCub(THREE,scene,h,QUALITY);
    bird();
   host.insertBefore(canvas,host.firstChild);
   root=host;
@@ -336,17 +338,35 @@ function tick(ms){
   if(!focused)playTime+=dt;
   for(const tr of scenes.trees){const breeze=Math.sin(elapsed*2*Math.PI/tr.tempo+tr.phase)*tr.amp;const cursor=pointer.x*tr.amp*.72;tr.crown.rotation.z=lerp(tr.crown.rotation.z,(breeze+cursor)*intensity,1-Math.exp(-dt*2.3));}
   for(const cl of scenes.clouds){cl.group.position.x+=dt*cl.speed*intensity;if(cl.group.position.x>105)cl.group.position.x=-110;}
-  if(scenes.bird){
-    const targetX=clamp(pointer.x*0.16,-.16,.16)*intensity;
-    const targetY=clamp(-pointer.y*.12,-.12,.12)*intensity;
-    const smooth=1-Math.exp(-dt*3.2);
-    const head=scenes.bird.head;
-    head.rotation.y=lerp(head.rotation.y,targetX,smooth);
-    head.rotation.z=lerp(head.rotation.z,targetY+Math.sin(elapsed*.5)*.03*intensity,smooth);
-    scenes.bird.group.position.y=scenes.bird.baseY+Math.sin(elapsed*.67)*.052*intensity;
-  }
-  // One shared rolling lap for all props; halted during study focus.
+  // Time-locked ball passes animate before the bird's peck decisions.
   scenes.machine?.animate(playTime);
+  scenes.cub?.animate(playTime);
+  if(scenes.bird){
+    const b=scenes.bird;
+    const targetX=clamp(pointer.x*.16,-.16,.16)*intensity;
+    const targetY=clamp(-pointer.y*.12,-.12,.12)*intensity;
+    const nearest=scenes.machine?.nearestBall(b.beakWorld);
+    // The front arc passes near the beak: each entering ball triggers one
+    // 0.62-second attempt, with a minimum gap between attempts.
+    if(!focused&&nearest&&nearest.distance<2.65&&nearest.index!==b.peckIndex
+       &&playTime-b.peckStarted>1.15){
+      b.peckStarted=playTime;
+      b.peckIndex=nearest.index;
+    }
+    if(nearest&&nearest.distance>3.7&&playTime-b.peckStarted>.85){
+      b.peckIndex=-1;
+    }
+    const progress=(playTime-b.peckStarted)/.62;
+    const peck=!focused&&progress>=0&&progress<=1
+      ?Math.pow(Math.sin(progress*Math.PI),1.1):0;
+    const smooth=1-Math.exp(-dt*9.3);
+    b.head.rotation.y=lerp(b.head.rotation.y,targetX,smooth);
+    b.head.rotation.z=lerp(b.head.rotation.z,targetY-.53*peck+Math.sin(elapsed*.5)*.02*intensity,smooth);
+    b.head.rotation.x=lerp(b.head.rotation.x,-.17*peck,smooth);
+    b.head.position.x=.30+.23*peck;
+    b.head.position.y=.72-.15*peck;
+    b.group.position.y=b.baseY+Math.sin(elapsed*.67)*.035*intensity-.055*peck;
+  }
   camera.position.x=lerp(camera.position.x,pointer.x*.32*intensity,1-Math.exp(-dt*1.2));
   camera.lookAt(0,6,-30);
   renderer.render(scene,camera);

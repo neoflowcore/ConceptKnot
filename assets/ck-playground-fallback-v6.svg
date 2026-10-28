@@ -70,4 +70,25 @@
 <path d="m54-61 25 10-25 13Z" fill="#f2b24d"/></g>
 <!-- Fixed balls along the same track, for users without WebGL -->
 <g stroke="#fff2d8" stroke-width="4"><circle cx="535" cy="292" r="18" fill="#f5bb27"/><circle cx="882" cy="305" r="18" fill="#e85c59"/><circle cx="1173" cy="397" r="18" fill="#2e8cc8"/><circle cx="976" cy="661" r="18" fill="#f17cb1"/><circle cx="500" cy="545" r="18" fill="#4bae74"/></g>
+
+<g id="ck9-sleeping-cub" transform="translate(1002 751)">
+ <ellipse cx="-10" cy="96" rx="152" ry="25" fill="#164536" opacity=".24"/>
+ <g id="ck9-cub-body"><ellipse cx="-48" cy="8" rx="117" ry="62" fill="#b67b46"/>
+ <ellipse cx="-53" cy="-3" rx="106" ry="56" fill="#d8a16a"/>
+ <ellipse cx="-86" cy="15" rx="50" ry="32" fill="#f1c48d"/>
+ <path d="M-125-20Q-159-55-174-27" fill="none" stroke="#bd8650" stroke-width="15"/>
+ <ellipse cx="-170" cy="-30" rx="20" ry="14" fill="#8a533d"/></g>
+ <g id="ck9-cub-ball"><circle cx="100" cy="60" r="43" fill="#248bb4" stroke="#62c3dc" stroke-width="5"/>
+ <path d="M62 31Q108 26 125 89" fill="none" stroke="#f8e7ae" stroke-width="12"/></g>
+ <g id="ck9-cub-head"><ellipse cx="17" cy="-43" rx="63" ry="61" fill="#dca46e"/>
+ <ellipse cx="-28" cy="-86" rx="21" ry="25" fill="#b37a46"/><ellipse cx="-28" cy="-86" rx="11" ry="15" fill="#764c3b"/>
+ <ellipse cx="58" cy="-86" rx="21" ry="25" fill="#b37a46"/><ellipse cx="58" cy="-86" rx="11" ry="15" fill="#764c3b"/>
+ <path d="M-23-43Q-4-27 13-41M34-42Q52-29 70-43" stroke="#503729" stroke-width="5" stroke-linecap="round" fill="none"/>
+ <ellipse cx="19" cy="2" rx="47" ry="32" fill="#f8d7ad"/>
+ <ellipse cx="-3" cy="-4" rx="22" ry="16" fill="#f6e2c6"/><ellipse cx="40" cy="-4" rx="22" ry="16" fill="#f6e2c6"/>
+ <path d="m7-13 13 11 13-11Z" fill="#594035"/><path d="M20-2v13m0 0q-9 9-18 0m18 0q10 9 19 0" stroke="#594035" stroke-width="2.5" fill="none"/>
+ <g fill="#7d5840"><circle cx="-11" cy="-6" r="3"/><circle cx="-8" cy="5" r="3"/><circle cx="0" cy="1" r="2.7"/>
+ <circle cx="45" cy="-6" r="3"/><circle cx="52" cy="4" r="3"/><circle cx="55" cy="-8" r="2.7"/></g></g>
+ <g fill="#e6b27a"><ellipse cx="-10" cy="82" rx="36" ry="22"/><ellipse cx="67" cy="86" rx="35" ry="21"/></g>
+</g>
 </svg>

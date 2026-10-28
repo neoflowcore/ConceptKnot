@@ -11,7 +11,7 @@
   const main=document.getElementById('main');
   if(!main)return;
   const reduced=()=>Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
-  const coarse=()=>Boolean(window.matchMedia?.('(pointer: coarse)').matches);
+  const isMobile=()=>Boolean(window.matchMedia('(max-width:850px)').matches);
   let prevView='',homeToStudy=false,lockedUntil=0,wheelSum=0,wheelAt=0,revealObserver=null,animTimer=0;
   const pager=document.createElement('nav');
   pager.className='ck4-pager';
@@ -155,8 +155,12 @@
     }
     return false;
   }
+  // Desktop: NEVER hijack the wheel. The active study document is one natural
+  // continuous vertical scroll; tab changes happen ONLY on explicit tab clicks.
+  // Narrow screens retain the deliberate page-by-page navigation behaviour.
   window.addEventListener('wheel',e=>{
-    if(e.defaultPrevented||e.ctrlKey||e.metaKey||e.shiftKey||coarse()||view()==='settings'||Math.abs(e.deltaX)>Math.abs(e.deltaY))return;
+    if(!isMobile())return;
+    if(e.defaultPrevented||e.ctrlKey||e.metaKey||e.shiftKey||view()==='settings'||Math.abs(e.deltaX)>Math.abs(e.deltaY))return;
     if(inEditor(e.target)||document.activeElement?.matches?.('textarea,input,select,[contenteditable="true"],[role="textbox"]'))return;
     const delta=e.deltaY*(e.deltaMode===1?16:e.deltaMode===2?innerHeight:1);
     if(!delta||scrollableChild(e.target,delta))return;
@@ -172,6 +176,32 @@
       e.preventDefault();step(delta>0?1:-1);wheelSum=0;
     }
   },{passive:false});
+
+  // Native touch scrolling is never prevented. On mobile, an additional,
+  // deliberate swipe beyond the document edge moves one tab at a time.
+  // The writing canvas and editable fields are excluded, so S Pen remains safe.
+  let touchStart=null;
+  document.addEventListener('touchstart',e=>{
+    if(!isMobile()||e.touches.length!==1||view()==='settings'
+       ||inEditor(e.target)||inEditor(document.activeElement))return;
+    const touch=e.touches[0],limit=Math.max(0,document.documentElement.scrollHeight-innerHeight);
+    const atTop=scrollY<=9,atBottom=scrollY>=limit-9;
+    if(!atTop&&!atBottom)return;
+    touchStart={x:touch.clientX,y:touch.clientY,target:e.target,
+       atTop,atBottom,time:performance.now()};
+  },{passive:true});
+  document.addEventListener('touchend',e=>{
+    const first=touchStart;touchStart=null;
+    if(!first||!isMobile()||e.changedTouches.length!==1||
+       performance.now()<lockedUntil)return;
+    const end=e.changedTouches[0],dy=first.y-end.clientY,dx=first.x-end.clientX;
+    if(Math.abs(dy)<105||Math.abs(dx)>65||performance.now()-first.time>1100)return;
+    if(dy>0&&!first.atBottom||dy<0&&!first.atTop)return;
+    if(scrollableChild(first.target,dy))return;
+    step(dy>0?1:-1);
+  },{passive:true});
+  document.addEventListener('touchcancel',()=>{touchStart=null;},{passive:true});
+
   document.addEventListener('keydown',e=>{
     if(e.defaultPrevented||inEditor(e.target)||!e.altKey||e.ctrlKey||e.metaKey||e.shiftKey)return;
     if(e.key==='ArrowDown'){e.preventDefault();step(1);}

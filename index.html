@@ -85,8 +85,9 @@ body{font-family:Pretendard,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;bac
 <link rel="stylesheet" href="./design-v2-glass.css" media="all">
 <link rel="stylesheet" href="./ui-fix-v3.css" media="all">
 <link rel="stylesheet" href="./home-scroll-v5.css" media="all">
-<meta name="conceptknot-release" content="glass-playground-v6">
+<meta name="conceptknot-release" content="living-garden-v9">
 <link rel="stylesheet" href="./workspace-glass-v6.css" media="all">
+<link rel="stylesheet" href="./experience-v9.css" media="all">
 <link rel="stylesheet" href="./assets/ck-playground-fallback-v6.css" media="all">
 </head>
 <body>
@@ -227,7 +228,7 @@ const names={listen:'문제·정답 듣기',typing:'분필 타이핑',visual:'�
 const nav=[['home','▦'],['reverse','⚡'],['theory','◈'],['visual','◇'],['typing','⌨'],['listen','♫'],['quiz','✎'],['calc','÷'],['exam','▤'],['venn','◉'],['wrong','↻'],['plan','▣']];
 const todayISO=()=>new Date().toLocaleDateString('sv-SE',{timeZone:'Asia/Seoul'});
 const dday=()=>Math.max(0,Math.ceil((new Date('2026-10-31T00:00:00+09:00').getTime()-Date.now())/DAY));
-const defaults={typingMode:'official',typingPick:0,typingYear:'all',typingHistory:[],tts:{rate:1.5,voice:''},spokenTexts:{},ink:{},chalk:{color:0,notes:{},practice:{}},view:'home',reverseState:{mode:'practice',id:'',step:0,firstChoice:0,transferChoice:0,retryChoice:0,recallRating:null,year:2025,number:1,showOfficialKey:false},reverseProgress:{},officialLinks:{},subject:'estate',year:2025,examQuestion:1,answers:{},graded:{},importedKeys:{},quizIndex:0,quizAnswers:{},theoryIndex:0,flashShown:false,flashVisits:{},reviews:{},compare:'v1',mistakes:{},notes:{},timerRemaining:1500,timerRunning:false,timerEnd:0,pomodoros:0,dailyTotals:{},studySubject:{},topicFilter:'all',showPdf:true,showExamKey:false,showAllMarks:false};
+const defaults={typingMode:'official',typingPick:0,typingYear:'all',typingHistory:[],tts:{rate:1.5,voice:''},spokenTexts:{},ink:{},chalk:{color:0,notes:{},practice:{}},view:'home',reverseState:{mode:'practice',id:'',step:0,firstChoice:0,transferChoice:0,retryChoice:0,recallRating:null,year:2025,number:1,showOfficialKey:false},reverseProgress:{},officialLinks:{},subject:'estate',year:2025,examQuestion:1,answers:{},graded:{},importedKeys:{},quizIndex:0,quizAnswers:{},theoryIndex:0,flashShown:false,flashVisits:{},reviews:{},compare:'v1',mistakes:{},notes:{},timerRemaining:1500,timerRunning:false,timerEnd:0,pomodoros:0,dailyTotals:{},studySubject:{},topicFilter:'all',showPdf:true,showExamKey:false,showAllMarks:false,ck9SpenMode:false,ck9SpenTool:'pen',ck9SpenWidth:3.2};
 let state={...defaults};
 try{const p=JSON.parse(localStorage.getItem(STORAGE)||'{}');if(p && typeof p==='object'){for(const k in defaults){if(Object.prototype.hasOwnProperty.call(p,k))state[k]=p[k];}}}catch(e){console.warn('기존 학습기록을 읽지 못했습니다',e);}
 if(!['estate','civil'].includes(state.subject))state.subject='estate';
@@ -873,7 +874,7 @@ function inkRecord(key){if(!state.ink||typeof state.ink!=='object'||Array.isArra
 function inkPad(key,exam=false){return `<section class="ink-pad" data-ink-key="${esc(key)}" aria-label="S펜 손글씨"><div class="ink-toolbar"><strong>${exam?state.examQuestion+'번 손글씨 풀이':'S펜 손글씨'}</strong><button data-ink-tool="pen" aria-pressed="${inkTool==='pen'}">펜</button><button data-ink-tool="eraser" aria-pressed="${inkTool==='eraser'}">지우개</button><label>굵기 <input type="range" data-ink-width min="1" max="12" step="0.5" value="${inkWidth}"></label><label><input type="checkbox" data-ink-pressure ${inkPressure?'checked':''}>필압</label><label><input type="checkbox" data-ink-touch ${inkTouch?'checked':''}>손가락도 쓰기</label><button data-ink-undo>되돌리기</button><button data-ink-redo>다시하기</button><button data-ink-full>${exam?'문제+필기 전체화면':'필기 전체화면'}</button><button data-ink-clear>필기 지우기</button></div><p class="ink-help">기본은 펜·마우스만 입력합니다. 색상은 위 분필 색 버튼과 Ctrl+1~4로 변경합니다.${exam?' PDF를 보면서 아래 칠판에 풀이하세요. 필기는 현재 연도·과목·문제번호에 저장됩니다.':''}</p><canvas class="ink-canvas" role="img" aria-label="손글씨 칠판. S펜으로 쓰세요. 텍스트 필기는 위 입력란을 사용하세요."></canvas><div class="ink-status" role="status">로컬 저장된 필기 불러오기</div></section>`;}
 function inkPoint(e,rect){return {x:Math.max(0,Math.min(1000,(e.clientX-rect.left)/rect.width*1000)),y:Math.max(0,Math.min(600,(e.clientY-rect.top)/rect.height*600)),p:e.pointerType==='pen'&&e.pressure>0?Math.max(.05,Math.min(1,e.pressure)):.5};}
 function inkThickness(stroke,p){return stroke.width*(stroke.pressure?(.3+1.4*p):1);}
-function inkDraw(canvas,key,active){const ctx=canvas.getContext('2d');if(!ctx)return;ctx.setTransform(canvas.width/1000,0,0,canvas.height/600,0,0);ctx.clearRect(0,0,1000,600);for(const s of [...inkRecord(key),...(active?[active]:[])]){if(!s?.points?.length)continue;ctx.globalCompositeOperation=s.tool==='eraser'?'destination-out':'source-over';ctx.strokeStyle=CHALK_COLORS.includes(s.color)?s.color:CHALK_COLORS[0];ctx.fillStyle=ctx.strokeStyle;ctx.lineCap='round';ctx.lineJoin='round';const pts=s.points;ctx.beginPath();ctx.arc(pts[0].x,pts[0].y,inkThickness(s,pts[0].p)/2,0,Math.PI*2);ctx.fill();for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i];ctx.lineWidth=inkThickness(s,(a.p+b.p)/2);ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}}ctx.globalCompositeOperation='source-over';}
+function inkDraw(canvas,key,active){const ctx=canvas.getContext('2d');if(!ctx)return;ctx.setTransform(canvas.width/1000,0,0,canvas.height/600,0,0);ctx.clearRect(0,0,1000,600);for(const s of [...inkRecord(key),...(active?[active]:[])]){if(!s?.points?.length)continue;ctx.globalCompositeOperation=s.tool==='eraser'?'destination-out':'source-over';ctx.globalAlpha=s.tool==='highlighter'?.32:1;ctx.strokeStyle=CHALK_COLORS.includes(s.color)?s.color:CHALK_COLORS[0];ctx.fillStyle=ctx.strokeStyle;ctx.lineCap='round';ctx.lineJoin='round';const pts=s.points;ctx.beginPath();ctx.arc(pts[0].x,pts[0].y,inkThickness(s,pts[0].p)/2,0,Math.PI*2);ctx.fill();for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i];ctx.lineWidth=inkThickness(s,(a.p+b.p)/2);ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}}ctx.globalCompositeOperation='source-over';ctx.globalAlpha=1;}
 function inkMount(){inkResizeObserver?.disconnect();inkResizeObserver=new ResizeObserver(entries=>entries.forEach(({target})=>target.__inkResize?.()));document.querySelectorAll('.ink-pad').forEach(pad=>{
  const canvas=pad.querySelector('canvas'),key=pad.dataset.inkKey,status=pad.querySelector('.ink-status');let active=null,pointer=null,raf=0;
  const draw=()=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(()=>inkDraw(canvas,key,active));};
@@ -1281,6 +1282,9 @@ window.addEventListener('beforeunload',()=>{if(localPdfUrl)URL.revokeObjectURL(l
   if(!Number.isFinite(Number(state.v7LeftWidth))||Number(state.v7LeftWidth)<260)state.v7LeftWidth=null;
   state.v7HistoryOpen=Boolean(state.v7HistoryOpen);
   state.ck6Swapped=Boolean(state.ck6Swapped);
+  state.ck9SpenMode=Boolean(state.ck9SpenMode);
+  if(!['pen','highlighter','eraser'].includes(state.ck9SpenTool))state.ck9SpenTool='pen';
+  state.ck9SpenWidth=Math.max(1,Math.min(13,Number(state.ck9SpenWidth)||3.2));
 
   function context(){
     const v=state.view;
@@ -1328,13 +1332,31 @@ window.addEventListener('beforeunload',()=>{if(localPdfUrl)URL.revokeObjectURL(l
     migrateMemo(ctx);
     const mode=chalkState().color;
     return `<aside class="ck-v7-board-shell" aria-label="문항별 통합 메모·필기">
-      <section class="ck-v7-board" data-ck-v7-key="${esc(ctx.key)}">
+      <section class="ck-v7-board ${state.ck9SpenMode?'ck9-spen-active':''}" data-ck-v7-key="${esc(ctx.key)}">
         <img class="ck-v7-art" src="${BOOK_LANDSCAPE}" alt="" aria-hidden="true">
         <div class="ck-v7-art-shade"></div>
         <div class="ck-v7-board-overlay">
           <div class="ck-v7-board-caption"><span>CONCEPTKNOT / NOTE</span><span>● LOCAL</span></div>
           <h2 class="ck-v7-board-heading">${esc(ctx.label)}</h2>
           <div class="ck-v7-board-small" id="ck-v7-note-status">✓ 자동 저장</div>
+          <div class="ck9-spen-strip">
+            <button class="ck9-spen-toggle" type="button" data-ck9-spen="toggle" aria-pressed="${!!state.ck9SpenMode}"><span aria-hidden="true">✎</span> S Pen 모드</button>
+            <span class="ck9-spen-hint">S Pen 필기 · 손가락은 스크롤</span>
+          </div>
+          <div class="ck9-spen-toolbar" data-ck9-spen-toolbar ${state.ck9SpenMode?'':'hidden'} aria-label="S Pen 전용 필기 도구">
+            <div role="group" aria-label="필기 도구 선택">
+              <button type="button" data-ck9-spen-tool="pen" aria-pressed="${state.ck9SpenTool==='pen'}">펜</button>
+              <button type="button" data-ck9-spen-tool="highlighter" aria-pressed="${state.ck9SpenTool==='highlighter'}">형광펜</button>
+              <button type="button" data-ck9-spen-tool="eraser" aria-pressed="${state.ck9SpenTool==='eraser'}">지우개</button>
+            </div>
+            <label>굵기 <input data-ck9-spen-width type="range" min="1" max="13" step=".5" value="${state.ck9SpenWidth}" aria-label="S Pen 굵기"></label>
+            <div role="group" aria-label="필기 작업">
+              <button type="button" data-ck9-spen-action="undo" title="되돌리기">↶</button>
+              <button type="button" data-ck9-spen-action="redo" title="다시하기">↷</button>
+              <button type="button" data-ck9-spen-action="fullscreen" title="집중 필기">⛶</button>
+              <button type="button" data-ck9-spen-action="clear" title="전체 지우기">⌫</button>
+            </div>
+          </div>
           <div class="ck-v7-writing-surface" data-ck-v7-surface title="키보드 입력 · S펜 직접 필기">
             ${chalkEditor('notes','workspace:'+ctx.key,'현재 문항의 통합 학습 메모')}
             <canvas class="ck-v7-pen-layer" role="img" aria-label="문항별 S펜 손글씨"></canvas>
@@ -1500,10 +1522,15 @@ window.addEventListener('beforeunload',()=>{if(localPdfUrl)URL.revokeObjectURL(l
     surface.addEventListener('pointerdown',e=>{
       if(pointer!==null)return;
       if(e.pointerType!=='pen'&&!(e.pointerType==='mouse'&&e.shiftKey))return;
+      // Stylus only; ignore finger/palm input even while dedicated mode is on.
       e.preventDefault();e.stopPropagation();
       pointer=e.pointerId;surface.setPointerCapture(e.pointerId);
       const x=inkPoint(e,surface.getBoundingClientRect());
-      active={tool:'pen',width:3.2,color:CHALK_COLORS[chalkState().color],pressure:e.pointerType==='pen',points:[x]};
+      const chosen=state.ck9SpenMode?state.ck9SpenTool:'pen';
+      const tool=e.button===5?'eraser':chosen;
+      const width=state.ck9SpenMode?state.ck9SpenWidth:3.2;
+      active={tool,width:tool==='eraser'?width*5:tool==='highlighter'?width*3.1:width,
+        color:CHALK_COLORS[chalkState().color],pressure:e.pointerType==='pen',points:[x]};
       draw();
     },true);
     surface.addEventListener('pointermove',e=>{
@@ -1579,20 +1606,79 @@ window.addEventListener('beforeunload',()=>{if(localPdfUrl)URL.revokeObjectURL(l
     stage.classList.toggle('ck6-swapped',state.ck6Swapped);
     button.setAttribute('aria-pressed',String(state.ck6Swapped));
     const after=[board.getBoundingClientRect(),content.getBoundingClientRect()];
-    if(matchMedia('(min-width:851px) and (prefers-reduced-motion: no-preference)').matches){
+    if(matchMedia('(prefers-reduced-motion: no-preference)').matches){
       [board,content].forEach((el,i)=>{
-        const dx=before[i].left-after[i].left;
-        if(Math.abs(dx)<2)return;
+        const mobile=matchMedia('(max-width:850px)').matches;
+        const displacement=mobile?before[i].top-after[i].top:before[i].left-after[i].left;
+        if(Math.abs(displacement)<2)return;
         el.getAnimations().forEach(a=>{if(a.effect?.getTiming?.().duration===340)a.cancel();});
         el.animate([
-          {transform:'translate3d('+dx.toFixed(1)+'px,0,0)',opacity:.87},
+          {transform:mobile?'translate3d(0,'+displacement.toFixed(1)+'px,0)':'translate3d('+displacement.toFixed(1)+'px,0,0)',opacity:.87},
           {transform:'translate3d(0,0,0)',opacity:1}
         ],{duration:340,easing:'cubic-bezier(.2,.72,.22,1)'});
       });
     }
     save();
-    toast(state.ck6Swapped?'칠판을 오른쪽으로 옮겼습니다.':'칠판을 왼쪽으로 옮겼습니다.');
+    const vertical=matchMedia('(max-width:850px)').matches;
+    toast(vertical?(state.ck6Swapped?'칠판을 아래로 옮겼습니다.':'칠판을 위로 옮겼습니다.'):
+         (state.ck6Swapped?'칠판을 오른쪽으로 옮겼습니다.':'칠판을 왼쪽으로 옮겼습니다.'));
   },true);
+
+
+  // Dedicated stylus toolbar operates on mounted canvas without re-rendering
+  // the active note or closing the mobile IME.
+  document.addEventListener('click',e=>{
+    const toggle=e.target?.closest?.('[data-ck9-spen="toggle"]');
+    const chosen=e.target?.closest?.('[data-ck9-spen-tool]');
+    const action=e.target?.closest?.('[data-ck9-spen-action]');
+    if(!toggle&&!chosen&&!action)return;
+    e.preventDefault();e.stopImmediatePropagation();
+    const board=(toggle||chosen||action).closest('.ck-v7-board');
+    if(!board)return;
+    const key='workspace:'+board.dataset.ckV7Key;
+    const surface=board.querySelector('.ck-v7-writing-surface');
+    const strip=board.querySelector('[data-ck9-spen-toolbar]');
+    if(toggle){
+      state.ck9SpenMode=!state.ck9SpenMode;
+      if(state.ck9SpenMode)board.querySelector('.chalk-editor textarea')?.blur();
+      board.classList.toggle('ck9-spen-active',state.ck9SpenMode);
+      toggle.setAttribute('aria-pressed',String(state.ck9SpenMode));
+      if(strip)strip.hidden=!state.ck9SpenMode;
+      save();
+      requestAnimationFrame(()=>surface?.__ckV7Draw?.());
+      toast(state.ck9SpenMode?'S Pen 전용 모드 · 펜으로 필기, 손가락으로 스크롤':'일반 입력 모드');
+      return;
+    }
+    if(chosen){
+      if(!['pen','highlighter','eraser'].includes(chosen.dataset.ck9SpenTool))return;
+      state.ck9SpenTool=chosen.dataset.ck9SpenTool;
+      board.querySelectorAll('[data-ck9-spen-tool]').forEach(b=>b.setAttribute('aria-pressed',String(b===chosen)));
+      save();return;
+    }
+    if(action){
+      const list=inkRecord(key),name=action.dataset.ck9SpenAction;
+      if(name==='undo'&&list.length){const redo=inkRedo.get(key)||[];redo.push(list.pop());inkRedo.set(key,redo);}
+      if(name==='redo'){const redo=inkRedo.get(key)||[];if(redo.length)list.push(redo.pop());}
+      if(name==='clear'&&list.length&&confirm('현재 칠판의 손글씨를 전부 지울까요?')){state.ink[key]=[];inkRedo.set(key,[]);}
+      if(name==='fullscreen'){
+        const focused=board.classList.toggle('ck9-spen-fullscreen');
+        if(!focused)document.body.classList.remove('ck9-spen-overlay');
+        else document.body.classList.add('ck9-spen-overlay');
+      }
+      surface?.__ckV7Draw?.();
+      save();
+    }
+  },true);
+  document.addEventListener('input',e=>{
+    if(!e.target?.matches?.('[data-ck9-spen-width]'))return;
+    state.ck9SpenWidth=Math.max(1,Math.min(13,Number(e.target.value)||3.2));
+    save();
+  },true);
+  document.addEventListener('keydown',e=>{
+    if(e.key!=='Escape')return;
+    document.querySelector('.ck9-spen-fullscreen')?.classList.remove('ck9-spen-fullscreen');
+    document.body.classList.remove('ck9-spen-overlay');
+  });
 
   function updateStats(){
     if(state.view!=='typing')return;
@@ -2030,7 +2116,7 @@ window.addEventListener('beforeunload',()=>{if(localPdfUrl)URL.revokeObjectURL(l
   document.addEventListener('click',e=>{
     if(e.target?.closest?.('button,a,[data-ck-v7-resize]'))return;
     const surface=e.target?.closest?.('.ck-v7-writing-surface');
-    if(surface){
+    if(surface&&!surface.closest('.ck9-spen-active')){
       const field=surface.querySelector('textarea');
       if(field&&document.activeElement!==field)field.focus({preventScroll:true});
     }
@@ -2052,5 +2138,6 @@ render();setInterval(timerTick,500);
 </script>
 <script src="./assets/ck-navigation-v5.js" defer></script>
 <script type="module" src="./assets/ck-landscape3d.js"></script>
+<script src="./assets/ck-experience-v9.js" defer></script>
 </body>
 </html>
