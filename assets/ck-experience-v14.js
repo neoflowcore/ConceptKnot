@@ -42,7 +42,7 @@ function ensurePopover(){
   ' <button type="button" data-ck14-pomo-action="reset">초기화</button>',
   ' <button type="button" data-ck14-pomo-action="skip">다음 단계</button>',
   '</div>',
-  '<p class="ck14-pomo-caption">집중 완료 후 휴식으로 전환됩니다. 시작은 직접 선택하세요. 진행 시간은 탭을 바꾸거나 새로고침해도 유지됩니다.</p>'
+  ''
  ].join('');
  document.body.append(pop);
  return pop;
@@ -116,33 +116,52 @@ function drawChalkCaret(){
  if(document.activeElement!==textarea||spen||textarea.selectionStart!==textarea.selectionEnd){
   visual.hidden=true;field.classList.remove('ck14-mirror-caret-on');return;
  }
+ const caretOffset=Math.max(0,Math.min(textarea.selectionStart,textarea.value.length));
  const glyphs=Array.from(mirror.querySelectorAll('.chalk-letter'));
- const sel=Math.max(0,Math.min(textarea.selectionStart,textarea.value.length));
- const range=document.createRange();let found=false,remaining=sel;
+ const range=document.createRange();let found=false,used=0,chosen=null;
  for(const glyph of glyphs){
-  const node=glyph.firstChild;
-  if(!node||node.nodeType!==Node.TEXT_NODE)continue;
-  const size=node.textContent.length;
-  if(remaining<=size){
-   range.setStart(node,remaining);range.collapse(true);found=true;break;
+  // Textarea selection offsets are UTF-16 units (Korean + surrogate pairs).
+  const length=glyph.textContent.length;
+  if(caretOffset<=used+length){
+   const offset=Math.min(length,Math.max(0,caretOffset-used));
+   const node=glyph.firstChild;
+   if(node?.nodeType===Node.TEXT_NODE){
+    // A collapsed Range on a newline has a zero-size rect; put a probe
+    // after that glyph to measure the beginning of the following line.
+    if(offset===length&&glyph.textContent==='\n')range.setStartAfter(glyph);
+    else range.setStart(node,offset);
+    range.collapse(true);chosen=glyph;found=true;
+   }
+   break;
   }
-  remaining-=size;
+  used+=length;
+ }
+ if(!found&&glyphs.length){
+  chosen=glyphs[glyphs.length-1];
+  range.setStartAfter(chosen);range.collapse(true);found=true;
  }
  let rect=null;
  if(found){
-  const list=range.getClientRects();rect=list.length?list[list.length-1]:range.getBoundingClientRect();
+  const probe=document.createElement('span');
+  probe.className='ck15-caret-probe';probe.textContent='\u200b';
+  probe.style.cssText='display:inline-block;width:0;height:1em;vertical-align:baseline;overflow:hidden;line-height:1;white-space:pre';
+  try{
+   range.insertNode(probe);
+   const measured=probe.getBoundingClientRect();
+   if(Number.isFinite(measured.left)&&Number.isFinite(measured.top)&&measured.height>0)rect=measured;
+  }finally{
+   probe.remove();chosen?.normalize();
+  }
  }
- const surface=field.getBoundingClientRect();
- const style=getComputedStyle(textarea);
- const glyphSize=parseFloat(style.fontSize)||18;
- const pad=parseFloat(getComputedStyle(mirror).paddingLeft)||0;
- const padTop=parseFloat(getComputedStyle(mirror).paddingTop)||0;
- const caretH=Math.max(12,Math.min(45,glyphSize*1.55));
- const left=rect&&Number.isFinite(rect.left)&&rect.height>0?rect.left-surface.left:mirror.getBoundingClientRect().left-surface.left+pad;
- const top=rect&&Number.isFinite(rect.top)&&rect.height>0?rect.top-surface.top:mirror.getBoundingClientRect().top-surface.top+padTop;
+ const base=field.getBoundingClientRect(),mir=mirror.getBoundingClientRect();
+ const style=getComputedStyle(textarea),font=parseFloat(style.fontSize)||18;
+ const mirrorStyle=getComputedStyle(mirror);
+ const padX=parseFloat(mirrorStyle.paddingLeft)||0,padY=parseFloat(mirrorStyle.paddingTop)||0;
+ const top=rect?rect.top-base.top:mir.top-base.top+padY;
+ const left=rect?rect.left-base.left:mir.left-base.left+padX;
  visual.style.left=Math.max(0,left)+'px';
  visual.style.top=Math.max(0,top)+'px';
- visual.style.height=caretH+'px';
+ visual.style.height=Math.max(13,Math.min(48,font*1.65))+'px';
  visual.hidden=false;field.classList.add('ck14-mirror-caret-on');
 }
 document.addEventListener('click',event=>{

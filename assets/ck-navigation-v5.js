@@ -87,13 +87,12 @@
     updatePager();
     if(id!==prevView){
       prevView=id;live.textContent='학습 화면: '+title(id);
+      // v15: the live garden never disappears; the workspace stage alone gets
+      // a short native View Transition. Old 650ms "reveal" caused double motion.
       main.classList.remove('ck4-changing');
-      if(!reduced()){
-        void main.offsetHeight;
-        main.classList.add('ck4-changing');
-        clearTimeout(animTimer);animTimer=setTimeout(()=>main.classList.remove('ck4-changing'),650);
-      }
-      reveal();
+      clearTimeout(animTimer);
+      revealObserver?.disconnect();revealObserver=null;
+      if(id==='home')reveal();
     }
     const current=pill.querySelector('.board-tab.active');
     if(current){
@@ -137,7 +136,7 @@
     if(e.target?.closest?.('[data-ck4-next]')){e.preventDefault();step(1);}
   },true);
   function inEditor(node){
-    return Boolean(node?.closest?.('textarea,input,select,iframe,[contenteditable="true"],[role="textbox"],.ck-v7-writing-surface,.ck-v7-divider,.ck-v7-nav-pill,.ink-pad,.ck-v7-pen-layer'));
+    return Boolean(node?.closest?.('textarea,input,select,iframe,[contenteditable="true"],[role="textbox"],.ck-v7-writing-surface,.ck-v7-divider,.ck-v7-nav-pill,.ink-pad,.ck-v7-pen-layer,.ck15-pdf-host'));
   }
   function scrollableChild(node,delta){
     for(let el=node?.nodeType===1?node:node?.parentElement;el&&el!==document.documentElement;el=el.parentElement){

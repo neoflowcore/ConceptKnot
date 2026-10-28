@@ -1,0 +1,202 @@
+/* ConceptKnot v15 — PDF handwriting, dark-mode audit and stable stage crossfade.
+   Loaded after v14; preserves user notes, original cards and native browser split.
+ */
+/* Native View Transition: only replace the workspace stage. Keep the garden and
+   navigation stationary, no 650ms staggered cards or blank frame flash. */
+html.ck15-transition #main{view-transition-name:none!important}
+html.ck15-transition #main .ck-v7-stage{view-transition-name:ck15-stage}
+html.ck15-transition #main .ck-v7-mainframe{animation:none!important}
+::view-transition-old(ck15-stage){
+ animation:ck15-exit .105s cubic-bezier(.45,0,.65,1) both;
+}
+::view-transition-new(ck15-stage){
+ animation:ck15-enter .19s cubic-bezier(.2,.7,.2,1) both;
+}
+@keyframes ck15-exit{from{opacity:1;filter:blur(0)}to{opacity:0;filter:blur(1.2px)}}
+@keyframes ck15-enter{from{opacity:.12;filter:blur(1.8px)}to{opacity:1;filter:blur(0)}}
+html.ck15-transition .ck4-changing,
+html.ck15-transition .ck4-reveal,
+html.ck15-transition .ck4-shown{animation:none!important;transition:none!important}
+.ck-v7-content .ck4-reveal{opacity:1!important;transform:none!important}
+@media(prefers-reduced-motion:reduce){
+ ::view-transition-old(ck15-stage),::view-transition-new(ck15-stage){animation:none!important}
+}
+/* Chalk: span glyphs must inherit exactly the mirror's typography.
+   The measured probe corrects newline and wrapped-row caret positioning. */
+html body #main .ck-v7-board .ck-v7-writing-surface .chalk-mirror .chalk-letter{
+ display:inline!important;float:none!important;position:static!important;
+ font:inherit!important;letter-spacing:inherit!important;word-spacing:inherit!important;
+ line-height:inherit!important;white-space:inherit!important;
+}
+.ck15-caret-probe{padding:0!important;margin:0!important;border:0!important}
+
+/* Dark mode comprehensive palette. Every light *surface* changes to dark,
+   every text block on a dark surface changes to pale ink. PDF paper stays white. */
+html[data-ck-theme="dark"] #main .ck-v7-content{
+ --ck15-dark-card:rgba(13,34,40,.82);
+ --ck15-dark-ink:#e9f8f3;
+ --ck15-dark-muted:#b2cdc6;
+ color:var(--ck15-dark-ink)!important;
+}
+html[data-ck-theme="dark"] #main .ck-v7-content :is(
+ .visual-sheet,.memory-tile,.memory-answer,.registered-question,.exam-sheet,
+ .pdf-panel,.ck-v7-typing-history,.ck-v7-stats .ck-v7-stat,
+ .ck-v3-completion,.typing-history,.quick-card,.panel,.flash-card,.callout,
+ .venn-box,.venn-info,.venn-inner,.reverse-recall-card,.reverse-suggestion,
+ .wrong-item,.mistake-item,.day-card,.study-row,.answer-box,.registered-question,
+ .ck-v7-controls select,.chalk-practice,.typing-source-card
+){
+ background:linear-gradient(138deg,rgba(15,40,45,.83),rgba(10,32,39,.72))!important;
+ color:var(--ck15-dark-ink)!important;
+ border-color:rgba(203,235,226,.10)!important;
+}
+html[data-ck-theme="dark"] #main .ck-v7-content .memory-tile{
+ color:#def3ee!important;
+ background:linear-gradient(144deg,rgba(18,53,57,.91),rgba(17,47,52,.83))!important;
+ box-shadow:inset 0 1px rgba(218,250,243,.05),0 14px 31px -25px rgba(57,165,154,.36)!important;
+ border:1px solid rgba(213,242,233,.14)!important;
+}
+html[data-ck-theme="dark"] #main .ck-v7-content .memory-tile svg{
+ color:#ddf6ec!important;stroke:#ddf6ec!important;opacity:.94!important;
+}
+html[data-ck-theme="dark"] #main .ck-v7-content .memory-number{color:#d8f2e9!important;opacity:.82!important}
+html[data-ck-theme="dark"] #main .ck-v7-content :is(
+ .ck-v7-question-body p,.ck-v7-options li,.ck-v7-option-num,
+ .ck-v7-qhead,.ck-v7-qhead span,.ck-v7-stat span,.ck-v7-stat strong,
+ .ck-v7-stat-icon,.ck-v3-completion strong,.ck-v3-completion span,
+ .registered-question h3,.registered-question p,.registered-question .choice,
+ .pdf-panel-header,.pdf-panel-header strong,.exam-sheet h3,
+ .answer-box,.answer-box p,.answer-large,.bubble,.bubble-opt,
+ .exam-nav,.visual-sheet h1,.visual-sheet p,.visual-sheet h2,
+ .memory-answer p,.memory-answer h2,.venn-box h2,.venn-box h4,
+ .venn-box p,.venn-info,.venn-center,.plan-day,.day-card strong,
+ .day-card p,.day-card .small,.quick-card h3,.quick-card p,
+ .reverse-suggestion strong,.reverse-suggestion p,.registered-question span,
+ .ck-v7-question-body,.small,.detail,.muted
+){
+ color:var(--ck15-dark-ink)!important;
+ -webkit-text-fill-color:var(--ck15-dark-ink)!important;
+ opacity:1!important;
+}
+html[data-ck-theme="dark"] #main .ck-v7-content :is(.muted,.small.muted,.detail.muted,.ck-v7-stat span,.pdf-panel-header .small,.ck-v7-option-num){color:var(--ck15-dark-muted)!important;-webkit-text-fill-color:var(--ck15-dark-muted)!important}
+html[data-ck-theme="dark"] #main .ck-v7-content .ck-v7-question{
+ border-left:0!important;border:0!important;
+ background:linear-gradient(135deg,rgba(11,38,45,.86),rgba(15,46,47,.75))!important;
+}
+html[data-ck-theme="dark"] #main .ck-v7-content .ck-v7-question-body,
+html[data-ck-theme="dark"] #main .ck-v7-content .ck-v7-qhead{
+ background:transparent!important;border:0!important;box-shadow:none!important;
+}
+html[data-ck-theme="dark"] #main .ck-v7-content :is(
+ .choice,.year-tab,.bubble,.bubble-opt,.btn.secondary,.panel-link,
+ .memory-tools .btn,.memory-tools .btn.secondary,
+ .ck-v7-actions button,.typing-choices button,.chalk-plain-btn
+){
+ background:rgba(25,60,65,.90)!important;color:#effff9!important;
+ -webkit-text-fill-color:#effff9!important;
+ border:1px solid rgba(202,241,230,.18)!important;
+ box-shadow:inset 0 1px rgba(240,255,250,.06)!important;
+}
+html[data-ck-theme="dark"] #main .ck-v7-content :is(.year-tab.active,.bubble-opt.picked,.choice.selected,.btn:not(.secondary)){
+ background:rgba(49,121,107,.91)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;
+}
+html[data-ck-theme="dark"] #main .ck-v7-content :is(.registered-question .stack,.bubble-grid,.exam-nav,.score-result,.progress-shell,.bubble-options){
+ background:transparent!important;
+}
+html[data-ck-theme="dark"] #main .ck-v7-content :is(.ck-v7-controls select,.field,.chalk-select,.note-area,.exam-sheet textarea){
+ color:#effcf6!important;-webkit-text-fill-color:#effcf6!important;
+ background:rgba(7,25,31,.82)!important;border:1px solid rgba(211,237,230,.2)!important;
+}
+html[data-ck-theme="dark"] #main .ck-v7-content .ck-v7-typing .ck-v7-input textarea,
+html[data-ck-theme="dark"] #main .ck-v7-board .chalk-editor textarea{
+ color:transparent!important;-webkit-text-fill-color:transparent!important;background:transparent!important;
+}
+html[data-ck-theme="dark"] #main .ck-v7-content .score-result strong,
+html[data-ck-theme="dark"] #main .ck-v7-content .score-number{
+ color:#f5fff9!important;-webkit-text-fill-color:#f5fff9!important;
+}
+html[data-ck-theme="dark"] #main .ck-v7-content .visual-sheet{
+ background:linear-gradient(145deg,rgba(10,34,39,.93),rgba(16,42,47,.81))!important;
+}
+html[data-ck-theme="dark"] #main .ck-v7-content .visual-sheet :is(.memory-tools .btn,.memory-tools .btn.secondary){
+ background:rgba(39,103,99,.78)!important;color:#f2fffb!important;
+}
+html[data-ck-theme="dark"] #main .ck-v7-content .pdf-panel .ck15-pdf-page{
+ color:#152a2c!important;background:#fff!important;
+}
+/* One PDF page visible at a time, with document coordinate-locked pen ink. */
+.ck15-pdf-host{width:100%;min-width:0;display:block;padding:0;margin:0;color:#1b3f3e}
+.ck15-pdf-tools{
+ display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-start;gap:6px;
+ position:sticky;top:2px;z-index:11;padding:9px 12px;
+ background:rgba(233,248,244,.90);
+ backdrop-filter:blur(12px) saturate(125%);-webkit-backdrop-filter:blur(12px) saturate(125%);
+ border-bottom:1px solid rgba(31,92,78,.1);
+}
+.ck15-pdf-toolgroup{display:flex;align-items:center;gap:3px;min-width:0}
+.ck15-pdf-tools button{
+ min-height:30px;min-width:28px;padding:4px 7px;border:0;border-radius:7px;
+ background:rgba(255,255,255,.72);color:#1e574f;
+ font:760 11px/1.3 Pretendard,"Malgun Gothic",sans-serif;cursor:pointer;
+ white-space:nowrap;
+}
+.ck15-pdf-tools button:hover{background:rgba(110,191,175,.2)}
+.ck15-pdf-tools button[aria-pressed="true"]{background:#205b50;color:#fff}
+.ck15-pdf-tools button:disabled{opacity:.36;cursor:not-allowed}
+.ck15-pdf-tools button:focus-visible{outline:2px solid #218b83;outline-offset:2px}
+.ck15-pdf-tools output{font:780 11px/1.2 Pretendard,sans-serif;white-space:nowrap;min-width:40px;text-align:center;color:#1e554b;font-variant-numeric:tabular-nums}
+.ck15-pdf-tools input[type="color"]{appearance:none;width:23px;height:23px;border-radius:50%;border:1px solid rgba(14,68,55,.2);overflow:hidden;background:none;cursor:pointer;padding:0}
+.ck15-pdf-tools input[type="color"]::-webkit-color-swatch-wrapper{padding:0}
+.ck15-pdf-tools input[type="color"]::-webkit-color-swatch{border:0}
+.ck15-pdf-status{padding:7px 12px;font:580 11px/1.5 Pretendard,sans-serif;color:#33645b;background:rgba(223,249,241,.50)}
+.ck15-pdf-scroll{
+ width:100%;height:min(77vh,820px);min-height:380px;overflow:auto;
+ overscroll-behavior:contain;scrollbar-gutter:stable;
+ background:linear-gradient(120deg,rgba(72,102,102,.18),rgba(116,136,128,.13));
+ border-radius:0 0 12px 12px;position:relative;
+}
+.ck15-pdf-scroll:focus-visible{outline:2px solid #267f7d;outline-offset:-2px}
+.ck15-pdf-page{
+ position:relative;display:block;margin:12px auto 15px;
+ padding:0!important;max-width:none!important;min-width:1px;min-height:1px;
+ background:#fff;box-shadow:0 4px 21px rgba(8,41,47,.28);
+ transform:none!important;
+}
+.ck15-pdf-page canvas[data-ck15-page-canvas]{display:block;position:relative;max-width:none!important;min-width:0;object-fit:fill;pointer-events:none;background:white}
+.ck15-pdf-page canvas[data-ck15-ink-canvas]{
+ position:absolute!important;left:0;top:0;z-index:2!important;
+ max-width:none!important;min-width:0!important;padding:0!important;
+ background:transparent!important;touch-action:none!important;
+ pointer-events:auto!important;cursor:grab;
+}
+.ck15-pdf-scroll[hidden],.ck15-pdf-fallback[hidden]{display:none!important}
+.ck15-pdf-help{font-size:11px;line-height:1.55;padding:9px 12px;color:#4d746a;background:rgba(233,248,240,.55)}
+.ck15-pdf-fallback{padding:10px 12px 15px;font:500 12px/1.65 Pretendard,sans-serif}
+.ck15-pdf-fallback .pdf-viewport{height:min(73vh,760px)}
+.ck15-pdf-fallback iframe{width:100%;height:100%;min-height:380px;border:0}
+.ck-v7-content .exam-sheet .registered-question{
+ margin:0 0 12px!important;padding:12px 14px!important;
+}
+.ck-v7-content .exam-sheet .registered-question + .panel-head{
+ margin-top:0!important;padding-top:10px!important;
+}
+.ck-v7-content .exam-sheet > .panel-head{margin-top:0!important}
+@media(max-width:850px){
+ .ck15-pdf-tools{position:relative;padding:8px;gap:4px}
+ .ck15-pdf-tools button{min-height:33px;padding:5px 6px}
+ .ck15-pdf-scroll{height:65vh;min-height:300px}
+ .ck15-pdf-help{font-size:10px}
+}
+html[data-ck-theme="dark"] #main .ck15-pdf-host{color:#e4f7ef}
+html[data-ck-theme="dark"] #main .ck15-pdf-tools{background:rgba(12,42,46,.94);border-color:rgba(213,250,236,.12)}
+html[data-ck-theme="dark"] #main .ck15-pdf-tools button{
+ background:rgba(183,224,209,.12);color:#e9fff8;
+}
+html[data-ck-theme="dark"] #main .ck15-pdf-tools button[aria-pressed="true"]{background:#469d85;color:#fff}
+html[data-ck-theme="dark"] #main .ck15-pdf-tools output{color:#e9fff8}
+html[data-ck-theme="dark"] #main .ck15-pdf-status,
+html[data-ck-theme="dark"] #main .ck15-pdf-help{
+ background:rgba(9,39,45,.83);color:#c6e8dd;
+}
+html[data-ck-theme="dark"] #main .ck15-pdf-scroll{background:rgba(3,16,22,.8)}
+html[data-ck-theme="dark"] #main .ck15-pdf-fallback{background:rgba(12,41,47,.8);color:#e9f9f4}

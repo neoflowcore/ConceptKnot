@@ -9,7 +9,7 @@ test('core and v14 scripts parse, no package/CI automation',()=>{
  inline.forEach((m,i)=>new vm.Script(m[1],{filename:'inline'+i}));
  new vm.Script(js);
  assert.match(read('vercel.json'),/"deploymentEnabled": false/);
- assert.match(sw,/conceptknot-study-v14/);
+ assert.match(sw,/conceptknot-study-v15/);
  assert.match(sw,/experience-v14.css/);assert.match(sw,/ck-experience-v14.js/);
 });
 test('ribbon is 80% height, larger tab text, brand matches tab type size',()=>{
