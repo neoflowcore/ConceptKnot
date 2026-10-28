@@ -66,3 +66,5 @@ html{scroll-behavior:smooth;scroll-padding-top:95px}
 @media(max-width:420px){.ck-v7-logo{font-size:15px!important}.ck4-cover{min-height:calc(100svh - 91px)}.ck4-copy{padding:22px 18px}.ck4-copy h1{font-size:43px!important}.ck4-note{display:none}.ck4-action{min-height:43px;padding:10px 16px;font-size:12px}}
 @media(prefers-reduced-motion:reduce){.ck4-changing .ck-v7-stage,.ck4-reveal,.ck4-cue i{animation:none!important;transition:none!important;transform:none!important}.ck4-reveal{opacity:1!important}html{scroll-behavior:auto!important}}
 @supports not (backdrop-filter:blur(2px)){.ck-v7-nav-pill.ck4-unified,.ck4-copy,.ck4-note{background:#fffff4!important}}
+
+.ck4-pager[hidden]{display:none!important}

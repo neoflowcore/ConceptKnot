@@ -20,7 +20,7 @@
   const live=document.createElement('span');
   live.className='ck4-sr';live.setAttribute('aria-live','polite');
   document.body.append(pager,live);
-  const view=()=>main.querySelector('.ck-v7-nav-pill .board-tab.active')?.dataset.go||'home';
+  const view=()=>document.body.dataset.ckV8Tab==='settings'?'settings':main.querySelector('.ck-v7-nav-pill .board-tab.active')?.dataset.go||document.body.dataset.ckV8Tab||'home';
   const pageIndex=()=>Math.max(0,pages.findIndex(x=>x[0]===view()));
   const title=id=>pages.find(x=>x[0]===id)?.[1]||'오늘의 학습';
   function go(id,study=false){
@@ -51,6 +51,8 @@
     return section;
   }
   function updatePager(){
+    pager.hidden=view()==='settings';
+    if(pager.hidden)return;
     const i=pageIndex();
     pager.querySelector('.ck4-pager-count').textContent=String(i+1).padStart(2,'0')+' / '+pages.length;
     pager.querySelector('.ck4-pager-label').textContent=pages[i][1];
@@ -132,7 +134,7 @@
       else go('home');
       return;
     }
-    if(e.target?.closest?.('.ck-v7-nav-pill .board-tab[data-go="home"]'))homeToStudy=true;
+    if(e.isTrusted&&e.target?.closest?.('.ck-v7-nav-pill .board-tab[data-go="home"]'))homeToStudy=true;
     if(e.target?.closest?.('[data-ck4-prev]')){e.preventDefault();step(-1);}
     if(e.target?.closest?.('[data-ck4-next]')){e.preventDefault();step(1);}
   },true);
@@ -150,8 +152,8 @@
     return false;
   }
   window.addEventListener('wheel',e=>{
-    if(e.defaultPrevented||e.ctrlKey||e.metaKey||e.shiftKey||coarse()||Math.abs(e.deltaX)>Math.abs(e.deltaY))return;
-    if(inEditor(e.target)||inEditor(document.activeElement))return;
+    if(e.defaultPrevented||e.ctrlKey||e.metaKey||e.shiftKey||coarse()||view()==='settings'||Math.abs(e.deltaX)>Math.abs(e.deltaY))return;
+    if(inEditor(e.target)||document.activeElement?.matches?.('textarea,input,select,[contenteditable="true"],[role="textbox"]'))return;
     const delta=e.deltaY*(e.deltaMode===1?16:e.deltaMode===2?innerHeight:1);
     if(!delta||scrollableChild(e.target,delta))return;
     const limit=Math.max(0,document.documentElement.scrollHeight-innerHeight);
