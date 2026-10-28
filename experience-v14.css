@@ -1,0 +1,318 @@
+/* ConceptKnot v14 art direction: study remains legible, garden stays alive.
+ * Design Taste app-screen principle: motion is feedback, not a new entrance per card.
+ */
+:root{--ck5-nav-height:53px;--ck14-font:"Pretendard Variable",Pretendard,"Malgun Gothic",sans-serif;}
+/* 20% thinner ribbon: increase tab labels by 1px and match brand exactly. */
+.ck-v7-global-nav{min-height:0!important}
+.ck-v7-nav-pill.ck4-unified{
+ min-height:53px!important;height:53px!important;
+ padding:3px 9px 3px clamp(13px,1.45vw,23px)!important;
+ border-radius:0 0 23px 23px!important;
+ gap:clamp(6px,.8vw,12px)!important;
+}
+.ck-v7-nav-pill .board-tab{
+ min-height:31px!important;padding:6px clamp(6px,.66vw,11px)!important;
+ font-size:clamp(11px,calc(.77vw + 1px),13px)!important;
+ line-height:1.15!important;
+}
+.ck-v7-nav-pill .ck-v7-logo,
+.ck-v7-nav-pill.ck4-unified .ck-v7-logo{
+ font-size:clamp(11px,calc(.77vw + 1px),13px)!important;
+ line-height:1.15!important;font-weight:850!important;letter-spacing:-.22px!important;
+}
+.ck-v7-nav-pill .board-tabs{padding:1px!important}
+.ck-v7-nav-pill .ck-v7-date-pill{
+ min-height:37px!important;height:37px!important;
+ padding:0 1px 0 9px!important;gap:6px!important;
+ font-size:10px!important;white-space:nowrap!important;
+}
+.ck-v7-date-pill button[data-go="settings"]{min-width:27px!important;width:27px!important;height:27px!important}
+.ck-v7-date-pill .ck14-theme-toggle,
+.ck-v7-date-pill .ck14-pomo-launch{
+ display:inline-flex!important;align-items:center!important;justify-content:center!important;flex:none;
+ margin:0!important;padding:0 6px!important;min-width:29px!important;
+ height:28px!important;border:0!important;border-radius:8px!important;
+ color:#225649!important;background:rgba(32,120,103,.055)!important;
+ box-shadow:none!important;cursor:pointer!important;
+}
+.ck-v7-date-pill .ck14-theme-toggle{width:29px!important;padding:0!important}
+.ck-v7-date-pill .ck14-theme-toggle:hover,
+.ck-v7-date-pill .ck14-pomo-launch:hover{background:rgba(33,115,94,.13)!important}
+.ck14-pomo-launch span{
+ font-family:var(--ck14-font)!important;font-size:11px!important;
+ font-weight:790!important;font-variant-numeric:tabular-nums!important;letter-spacing:-.2px!important;
+}
+.ck14-theme-toggle .ck14-sun{display:none}
+html[data-ck-theme="dark"] .ck14-theme-toggle .ck14-sun{display:block}
+html[data-ck-theme="dark"] .ck14-theme-toggle .ck14-moon{display:none}
+.ck14-pomo-running svg{color:#128b71}
+.ck14-pomo-launch:focus-visible,.ck14-theme-toggle:focus-visible{
+ outline:2px solid #18a38c!important;outline-offset:3px!important;
+}
+/* Stable garden under a restrained view transition; NO re-entry of all cards. */
+html.ck14-transition #main{view-transition-name:ck14-workspace}
+html.ck14-transition #main.ck4-changing .ck-v7-stage,
+html.ck14-transition #main .ck4-changing .ck-v7-stage,
+html.ck14-transition .ck4-changing .ck-v7-stage{animation:none!important}
+::view-transition-old(ck14-workspace){
+ animation:ck14-fade-out .15s cubic-bezier(.4,0,.7,1) both;
+}
+::view-transition-new(ck14-workspace){
+ animation:ck14-fade-in .27s cubic-bezier(.19,.75,.25,1) both;
+}
+@keyframes ck14-fade-out{to{opacity:0;transform:translateY(-4px)}}
+@keyframes ck14-fade-in{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){
+ ::view-transition-old(ck14-workspace),::view-transition-new(ck14-workspace){animation:none!important}
+}
+
+/* Fix the actual fault: note textarea and multi-span chalk mirror shared DIFFERENT
+ * font shorthands, padding and line-break metrics. Override both at higher specificity. */
+html body #main .ck-v7-board .ck-v7-writing-surface .chalk-editor,
+html body #main .ck-v7-board .ck-v7-writing-surface .chalk-editor .chalk-mirror,
+html body #main .ck-v7-board .ck-v7-writing-surface .chalk-editor textarea{
+ font-family:var(--ck14-font)!important;
+ font-size:var(--ck10-chalk-font,18px)!important;
+ font-weight:650!important;
+ font-style:normal!important;
+ font-stretch:normal!important;
+ font-kerning:none!important;
+ font-variant-ligatures:none!important;
+ font-feature-settings:"kern" 0!important;
+ line-height:1.65!important;
+ letter-spacing:0!important;word-spacing:0!important;
+ text-align:left!important;text-indent:0!important;text-transform:none!important;
+ tab-size:4!important;word-break:break-word!important;overflow-wrap:break-word!important;
+ white-space:pre-wrap!important;box-sizing:border-box!important;
+}
+html body #main .ck-v7-board .ck-v7-writing-surface .chalk-editor{
+ position:relative!important;padding:0!important;
+ overflow:visible!important;
+}
+html body #main .ck-v7-board .ck-v7-writing-surface .chalk-editor .chalk-mirror,
+html body #main .ck-v7-board .ck-v7-writing-surface .chalk-editor textarea{
+ position:relative;max-width:100%!important;
+ margin:0!important;padding:10px!important;border:0!important;
+}
+html body #main .ck-v7-board .ck-v7-writing-surface .chalk-editor .chalk-mirror{
+ position:relative!important;z-index:1!important;
+ overflow:visible!important;background:transparent!important;
+}
+html body #main .ck-v7-board .ck-v7-writing-surface .chalk-editor textarea{
+ position:absolute!important;inset:0!important;z-index:3!important;
+ width:100%!important;height:100%!important;
+ opacity:1!important;color:transparent!important;-webkit-text-fill-color:transparent!important;
+ background:transparent!important;caret-color:#f3fff4!important;
+ pointer-events:auto!important;resize:none!important;
+}
+html body #main .ck-v7-board.ck9-spen-active .ck-v7-writing-surface .chalk-editor textarea{
+ opacity:0!important;pointer-events:none!important;
+}
+html body #main .ck-v7-board .ck-v7-writing-surface .chalk-editor.ck14-mirror-caret-on textarea{
+ caret-color:transparent!important;
+}
+html body #main .ck-v7-board .ck-v7-writing-surface .chalk-editor .ck14-mirror-caret{
+ position:absolute;left:10px;top:10px;width:2px!important;min-height:14px;
+ padding:0!important;margin:0!important;z-index:5!important;
+ border:0!important;border-radius:1px;pointer-events:none!important;
+ background:#f5fff4!important;box-shadow:0 0 5px rgba(219,255,238,.42);
+ animation:ck14-caret-blink 1.05s steps(2,end) infinite;
+}
+html body #main .ck-v7-board .ck-v7-writing-surface .chalk-editor .ck14-mirror-caret[hidden]{display:none!important}
+@keyframes ck14-caret-blink{50%{opacity:0}}
+@media(prefers-reduced-motion:reduce){.ck14-mirror-caret{animation:none!important}}
+
+/* The typing box is genuinely translucent charcoal — the outdoors remains faintly visible. */
+.ck-v7-content .ck-v7-typing .ck-v7-input{
+ background:linear-gradient(155deg,rgba(8,27,32,.78),rgba(12,32,38,.69) 70%,rgba(14,36,39,.75))!important;
+ backdrop-filter:blur(14px) saturate(118%) brightness(.85)!important;
+ -webkit-backdrop-filter:blur(14px) saturate(118%) brightness(.85)!important;
+ border:0!important;
+ box-shadow:0 13px 32px -18px rgba(42,173,174,.43),0 16px 35px -20px rgba(240,149,165,.3),
+ inset 0 1px rgba(248,255,253,.12)!important;
+}
+.ck-v7-content .ck-v7-typing .ck-v7-input .chalk-editor{
+ background:rgba(8,19,22,.14)!important;backdrop-filter:none!important;
+ -webkit-backdrop-filter:none!important;
+}
+.ck-v7-content .ck-v7-typing .ck-v7-input .chalk-mirror{
+ background:transparent!important;color:#f5fff4!important;opacity:1!important;
+}
+
+/* Three starter cards: individual original red, violet, mint edges become vivid HALO,
+ * never a 5px top stripe or a colored tile fill. */
+.ck-v7-content .quick-grid > .quick-card:nth-child(1){--ck14-card-halo:rgba(246,113,111,.56)}
+.ck-v7-content .quick-grid > .quick-card:nth-child(2){--ck14-card-halo:rgba(151,119,250,.56)}
+.ck-v7-content .quick-grid > .quick-card:nth-child(3){--ck14-card-halo:rgba(61,187,167,.59)}
+.ck-v7-content .quick-grid > .quick-card:nth-child(n){
+ background:linear-gradient(135deg,rgba(250,255,251,.58),rgba(234,251,248,.36))!important;
+ border:0!important;border-top:0!important;
+ box-shadow:0 0 21px -5px var(--ck14-card-halo),
+  0 16px 34px -15px var(--ck14-card-halo),
+  0 18px 32px -24px rgba(13,80,62,.39),
+  inset 0 1px 0 rgba(255,255,255,.66)!important;
+ backdrop-filter:blur(19px) saturate(128%)!important;
+ -webkit-backdrop-filter:blur(19px) saturate(128%)!important;
+}
+.ck-v7-content .quick-grid > .quick-card:nth-child(n):hover{
+ box-shadow:0 0 28px -3px var(--ck14-card-halo),
+  0 19px 42px -12px var(--ck14-card-halo),
+  inset 0 1px 0 rgba(255,255,255,.65)!important;
+}
+/* Header popover is a working tool, not a promotional dashboard. */
+.ck14-pomodoro{
+ position:fixed!important;top:calc(var(--ck5-nav-height,53px) + 12px);
+ right:clamp(9px,1.5vw,26px);z-index:950;width:min(316px,calc(100vw - 18px));
+ padding:15px;border-radius:17px;
+ color:#204a43;background:rgba(252,255,251,.94);
+ backdrop-filter:blur(24px) saturate(130%);
+ -webkit-backdrop-filter:blur(24px) saturate(130%);
+ box-shadow:0 15px 46px rgba(13,46,45,.20),0 0 21px -9px rgba(72,187,172,.30);
+ font-family:var(--ck14-font)!important;
+}
+.ck14-pomodoro[hidden]{display:none!important}
+.ck14-pomo-head{display:flex;align-items:center;justify-content:space-between}
+.ck14-pomo-head strong{font-weight:830;font-size:14px}
+.ck14-pomo-head button{width:30px;height:30px;border:0;border-radius:7px;color:inherit;background:transparent;font-size:22px;cursor:pointer}
+.ck14-pomo-ring{
+ --ck14-progress:0%;display:flex;flex-direction:column;
+ align-items:center;justify-content:center;gap:2px;position:relative;
+ width:170px;height:170px;border-radius:50%;margin:10px auto 16px;
+ isolation:isolate;background:conic-gradient(#4cae9b var(--ck14-progress),rgba(20,95,86,.12) 0);
+}
+.ck14-pomo-ring[data-phase="break"]{background:conic-gradient(#a78de1 var(--ck14-progress),rgba(20,95,86,.12) 0)}
+.ck14-pomo-ring::before{content:"";position:absolute;inset:7px;border-radius:50%;z-index:-1;background:rgba(251,255,253,.98)}
+.ck14-pomo-ring > span{font-size:12px;color:#56766c;font-weight:790}
+.ck14-pomo-ring > strong{font-size:35px;font-weight:850;letter-spacing:-1px;font-variant-numeric:tabular-nums}
+.ck14-pomo-ring > small{font-size:10px;color:#66857a}
+.ck14-pomo-config{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.ck14-pomo-config label{
+ display:flex;align-items:center;gap:6px;justify-content:center;
+ font-size:12px;background:rgba(205,225,219,.31);
+ border-radius:9px;padding:9px 6px;
+}
+.ck14-pomo-config input{width:47px;padding:3px;border:0;border-bottom:1px solid rgba(70,117,104,.32);background:transparent;color:inherit;text-align:center;font:700 13px var(--ck14-font)}
+.ck14-pomo-actions{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:6px;margin-top:13px}
+.ck14-pomo-actions button{border:0;border-radius:9px;background:rgba(21,89,76,.10);color:#1b574b;padding:10px 6px;cursor:pointer;font:750 11px var(--ck14-font)}
+.ck14-pomo-actions button:first-child{background:#1b5e4d;color:#fff}
+.ck14-pomo-caption{margin:12px 2px 0;font:400 11px/1.6 var(--ck14-font);color:#668377}
+.ck14-pomodoro button:focus-visible{outline:2px solid #159e85;outline-offset:2px}
+
+/* Night mode: shared deep teal canvas, calm glass, honest contrast. */
+html[data-ck-theme="dark"] body{
+ background:#0b1b21!important;color:#e5f7f1!important;
+}
+html[data-ck-theme="dark"] .ck-v8-ambient{
+ filter:brightness(.47) saturate(.76) hue-rotate(4deg)!important;
+}
+html[data-ck-theme="dark"] .ck-v8-art{filter:saturate(.8) brightness(.72)!important}
+html[data-ck-theme="dark"] .ck-v8-ambient.ck-3d-ready .ck-3d-canvas{
+ filter:brightness(.75) saturate(.81)!important;
+}
+html[data-ck-theme="dark"] .ck-v7-nav-pill.ck4-unified{
+ border:0!important;background:rgba(13,29,35,.91)!important;
+ box-shadow:0 11px 34px -20px rgba(9,28,29,.7)!important;
+ backdrop-filter:blur(20px) saturate(114%)!important;
+ -webkit-backdrop-filter:blur(20px) saturate(114%)!important;
+}
+html[data-ck-theme="dark"] .ck-v7-nav-pill .ck-v7-logo,
+html[data-ck-theme="dark"] .ck-v7-nav-pill .board-tab{
+ color:#dcefe9!important;
+}
+html[data-ck-theme="dark"] .ck-v7-nav-pill .ck-v7-logo b{color:#7ed4c0!important}
+html[data-ck-theme="dark"] .ck-v7-nav-pill .board-tab.active{
+ color:#f5fffb!important;background:rgba(68,133,114,.65)!important;
+}
+html[data-ck-theme="dark"] .ck-v7-date-pill,
+html[data-ck-theme="dark"] .ck-v7-date-pill > span,
+html[data-ck-theme="dark"] .ck-v7-date-pill button,
+html[data-ck-theme="dark"] .ck-v7-date-pill .ck14-pomo-launch{
+ color:#d6eee7!important;
+}
+html[data-ck-theme="dark"] .ck-v7-date-pill .ck14-theme-toggle,
+html[data-ck-theme="dark"] .ck-v7-date-pill .ck14-pomo-launch{
+ background:rgba(173,221,208,.13)!important;
+}
+html[data-ck-theme="dark"] .ck-v7-date-pill button[data-go="settings"]{
+ background:rgba(173,221,208,.12)!important;
+}
+html[data-ck-theme="dark"] .ck-v7-stage > .ck-v7-content{
+ background:linear-gradient(135deg,rgba(9,25,32,.66),rgba(15,38,42,.55))!important;
+ color:#e7faf3!important;
+ box-shadow:0 16px 40px -25px rgba(5,13,19,.68),inset 0 1px rgba(255,255,255,.06)!important;
+}
+html[data-ck-theme="dark"] .ck-v7-content :is(.panel,.flash-card,.exam-sheet,.pdf-panel,.visual-sheet,.chalk-practice,.callout,.reverse-recall-card,.reverse-concept,.ck-v7-question,.ck-v7-stat,.ck-v7-heatmap,.ck-v7-typing-history,.calc-card,.typing-history,.registration-summary){
+ border:0!important;
+ background:linear-gradient(138deg,rgba(18,42,47,.78),rgba(17,43,46,.63))!important;
+ box-shadow:0 16px 32px -25px rgba(2,18,21,.68),inset 0 1px rgba(208,244,233,.07)!important;
+ color:#e8faf4!important;
+}
+html[data-ck-theme="dark"] .ck-v7-content .quick-grid > .quick-card:nth-child(n){
+ background:linear-gradient(138deg,rgba(16,42,46,.74),rgba(15,41,43,.58))!important;
+ color:#eafaf5!important;
+ box-shadow:0 0 21px -5px var(--ck14-card-halo),0 16px 34px -16px var(--ck14-card-halo),
+ inset 0 1px 0 rgba(230,255,249,.10)!important;
+}
+html[data-ck-theme="dark"] .ck-v7-content :is(.page-intro h1,.section-heading h2,.quick-card h3,.panel h2,.panel h3,.visual-sheet h1,.ck-v7-question h2,.ck-v7-typing-history h2){
+ color:#eafaf4!important;
+}
+html[data-ck-theme="dark"] .ck-v7-content :is(.muted,.quick-card p,.panel p,.page-intro p,.small){
+ color:#a9c7c2!important;
+}
+html[data-ck-theme="dark"] .ck-v7-content .quick-card .arrow{color:#f6baa9!important}
+html[data-ck-theme="dark"] .ck-v7-content .ck-v7-ihead,
+html[data-ck-theme="dark"] .ck-v7-content .ck-v7-ihead small,
+html[data-ck-theme="dark"] .ck-v7-content .ck-v7-qhead{color:#e7f9f3!important}
+html[data-ck-theme="dark"] .ck-v7-content .subject-tab,
+html[data-ck-theme="dark"] .ck-v7-content .subject-tab.active,
+html[data-ck-theme="dark"] .ck-v7-content .ck-v7-controls button{
+ background:rgba(224,250,239,.11)!important;
+ border:1px solid rgba(224,250,239,.13)!important;color:#e7fbf4!important;
+}
+html[data-ck-theme="dark"] .ck-v7-content .ck-v7-controls button[aria-pressed="true"],
+html[data-ck-theme="dark"] .ck-v7-content .subject-tab.active{
+ background:rgba(68,139,118,.55)!important;color:#fff!important;
+}
+html[data-ck-theme="dark"] .ck-v7-content :is(.field,select,input:not([type="range"]):not([type="color"]),textarea:not(.ck14-placeholder)){
+ background-color:rgba(6,27,32,.55)!important;
+ color:#eafbf3!important;border-color:rgba(189,224,218,.17)!important;
+}
+html[data-ck-theme="dark"] .ck-v7-content .ck-v7-typing .ck-v7-input{
+ background:linear-gradient(150deg,rgba(4,16,21,.76),rgba(10,30,36,.7))!important;
+ color:#f7fffa!important;
+}
+html[data-ck-theme="dark"] .ck-v7-content .ck-v7-typing .ck-v7-input .chalk-editor textarea,
+html[data-ck-theme="dark"] .ck-v7-board .chalk-editor textarea{
+ color:transparent!important;-webkit-text-fill-color:transparent!important;
+ background:transparent!important;
+}
+html[data-ck-theme="dark"] .ck-v7-content :is(.ck-v7-question-body,.ck-v7-qhead){
+ background:transparent!important;
+}
+html[data-ck-theme="dark"] .ck14-pomodoro{
+ background:rgba(12,32,38,.96);color:#e5f7ef;
+ box-shadow:0 16px 48px rgba(0,12,17,.62);
+}
+html[data-ck-theme="dark"] .ck14-pomo-ring::before{background:rgba(12,32,38,.99)}
+html[data-ck-theme="dark"] .ck14-pomo-ring > span,
+html[data-ck-theme="dark"] .ck14-pomo-ring > small,
+html[data-ck-theme="dark"] .ck14-pomo-caption{color:#aacdc2}
+html[data-ck-theme="dark"] .ck14-pomo-config label{background:rgba(193,233,223,.1)}
+html[data-ck-theme="dark"] .ck14-pomo-actions button{background:rgba(183,230,214,.13);color:#e7fbf3}
+html[data-ck-theme="dark"] .ck14-pomo-actions button:first-child{background:#3b947d;color:white}
+@media(max-width:1050px){
+ .ck-v7-date-pill .ck14-pomo-launch{padding:0 4px!important}
+ .ck14-pomo-launch span{font-size:10px!important}
+}
+@media(max-width:760px){
+ :root{--ck5-nav-height:48px}
+ .ck-v7-nav-pill.ck4-unified{height:48px!important;min-height:48px!important;border-radius:0 0 20px 20px!important}
+ .ck-v7-nav-pill .board-tab{min-height:30px!important;font-size:11px!important;padding:6px 7px!important}
+ .ck-v7-nav-pill .ck-v7-logo{font-size:11px!important}
+ .ck-v7-nav-pill .ck-v7-date-pill{gap:3px!important;padding:0 0 0 4px!important}
+ .ck14-pomo-launch span{display:none}
+}
+@media(max-width:450px){
+ .ck-v7-nav-pill .ck-v7-date-pill > span{display:none!important}
+ .ck-v7-date-pill .ck14-pomo-launch{width:27px!important;min-width:27px!important}
+}

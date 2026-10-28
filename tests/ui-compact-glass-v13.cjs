@@ -38,7 +38,7 @@ test('colored card edges are overridden by ambient-lit borderless glass',()=>{
  assert.match(css,/backdrop-filter:blur\(19px\)/);
 });
 test('all inline JS parses, stylesheet is last and cache is fresh',()=>{
- assert.match(html,/experience-v13\.css/);assert.match(sw,/conceptknot-study-v13/);
+ assert.match(html,/experience-v13\.css/);assert.match(sw,/conceptknot-study-v14/);
  assert.match(sw,/experience-v13\.css/);
  for(const match of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))new vm.Script(match[1]);
  new vm.Script(nav);
