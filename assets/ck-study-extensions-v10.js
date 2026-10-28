@@ -128,3 +128,196 @@ new MutationObserver(()=>{if(document.getElementById('ck10-final-root'))finalMou
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',finalMount,{once:true});else finalMount();
 window.CK10=Object.freeze({exportBoard,finalExport,openDock});
 })();
+
+
+/* v11: optional real browser pop-out split, monochrome brands, printable notes */
+(function(){
+'use strict';
+const SERVICE={
+ chatgpt:{name:'ChatGPT',url:'https://chatgpt.com/',icon:'./assets/ck-brand-chatgpt.svg'},
+ gemini:{name:'Gemini',url:'https://gemini.google.com/app',icon:'./assets/ck-brand-gemini.svg'},
+ claude:{name:'Claude',url:'https://claude.ai/new',icon:'./assets/ck-brand-claude.svg'}
+};
+let last='chatgpt';
+const PAGE_COUNT='ck11-final-page-count';
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const maxPages=()=>{let n=5;try{n=Number(localStorage.getItem(PAGE_COUNT)||5)}catch(e){}return Math.max(1,Math.min(5,Math.round(n)||5))};
+function status(message){
+ const dock=document.getElementById('ck10-ai-dock');if(!dock)return;
+ let p=dock.querySelector('.ck11-status');
+ if(!p){p=document.createElement('p');p.className='ck11-status';p.setAttribute('role','status');dock.appendChild(p)}
+ p.textContent=message;
+}
+function decorate(){
+ document.querySelectorAll('[data-ck10-ai],[data-ck10-provider]').forEach(button=>{
+  const id=button.dataset.ck10Ai||button.dataset.ck10Provider;
+  if(!SERVICE[id]||button.dataset.ck11Logo===id)return;
+  const img=document.createElement('img');img.alt='';img.setAttribute('aria-hidden','true');
+  img.src=SERVICE[id].icon;img.width=21;img.height=21;
+  button.replaceChildren(img);
+  if(button.hasAttribute('data-ck10-provider'))button.appendChild(document.createTextNode(' '+SERVICE[id].name));
+  button.dataset.ck11Logo=id;
+ });
+ document.querySelectorAll('.ck-v7-toolrow').forEach(row=>{
+  const clear=row.querySelector('[data-ck-v7-command="clear"]');
+  if(clear&&!row.querySelector('[data-ck11-eraser]')){
+   const b=document.createElement('button');b.type='button';b.dataset.ck11Eraser='true';
+   b.className='ck11-eraser';b.title='S Pen 지우개';b.setAttribute('aria-label','S Pen 지우개');
+   b.innerHTML='<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M20 14.5 12 22H6l-4-4 11.7-11.7a2 2 0 0 1 2.8 0l3.5 3.5a3 3 0 0 1 0 4.7Z"/><path d="m8 12 6 6M12 22h9"/></svg>';
+   clear.before(b);
+  }
+  const font=row.querySelector('.ck10-font'),slider=font?.querySelector('[data-ck10-font]');
+  if(slider&&!font.querySelector('output')){
+   const out=document.createElement('output');out.className='ck11-font-size';out.textContent=slider.value+'px';font.append(out);
+  }
+ });
+ const root=document.getElementById('ck10-final-root'),actions=root?.querySelector('.ck10-final-actions');
+ if(actions&&!actions.querySelector('[data-ck11-pages]')){
+  const label=document.createElement('label');label.className='ck11-page-count';
+  label.innerHTML='<span>출력 분량</span><select data-ck11-pages aria-label="최종노트 출력 장수"><option value="1">A4 1장</option><option value="2">A4 2장</option><option value="3">A4 3장</option><option value="4">A4 4장</option><option value="5">A4 5장</option></select>';
+  actions.prepend(label);
+ }
+ if(actions){
+  const number=maxPages(),selector=actions.querySelector('[data-ck11-pages]');
+  if(selector&&selector.value!==String(number))selector.value=String(number);
+  root.querySelectorAll('.ck10-paper').forEach((page,i)=>{const hide=i>=number;if(page.hidden!==hide)page.hidden=hide});
+  const label=root.querySelector('.ck10-final-heading span');if(label)label.textContent='A4 · '+number+' / 5장';
+ }
+}
+function selectedText(){
+ const value=window.getSelection?.()?.toString().trim();
+ const target=document.getElementById('ck10-ai-question');
+ if(value&&target&&!target.value.trim())target.value=value.slice(0,4000);
+}
+function provider(){
+ const pressed=document.querySelector('#ck10-ai-dock [data-ck10-provider][aria-pressed="true"]');
+ return SERVICE[pressed?.dataset.ck10Provider]?pressed.dataset.ck10Provider:last;
+}
+function externalAI(id){
+ id=SERVICE[id]?id:'chatgpt';last=id;
+ const display=window.screen||{},w=display.availWidth||1280,h=display.availHeight||850;
+ const width=Math.min(w,Math.max(480,Math.round(w*.47))),height=Math.max(480,h-25);
+ const left=(display.availLeft||0)+Math.max(0,w-width),top=display.availTop||0;
+ let popup=null;
+ try{popup=window.open('about:blank','ck11-'+id,'popup=yes,width='+width+',height='+height+',left='+left+',top='+top);
+     if(popup){popup.opener=null;popup.location.replace(SERVICE[id].url);popup.focus()}}catch(e){popup=null}
+ if(!popup){
+  status('팝업 차단됨: 이 사이트의 팝업을 허용하거나 아래 링크를 여세요.');
+  const dock=document.getElementById('ck10-ai-dock');
+  if(dock){
+   let a=dock.querySelector('.ck11-direct');
+   if(!a){a=document.createElement('a');a.className='ck11-direct';a.rel='noopener noreferrer';a.target='_blank';a.textContent='AI 서비스 열기 ↗';dock.append(a)}
+   a.href=SERVICE[id].url;
+  }
+  return false;
+ }
+ document.body.classList.add('ck11-external-open');
+ status(SERVICE[id].name+' 웹사이트를 오른쪽 새 창에 열도록 요청했습니다. 창이 나란히 배치되지 않으면 Windows + ← / → 키로 창을 정렬하세요.');
+ return true;
+}
+function launchAI(id,selection){
+ last=SERVICE[id]?id:'chatgpt';
+ window.CK10?.openDock?.(last);
+ decorate();if(selection)selectedText();
+ externalAI(last);
+}
+function copyQuestion(){
+ const text=document.getElementById('ck10-ai-question')?.value||'';
+ if(!text.trim()){status('질문을 입력하거나 칠판에서 문장을 선택하세요.');return}
+ const done=()=>{const button=document.querySelector('[data-ck10-copy]');if(button)button.textContent='복사됨 ✓';status('복사 완료. AI 창에서 Ctrl+V로 붙여 넣으세요.')};
+ const fallback=()=>{
+  const node=document.createElement('textarea');node.value=text;node.readOnly=true;node.style.cssText='position:fixed;left:-9999px';
+  document.body.append(node);node.select();let ok=false;
+  try{ok=document.execCommand('copy')}catch(e){}node.remove();
+  if(ok)done();else window.prompt('질문 복사',text);
+ };
+ if(navigator.clipboard?.writeText)navigator.clipboard.writeText(text).then(done,fallback);else fallback();
+}
+function txt(name,text){
+ const url=URL.createObjectURL(new Blob(['\uFEFF',text],{type:'text/plain;charset=utf-8'}));
+ const a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),3000);
+}
+function print(title,body){
+ const popup=window.open('about:blank','_blank','width=860,height=1040');
+ if(!popup){window.alert('인쇄 창이 차단되었습니다. 팝업을 허용해 주세요.');return}
+ popup.document.open();
+ popup.document.write('<!doctype html><html lang="ko"><head><meta charset="utf-8"><title>'+esc(title)+'</title><style>@page{size:A4;margin:14mm 15mm}*{box-sizing:border-box}body{font:13px/1.57 Arial,"Malgun Gothic",sans-serif;color:#152d27;margin:0}h1{font-size:20px;margin:0 0 9mm}h2{font-size:17px;margin:0 0 7mm;border-bottom:1px solid #cad8d1;padding-bottom:5mm}pre{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.6;font:inherit}.paper{page-break-after:always;break-after:page}.paper:last-child{page-break-after:auto;break-after:auto}.paper-num{font-size:11px;color:#54746a;margin-bottom:7mm}.ink{margin-top:8mm;padding:8mm;background:#133e39;break-inside:avoid}.ink img{width:100%;height:auto;display:block}@media screen{body{padding:20px;max-width:800px;margin:auto}.paper{padding:10px;border:1px solid #ddd;margin-bottom:20px}}</style></head><body>'+body+'</body></html>');
+ popup.document.close();popup.focus();setTimeout(()=>{if(!popup.closed)popup.print()},420);
+}
+function finalExport(kind){
+ const root=document.getElementById('ck10-final-root');if(!root)return;
+ const pages=Array.from(root.querySelectorAll('.ck10-paper')).slice(0,maxPages()).map(el=>({
+  title:el.querySelector('[data-ck10-final-title]')?.value||'시험 직전 암기',
+  body:el.querySelector('[data-ck10-final-body]')?.value||''
+ }));
+ if(!pages.length)return;
+ if(kind==='final-txt'){
+  txt('ConceptKnot-최종정리-'+pages.length+'장.txt',pages.map((p,i)=>'['+(i+1)+'/'+pages.length+'] '+p.title+'\r\n\r\n'+p.body).join('\r\n\r\n-----\r\n\r\n'));return;
+ }
+ if(pages.some(p=>p.body.length>2400)){
+  const hint=root.querySelector('.ck10-final-guide');if(hint)hint.textContent='내용이 긴 쪽은 인쇄 시 다음 페이지로 넘어갈 수 있습니다. 원본 내용은 유지됩니다.';
+ }
+ print('ConceptKnot 최종 노트',pages.map((p,i)=>'<section class="paper"><div class="paper-num">CONCEPTKNOT · '+(i+1)+' / '+pages.length+'</div><h2>'+esc(p.title)+'</h2><pre>'+esc(p.body)+'</pre></section>').join(''));
+}
+function boardPdf(button){
+ const board=button.closest('.ck-v7-board'),key=board?.dataset.ckV7Key||'study';
+ const text=board?.querySelector('.chalk-editor textarea')?.value||'';
+ let ink='';
+ try{
+  const state=JSON.parse(localStorage.getItem('recallgraph-first-exam-v1')||'{}');
+  const canvas=board?.querySelector('canvas.ck-v7-pen-layer');
+  if(Array.isArray(state.ink?.[key])&&state.ink[key].length&&canvas?.width&&canvas.height){
+   ink='<div class="ink"><img alt="필기 이미지" src="'+canvas.toDataURL('image/png')+'"></div>';
+  }
+ }catch(e){}
+ print('ConceptKnot 메모', '<section class="paper"><h1>'+esc(key)+'</h1><pre>'+esc(text)+'</pre>'+ink+'</section>');
+}
+document.addEventListener('click',e=>{
+ const target=e.target;if(!target.closest)return;
+ const icon=target.closest('[data-ck10-ai]');
+ const shortcut=e.button===0&&e.ctrlKey&&e.altKey&&target.closest('.ck-v7-board,.ck-v7-content');
+ if(icon||shortcut){
+  e.preventDefault();e.stopImmediatePropagation();launchAI(icon?.dataset.ck10Ai||provider(),!!shortcut);return;
+ }
+ const menu=target.closest('[data-ck10-provider]');if(menu){last=menu.dataset.ck10Provider;return}
+ if(target.closest('[data-ck10-open]')){e.preventDefault();e.stopImmediatePropagation();externalAI(provider());return}
+ if(target.closest('[data-ck10-copy]')){e.preventDefault();e.stopImmediatePropagation();copyQuestion();return}
+ const output=target.closest('[data-ck10-export]');
+ if(output){e.preventDefault();e.stopImmediatePropagation();finalExport(output.dataset.ck10Export);return}
+ const eraser=target.closest('[data-ck11-eraser]');
+ if(eraser){
+  e.preventDefault();e.stopImmediatePropagation();
+  const board=eraser.closest('.ck-v7-board'),mode=board?.querySelector('[data-ck9-spen="toggle"]');
+  if(mode&&mode.getAttribute('aria-pressed')!=='true')mode.click();
+  const tool=document.querySelector('[data-ck9-spen-tool="eraser"]');if(tool)tool.click();
+  return;
+ }
+ const pdf=target.closest('[data-ck-v7-command="pdf"]');
+ if(pdf){e.preventDefault();e.stopImmediatePropagation();boardPdf(pdf)}
+},true);
+document.addEventListener('change',e=>{
+ if(!e.target.matches?.('[data-ck11-pages]'))return;
+ const value=Math.max(1,Math.min(5,Math.round(Number(e.target.value)||5)));
+ try{localStorage.setItem(PAGE_COUNT,String(value))}catch(err){}
+ decorate();
+});
+document.addEventListener('input',e=>{
+ if(!e.target.matches?.('[data-ck10-font]'))return;
+ const output=e.target.closest('.ck10-font')?.querySelector('output');
+ if(output)output.textContent=e.target.value+'px';
+});
+function monitor(){
+ decorate();const main=document.getElementById('main');
+ if(!main||!window.MutationObserver)return;
+ let pending=false;
+ const observer=new MutationObserver(records=>{
+  if(pending||!records.some(r=>Array.from(r.addedNodes).some(node=>node.nodeType===1&&
+     (node.matches?.('.ck-v7-board,.ck10-final-heading,.ck10-paper,[data-ck10-ai]')||
+      node.querySelector?.('.ck-v7-board,.ck10-final-actions,[data-ck10-ai]')))))return;
+  pending=true;requestAnimationFrame(()=>{pending=false;decorate()});
+ });
+ observer.observe(main,{childList:true,subtree:true});
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',monitor,{once:true});else monitor();
+})();

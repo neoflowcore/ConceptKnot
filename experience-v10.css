@@ -41,3 +41,30 @@
 .ck-v7-content .ck-v7-input .type-pending{color:#99acaa!important;opacity:.65}
 @media(max-width:850px){body.ck10-dock-open #main{width:100%!important}.ck10-ai-dock{top:59px}}
 @media print{.ck10-ai-dock,.ck10-final-actions{display:none!important}}
+
+/* v11 ambient glass, white brand marks and compact board tools */
+.ck10-ai-launch button{display:inline-flex!important;align-items:center;justify-content:center;background:transparent!important;border:0!important;box-shadow:none!important;padding:2px!important}
+.ck10-ai-launch img{display:block;width:20px;height:20px;object-fit:contain;filter:drop-shadow(0 2px 4px rgba(9,48,43,.4))}
+.ck10-ai-dock nav button{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-width:0}
+.ck10-ai-dock nav img{width:17px;height:17px;filter:brightness(0) saturate(100%) invert(22%) sepia(19%) saturate(1059%) hue-rotate(101deg)}
+.ck10-ai-dock nav button[aria-pressed=true] img{filter:brightness(0) invert(1)}
+.ck10-ai-dock{border:0!important;box-shadow:-18px 0 44px -18px rgba(55,184,169,.48),-15px 0 38px -18px rgba(237,170,92,.38)!important}
+.ck10-ai-dock .ck11-status{font-size:12px;line-height:1.65;background:rgba(28,75,65,.08);border-radius:11px;padding:12px}
+.ck10-ai-dock .ck11-direct{display:block;color:#0a655e;font-weight:750;margin-top:9px;font-size:12px}
+.ck-v7-toolrow .ck11-eraser{display:inline-flex;align-items:center;justify-content:center;width:24px;min-width:24px;height:24px;padding:3px!important;border-radius:8px}
+.ck11-font-size{font:600 10px/1.4 Pretendard,sans-serif;color:#ebfff7;min-width:29px}
+.ck-v7-toolrow .ck10-color input[type=color]{appearance:none;-webkit-appearance:none;width:18px;height:18px;border-radius:50%!important;overflow:hidden;cursor:pointer;border:1px solid rgba(255,255,255,.68)!important}
+.ck-v7-toolrow .ck10-color input[type=color]::-webkit-color-swatch-wrapper{padding:0}
+.ck-v7-toolrow .ck10-color input[type=color]::-webkit-color-swatch{border:0;border-radius:50%}
+.ck-v7-content :is(.dashboard-grid>*,.panel,.exam-sheet,.chalk-practice,.ck-v7-question,.reverse-recall-card,.visual-sheet,.typing-history,.calc-card){border:0!important;border-left:0!important;border-top:0!important;background:linear-gradient(145deg,rgba(255,255,255,.61),rgba(243,255,254,.34))!important;backdrop-filter:blur(21px) saturate(140%)!important;box-shadow:0 18px 37px -22px rgba(33,141,190,.46),0 24px 44px -28px rgba(245,126,154,.39),0 -15px 34px -27px rgba(255,219,124,.43),inset 0 1px rgba(255,255,255,.62)!important}
+.ck-v7-content :is(.ck-v7-input,.chalk-practice .chalk-editor){border-left:0!important;border-top:0!important;background:linear-gradient(155deg,rgba(13,25,31,.97),rgba(19,38,45,.94))!important;box-shadow:0 16px 35px -20px rgba(46,154,178,.68),0 16px 28px -24px rgba(228,154,111,.35),inset 0 1px rgba(255,255,255,.06)!important}
+.ck-v7-content .ck-v7-input :is(.chalk-editor,.chalk-mirror,textarea,.chalk-letter,.type-correct){color:#effdf7!important}
+.ck-v7-content .ck-v7-input .type-pending{color:rgba(217,230,229,.54)!important}
+.ck-v7-content .ck-v7-input textarea{caret-color:#f9fff2!important}
+.ck10-final-actions .ck11-page-count{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.59);padding:5px 10px;border-radius:11px;color:#27554d;font-size:12px;font-weight:700}
+.ck11-page-count select{border:0;background:transparent;color:#18443c;font:700 12px Pretendard,sans-serif;cursor:pointer}
+.ck10-paper[hidden]{display:none!important}
+.ck10-paper{aspect-ratio:210/297;min-height:0;background:rgba(255,255,250,.88)!important;border:0!important;box-shadow:0 20px 38px -24px rgba(37,119,130,.33),0 24px 45px -27px rgba(238,169,130,.28)!important}
+.ck10-paper textarea{min-height:80%;resize:vertical}
+@media(max-width:850px){.ck10-paper{aspect-ratio:auto;min-height:450px}.ck10-paper textarea{min-height:350px}.ck10-ai-dock nav{flex-wrap:wrap}.ck11-font-size{display:none}}
+@media print{.ck11-page-count{display:none!important}}
