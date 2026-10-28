@@ -237,3 +237,12 @@ body[data-ck-v8-tab="wrong"]{--ck-v8-accent:#ca6a7d;--ck-v8-accent-soft:rgba(240
  }
  .ck-v7-board{background:rgba(3,40,43,.89)!important}
 }
+
+/* v3: live WebGL PBR garden is primary; v2 illustrated background remains fallback */
+.ck-v8-ambient.ck-3d-ready>.ck-v8-art,
+.ck-v8-ambient.ck-3d-ready>.ck-v8-ground-texture,
+.ck-v8-ambient.ck-3d-ready>.ck-v8-ornament,
+.ck-v8-ambient.ck-3d-ready>.ck-v8-bird,
+.ck-v8-ambient.ck-3d-ready>.ck-v8-cloud{visibility:hidden!important}
+.ck-v8-ambient .ck-3d-canvas{pointer-events:none}
+@media(prefers-reduced-motion:reduce){.ck-v8-ambient .ck-3d-canvas{display:none!important}}
