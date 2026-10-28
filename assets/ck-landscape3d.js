@@ -14,8 +14,8 @@ const lerp = THREE.MathUtils.lerp;
 const clamp = THREE.MathUtils.clamp;
 const v3 = (x, y, z) => new THREE.Vector3(x, y, z);
 const scenes = { trees: [], clouds: [], bird: null };
-const pastel = [0xb4e4a1, 0x95d389, 0x80bc84, 0x4c9975, 0xd6e99c];
-const flowerColors = [0xffe4ba, 0xffa9c5, 0xfef5d8, 0xc8e7fc, 0xfce1a1];
+const pastel = [0x75c957, 0x4eb65e, 0x2b9d74, 0x217f63, 0xc0d956];
+const flowerColors = [0xffc44f, 0xff789b, 0xffe28a, 0x6db9f3, 0xff8753];
 let root, renderer, camera, scene, materialCache, clock, frameId = 0;
 let resizeObserver, last = 0, pointer = {x: 0, y: 0}, elapsed = 0, firstDraw = false;
 let resizeTimer = 0;
@@ -57,7 +57,7 @@ function ground() {
     const nr = Math.sin(x * 1.32 + z * 2.17) * .045 + Math.cos(z * 1.59 - x * .62) * .038;
     const brightness = .94 + nr + .075 * Math.sin(x * .13 + z * .03);
     const t = clamp(((-z) - 23) / 120, 0, 1);
-    col.setRGB(lerp(.25, .60, t) * brightness, lerp(.59, .74, t) * brightness, lerp(.30, .43, t) * brightness);
+    col.setRGB(lerp(.22, .43, t) * brightness, lerp(.55, .70, t) * brightness, lerp(.23, .31, t) * brightness);
     colors.push(col.r, col.g, col.b);
   }
   geom.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
@@ -77,8 +77,8 @@ function sky() {
     fragmentShader:`varying vec3 worldPoint;
       void main(){ float y=normalize(worldPoint).y;
         float t=smoothstep(-.14,.83,y);
-        vec3 c=mix(vec3(.82,.95,.91),vec3(.22,.65,.91),t);
-        c=mix(c,vec3(.57,.82,.98),pow(t,.52)*.27);
+        vec3 c=mix(vec3(.67,.87,.91),vec3(.11,.56,.91),t);
+        c=mix(c,vec3(.36,.76,.96),pow(t,.52)*.14);
         float glow=pow(max(0.0,dot(normalize(worldPoint),normalize(vec3(-.49,.71,-.5)))),30.0);
         c+=glow*vec3(.22,.20,.14);
         gl_FragColor=vec4(c,1.0);
@@ -117,7 +117,7 @@ function tree(x, z, size, paletteIndex, sways=true) {
   const crown = new THREE.Group();
   crown.position.set(0,height*.85,0);
   const sGeo = new THREE.IcosahedronGeometry(1,2);
-  const colors=[0x55ad78,0x76c98a,0x9fd78c,0x2c8d79,0x3fae8b,0x90c96d];
+  const colors=[0x299d62,0x4db75c,0x7acb55,0x127d68,0x239d80,0xacd24a];
   for(let i=0;i<9;i++){
     const a=i*2.399, rr=.2+Math.sqrt(rand())*1.48;
     const xx=Math.cos(a)*rr*size,zz=Math.sin(a)*rr*.56*size,yy=(.1+rand()*1.7)*size;
@@ -126,7 +126,7 @@ function tree(x, z, size, paletteIndex, sways=true) {
     crown.add(blob);
   }
   // Small color-varied highlights approximate matte clay leaves / specular edges.
-  const highlights=pbr(0xcbe8a4,.96,{transparent:true,opacity:.48});
+  const highlights=pbr(0x9dd66e,.96,{transparent:true,opacity:.37});
   for(let k=0;k<4;k++){
     const a=k*2.1;
     crown.add(sphere(sGeo,highlights,Math.sin(a)*1.05*size,(1.55+Math.sin(a)*.4)*size,Math.cos(a)*.56*size,.31*size,.24*size,.25*size));
@@ -152,7 +152,7 @@ function grass() {
   const count = QUALITY ? 9600 : 3100;
   const geometry = new THREE.ConeGeometry(.045,.64,3);
   geometry.translate(0,.24,0);
-  const mat = pbr(0x78bf6a,.96,{side:THREE.DoubleSide});
+  const mat = pbr(0x5aae52,.96,{side:THREE.DoubleSide});
   const grass = new THREE.InstancedMesh(geometry,mat,count);
   grass.castShadow = false;grass.receiveShadow = true;
   const obj=new THREE.Object3D();const col=new THREE.Color();
@@ -226,7 +226,7 @@ function bird() {
   const bird=new THREE.Group();
   bird.position.set(-20.5,h(-20.5,1)+8.7,1);
   bird.scale.setScalar(.95);
-  const teal=pbr(0x39aab1,.62),blue=pbr(0x2589b8,.52),white=pbr(0xf9f4e7,.92),beak=pbr(0xf2b359,.58),black=pbr(0x092b3d,.28);
+  const teal=pbr(0x159eb5,.62),blue=pbr(0x137ebe,.52),white=pbr(0xf9f4e7,.92),beak=pbr(0xf3a54d,.58),black=pbr(0x092b3d,.28);
   const ball=new THREE.SphereGeometry(1,20,12);
   bird.add(sphere(ball,blue,0,0,0,.68,.93,.57));
   bird.add(sphere(ball,white,.20,-.17,.43,.43,.57,.21));
@@ -264,15 +264,15 @@ function createRenderer() {
   canvas.style.cssText='position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;z-index:0;';
   const opts={canvas,alpha:false,antialias:!MOBILE.matches,powerPreference:'high-performance',stencil:false,depth:true};
   try{renderer=new THREE.WebGLRenderer(opts);}catch(err){console.info('ConceptKnot uses SVG scenery fallback',err);return;}
-  renderer.setClearColor(0x9bdbed,1);
+  renderer.setClearColor(0x65c6e9,1);
   renderer.outputColorSpace=THREE.SRGBColorSpace;
   renderer.toneMapping=THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure=1.48;
+  renderer.toneMappingExposure=1.24;
   renderer.shadowMap.enabled=true;
   renderer.shadowMap.type=THREE.PCFSoftShadowMap;
-  scene=new THREE.Scene();scene.fog=new THREE.FogExp2(0xc8e6d5,.0076);
-  const hemi=new THREE.HemisphereLight(0xe2f4ff,0x6a9672,2.25);scene.add(hemi);
-  const sun=new THREE.DirectionalLight(0xfff3cf,2.7);
+  scene=new THREE.Scene();scene.fog=new THREE.FogExp2(0x9edac0,.0072);
+  const hemi=new THREE.HemisphereLight(0xd4f2ff,0x4a8f63,1.94);scene.add(hemi);
+  const sun=new THREE.DirectionalLight(0xfff0c6,2.4);
   sun.position.set(-23,46,12);sun.castShadow=true;
   sun.shadow.mapSize.set(1024,1024);
   sun.shadow.camera.left=-50;sun.shadow.camera.right=50;sun.shadow.camera.top=60;sun.shadow.camera.bottom=-40;
