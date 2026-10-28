@@ -1,0 +1,239 @@
+/* ConceptKnot v2: original tactile landscape + design-token glass.
+ * Visual source-of-truth: approved 2026-10-28 typing layout.
+ * Decorative art is independently generated; never copy Clay.com assets. */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap');
+@import url('https://cdn.jsdelivr.net/gh/moonspam/NanumSquareNeo@1.0/nanumsquareneo.css');
+:root{
+ --ck-v8-font:'Nunito','NanumSquareNeo','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+ --ck-glass-fill:rgba(253,255,251,.77);
+ --ck-glass-card:rgba(255,255,255,.77);
+ --ck-glass-input:rgba(252,255,255,.82);
+ --ck-glass-blur:20px;
+ --ck-glass-edge:rgba(255,255,255,.91);
+ --ck-glass-shine:rgba(255,255,255,.46);
+ --ck-glass-shadow:0 12px 34px rgba(10,57,59,.18),inset 0 1px 0 rgba(255,255,255,.94);
+ --ck-v8-accent:#3e74eb;
+ --ck-v8-accent-soft:rgba(126,182,247,.25);
+ --ck-v8-note-ink:#f6fffa;
+}
+html{background:#8acdad!important}
+body{background:#a3ddbb!important;min-height:100vh;color:#1b3044;font-family:var(--ck-v8-font)!important}
+body,button,input,textarea,select,option,label,summary,h1,h2,h3,h4,h5,h6,p,small,span,div,a,table,th,td{
+ font-family:var(--ck-v8-font)!important
+}
+button,input,select,textarea{font-size:inherit}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background:linear-gradient(180deg,rgba(170,230,253,.16),transparent 39%,rgba(9,107,66,.08) 100%)}
+#root{position:relative;z-index:1;background:transparent!important}
+.ck-v8-ambient{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:linear-gradient(180deg,#68c9ee 0%,#c5edf2 32%,#9cda84 69%,#48ad74 100%);--ck-v8-x:0;--ck-v8-y:0}
+.ck-v8-art{position:absolute;inset:-1.5%;background-image:url('./assets/ck-landscape-textured-v2.svg');background-size:cover;background-position:center 48%;background-repeat:repeat-x;transform:translate3d(calc(var(--ck-v8-x)*-4px),calc(var(--ck-v8-y)*-1.5px),0);transition:transform .45s ease-out}
+.ck-v8-ground-texture{position:absolute;bottom:0;left:0;right:0;height:45%;background:radial-gradient(ellipse at 25% 90%,rgba(234,250,166,.12),transparent 49%),radial-gradient(ellipse at 70% 80%,rgba(34,90,53,.13),transparent 50%);mix-blend-mode:multiply;pointer-events:none}
+.ck-v8-cloud{position:absolute;width:21vw;min-width:210px;max-width:390px;height:65px;filter:blur(16px);border-radius:60%;background:radial-gradient(ellipse,rgba(255,255,255,.28),rgba(245,254,250,0) 70%);opacity:.44;will-change:transform}
+.ck-v8-cloud--a{top:11%;left:-17%;animation:ck-v8-cloud-drift 94s linear infinite}
+.ck-v8-cloud--b{top:21%;left:-35%;animation:ck-v8-cloud-drift 143s linear -41s infinite;opacity:.32}
+@keyframes ck-v8-cloud-drift{0%{transform:translate3d(0,0,0)}100%{transform:translate3d(165vw,0,0)}}
+.ck-v8-ornament{position:absolute;pointer-events:none;filter:drop-shadow(0 8px 12px #204f3b47);transform:translate3d(calc(var(--ck-v8-x)*-8px),0,0);transition:transform .25s ease-out}
+.ck-v8-ornament--left{left:clamp(-55px,-1.8vw,0px);bottom:18%;width:clamp(110px,14vw,246px);opacity:.85}
+.ck-v8-ornament--right{right:clamp(-35px,1vw,55px);bottom:19%;width:clamp(110px,11vw,190px);opacity:.83}
+.ck-v8-sway,.ck-v8-leaf-sway{transform-origin:50% 100%;animation:ck-v8-tree-wind 7.4s cubic-bezier(.45,0,.55,1) infinite}
+.ck-v8-ornament--right .ck-v8-sway{animation-duration:9.2s;animation-delay:-2.4s}
+.ck-v8-leaf-sway{animation-duration:5.4s;animation-delay:-3s}
+@keyframes ck-v8-tree-wind{0%,100%{transform:rotate(-1.1deg)}38%{transform:rotate(1.8deg)}72%{transform:rotate(-.6deg)}}
+.ck-v8-bird{position:absolute;right:clamp(14px,9.2vw,210px);top:clamp(112px,13.5vh,230px);width:clamp(90px,9vw,160px);height:auto;filter:drop-shadow(3px 12px 10px rgba(36,72,60,.24));transform:translate3d(calc(var(--ck-v8-x)*7px),calc(var(--ck-v8-y)*2px),0);transition:transform .4s ease-out;will-change:transform}
+.ck-v8-bird-head{transform-origin:85px 62px;transform-box:fill-box;transform:rotate(var(--ck-v8-bird-angle,0deg));transition:transform .18s cubic-bezier(.2,.55,.3,1)}
+.ck-v8-bird-eye{transform:translate3d(var(--ck-v8-eye-x,0px),var(--ck-v8-eye-y,0px),0);transition:transform .16s ease-out}
+.ck-v8-bird-blink{transform-origin:center;animation:ck-v8-blink 12s linear infinite}
+@keyframes ck-v8-blink{0%,25%,26.5%,100%{transform:scaleY(1)}25.8%,26.1%{transform:scaleY(.08)}}
+body.ck-v8-study-focus .ck-v8-cloud{animation-play-state:paused}
+body.ck-v8-study-focus .ck-v8-art,body.ck-v8-study-focus .ck-v8-ornament,body.ck-v8-study-focus .ck-v8-bird{transform:none!important}
+body[data-ck-v8-tab="home"]{--ck-v8-accent:#447a65;--ck-v8-accent-soft:rgba(160,225,150,.26)}
+body[data-ck-v8-tab="reverse"],body[data-ck-v8-tab="exam"]{--ck-v8-accent:#92735d;--ck-v8-accent-soft:rgba(250,213,149,.24)}
+body[data-ck-v8-tab="typing"],body[data-ck-v8-tab="listen"]{--ck-v8-accent:#4079e9;--ck-v8-accent-soft:rgba(109,190,245,.24)}
+body[data-ck-v8-tab="venn"],body[data-ck-v8-tab="theory"]{--ck-v8-accent:#755c9c;--ck-v8-accent-soft:rgba(167,142,226,.24)}
+body[data-ck-v8-tab="wrong"]{--ck-v8-accent:#ca6a7d;--ck-v8-accent-soft:rgba(240,160,179,.22)}
+/* All glass in one geometry system rather than thirteen unrelated surfaces. */
+.ck-v7-global-nav{position:relative;z-index:30;margin-bottom:clamp(32px,6vh,74px)!important}
+.ck-v7-nav-pill,.ck-v7-date-pill{
+ background:rgba(255,255,255,.94)!important;backdrop-filter:blur(14px) saturate(1.1);
+ -webkit-backdrop-filter:blur(14px) saturate(1.1);
+ border:1px solid rgba(255,255,255,.95)!important;
+ box-shadow:0 7px 25px rgba(15,71,69,.15),inset 0 1px rgba(255,255,255,.9)!important;
+}
+.ck-v7-nav-pill .board-tabs{min-width:0}
+.ck-v7-nav-pill .board-tab{font-size:clamp(11px,.88vw,14px)!important;letter-spacing:-.35px;font-weight:800!important}
+.ck-v7-nav-pill .board-tab.active{background:#152c41!important}
+.ck-v7-logo{font-size:clamp(18px,1.65vw,28px)!important;font-weight:900!important}
+.ck-v7-date-pill{font-size:12px}
+.ck-v7-content{
+ background:var(--ck-glass-fill)!important;
+ border:1px solid var(--ck-glass-edge)!important;
+ box-shadow:var(--ck-glass-shadow)!important;
+ backdrop-filter:blur(var(--ck-glass-blur)) saturate(130%) brightness(1.02)!important;
+ -webkit-backdrop-filter:blur(var(--ck-glass-blur)) saturate(130%) brightness(1.02)!important;
+ border-radius:23px!important;
+ position:relative;
+}
+.ck-v7-content:before{content:'';position:absolute;top:0;left:5%;right:5%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.98),transparent);pointer-events:none}
+.ck-v7-content .panel,.ck-v7-content .quick-card,.ck-v7-content .exam-sheet,.ck-v7-content .pdf-panel,
+.ck-v7-content .flash-card,.ck-v7-content .callout,.ck-v7-content .reverse-concept,
+.ck-v7-content .reverse-recall-card,.ck-v7-content .visual-sheet,.ck-v7-content .typing-history,
+.ck-v7-content .calc-card,.ck-v7-content .chalk-practice{
+ background:var(--ck-glass-card)!important;
+ border:1px solid rgba(255,255,255,.86)!important;
+ border-radius:16px!important;
+ box-shadow:0 5px 17px rgba(30,70,67,.10),inset 0 1px 0 rgba(255,255,255,.85)!important;
+ backdrop-filter:blur(12px) saturate(128%);
+ -webkit-backdrop-filter:blur(12px) saturate(128%);
+}
+.ck-v7-content .hero{
+ background:linear-gradient(126deg,rgba(13,72,67,.77),rgba(26,104,92,.55))!important;
+ border:1px solid rgba(235,255,244,.42)!important;
+ backdrop-filter:blur(11px) saturate(160%)!important;
+ box-shadow:0 10px 24px rgba(4,66,55,.17),inset 0 1px rgba(255,255,255,.36)!important;
+}
+.ck-v7-content .hero h2,.ck-v7-content .hero p{color:#fff!important}
+.ck-v7-content .subject-tab{
+ background:rgba(255,255,255,.62)!important;
+ border:1px solid rgba(220,233,232,.89)!important;
+ border-radius:10px!important;
+ backdrop-filter:blur(6px)
+}
+.ck-v7-content .subject-tab.active{background:rgba(230,240,255,.85)!important;border-color:rgba(108,148,220,.62)!important;color:#315cce!important}
+.ck-v7-content .btn,.ck-v7-content .ck-v7-actions button,.ck-v7-controls button{
+ border-radius:11px!important;
+ box-shadow:inset 0 1px rgba(255,255,255,.7),0 3px 7px rgba(36,76,79,.07);
+}
+.ck-v7-content .ck-v7-typing{gap:12px}
+.ck-v7-content .ck-v7-stat,
+.ck-v7-content .ck-v7-heatmap,
+.ck-v7-content .ck-v7-question,
+.ck-v7-content .ck-v7-input,
+.ck-v7-content .ck-v7-question-body,
+.ck-v7-content .ck-v7-typing-history,
+.ck-v7-content .ck-v7-controls select{
+ background:var(--ck-glass-card)!important;
+ border:1px solid rgba(255,255,255,.8)!important;
+ box-shadow:0 3px 12px rgba(34,90,93,.08),inset 0 1px 0 rgba(255,255,255,.78)!important;
+ backdrop-filter:blur(10px) saturate(130%)!important;
+ -webkit-backdrop-filter:blur(10px) saturate(130%)!important;
+ border-radius:14px!important;
+}
+.ck-v7-content .ck-v7-question{background:rgba(255,250,235,.86)!important;border-left:5px solid rgba(255,207,104,.9)!important}
+.ck-v7-content .ck-v7-qhead{background:rgba(255,250,231,.66)!important}
+.ck-v7-content .ck-v7-question-body{border:0!important;box-shadow:none!important;background:transparent!important;backdrop-filter:none!important}
+.ck-v7-content .ck-v7-input{background:rgba(237,249,255,.77)!important;border-left:5px solid rgba(137,207,248,.92)!important}
+.ck-v7-content .ck-v7-input .chalk-editor{background:rgba(255,255,255,.72)!important;border-color:rgba(255,255,255,.94)!important}
+.ck-v7-content .ck-v7-stats{gap:9px}
+.ck-v7-content .ck-v7-stat strong{font-size:clamp(17px,1.55vw,25px)}
+.ck-v7-content .ck-v7-stat span{font-size:12px}
+.ck-v7-content .ck-v7-question-body p,.ck-v7-content .ck-v7-options li{font-size:clamp(15px,1.06vw,19px);line-height:1.74}
+.ck-v7-content .ck-v7-controls button,.ck-v7-content .ck-v7-controls select{font-size:12px}
+.ck-v7-content .page-intro h1{font-size:clamp(25px,2.2vw,39px)!important;font-weight:850!important}
+.ck-v7-content .page-intro p{font-size:clamp(12px,.97vw,15px);line-height:1.7}
+/* The board IS glass: old opaque Monet board layers must not cover the landscape. */
+.ck-v7-board{
+ background:linear-gradient(145deg,rgba(4,46,52,.38),rgba(5,49,49,.30) 42%,rgba(3,32,43,.50))!important;
+ background-color:rgba(5,43,45,.27)!important;
+ border:2px solid rgba(255,255,255,.79)!important;
+ box-shadow:0 14px 32px rgba(7,60,52,.3),inset 0 0 0 1px rgba(255,255,255,.22),inset 0 28px 48px rgba(255,255,255,.05)!important;
+ backdrop-filter:blur(9px) saturate(155%) brightness(.81)!important;
+ -webkit-backdrop-filter:blur(9px) saturate(155%) brightness(.81)!important;
+ overflow:hidden;
+}
+.ck-v7-board .ck-v7-art,.ck-v7-board .ck-v7-art-shade{display:none!important}
+.ck-v7-board:before{content:'';position:absolute;inset:0;background:linear-gradient(106deg,rgba(255,255,255,.20),rgba(255,255,255,.03) 18%,transparent 34%),radial-gradient(ellipse at 0 0,rgba(255,255,255,.13),transparent 42%);pointer-events:none}
+.ck-v7-board:after{content:'';position:absolute;inset:4px;border:1px solid rgba(236,255,243,.26);border-radius:18px;pointer-events:none}
+.ck-v7-board-overlay{position:relative;z-index:1}
+.ck-v7-board-caption,.ck-v7-board-heading{color:#fbfff9!important;text-shadow:0 2px 5px rgba(2,38,34,.8)}
+.ck-v7-board-heading{font-weight:800!important}
+.ck-v7-board-small{color:#e5f9f3!important}
+.ck-v7-writing-surface{background:rgba(5,39,40,.06)!important;border:none!important}
+.ck-v7-writing-surface .chalk-editor{background:transparent!important}
+.ck-v7-writing-surface .chalk-editor,.ck-v7-writing-surface .chalk-mirror,.ck-v7-writing-surface .chalk-editor textarea{
+ font-family:var(--ck-v8-font)!important;
+ font-size:clamp(17px,1.36vw,23px)!important;
+ line-height:1.8!important;
+ letter-spacing:.01em!important
+}
+.ck-v7-writing-surface .chalk-mirror,.ck-v7-writing-surface .chalk-editor textarea{padding:9px!important}
+.ck-v7-board .chalk-placeholder{color:rgba(250,255,253,.68)!important}
+.ck-v7-toolrow{
+ border:1px solid rgba(255,255,255,.38)!important;
+ background:rgba(8,42,45,.31)!important;
+ box-shadow:inset 0 1px rgba(255,255,255,.15)!important;
+ backdrop-filter:blur(12px) saturate(140%);
+ -webkit-backdrop-filter:blur(12px) saturate(140%)
+}
+.ck-v7-toolrow button{background:rgba(255,255,255,.16)}
+.ck-v7-divider:after{background:rgba(242,252,255,.87)!important;backdrop-filter:blur(7px);box-shadow:0 4px 12px rgba(19,62,76,.22)!important}
+.ck-v8-ambient + #root{position:relative}
+/* Distinguishable hover/focus states preserve accessibility over a dynamic background. */
+.ck-v7-content button:focus-visible,.ck-v7-board button:focus-visible,.ck-v7-global-nav button:focus-visible{outline:3px solid #3d76ee!important;outline-offset:2px}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+ .ck-v7-board{background:rgba(3,37,43,.78)!important}
+ .ck-v7-content{background:rgba(250,254,252,.96)!important}
+ .ck-v7-content .panel,.ck-v7-content .ck-v7-stat{background:rgba(255,255,255,.95)!important}
+}
+@media(max-width:1150px){
+ .ck-v8-bird{right:3vw;top:16vh;width:95px}
+ .ck-v7-global-nav{margin-bottom:clamp(20px,4vh,44px)!important}
+ .ck-v8-ornament--left,.ck-v8-ornament--right{opacity:.62}
+ .ck-v7-content .ck-v7-stat{padding:10px}
+}
+@media(max-width:850px){
+ .ck-v8-art{background-position:center 42%;background-size:auto 100%}
+ .ck-v8-bird{top:14%;right:7%;width:83px;opacity:.9}
+ .ck-v8-ornament--left{left:-34px;bottom:12%;opacity:.4}
+ .ck-v8-ornament--right{right:-25px;bottom:8%;opacity:.5}
+ .ck-v7-content{background:rgba(251,255,252,.86)!important;backdrop-filter:blur(16px) saturate(140%)!important}
+ .ck-v7-global-nav{margin-bottom:18px!important}
+}
+@media(max-width:520px){
+ .ck-v8-bird{top:12%;right:5%;width:72px}
+ .ck-v7-content .page-intro h1{font-size:24px!important}
+ .ck-v7-content .ck-v7-options li{font-size:14px}
+ .ck-v7-board{backdrop-filter:blur(7px) saturate(155%) brightness(.75)!important}
+ .ck-v7-nav-pill .board-tab{font-size:11px!important}
+}
+@media(prefers-reduced-motion:reduce){
+ .ck-v8-cloud,.ck-v8-sway,.ck-v8-leaf-sway,.ck-v8-bird-blink{animation:none!important}
+ .ck-v8-art,.ck-v8-ornament,.ck-v8-bird,.ck-v8-bird-head,.ck-v8-bird-eye{transition:none!important;transform:none!important}
+}
+
+/* Pause decor when hidden or when animation is disabled. */
+.ck-v8-paused .ck-v8-cloud,
+.ck-v8-paused .ck-v8-sway,
+.ck-v8-paused .ck-v8-leaf-sway,
+.ck-v8-paused .ck-v8-bird-blink{animation-play-state:paused!important}
+.ck-v8-paused .ck-v8-art,
+.ck-v8-paused .ck-v8-bird,
+.ck-v8-paused .ck-v8-ornament{transform:none!important}
+@media(hover:none),(pointer:coarse){
+ .ck-v8-art,.ck-v8-ornament{transform:none!important}
+ .ck-v8-bird-head{animation:ck-v8-curious-bird 15s ease-in-out infinite}
+ @keyframes ck-v8-curious-bird{
+  0%,43%,64%,100%{transform:rotate(0deg)}
+  48%,56%{transform:rotate(-6deg)}
+  75%,80%{transform:rotate(5deg)}
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ .ck-v8-bird-head{animation:none!important}
+}
+/* Keep content text visibly above the picture's fine textures. */
+.ck-v7-content .page-intro,
+.ck-v7-content .section-heading,
+.ck-v7-content .theory-layout,
+.ck-v7-content .exam-layout{position:relative;z-index:1}
+.ck-v7-board .ck-v7-writing-surface{touch-action:pan-y}
+.ck-v7-board .ck-v7-pen-layer{touch-action:none}
+.ck-v7-typing .ck-v7-controls select,
+.ck-v7-typing .ck-v7-controls button,
+.ck-v7-typing .ck-v7-actions button{font-weight:750}
+/* Glass surfaces retain a real outline under high-contrast preference. */
+@media(prefers-contrast:more){
+ .ck-v7-content,.ck-v7-content .panel,.ck-v7-content .ck-v7-stat,
+ .ck-v7-content .ck-v7-question,.ck-v7-content .ck-v7-input{
+  background:rgba(255,255,255,.96)!important;border-color:#59758c!important
+ }
+ .ck-v7-board{background:rgba(3,40,43,.89)!important}
+}
