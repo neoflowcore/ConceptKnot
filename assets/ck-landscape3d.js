@@ -316,6 +316,7 @@ function onPointer(e){
   pointer.x=clamp((e.clientX/window.innerWidth-.5)*2,-1,1);
   pointer.y=clamp((e.clientY/window.innerHeight-.5)*2,-1,1);
 }
+window.addEventListener('pointerleave',()=>{pointer.x=0;pointer.y=0;},{passive:true});
 function onVisibility(){
   if(document.hidden){if(frameId)cancelAnimationFrame(frameId);frameId=0;return;}
   last=0;if(!frameId&&!REDUCED.matches)frameId=requestAnimationFrame(tick);
@@ -325,7 +326,7 @@ function tick(ms){
   const dt=last?Math.min(.05,(ms-last)/1000):0;last=ms;elapsed+=dt;
   const focused=Boolean(document.body?.classList.contains('ck-v8-study-focus'));
   const intensity=focused?.18:1;
-  for(const tr of scenes.trees){tr.crown.rotation.z=Math.sin(elapsed*2*Math.PI/tr.tempo+tr.phase)*tr.amp*intensity;}
+  for(const tr of scenes.trees){const breeze=Math.sin(elapsed*2*Math.PI/tr.tempo+tr.phase)*tr.amp;const cursor=pointer.x*tr.amp*.72;tr.crown.rotation.z=lerp(tr.crown.rotation.z,(breeze+cursor)*intensity,1-Math.exp(-dt*2.3));}
   for(const cl of scenes.clouds){cl.group.position.x+=dt*cl.speed*intensity;if(cl.group.position.x>105)cl.group.position.x=-110;}
   if(scenes.bird){
     const targetX=clamp(pointer.x*0.16,-.16,.16)*intensity;

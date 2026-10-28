@@ -1,0 +1,68 @@
+
+/* ConceptKnot Home v4 — original interpretation of a roomy rounded editorial header. */
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+html,body,button,input,textarea,select,#root,#main,#main *,.ck4-pager{font-family:"Pretendard Variable",Pretendard,"Apple SD Gothic Neo","Malgun Gothic",sans-serif!important}
+html{scroll-behavior:smooth;scroll-padding-top:95px}
+#main{max-width:none!important;width:100%!important;margin:0!important;padding:clamp(9px,1.1vw,18px) clamp(9px,1.2vw,23px) 72px!important}
+.ck-v7-mainframe{width:100%;min-width:0}
+.ck-v7-global-nav{display:flex!important;position:sticky!important;top:10px!important;z-index:100!important;width:100%!important;margin:0 auto 15px!important;gap:0!important;padding:0!important;align-items:center!important}
+.ck-v7-nav-pill.ck4-unified{display:flex!important;gap:clamp(8px,1.1vw,18px)!important;align-items:center!important;min-width:0;width:100%!important;min-height:69px!important;padding:6px 10px 6px clamp(14px,2vw,32px)!important;border:1px solid rgba(255,255,255,.99)!important;border-radius:999px!important;background:rgba(255,255,250,.96)!important;box-shadow:0 9px 28px #235a4426!important;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.ck-v7-logo{flex:none;color:#24453a!important;font-weight:850!important;letter-spacing:-1.3px!important;text-transform:uppercase;font-size:clamp(18px,1.6vw,26px)!important}
+.ck-v7-logo b{color:#30816e!important}
+.ck-v7-nav-pill .board-tabs{display:flex!important;flex:1 1 auto!important;align-items:center!important;min-width:0!important;gap:3px!important;overflow-x:auto!important;padding:3px!important;margin:0!important;scrollbar-width:none!important;scroll-snap-type:x proximity}
+.ck-v7-nav-pill .board-tabs::-webkit-scrollbar{display:none}
+.ck-v7-nav-pill .board-tab{flex:none!important;min-height:41px!important;padding:10px clamp(8px,.8vw,13px)!important;border-radius:999px!important;font-size:clamp(10px,.83vw,13px)!important;font-weight:760!important;scroll-snap-align:center}
+.ck-v7-nav-pill .board-tab.active{background:#245348!important;color:#fff!important;box-shadow:0 2px 8px #244b3f24!important}
+.ck-v7-nav-pill .board-tab:hover:not(.active){background:#e2f0e5!important}
+.ck-v7-nav-pill.ck4-unified>.ck-v7-date-pill{display:flex!important;gap:7px!important;flex:none;min-height:39px!important;padding:2px 2px 2px 12px!important;margin:0!important;border:0!important;border-left:1px solid #dbe7de!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;font-size:11px;white-space:nowrap}
+.ck-v7-stage{scroll-margin-top:100px}
+.ck4-cover{position:relative;isolation:isolate;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(210px,.6fr);align-items:center;gap:4%;min-height:max(610px,calc(100svh - 106px));padding:clamp(26px,5.7vw,95px) clamp(18px,5.2vw,90px) 85px;margin:0 0 29px;border-radius:clamp(24px,3.3vw,48px);border:1px solid #ffffff87;overflow:hidden;background:linear-gradient(108deg,#faffef45,#faffef09 77%);box-shadow:inset 0 1px #ffffff77,0 23px 62px #285b3c18}
+.ck4-cover:before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 5% 50%,#fffff25d,transparent 62%)}
+.ck4-copy{padding:clamp(23px,3.8vw,55px);max-width:690px;border:1px solid #ffffffd2;border-radius:clamp(22px,2.8vw,40px);background:rgba(255,255,250,.81);box-shadow:0 14px 44px #275d401e;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.ck4-eyebrow{display:inline-block;padding:8px 14px;background:#e5f4dc;border-radius:999px;color:#2b664d;font-size:11px;font-weight:830;letter-spacing:.6px}
+.ck4-copy h1{font-size:clamp(46px,5.9vw,98px)!important;font-weight:880!important;line-height:1.08!important;letter-spacing:-.075em!important;color:#203d34!important;margin:20px 0 19px!important;word-break:keep-all}
+.ck4-copy h1 em{font-style:normal;color:#307d6c}
+.ck4-copy p{max-width:450px;color:#456256;font-size:clamp(14px,1.1vw,18px);line-height:1.75;word-break:keep-all}
+.ck4-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:29px}
+.ck4-action{min-height:48px;padding:11px 23px;border:1px solid #285848;border-radius:999px;background:#285848;color:#fff;font-weight:750;transition:transform .22s ease,background .22s ease}
+.ck4-action:hover{transform:translateY(-3px);background:#153c30}
+.ck4-action.secondary{background:#fffcf5c9;color:#295d48}
+.ck4-action.secondary:hover{background:#fff;color:#153c30}
+.ck4-note{align-self:end;justify-self:end;max-width:320px;padding:22px 25px;margin:0 0 21px;border:1px solid #fff9;border-radius:23px;background:#fffae9e9;box-shadow:0 16px 32px #2a66452b;backdrop-filter:blur(10px);transform:rotate(3deg)}
+.ck4-note>span{font-size:10px;letter-spacing:1.5px;font-weight:850;color:#487c61}
+.ck4-note h2{margin:10px 0 5px!important;font-size:clamp(18px,1.7vw,25px)!important;letter-spacing:-.7px;color:#275240}
+.ck4-note p{margin:0;font-size:12px;color:#4a7055;line-height:1.7}
+.ck4-cue{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);display:flex;align-items:center;flex-direction:column;gap:8px;color:#23543d;font-size:11px;font-weight:850;text-shadow:0 1px 5px #fff}
+.ck4-cue i{width:30px;height:38px;border:1px solid #5b9578;border-radius:50%;display:grid;place-items:center;font-size:23px;font-style:normal;background:#ffffffaa;animation:ck4-float 2s ease-in-out infinite}
+@keyframes ck4-float{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+.ck4-pager{position:fixed;right:clamp(10px,1.6vw,26px);bottom:17px;z-index:140;display:flex;align-items:center;gap:6px;padding:7px;border-radius:999px;background:#fffffff0;box-shadow:0 8px 22px #245b3929;backdrop-filter:blur(15px);border:1px solid #fff}
+.ck4-pager button{width:35px;height:35px;border:0;border-radius:50%;background:transparent;color:#275942;font-size:21px;cursor:pointer}
+.ck4-pager button:hover:not(:disabled){background:#e5f3e7}
+.ck4-pager button:disabled{opacity:.2;cursor:default}
+.ck4-pager-count{min-width:61px;text-align:center;color:#2f614c;font-size:11px;font-weight:820;font-variant-numeric:tabular-nums}
+.ck4-pager-label{position:absolute;bottom:calc(100% + 8px);right:8px;padding:6px 11px;border-radius:999px;background:#fffffff0;color:#376550;font-size:10px;font-weight:800;white-space:nowrap}
+.ck4-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.ck4-changing .ck-v7-stage{animation:ck4-arrive .52s cubic-bezier(.2,.7,.2,1) both}
+@keyframes ck4-arrive{from{opacity:.2;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.ck4-reveal{opacity:0;transform:translateY(17px);transition:opacity .64s ease,transform .64s ease}
+.ck4-reveal.ck4-shown{opacity:1;transform:none}
+@media(max-width:1050px){.ck-v7-nav-pill.ck4-unified>.ck-v7-date-pill span{display:none!important}.ck-v7-nav-pill.ck4-unified>.ck-v7-date-pill{padding-left:5px!important}}
+@media(max-width:760px){
+ #main{padding:8px 9px 62px!important}
+ .ck-v7-global-nav{top:7px!important}
+ .ck-v7-nav-pill.ck4-unified{min-height:61px!important;padding:5px 7px 5px 12px!important;gap:7px!important}
+ .ck-v7-logo{font-size:16px!important;letter-spacing:-.8px!important}
+ .ck-v7-nav-pill .board-tab{font-size:10.5px!important;padding:9px!important;min-height:36px!important}
+ .ck-v7-nav-pill.ck4-unified>.ck-v7-date-pill{border:0!important;padding:0!important}
+ .ck4-cover{min-height:max(570px,calc(100svh - 94px));display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:18px;padding:27px 17px 70px;border-radius:28px}
+ .ck4-copy{max-width:620px;padding:25px}
+ .ck4-copy h1{font-size:clamp(43px,10.3vw,65px)!important}
+ .ck4-copy p{font-size:13px}
+ .ck4-note{align-self:flex-end;max-width:270px;margin:0 5px;padding:13px 17px}
+ .ck4-note h2{font-size:18px!important}
+ .ck4-pager{right:10px;bottom:10px;padding:5px}
+ .ck4-pager-label{display:none}
+}
+@media(max-width:420px){.ck-v7-logo{font-size:15px!important}.ck4-cover{min-height:calc(100svh - 91px)}.ck4-copy{padding:22px 18px}.ck4-copy h1{font-size:43px!important}.ck4-note{display:none}.ck4-action{min-height:43px;padding:10px 16px;font-size:12px}}
+@media(prefers-reduced-motion:reduce){.ck4-changing .ck-v7-stage,.ck4-reveal,.ck4-cue i{animation:none!important;transition:none!important;transform:none!important}.ck4-reveal{opacity:1!important}html{scroll-behavior:auto!important}}
+@supports not (backdrop-filter:blur(2px)){.ck-v7-nav-pill.ck4-unified,.ck4-copy,.ck4-note{background:#fffff4!important}}

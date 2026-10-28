@@ -1,0 +1,13 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
+const read=p=>fs.readFileSync(path.join(__dirname,'..',p),'utf8');
+const html=read('index.html'),css=read('home-scroll-v4.css'),js=read('assets/ck-navigation-v4.js');
+assert.match(html,/home-scroll-v4\.css/);assert.match(html,/ck-navigation-v4\.js/);
+assert.match(css,/ck4-unified/);assert.match(css,/ck4-cover/);assert.match(css,/prefers-reduced-motion/);assert.match(css,/Pretendard Variable/);
+assert.match(js,/new MutationObserver/);assert.match(js,/addEventListener\('wheel'/);
+assert.match(js,/scrollableChild/);assert.match(js,/inEditor/);assert.match(js,/ck4-cover/);
+assert.match(read('assets/ck-landscape3d.js'),/pointer\.x\*tr\.amp/);
+assert.match(read('sw.js'),/ck-navigation-v4\.js/);
+assert.match(read('vercel.json'),/"deploymentEnabled": false/);
+new vm.Script(js,{filename:'ck-navigation-v4.js'});
+console.log('PASS: v4 home, round navbar, section wheel navigation, input guards, reduced motion, 3D hover');
