@@ -9,7 +9,7 @@ const MIN_DESKTOP=940;
 const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
 let drag=null,scheduled=0;
 function read(k){
- try{const n=Number(localStorage.getItem(PREFIX+k));return Number.isFinite(n)&&n>=20&&n<=80?n:null}catch(e){return null}
+ try{const n=Number(localStorage.getItem(PREFIX+k));return Number.isFinite(n)&&n>=10&&n<=90?n:null}catch(e){return null}
 }
 function save(k,val){try{localStorage.setItem(PREFIX+k,String(val))}catch(e){}}
 function childrenOf(el){
@@ -21,9 +21,9 @@ function keyFor(layout,index){
 }
 function limits(el){
  const w=el.getBoundingClientRect().width;
- const other=el.matches('.exam-layout')?340:230;
- const lo=Math.max(27,Math.min(40,285/w*100));
- const hi=Math.min(75,Math.max(60,(w-other)/w*100));
+ const other=el.matches('.exam-layout')?170:115;
+ const lo=Math.max(13.5,Math.min(20,142.5/w*100));
+ const hi=Math.min(87.5,Math.max(80,(w-other-12)/w*100));
  return {lo:Math.min(lo,hi),hi:Math.max(lo,hi)};
 }
 function apply(layout,value,persist){
@@ -32,7 +32,7 @@ function apply(layout,value,persist){
  const n=clamp(Number.isFinite(value)?value:defaultWidth(layout),lo,hi);
  layout.style.setProperty('--ck16-left',n.toFixed(1)+'%');
  const bar=layout.querySelector(':scope > [data-ck16-split]');
- if(bar){bar.setAttribute('aria-valuenow',String(Math.round(n)));bar.setAttribute('aria-valuetext','왼쪽 '+Math.round(n)+'% · 오른쪽 '+Math.round(100-n)+'%')}
+ if(bar){bar.setAttribute('aria-valuemin',String(Math.round(lo)));bar.setAttribute('aria-valuemax',String(Math.round(hi)));bar.setAttribute('aria-valuenow',String(Math.round(n)));bar.setAttribute('aria-valuetext','왼쪽 '+Math.round(n)+'% · 오른쪽 '+Math.round(100-n)+'%')}
  if(persist)save(layout.dataset.ck16Key,n);
 }
 function eligible(layout){

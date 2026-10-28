@@ -65,7 +65,7 @@ test('new modules and inline scripts parse and SW cache is upgraded',()=>{
  new vm.Script(threeModule);
  new vm.Script(lion.replace('export function','function'));
  for(const match of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))new vm.Script(match[1]);
- assert.match(sw,/conceptknot-study-v16/);
+ assert.match(sw,/conceptknot-study-v17/);
  assert.match(sw,/experience-v16\.css/);
  assert.match(sw,/ck-pointing-cub-v16\.js/);
  assert.match(sw,/ck-layout-v16\.js/);

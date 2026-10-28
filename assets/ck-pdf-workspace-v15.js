@@ -10,8 +10,9 @@ const PDFLIB_URL='https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.j
 const ANNOTATION_PREFIX='ck15-ink:';
 const clamp=(x,lo,hi)=>Math.max(lo,Math.min(hi,x));
 let pdfjsPromise=null,pdflibPromise=null,session=null,pendingFile=null,pendingYear=0,attachFrame=0;
-const els=(host,selector)=>host.querySelector(selector);
+const els=(host,selector)=>host.querySelector(selector)||(selector==='[data-ck15-scroll]'?host.closest('[data-ck15-scroll]'):null);
 function alertStatus(s,message){
+ if(s.parent){alertStatus(s.parent,message);return}
  const el=els(s.host,'[data-ck15-status]');
  if(el)el.textContent=message;
 }
@@ -96,7 +97,9 @@ function pageMetrics(s){
  if(count)count.textContent=s.page+' / '+(s.pdf?.numPages||'—');
  const prev=els(s.host,'[data-ck15-prev]'),next=els(s.host,'[data-ck15-next]');
  if(prev)prev.disabled=s.page<=1;
- if(next)next.disabled=s.page>=s.pdf.numPages;
+ if(next)next.disabled=s.page+(s.spread?1:0)>=s.pdf.numPages;
+ if(count&&s.spread)count.textContent=s.page+'–'+Math.min(s.page+1,s.pdf.numPages)+' / '+s.pdf.numPages;
+ if(s.second){s.second.zoom=s.zoom;pageMetrics(s.second)}
  redrawInk(s);
 }
 function schedulePaint(s,delay=130){
@@ -111,7 +114,7 @@ async function paintPdf(s){
  if(!s.baseViewport){
   const atOne=pdfPage.getViewport({scale:1});
   const scroller=els(s.host,'[data-ck15-scroll]');
-  const fit=Math.max(.25,(scroller.clientWidth-24)/atOne.width);
+  const fit=Math.max(.08,(scroller.clientWidth-(s.spread?36:24))/(atOne.width*(s.spread?2:1)));
   s.baseViewport={width:atOne.width*fit,height:atOne.height*fit,fit};
  }
  pageMetrics(s);
@@ -131,9 +134,32 @@ async function paintPdf(s){
  canvas.width=temp.width;canvas.height=temp.height;
  canvas.getContext('2d')?.drawImage(temp,0,0);
  redrawInk(s);
+ if(!s.parent)await paintSpread(s,token);
  alertStatus(s,'원문 '+s.page+' / '+s.pdf.numPages+'쪽 · '+Math.round(s.zoom*100)+'% · '+strokes(s).length+'획 (로컬 저장)');
 }
+async function paintSpread(s,token){
+ const scroll=els(s.host,'[data-ck15-scroll]');
+ scroll.classList.toggle('ck17-spread',!!s.spread);
+ if(!s.spread||s.page>=s.pdf.numPages){
+  s.second?.host.remove();s.second=null;return;
+ }
+ if(!s.second){
+  const host=document.createElement('div');host.className='ck17-second-page';
+  host.innerHTML='<div class="ck15-pdf-page" data-ck15-page><canvas data-ck15-page-canvas aria-label="오른쪽 PDF 페이지"></canvas><canvas data-ck15-ink-canvas aria-label="오른쪽 PDF 필기"></canvas></div>';
+  scroll.append(host);
+  const child={...s,host,parent:s,second:null,spread:false,activeStroke:null,touchPoints:new Map(),gesture:null,pinch:null};
+  s.second=child;bind(child);
+ }
+ const child=s.second;
+ child.page=s.page+1;child.zoom=s.zoom;child.tool=s.tool;child.color=s.color;child.baseViewport=null;
+ const page=await s.pdf.getPage(child.page);
+ if(token!==s.paintToken||!s.host.isConnected)return;
+ const vp=page.getViewport({scale:1});
+ child.baseViewport={width:vp.width*s.baseViewport.fit,height:vp.height*s.baseViewport.fit,fit:s.baseViewport.fit};
+ await paintPdf(child);
+}
 function applyZoom(s,newZoom,clientX,clientY){
+ if(s.parent){applyZoom(s.parent,newZoom,clientX,clientY);return}
  if(!s.baseViewport)return;
  const scroller=els(s.host,'[data-ck15-scroll]');
  if(!scroller)return;
@@ -151,6 +177,8 @@ function applyZoom(s,newZoom,clientX,clientY){
 async function goPage(s,page){
  if(!s.pdf)return;
  s.page=clamp(Math.round(page),1,s.pdf.numPages);
+ if(s.spread)s.page=1+2*Math.floor((s.page-1)/2);
+ s.second?.host.remove();s.second=null;
  s.baseViewport=null;s.paintToken++;
  const scroller=els(s.host,'[data-ck15-scroll]');
  if(scroller){scroller.scrollLeft=0;scroller.scrollTop=0}
@@ -208,6 +236,7 @@ function hitTest(stroke,x,y,rect){
 function onPointerDown(s,event){
  if(!s.pdf||(event.button!==0&&!(event.pointerType==='pen'&&event.button===5))||!s.host.isConnected)return;
  s.lastZoomGestureMoved=false;
+ if(s.parent)s.parent.activePage=s;else s.activePage=s;
  const ink=els(s.host,'[data-ck15-ink-canvas]'),scroller=els(s.host,'[data-ck15-scroll]');
  if(!ink||!scroller)return;
  if(event.pointerType==='touch'){
@@ -283,6 +312,7 @@ function onPointerUp(s,event){
 }
 function updateTool(s,tool){
  s.tool=tool;
+ if(s.second)updateTool(s.second,tool);
  s.host.querySelectorAll('[data-ck15-tool]').forEach(btn=>btn.setAttribute('aria-pressed',String(btn.dataset.ck15Tool===tool)));
  const ink=els(s.host,'[data-ck15-ink-canvas]');
  if(ink)ink.style.cursor=tool==='hand'?'grab':tool==='eraser'?'cell':'crosshair';
@@ -339,10 +369,15 @@ async function act(s,button){
  if(action.ck15Tool){updateTool(s,action.ck15Tool);return}
  if('ck15Zoom'in action){applyZoom(s,s.zoom+(Number(action.ck15Zoom)>0?.2:-.2));return}
  if('ck15Fit'in action){applyZoom(s,1);return}
- if('ck15Prev'in action){goPage(s,s.page-1);return}
- if('ck15Next'in action){goPage(s,s.page+1);return}
- if('ck15Undo'in action){undo(s);return}
- if('ck15Redo'in action){redo(s);return}
+ if('ck17Spread'in action){
+  s.spread=!s.spread;button.setAttribute('aria-pressed',String(s.spread));
+  try{localStorage.setItem('ck17-pdf-spread',String(s.spread))}catch(e){}
+  s.zoom=1;await goPage(s,s.page);return;
+ }
+ if('ck15Prev'in action){goPage(s,s.page-(s.spread?2:1));return}
+ if('ck15Next'in action){goPage(s,s.page+(s.spread?2:1));return}
+ if('ck15Undo'in action){undo(s.activePage?.host?.isConnected?s.activePage:s);return}
+ if('ck15Redo'in action){redo(s.activePage?.host?.isConnected?s.activePage:s);return}
  if('ck15Save'in action){
   button.disabled=true;alertStatus(s,'필기 PDF 파일을 만드는 중…');
   try{await exportPdf(s);alertStatus(s,'필기 PDF를 저장했습니다.')}
@@ -360,25 +395,26 @@ function bind(s){
   if(s.lastZoomGestureMoved)return;
   e.preventDefault();applyZoom(s,s.zoom*1.25,e.clientX,e.clientY);
  });
- scroller.addEventListener('wheel',e=>{
+ if(!s.parent){scroller.addEventListener('wheel',e=>{
   if(!e.ctrlKey&&!e.metaKey)return;
   e.preventDefault();applyZoom(s,s.zoom*(e.deltaY>0?.88:1.12),e.clientX,e.clientY);
  },{passive:false});
  scroller.addEventListener('keydown',e=>{
   if(e.target!==scroller)return;
   if(e.key==='PageDown'||e.key==='PageUp'){
-   e.preventDefault();goPage(s,s.page+(e.key==='PageDown'?1:-1));
+   e.preventDefault();goPage(s.parent||s,(s.parent||s).page+(e.key==='PageDown'?1:-1)*((s.parent||s).spread?2:1));
   }else if(e.key==='+'||e.key==='='){e.preventDefault();applyZoom(s,s.zoom+.2)}
   else if(e.key==='-'){e.preventDefault();applyZoom(s,s.zoom-.2)}
  });
+ }
  host.addEventListener('click',e=>{
-  const button=e.target.closest('button[data-ck15-tool],button[data-ck15-zoom],button[data-ck15-fit],button[data-ck15-prev],button[data-ck15-next],button[data-ck15-undo],button[data-ck15-redo],button[data-ck15-save]');
+  const button=e.target.closest('button[data-ck15-tool],button[data-ck15-zoom],button[data-ck15-fit],button[data-ck15-prev],button[data-ck15-next],button[data-ck15-undo],button[data-ck15-redo],button[data-ck15-save],button[data-ck17-spread]');
   if(!button)return;e.preventDefault();act(s,button);
  });
  host.addEventListener('input',e=>{
-  if(e.target.matches('[data-ck15-color]'))s.color=e.target.value;
+  if(e.target.matches('[data-ck15-color]')){s.color=e.target.value;if(s.second)s.second.color=s.color;}
  });
- if(typeof ResizeObserver==='function'){
+ if(!s.parent&&typeof ResizeObserver==='function'){
   const resize=new ResizeObserver(()=>{if(s.host.isConnected&&s.pdf&&s.zoom===1){
    s.baseViewport=null;s.paintToken++;schedulePaint(s,180);
   }});
@@ -386,6 +422,7 @@ function bind(s){
   s.resizeObserver=resize;
  }
  updateTool(s,s.tool);
+ const spread=els(host,'[data-ck17-spread]');if(spread)spread.setAttribute('aria-pressed',String(!!s.spread));
 }
 function attach(){
  attachFrame=0;
@@ -397,6 +434,7 @@ function attach(){
  const id=file?year+':file:'+file.name+':'+file.size:year+':'+source;
  if(session&&session.id===id&&session.pdf){
   session.resizeObserver?.disconnect();
+  session.second?.host.remove();session.second=null;
   session.host=host;session.paintToken++;session.baseViewport=null;
   bind(session);paintPdf(session);return;
  }
@@ -411,6 +449,7 @@ function attach(){
   annotations:Object.create(null),redo:Object.create(null),
   touchPoints:new Map(),gesture:null,pinch:null,activeStroke:null,pdf:null,bytes:null
  };
+ try{s.spread=localStorage.getItem('ck17-pdf-spread')==='true'}catch(e){s.spread=false}
  session=s;restore(s);bind(s);loadDocument(s);
 }
 function scheduleAttach(){
@@ -437,7 +476,7 @@ function boot(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});
 else boot();
 window.CKPDF15=Object.freeze({
- getState:()=>session?{year:session.year,page:session.page,pages:session.pdf?.numPages||0,zoom:session.zoom,tool:session.tool,annotationCount:Object.values(session.annotations).reduce((n,lines)=>n+lines.length,0)}:null,
+ getState:()=>session?{year:session.year,page:session.page,pages:session.pdf?.numPages||0,zoom:session.zoom,spread:!!session.spread,tool:session.tool,annotationCount:Object.values(session.annotations).reduce((n,lines)=>n+lines.length,0)}:null,
  zoom:(scale)=>session&&applyZoom(session,scale),
  page:(page)=>session&&goPage(session,page)
 });

@@ -74,7 +74,7 @@ test('pointer hit testing uses actual page coordinates',()=>{
 test('all dynamic code parses, cache resources are current',()=>{
  for(const [i,m] of [...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)].entries())new vm.Script(m[1],{filename:'inline'+i});
  new vm.Script(nav);new vm.Script(tool);new vm.Script(caret);
- assert.match(sw,/conceptknot-study-v16/);
+ assert.match(sw,/conceptknot-study-v17/);
  assert.match(sw,/experience-v15\.css/);
  assert.match(sw,/ck-pdf-workspace-v15\.js/);
  assert.match(read('vercel.json'),/"deploymentEnabled": false/);

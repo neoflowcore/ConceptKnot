@@ -1,0 +1,37 @@
+/* Screen comfort and compact responsive workspace. */
+:root{--ck17-bg-saturation:.72;--ck17-bg-brightness:.92;--ck17-bg-hue:0deg;--ck17-brightness:1;--ck17-contrast:1}
+html{filter:brightness(var(--ck17-brightness)) contrast(var(--ck17-contrast))}
+#ck-v8-ambient{filter:saturate(var(--ck17-bg-saturation)) brightness(var(--ck17-bg-brightness)) hue-rotate(var(--ck17-bg-hue))!important}
+html body #main .quick-card{padding:14px 16px!important;min-height:0!important;gap:6px!important}
+html body #main .quick-card h3{margin:0 0 5px!important}
+html body #main .quick-card p{margin:0!important}
+html body #main .quick-card .arrow{margin-top:8px!important}
+.ck17-display-launch{display:inline-grid;place-items:center;width:32px;height:32px;border:0;border-radius:50%;background:transparent;color:inherit;cursor:pointer}
+.ck17-display-launch:hover{background:#78958a24}
+#ck17-display-dialog{width:min(420px,calc(100vw - 28px));max-height:calc(100dvh - 32px);overflow:auto;box-sizing:border-box;border:1px solid #cdd9d3;border-radius:18px;padding:22px;background:#f4f5ef;color:#293c36;box-shadow:0 18px 70px #152b3340}
+#ck17-display-dialog::backdrop{background:#152b3333}
+#ck17-display-dialog header{display:flex;align-items:center;justify-content:space-between;gap:16px}
+#ck17-display-dialog h2{font-size:17px;margin:0}
+#ck17-display-dialog h3{font-size:13px;margin:24px 0 14px;color:#577064}
+#ck17-display-dialog button{border:1px solid #becfc4;background:transparent;border-radius:8px;padding:6px 10px;color:inherit}
+#ck17-display-dialog label{display:grid;grid-template-columns:1fr auto;gap:9px;margin:16px 0;font-size:13px}
+#ck17-display-dialog input{grid-column:1/-1;width:100%;margin:0;accent-color:#587865}
+#ck17-display-dialog output{font-variant-numeric:tabular-nums}
+#ck17-display-dialog footer{border-top:1px solid #d6dfd8;padding-top:16px;margin-top:20px;display:flex;justify-content:flex-end}
+html[data-ck-theme="dark"] #ck17-display-dialog{background:#21332f;color:#e4eee7;border-color:#50645b}
+.ck15-pdf-scroll.ck17-spread{display:flex;align-items:flex-start;gap:12px}
+.ck15-pdf-scroll.ck17-spread>.ck15-pdf-page{flex:none;margin:0}
+.ck17-second-page{flex:none}
+.ck17-second-page .ck15-pdf-page{margin:0}
+@media(min-width:851px){
+ html body #main .board-stage.ck-v7-stage{grid-template-columns:minmax(132.5px,var(--ck-v7-left,33.333%)) var(--ck6-rail) minmax(205px,1fr)!important}
+ html body #main .board-stage.ck-v7-stage.ck6-swapped{grid-template-columns:minmax(205px,1fr) var(--ck6-rail) minmax(132.5px,var(--ck-v7-left,33.333%))!important}
+ html body #main .ck-v7-stage .ck-v7-board:not(.ck9-spen-fullscreen){top:8px!important;min-height:0!important;height:calc(100dvh - var(--ck17-board-top,80px) - 12px)!important;max-height:calc(100dvh - 24px)!important;overflow:auto!important}
+ html body #main .ck-v7-board .ck-v7-writing-surface{min-height:80px!important}
+}
+@media(max-width:850px){
+ html body #main .ck-v7-stage .ck-v7-board:not(.ck9-spen-fullscreen){min-height:0!important;height:clamp(240px,calc(100dvh - 120px),700px)!important;max-height:calc(100dvh - 24px)!important}
+}
+html body #main .ck-v7-board .ck-v7-toolrow{flex-wrap:wrap!important;min-width:0}
+html body #main .ck-v7-board .ck-v7-board-heading{overflow-wrap:anywhere}
+html body #main .ck-v7-board .ck-v7-board-overlay{min-width:0;padding-left:clamp(8px,1.3vw,24px)!important;padding-right:clamp(8px,1.3vw,24px)!important}
