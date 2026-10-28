@@ -99,7 +99,7 @@ function openDock(provider='chatgpt'){
 }
 function closeDock(){const el=document.getElementById('ck10-ai-dock');if(el)el.hidden=true;document.body.classList.remove('ck10-dock-open')}
 document.addEventListener('click',e=>{
- const a=e.target.closest('[data-ck10-ai]');if(a){e.preventDefault();openDock(a.dataset.ck10Ai);return;}
+ const a=e.target.closest('[data-ck10-ai]');if(a){if(a.tagName==='A')return;e.preventDefault();openDock(a.dataset.ck10Ai);return;}
  const provider=e.target.closest('[data-ck10-provider]');if(provider){openDock(provider.dataset.ck10Provider);return;}
  if(e.target.closest('[data-ck10-close]')){closeDock();return;}
  if(e.target.closest('[data-ck10-copy]')){
@@ -117,11 +117,6 @@ document.addEventListener('input',e=>{
   pages[idx][title!==undefined?0:1]=e.target.value.slice(0,10000);savePages();
  }
 });
-document.addEventListener('mousedown',e=>{
- if(e.button!==0||!e.ctrlKey||!e.altKey)return;
- if(!e.target.closest('.ck-v7-board,.ck-v7-content'))return;
- e.preventDefault();openDock(activeAI);
-},true);
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDock()});
 new MutationObserver(()=>{if(document.getElementById('ck10-final-root'))finalMount()})
  .observe(document.getElementById('main')||document.body,{childList:true,subtree:false});
@@ -151,7 +146,21 @@ function status(message){
 function decorate(){
  document.querySelectorAll('[data-ck10-ai],[data-ck10-provider]').forEach(button=>{
   const id=button.dataset.ck10Ai||button.dataset.ck10Provider;
-  if(!SERVICE[id]||button.dataset.ck11Logo===id)return;
+  if(!SERVICE[id])return;
+  // Upgrade old cached button markup to a native link without losing data attributes.
+  // Native browser gestures and right-click Split View require a real <a href>.
+  if(button.hasAttribute('data-ck10-ai')&&button.tagName!=='A'){
+   const anchor=document.createElement('a');
+   for(const attr of Array.from(button.attributes)){
+    if(attr.name!=='type')anchor.setAttribute(attr.name,attr.value);
+   }
+   anchor.href=SERVICE[id].url;anchor.target='_blank';anchor.rel='noopener noreferrer';
+   button.replaceWith(anchor);button=anchor;
+  }
+  if(button.hasAttribute('data-ck10-ai')){
+   button.href=SERVICE[id].url;button.target='_blank';button.rel='noopener noreferrer';
+  }
+  if(button.dataset.ck11Logo===id)return;
   const img=document.createElement('img');img.alt='';img.setAttribute('aria-hidden','true');
   img.src=SERVICE[id].icon;img.width=21;img.height=21;
   button.replaceChildren(img);
@@ -193,33 +202,33 @@ function provider(){
  const pressed=document.querySelector('#ck10-ai-dock [data-ck10-provider][aria-pressed="true"]');
  return SERVICE[pressed?.dataset.ck10Provider]?pressed.dataset.ck10Provider:last;
 }
+// Ported from LexLoom/app/chatgpt-companion.mjs (single right-hand third).
+// Best-effort screen geometry; never a privileged/native browser split command.
+function companionWindowFeatures(screen){
+ const widthAvailable=Number.isFinite(screen?.availWidth)&&screen.availWidth>0
+  ?Math.floor(screen.availWidth):1365;
+ const heightAvailable=Number.isFinite(screen?.availHeight)&&screen.availHeight>0
+  ?Math.floor(screen.availHeight):800;
+ const originLeft=Number.isFinite(screen?.availLeft)?Math.floor(screen.availLeft):0;
+ const originTop=Number.isFinite(screen?.availTop)?Math.floor(screen.availTop):0;
+ const width=Math.min(widthAvailable,Math.max(400,Math.round(widthAvailable/3)));
+ const height=Math.max(250,heightAvailable);
+ const left=originLeft+widthAvailable-width;
+ return 'popup=yes,width='+width+',height='+height+',left='+left+',top='+originTop+',resizable=yes,scrollbars=yes';
+}
 function externalAI(id){
  id=SERVICE[id]?id:'chatgpt';last=id;
- const display=window.screen||{},w=display.availWidth||1280,h=display.availHeight||850;
- const width=Math.min(w,Math.max(480,Math.round(w*.47))),height=Math.max(480,h-25);
- const left=(display.availLeft||0)+Math.max(0,w-width),top=display.availTop||0;
  let popup=null;
- try{popup=window.open('about:blank','ck11-'+id,'popup=yes,width='+width+',height='+height+',left='+left+',top='+top);
-     if(popup){popup.opener=null;popup.location.replace(SERVICE[id].url);popup.focus()}}catch(e){popup=null}
+ try{
+  popup=window.open('about:blank','_blank',companionWindowFeatures(window.screen));
+  if(popup){popup.opener=null;popup.location.replace(SERVICE[id].url);popup.focus()}
+ }catch(e){if(popup){try{popup.close()}catch(ex){}}popup=null}
  if(!popup){
-  status('팝업 차단됨: 이 사이트의 팝업을 허용하거나 아래 링크를 여세요.');
-  const dock=document.getElementById('ck10-ai-dock');
-  if(dock){
-   let a=dock.querySelector('.ck11-direct');
-   if(!a){a=document.createElement('a');a.className='ck11-direct';a.rel='noopener noreferrer';a.target='_blank';a.textContent='AI 서비스 열기 ↗';dock.append(a)}
-   a.href=SERVICE[id].url;
-  }
+  status('팝업 차단됨: 링크를 새 탭에서 열 수 있습니다.');
   return false;
  }
- document.body.classList.add('ck11-external-open');
- status(SERVICE[id].name+' 웹사이트를 오른쪽 새 창에 열도록 요청했습니다. 창이 나란히 배치되지 않으면 Windows + ← / → 키로 창을 정렬하세요.');
+ status(SERVICE[id].name+' 오른쪽 보조창 요청 완료. 실제 위치·크기는 브라우저가 결정합니다.');
  return true;
-}
-function launchAI(id,selection){
- last=SERVICE[id]?id:'chatgpt';
- window.CK10?.openDock?.(last);
- decorate();if(selection)selectedText();
- externalAI(last);
 }
 function copyQuestion(){
  const text=document.getElementById('ck10-ai-question')?.value||'';
@@ -276,9 +285,13 @@ function boardPdf(button){
 document.addEventListener('click',e=>{
  const target=e.target;if(!target.closest)return;
  const icon=target.closest('[data-ck10-ai]');
- const shortcut=e.button===0&&e.ctrlKey&&e.altKey&&target.closest('.ck-v7-board,.ck-v7-content');
- if(icon||shortcut){
-  e.preventDefault();e.stopImmediatePropagation();launchAI(icon?.dataset.ck10Ai||provider(),!!shortcut);return;
+ if(icon){
+  // LexLoom contract: modified clicks, including Ctrl+Alt, belong to the browser.
+  // Do not preventDefault, including for native Chrome/Brave Split View.
+  if(e.button!==0||e.ctrlKey||e.altKey||e.metaKey||e.shiftKey||window.innerWidth<720)return;
+  // Only consume a plain click when popup actually opens; otherwise follow href.
+  if(externalAI(icon.dataset.ck10Ai)){e.preventDefault();e.stopImmediatePropagation()}
+  return;
  }
  const menu=target.closest('[data-ck10-provider]');if(menu){last=menu.dataset.ck10Provider;return}
  if(target.closest('[data-ck10-open]')){e.preventDefault();e.stopImmediatePropagation();externalAI(provider());return}

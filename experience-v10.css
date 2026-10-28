@@ -68,3 +68,16 @@
 .ck10-paper textarea{min-height:80%;resize:vertical}
 @media(max-width:850px){.ck10-paper{aspect-ratio:auto;min-height:450px}.ck10-paper textarea{min-height:350px}.ck10-ai-dock nav{flex-wrap:wrap}.ck11-font-size{display:none}}
 @media print{.ck11-page-count{display:none!important}}
+
+
+/* v12 LexLoom native-link parity: anchor links, not JS-only controls. */
+.ck10-ai-launch a[data-ck10-ai]{
+ display:inline-flex!important;align-items:center;justify-content:center;
+ width:27px;height:27px;min-width:27px;min-height:27px;
+ background:transparent!important;border:0!important;border-radius:9px;
+ padding:2px!important;margin:0;text-decoration:none;color:white!important;
+ box-shadow:none!important;cursor:pointer;line-height:1;
+}
+.ck10-ai-launch a[data-ck10-ai]:hover{background:rgba(255,255,255,.16)!important}
+.ck10-ai-launch a[data-ck10-ai]:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.ck10-ai-launch a[data-ck10-ai] img{width:20px;height:20px;pointer-events:none}
