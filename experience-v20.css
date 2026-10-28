@@ -1,0 +1,336 @@
+/* ConceptKnot v20 — container-resilient exercises, forty picture cues,
+   year-wide audio playback, and final dark-theme badge audit.
+   Loaded AFTER v19 and legacy !important styles. */
+
+/* The outer split rail may shrink the right pane to <200px.
+   Grid children's min-content must never expand the pane beyond its track. */
+#main .ck-v7-stage .ck-v7-content{
+ min-width:0!important;
+ max-width:100%!important;
+ overflow-wrap:anywhere;
+ container-type:inline-size;
+}
+#main .ck-v7-content :is(.quiz-layout,.theory-layout,.listen-grid,.exam-layout,.calendar-grid,
+ .dashboard-grid,.ck20-visual-layout,.ck20-quiz-layout,.ck20-quiz-main,.ck20-quiz-picker,
+ .ck20-visual-study,.ck20-visual-list,.concept-list,.concept-item,.metrics-row,.choices,.panel){
+ min-width:0!important;max-width:100%;
+}
+#main .ck-v7-content .quiz-layout.ck20-quiz-layout{
+ display:grid!important;
+ grid-template-columns:minmax(0,1.5fr) minmax(0,.8fr)!important;
+ align-items:start;
+ gap:12px!important;
+}
+#main .ck-v7-content .ck20-quiz-main,
+#main .ck-v7-content .ck20-quiz-picker{
+ width:100%!important;
+ min-width:0!important;
+}
+#main .ck-v7-content :is(.quiz-layout .panel-head,.ck20-quiz-top,
+ .ck20-visual-meta,.ck20-visual-actions,.ck20-mock-source,.ck20-visual-source){
+ flex-wrap:wrap!important;
+ min-width:0;
+}
+#main .ck-v7-content .quiz-dots{
+ display:grid!important;
+ grid-template-columns:repeat(auto-fit,minmax(30px,1fr))!important;
+ gap:5px!important;
+ min-width:0;max-width:100%;
+}
+#main .ck-v7-content .quiz-dots .quiz-dot{
+ min-width:0!important;
+ width:100%!important;
+ padding:5px 1px!important;
+ font-size:11px!important;
+ min-height:35px!important;
+}
+#main .ck-v7-content .ck20-quiz-picker .metrics-row{
+ display:grid!important;
+ grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ gap:8px!important;
+}
+#main .ck-v7-content :is(.ck20-quiz-picker .metric,
+ .ck20-quiz-picker .pill,.ck20-quiz-main .pill,.ck20-quiz-main .question,.ck20-quiz-main .choice,
+ .ck20-quiz-main .choice>span,.ck20-mock-hint){
+ min-width:0!important;
+ max-width:100%!important;
+ overflow-wrap:anywhere!important;
+ word-break:keep-all;
+ white-space:normal!important;
+}
+#main .ck-v7-content .ck20-quiz-main .choices .choice{
+ display:flex!important;
+ align-items:flex-start;
+ gap:10px;
+ min-height:44px;
+ padding:11px 12px!important;
+}
+#main .ck-v7-content .ck20-quiz-main .choice .option-index{
+ flex:none;display:inline-flex;align-items:center;justify-content:center;
+ min-width:23px;height:23px;
+}
+#main .ck-v7-content .ck20-quiz-main .choice span:last-child{flex:1;min-width:0}
+#main .ck-v7-content .ck20-quiz-main .question{
+ font-size:clamp(16px,2vw,23px);
+ line-height:1.55;
+ white-space:pre-wrap!important;
+ min-width:0;
+}
+#main .ck-v7-content .ck20-quiz-sets{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0 12px}
+#main .ck-v7-content .ck20-quiz-sets button{
+ border:1px solid #bed3cc;
+ border-radius:999px;
+ background:rgba(242,251,246,.91);
+ color:#30574e;
+ padding:7px 11px;
+ min-height:34px;
+ font-size:11px;font-weight:730;
+}
+#main .ck-v7-content .ck20-quiz-sets button[aria-pressed="true"]{
+ background:#286e5d;color:#f2fbf8;border-color:#286e5d;
+}
+#main .ck-v7-content .ck20-mock-hint{
+ padding:5px 2px 13px;
+ font-size:12px;line-height:1.65;
+ color:#526960;
+}
+#main .ck-v7-content .ck20-mock-source{
+ display:flex;align-items:center;gap:8px;
+ padding:9px 12px;margin:10px 0 13px;
+ background:rgba(52,115,105,.07);border-radius:11px;
+ font-size:12px;
+}
+#main .ck-v7-content .ck20-mock-source button{
+ background:none;border:0;cursor:pointer;color:#237d65;font-weight:750;font-size:12px;
+}
+
+/* Source-grounded mental imagery: 20 concepts/subject, all reachable from theory.
+   Static geometric connector avoids new continuous GPU animation. */
+#main .ck-v7-content .ck20-visual-guide{
+ margin:4px 0 16px;line-height:1.65;font-size:12px;opacity:.9;
+}
+#main .ck-v7-content .ck20-visual-layout{
+ display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,.85fr);gap:12px;align-items:start;
+}
+#main .ck-v7-content .ck20-visual-study,
+#main .ck-v7-content .ck20-visual-list{min-width:0}
+#main .ck-v7-content .ck20-visual-meta{
+ display:flex;align-items:center;justify-content:space-between;
+ font-size:12px;font-weight:750;gap:8px;
+}
+#main .ck-v7-content .ck20-visual-stage{
+ margin:14px 0;padding:22px 14px 18px;
+ border:1px solid rgba(103,159,145,.17);border-radius:19px;
+ background:radial-gradient(ellipse at 30% 20%,rgba(192,234,215,.50),transparent 60%),rgba(235,248,237,.56);
+ text-align:center;
+}
+#main .ck-v7-content .ck20-visual-scene{
+ display:flex;align-items:center;justify-content:center;gap:5px;
+ min-width:0;
+}
+#main .ck-v7-content .ck20-visual-symbol{
+ display:grid;place-items:center;flex:0 0 auto;
+ width:clamp(65px,9cqi,128px);height:clamp(65px,9cqi,128px);
+ background:rgba(255,255,255,.59);
+ border:1px solid rgba(123,173,156,.24);
+ border-radius:28px;
+ box-shadow:0 12px 27px rgba(43,94,78,.12);
+ font-size:clamp(36px,5cqi,66px);
+}
+#main .ck-v7-content .ck20-visual-path{width:clamp(25px,8cqi,100px);height:80px;opacity:.7;flex:0 1 100px}
+#main .ck-v7-content .ck20-visual-stage h2{margin:16px 0 7px;font-size:20px}
+#main .ck-v7-content .ck20-visual-cue{
+ color:#44665a;font-size:13px;line-height:1.75;
+ margin:0 auto;max-width:55ch;
+}
+#main .ck-v7-content .ck20-visual-question{
+ margin:14px 0 13px;padding:15px;
+ background:rgba(237,245,239,.58);
+ border:1px solid rgba(111,157,146,.19);
+ border-radius:12px;
+}
+#main .ck-v7-content .ck20-visual-label{font-size:11px;font-weight:800;color:#2b8870}
+#main .ck-v7-content .ck20-visual-question h3{font-size:17px;line-height:1.55;margin:10px 0}
+#main .ck-v7-content .ck20-visual-hidden,
+#main .ck-v7-content .ck20-visual-answer{
+ margin-top:17px;border:1px dashed rgba(99,161,146,.42);border-radius:9px;
+ padding:12px;font-size:12px;line-height:1.8;
+ background:rgba(255,255,255,.51);
+}
+#main .ck-v7-content .ck20-visual-answer strong{font-size:13px}
+#main .ck-v7-content .ck20-visual-actions{display:flex;gap:7px;flex-wrap:wrap}
+#main .ck-v7-content .ck20-visual-source{
+ margin-top:19px;padding:15px;border:1px solid rgba(119,155,141,.18);
+ border-radius:14px;background:rgba(235,244,239,.44);
+ font-size:12px;line-height:1.75;word-break:keep-all;
+}
+#main .ck-v7-content .ck20-visual-source :is(p,small){display:block;margin:9px 0;line-height:1.7;overflow-wrap:anywhere}
+#main .ck-v7-content .ck20-visual-index{
+ display:grid;grid-template-columns:minmax(0,1fr);gap:6px;min-width:0;
+ max-height:670px;overflow:auto;
+}
+#main .ck-v7-content .ck20-visual-item{
+ display:flex;align-items:center;text-align:left;
+ min-width:0;width:100%;gap:9px;padding:10px;
+ border:1px solid rgba(95,146,127,.15);border-radius:10px;
+ background:rgba(240,248,243,.61);color:#32574d;
+ font-size:12px;font-weight:740;white-space:normal;overflow-wrap:anywhere;
+}
+#main .ck-v7-content .ck20-visual-item-emoji{font-size:21px;flex:none}
+#main .ck-v7-content .ck20-visual-item[aria-pressed="true"]{
+ background:#d9efe3;color:#1c6955;border-color:#80bc9e;
+}
+#main .ck-v7-content .ck20-linked-concepts{display:grid;gap:6px;min-width:0}
+#main .ck-v7-content .ck20-linked-concept{
+ display:grid;grid-template-columns:minmax(0,1fr) 38px;align-items:stretch;gap:6px;min-width:0;
+}
+#main .ck-v7-content .ck20-linked-concept>.concept-item{
+ display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;
+ flex:1;min-width:0;width:100%;text-align:left;
+}
+#main .ck-v7-content .ck20-concept-image{
+ display:grid;place-items:center;border-radius:10px;min-width:0;
+ border:1px solid #accdc2;background:#e5f2e9;color:#225f51;
+ cursor:pointer;font-size:19px;
+}
+#main .ck-v7-content .ck20-concept-image:hover,
+#main .ck-v7-content .ck20-concept-image:focus-visible{outline:2px solid #249a7e;outline-offset:1px}
+
+/* One click for selected subject/year, automatic sequential queue. */
+#main .ck-v7-content .ck20-marathon{
+ margin:12px 0 17px;padding:15px;
+ background:rgba(219,243,233,.6);border:1px solid rgba(111,162,144,.32);border-radius:14px;
+ min-width:0;word-break:keep-all;
+}
+#main .ck-v7-content .ck20-marathon>strong{display:block;font-size:16px}
+#main .ck-v7-content .ck20-marathon>p{font-size:12px;line-height:1.7}
+#main .ck-v7-content .ck20-marathon :is(select,button){max-width:100%;white-space:normal}
+#main .ck-v7-content #ck20-marathon-status{font-size:12px;min-height:26px}
+
+/* Containers fall back to stacked mode before the narrow question sidebar can overflow. */
+@container (max-width:760px){
+ #main .ck-v7-content .quiz-layout.ck20-quiz-layout,
+ #main .ck-v7-content .ck20-visual-layout,
+ #main .ck-v7-content .theory-layout,
+ #main .ck-v7-content .listen-grid,
+ #main .ck-v7-content .exam-layout{
+  grid-template-columns:minmax(0,1fr)!important;
+ }
+ #main .ck-v7-content .ck20-visual-index{
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));
+  max-height:410px;
+ }
+ #main .ck-v7-content .quiz-dots{grid-template-columns:repeat(auto-fit,minmax(34px,1fr))!important}
+ #main .ck-v7-content .ck20-quiz-picker{margin-top:0}
+ #main .ck-v7-content .ck20-quiz-main .question{font-size:16px}
+ #main .ck-v7-content .ck20-quiz-sets button{padding:6px 9px}
+}
+@container (max-width:320px){
+ #main .ck-v7-content .ck20-visual-path{width:27px;height:55px}
+ #main .ck-v7-content .ck20-visual-symbol{width:58px;height:58px;border-radius:14px;font-size:32px}
+ #main .ck-v7-content .ck20-quiz-picker .panel-head>*{max-width:100%;min-width:0}
+ #main .ck-v7-content .quiz-dots{gap:3px!important}
+ #main .ck-v7-content .quiz-dot{font-size:10px!important}
+}
+@container (max-width:210px){
+ #main .ck-v7-content .ck20-visual-scene{flex-wrap:wrap}
+ #main .ck-v7-content .ck20-visual-path{display:none}
+ #main .ck-v7-content .ck20-quiz-sets button{width:100%}
+ #main .ck-v7-content .ck20-quiz-picker .metrics-row{grid-template-columns:minmax(0,1fr)!important}
+}
+@media(max-width:850px){
+ #main .ck-v7-stage .ck-v7-content{overflow-x:hidden}
+}
+
+/* Final dark audit: light squares on subject switches, local-save badges, progress
+   timeline step circles, quiz topic pills, and read-aloud/status chips. */
+html[data-ck-theme="dark"] body #main .ck-v7-content :is(
+ .subject-tab .n,.step-round,.pill,.quiz-dot,.option-index,.ck20-set-pill,.ck20-visual-item,
+ .ck20-concept-image,.ck20-visual-hidden,.ck20-visual-question,.ck20-visual-source,
+ .ck20-marathon,.ck20-mock-source,.ck20-visual-item,.ck20-visual-stage,.ck20-visual-symbol,
+ .memory-number,.hero-label,.tag,.quiz-sets,.reverse-kicker,.number-box,.badge
+ ){
+ background:#1c373f!important;
+ background-image:none!important;
+ color:#d6e2dc!important;
+ -webkit-text-fill-color:#d6e2dc!important;
+ border-color:rgba(173,215,202,.24)!important;
+}
+html[data-ck-theme="dark"] body #main .ck-v7-content :is(
+ .subject-tab.active .n,.subject-tab.civil.active .n,
+ .pill.green,.ck20-set-pill[aria-pressed="true"],.ck20-visual-item[aria-pressed="true"],
+ .ck20-quiz-main .choice.correct,.quiz-dots .quiz-dot.active
+ ){
+ background:#295b52!important;color:#e2ede6!important;
+ -webkit-text-fill-color:#e2ede6!important;border-color:#52917f!important;
+}
+html[data-ck-theme="dark"] body #main .ck-v7-content :is(.pill.purple,.pill.orange,.pill.warn){
+ background:#353951!important;color:#ddddec!important;-webkit-text-fill-color:#ddddec!important;
+}
+html[data-ck-theme="dark"] body #main .ck-v7-content :is(
+ .metric,.metric strong,.metric span,.metrics-row,.quiz-dots,
+ .ck20-quiz-main .question,.ck20-quiz-main .choice,.ck20-quiz-main .choice span,
+ .ck20-quiz-main .choice .option-index,.ck20-quiz-main .explanation,
+ .ck20-mock-hint,.ck20-visual-stage h2,.ck20-visual-stage p,.ck20-visual-cue,
+ .ck20-visual-answer,.ck20-visual-answer p,.ck20-visual-answer strong,
+ .ck20-visual-source p,.ck20-visual-source small,.ck20-visual-guide,.ck20-marathon p,
+ .ck20-marathon strong,.study-row .detail,.day-card .small,
+ .subject-tabs .subject-tab,.subject-tab .n,.ck20-visual-item,
+ .ck20-quiz-picker .panel-head,.ck20-quiz-picker h3
+ ){
+ color:#d7e2de!important;
+ -webkit-text-fill-color:#d7e2de!important;
+}
+html[data-ck-theme="dark"] body #main .ck-v7-content .ck20-quiz-main .choice{
+ background:#122b33!important;color:#d8e4de!important;
+ border:1px solid rgba(176,216,201,.22)!important;
+}
+html[data-ck-theme="dark"] body #main .ck-v7-content .ck20-quiz-main .choice.selected{
+ background:#244b4a!important;border-color:#68a894!important;
+}
+html[data-ck-theme="dark"] body #main .ck-v7-content .ck20-quiz-main .choice.correct{
+ background:#1d594b!important;border-color:#7cbaa8!important;
+}
+html[data-ck-theme="dark"] body #main .ck-v7-content .ck20-quiz-main .choice.wrong{
+ background:#532b33!important;color:#f1dadd!important;border-color:#a56c71!important;
+}
+html[data-ck-theme="dark"] body #main .ck-v7-content .ck20-quiz-main .choice.wrong span{
+ color:#f1dadd!important;-webkit-text-fill-color:#f1dadd!important;
+}
+html[data-ck-theme="dark"] body #main .ck-v7-content .ck20-visual-stage{
+ background:radial-gradient(ellipse at 30% 20%,#254944,#10242e 70%)!important;
+}
+html[data-ck-theme="dark"] body #main .ck-v7-content .ck20-visual-symbol{
+ background:#28494a!important;
+}
+html[data-ck-theme="dark"] body #main .ck-v7-content .ck20-visual-path{color:#8bb7ab!important}
+html[data-ck-theme="dark"] body #main .ck-v7-content :is(.ck20-visual-question,.ck20-visual-source,.ck20-marathon){
+ background:#112a32!important;color:#d8e5de!important;
+}
+html[data-ck-theme="dark"] body #main .ck-v7-content .ck20-visual-hidden{
+ background:#0b232c!important;color:#a9bdb8!important;
+}
+html[data-ck-theme="dark"] body #main .ck-v7-content .ck20-visual-answer{background:#193b39!important}
+html[data-ck-theme="dark"] body #main .ck-v7-content .ck20-linked-concept .concept-item{
+ background:#112a31!important;color:#d3e1da!important;
+}
+html[data-ck-theme="dark"] body #main .ck-v7-content .ck20-linked-concept .concept-item.active{
+ background:#245047!important;
+}
+html[data-ck-theme="dark"] body #main .ck-v7-content .ck20-concept-image{
+ background:#1b413e!important;color:#d1e6dd!important;
+}
+html[data-ck-theme="dark"] body #main .ck-v7-content .ck20-quiz-sets button{
+ background:#183239!important;color:#cadad5!important;
+}
+html[data-ck-theme="dark"] body #main .ck-v7-content .ck20-quiz-sets button[aria-pressed="true"]{
+ background:#2b6457!important;color:#dcefe5!important;
+}
+html[data-ck-theme="dark"] body #main .ck-v7-content :is(.ck20-mock-source button,.ck20-visual-label){
+ color:#a3d8c3!important;-webkit-text-fill-color:#a3d8c3!important;
+}
+html[data-ck-theme="dark"] body #main .ck-v7-content :is(.study-row .step-round,.study-row .pill,.day-card .day-num,.day-card .small){
+ background:#1b353a!important;color:#cbdad4!important;-webkit-text-fill-color:#cbdad4!important;
+}
+/* Existing PDF page dark inversion stays unchanged from v19. */
+@media(prefers-reduced-motion:reduce){#main .ck20-visual-item{transition:none}}
