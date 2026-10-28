@@ -1,0 +1,43 @@
+/* ConceptKnot v10 — color via ambient shadows, no accent borders */
+:root{--ck10-chalk-font:18px}
+.ck-v7-board .ck9-spen-strip{display:none!important}
+.ck-v7-toolrow .ck9-spen-toggle{display:grid;place-items:center;min-width:20px!important;width:20px!important;height:20px!important;min-height:20px!important;padding:0!important;border-radius:50%!important;font:800 10px Pretendard,sans-serif!important}
+.ck10-color input{width:18px;height:19px;border:0;padding:0;background:transparent;cursor:pointer}
+.ck10-font{display:flex;gap:3px;align-items:center;font-size:10px!important;color:#effffa}
+.ck10-font input{width:60px;accent-color:#ffedba}
+.ck-v7-writing-surface .chalk-editor,.ck-v7-writing-surface .chalk-mirror,.ck-v7-writing-surface textarea{font-size:var(--ck10-chalk-font)!important;line-height:1.65!important}
+.ck10-ai-launch{position:relative;display:flex;align-items:center;gap:6px;padding:8px 3px 2px}
+.ck10-ai-launch button{width:27px;height:27px;border-radius:9px;border:0!important;background:transparent!important;color:white!important;font-size:19px;cursor:pointer;opacity:.94;text-shadow:0 2px 6px #124039}
+.ck10-ai-launch button:hover{background:#ffffff20!important}
+.ck10-ai-dock{position:fixed;right:0;top:69px;bottom:0;z-index:170;width:min(420px,100vw);padding:20px;background:rgba(244,250,246,.97);box-shadow:-16px 0 45px #103b3255;backdrop-filter:blur(20px);overflow-y:auto;color:#23453a}
+.ck10-ai-dock[hidden]{display:none!important}
+.ck10-ai-dock header,.ck10-ai-dock nav,.ck10-ai-actions{display:flex;justify-content:space-between;align-items:center;gap:6px;margin-bottom:16px}
+.ck10-ai-dock button,.ck10-final-actions button{padding:9px 12px;background:#ecf5ee;border:1px solid #bfd6c8;border-radius:10px;color:#265340;cursor:pointer;font-weight:700}
+.ck10-ai-dock [aria-pressed=true]{background:#195c47;color:white}
+.ck10-ai-dock textarea{display:block;width:100%;height:190px;margin:8px 0 14px;border:1px solid #c9dbcf;border-radius:12px;padding:15px;background:white;font:inherit;resize:vertical}
+.ck10-ai-dock p{font-size:12px;line-height:1.7;color:#52665a}
+@media(min-width:851px){body.ck10-dock-open #main{width:calc(100% - min(420px,34vw))!important;transition:width .28s ease}.ck10-ai-dock{width:min(420px,34vw)}}
+.ck10-final-heading{display:flex;justify-content:space-between;align-items:center;padding:10px 6px}
+.ck10-final-heading h1{font-size:25px;color:#20483c}
+.ck10-final-actions{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.ck10-final-guide{color:#556e60;font-size:12px}
+.ck10-paper{position:relative;max-width:794px;min-height:300px;margin:18px auto;padding:26px;background:#fffefaee;box-shadow:0 14px 34px #244b3c20;border-radius:15px}
+.ck10-page-label{font-size:11px;color:#698178}
+.ck10-paper input{display:block;width:100%;border:0;border-bottom:1px solid #ccd9cd;background:transparent;font-size:21px;font-weight:800;margin:12px 0}
+.ck10-paper textarea{display:block;width:100%;min-height:310px;background:transparent;border:0;resize:vertical;font:15px/1.8 Pretendard,sans-serif;color:#283b35}
+.ck-v7-content .dashboard-grid>*,.ck-v7-content .panel,.ck-v7-content .exam-sheet,.ck-v7-content .chalk-practice,.ck-v7-content .ck-v7-question,.ck-v7-content .ck-v7-input{
+ border-color:transparent!important;border-left-color:transparent!important;
+ background:rgba(251,255,251,.53)!important;
+ backdrop-filter:blur(17px) saturate(115%)!important;
+ box-shadow:0 15px 35px -19px rgba(22,127,178,.35),0 17px 35px -22px rgba(229,128,142,.3),0 -10px 28px -22px rgba(219,177,75,.28),inset 0 1px rgba(255,255,255,.62)!important;
+}
+.ck-v7-content .dashboard-grid>*,.ck-v7-content .panel,.ck-v7-content .exam-sheet{border-top:0!important}
+.ck-v7-content .ck-v7-input,.ck-v7-content .chalk-editor:has(textarea):not(.ck-v7-writing-surface .chalk-editor){
+ background:rgba(16,30,34,.91)!important;
+ box-shadow:0 13px 32px #133e4950,inset 0 1px #ffffff17!important;
+}
+.ck-v7-content .ck-v7-input .chalk-editor,.ck-v7-content .ck-v7-input .chalk-mirror{color:#f4fff9!important;background:rgba(16,29,34,.89)!important}
+.ck-v7-content .ck-v7-input .chalk-letter,.ck-v7-content .ck-v7-input .type-correct{color:#ecfff1!important}
+.ck-v7-content .ck-v7-input .type-pending{color:#99acaa!important;opacity:.65}
+@media(max-width:850px){body.ck10-dock-open #main{width:100%!important}.ck10-ai-dock{top:59px}}
+@media print{.ck10-ai-dock,.ck10-final-actions{display:none!important}}

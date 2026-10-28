@@ -6,7 +6,7 @@
     ['home','오늘의 학습'],['theory','핵심 이론'],['visual','그림 연상'],
     ['typing','분필 타이핑'],['listen','문제·정답'],['reverse','기출 → 이론'],
     ['quiz','문제 풀이'],['calc','계산 집중'],['exam','10개년 기출'],
-    ['venn','비교 도형'],['wrong','오답 복습'],['plan','학습 계획']
+    ['venn','비교 도형'],['wrong','오답 복습'],['plan','학습 계획'],['final','최종 정리본']
   ];
   const main=document.getElementById('main');
   if(!main)return;
@@ -16,7 +16,7 @@
   const pager=document.createElement('nav');
   pager.className='ck4-pager';
   pager.setAttribute('aria-label','학습 페이지 이동');
-  pager.innerHTML='<span class="ck4-pager-label"></span><button type="button" data-ck4-prev aria-label="이전 페이지">↑</button><span class="ck4-pager-count">01 / 12</span><button type="button" data-ck4-next aria-label="다음 페이지">↓</button>';
+  pager.innerHTML='<span class="ck4-pager-label"></span><button type="button" data-ck4-prev aria-label="이전 페이지">↑</button><span class="ck4-pager-count">01 / 13</span><button type="button" data-ck4-next aria-label="다음 페이지">↓</button>';
   const live=document.createElement('span');
   live.className='ck4-sr';live.setAttribute('aria-live','polite');
   document.body.append(pager,live);

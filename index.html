@@ -88,6 +88,7 @@ body{font-family:Pretendard,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;bac
 <meta name="conceptknot-release" content="living-garden-v9">
 <link rel="stylesheet" href="./workspace-glass-v6.css" media="all">
 <link rel="stylesheet" href="./experience-v9.css" media="all">
+<link rel="stylesheet" href="./experience-v10.css" media="all">
 <link rel="stylesheet" href="./assets/ck-playground-fallback-v6.css" media="all">
 </head>
 <body>
@@ -224,11 +225,11 @@ const CONTENT=window.RECALL_CONTENT, EXAMS=window.RECALL_EXAMS, KEYS=window.RECA
 if(!CONTENT || !EXAMS || !KEYS){document.getElementById('main').textContent='학습 데이터를 읽지 못했습니다. 파일을 다시 확인하세요.';return;}
 const STORAGE='recallgraph-first-exam-v1';
 const DAY=86400000;
-const names={listen:'문제·정답 듣기',typing:'분필 타이핑',visual:'그림으로 기억',calc:'계산문제 집중',home:'오늘의 학습',reverse:'기출→이론 학습',theory:'핵심이론·능동회상',quiz:'기출형 연습',exam:'10개년 기출',venn:'비교 다이어그램',wrong:'오답·복습',plan:'4일 학습계획',settings:'내 데이터'};
-const nav=[['home','▦'],['reverse','⚡'],['theory','◈'],['visual','◇'],['typing','⌨'],['listen','♫'],['quiz','✎'],['calc','÷'],['exam','▤'],['venn','◉'],['wrong','↻'],['plan','▣']];
+const names={listen:'문제·정답 듣기',typing:'분필 타이핑',visual:'그림으로 기억',calc:'계산문제 집중',home:'오늘의 학습',reverse:'기출→이론 학습',theory:'핵심이론·능동회상',quiz:'기출형 연습',exam:'10개년 기출',venn:'비교 다이어그램',wrong:'오답·복습',plan:'4일 학습계획',final:'시험 직전 최종 노트',settings:'내 데이터'};
+const nav=[['home','▦'],['reverse','⚡'],['theory','◈'],['visual','◇'],['typing','⌨'],['listen','♫'],['quiz','✎'],['calc','÷'],['exam','▤'],['venn','◉'],['wrong','↻'],['plan','▣'],['final','▤']];
 const todayISO=()=>new Date().toLocaleDateString('sv-SE',{timeZone:'Asia/Seoul'});
 const dday=()=>Math.max(0,Math.ceil((new Date('2026-10-31T00:00:00+09:00').getTime()-Date.now())/DAY));
-const defaults={typingMode:'official',typingPick:0,typingYear:'all',typingHistory:[],tts:{rate:1.5,voice:''},spokenTexts:{},ink:{},chalk:{color:0,notes:{},practice:{}},view:'home',reverseState:{mode:'practice',id:'',step:0,firstChoice:0,transferChoice:0,retryChoice:0,recallRating:null,year:2025,number:1,showOfficialKey:false},reverseProgress:{},officialLinks:{},subject:'estate',year:2025,examQuestion:1,answers:{},graded:{},importedKeys:{},quizIndex:0,quizAnswers:{},theoryIndex:0,flashShown:false,flashVisits:{},reviews:{},compare:'v1',mistakes:{},notes:{},timerRemaining:1500,timerRunning:false,timerEnd:0,pomodoros:0,dailyTotals:{},studySubject:{},topicFilter:'all',showPdf:true,showExamKey:false,showAllMarks:false,ck9SpenMode:false,ck9SpenTool:'pen',ck9SpenWidth:3.2};
+const defaults={typingMode:'official',typingPick:0,typingYear:'all',typingHistory:[],tts:{rate:1.5,voice:''},spokenTexts:{},ink:{},chalk:{color:0,notes:{},practice:{}},view:'home',reverseState:{mode:'practice',id:'',step:0,firstChoice:0,transferChoice:0,retryChoice:0,recallRating:null,year:2025,number:1,showOfficialKey:false},reverseProgress:{},officialLinks:{},subject:'estate',year:2025,examQuestion:1,answers:{},graded:{},importedKeys:{},quizIndex:0,quizAnswers:{},theoryIndex:0,flashShown:false,flashVisits:{},reviews:{},compare:'v1',mistakes:{},notes:{},timerRemaining:1500,timerRunning:false,timerEnd:0,pomodoros:0,dailyTotals:{},studySubject:{},topicFilter:'all',showPdf:true,showExamKey:false,showAllMarks:false,ck10FontSize:18,ck10CustomColor:'#8ee5ff',ck9SpenMode:false,ck9SpenTool:'pen',ck9SpenWidth:3.2};
 let state={...defaults};
 try{const p=JSON.parse(localStorage.getItem(STORAGE)||'{}');if(p && typeof p==='object'){for(const k in defaults){if(Object.prototype.hasOwnProperty.call(p,k))state[k]=p[k];}}}catch(e){console.warn('기존 학습기록을 읽지 못했습니다',e);}
 if(!['estate','civil'].includes(state.subject))state.subject='estate';
@@ -836,10 +837,10 @@ document.addEventListener('click',e=>{
 });
 
 
-const CHALK_COLORS=['#fffdf2','#ffe397','#ffb8cc','#b5edca'];
-const CHALK_NAMES=['하양','노랑','분홍','연두'];
+const CHALK_COLORS=['#fffdf2','#ffe397','#ffb8cc','#b5edca',state.ck10CustomColor||'#8ee5ff'];
+const CHALK_NAMES=['하양','노랑','분홍','연두','직접 선택'];
 let typingRecall=false,typingResult=false;
-function chalkState(){if(!state.chalk||typeof state.chalk!=='object')state.chalk={};const c=state.chalk;if(!Number.isInteger(c.color)||c.color<0||c.color>3)c.color=0;for(const k of ['notes','practice'])if(!c[k]||typeof c[k]!=='object'||Array.isArray(c[k]))c[k]={};return c;}
+function chalkState(){if(!state.chalk||typeof state.chalk!=='object')state.chalk={};const c=state.chalk;if(!Number.isInteger(c.color)||c.color<0||c.color>4)c.color=0;for(const k of ['notes','practice'])if(!c[k]||typeof c[k]!=='object'||Array.isArray(c[k]))c[k]={};return c;}
 function typingItems(){if(state.typingMode==='theory')return theory().map(c=>({...c,label:c.t}));if(state.typingMode==='official'){const [a,b]=examRange(),items=[];for(const y of EXAMS.filter(y=>state.typingYear==='all'||!state.typingYear||y.year===Number(state.typingYear)))for(let n=a;n<=b;n++){try{const q=officialSpeech(y.year,n);items.push({id:`official-${y.year}-${n}`,t:q.label,label:q.label,fact:q.question+'\n\n'+q.answers.join('\n'),year:y.year,number:n});}catch{}}return items;}return quizzes().map((q,i)=>({id:'type-'+q.id,t:`연습 ${i+1} · ${q.topic}`,label:`연습 ${i+1} · ${q.topic}`,fact:q.q+'\n\n'+q.a[q.ok-1]}));}
 function typingConcept(){const cs=typingItems();state.typingPick=Math.max(0,Math.min(Number(state.typingPick)||0,cs.length-1));return cs[state.typingPick]||{id:'empty-'+state.subject,t:'등록된 공식 문항 없음',fact:''};}
 function chalkRecord(kind,key){const c=chalkState();let r=c[kind][key];if(!r||typeof r!=='object'||typeof r.text!=='string')r=c[kind][key]={text:'',colors:[]};if(!Array.isArray(r.colors))r.colors=[];return r;}
@@ -957,7 +958,7 @@ document.addEventListener('click',e=>{const rate=e.target.closest('[data-rate-pr
 document.addEventListener('change',e=>{if(e.target.id==='neural-voice'){ttsSettings().neuralVoice=e.target.value;save();}});
 
 document.addEventListener('click',e=>{const b=e.target.closest('[data-typing-year]');if(b){state.typingYear=b.dataset.typingYear;state.typingPick=0;save();render();}});
-function render(){ttsStop(false);inkFlush();renderNav();const renderers={home:renderHome,reverse:renderReverse,theory:renderTheory,quiz:renderQuiz,exam:renderExam,venn:renderVenn,wrong:renderWrong,plan:renderPlan,settings:renderSettings,calc:renderCalc,visual:renderVisual,typing:renderTyping,listen:renderListen};$('#main').innerHTML=boardFrame(renderers[state.view]());refreshTimerDisplay();chalkMount();inkMount();ttsMount();bookScroll();}
+function render(){ttsStop(false);inkFlush();renderNav();const renderers={home:renderHome,reverse:renderReverse,theory:renderTheory,quiz:renderQuiz,exam:renderExam,venn:renderVenn,wrong:renderWrong,plan:renderPlan,final:()=>'<div id="ck10-final-root"></div>',settings:renderSettings,calc:renderCalc,visual:renderVisual,typing:renderTyping,listen:renderListen};$('#main').innerHTML=boardFrame(renderers[state.view]());refreshTimerDisplay();chalkMount();inkMount();ttsMount();bookScroll();}
 function setSubject(s){if(!CONTENT.subjects[s])return;state.subject=s;state.topicFilter='all';state.theoryIndex=0;state.flashShown=false;state.quizIndex=0;state.typingPick=0;state.examQuestion=s==='estate'?1:41;state.compare=venns()[0].id;rs().id='';rs().number=s==='estate'?1:41;rs().step=0;rs().firstChoice=0;rs().retryChoice=0;rs().transferChoice=0;save();render();}
 function markTheory(pass){const cs=filteredTheory();const c=cs[state.theoryIndex];if(!c)return;state.flashVisits[c.id]={correct:pass,at:Date.now()};state.reviews[c.id]=new Date(Date.now()+(pass?2*DAY:DAY)).toISOString();state.flashShown=false;if(state.theoryIndex<cs.length-1)state.theoryIndex++;save();render();toast(pass?'기억 완료 · 이틀 뒤 복습':'복습 예약 · 내일 다시 떠올리기');}
 function markQuiz(val){const q=quizzes()[state.quizIndex];state.quizAnswers[q.id]=val;const id='quiz-'+q.id;if(val===q.ok){if(state.mistakes[id])state.mistakes[id].resolved=true;}else{state.mistakes[id]={id,type:'quiz',s:state.subject,label:q.q,topic:q.topic,answer:val,correct:String(q.ok),why:q.why,updated:Date.now(),resolved:false};}save();render();}
@@ -1261,7 +1262,7 @@ window.addEventListener('beforeunload',()=>{if(localPdfUrl)URL.revokeObjectURL(l
     ['home','오늘의 학습'],['theory','핵심 이론'],['visual','그림 연상'],
     ['typing','분필 타이핑'],['listen','문제·정답'],['reverse','기출 → 이론'],
     ['quiz','문제 풀이'],['calc','계산 집중'],['exam','10개년 기출'],
-    ['venn','비교 도형'],['wrong','오답 복습'],['plan','학습 계획']
+    ['venn','비교 도형'],['wrong','오답 복습'],['plan','학습 계획'],['final','최종 정리본']
   ];
   defaults.v7LeftWidth=null;
   defaults.ck6Swapped=false;
@@ -1339,10 +1340,7 @@ window.addEventListener('beforeunload',()=>{if(localPdfUrl)URL.revokeObjectURL(l
           <div class="ck-v7-board-caption"><span>CONCEPTKNOT / NOTE</span><span>● LOCAL</span></div>
           <h2 class="ck-v7-board-heading">${esc(ctx.label)}</h2>
           <div class="ck-v7-board-small" id="ck-v7-note-status">✓ 자동 저장</div>
-          <div class="ck9-spen-strip">
-            <button class="ck9-spen-toggle" type="button" data-ck9-spen="toggle" aria-pressed="${!!state.ck9SpenMode}"><span aria-hidden="true">✎</span> S Pen 모드</button>
-            <span class="ck9-spen-hint">S Pen 필기 · 손가락은 스크롤</span>
-          </div>
+          
           <div class="ck9-spen-toolbar" data-ck9-spen-toolbar ${state.ck9SpenMode?'':'hidden'} aria-label="S Pen 전용 필기 도구">
             <div role="group" aria-label="필기 도구 선택">
               <button type="button" data-ck9-spen-tool="pen" aria-pressed="${state.ck9SpenTool==='pen'}">펜</button>
@@ -1362,12 +1360,22 @@ window.addEventListener('beforeunload',()=>{if(localPdfUrl)URL.revokeObjectURL(l
             <canvas class="ck-v7-pen-layer" role="img" aria-label="문항별 S펜 손글씨"></canvas>
           </div>
           <div class="ck-v7-toolrow" aria-label="분필과 필기 도구">
+            <button class="ck9-spen-toggle" type="button" data-ck9-spen="toggle" aria-pressed="${!!state.ck9SpenMode}" title="S Pen 모드">S</button>
             ${CHALK_COLORS.map((x,i)=>`<button class="ck-v7-dot" type="button" data-chalk-color="${i}" aria-label="${esc(CHALK_NAMES[i])} 분필" title="${esc(CHALK_NAMES[i])} 분필" aria-pressed="${i===mode?'true':'false'}" style="--dot-color:${x}"><i></i></button>`).join('')}
+            <label class="ck10-color" title="사용자 분필색"><input type="color" data-ck10-custom-color value="${esc(state.ck10CustomColor||'#8ee5ff')}" aria-label="사용자 분필 색상"></label>
+            <label class="ck10-font" title="칠판 글자 크기">가 <input type="range" data-ck10-font min="12" max="36" step="1" value="${Number(state.ck10FontSize)||18}" aria-label="칠판 글자 크기"></label>
             <span class="ck-v7-tool-spacer"></span>
             <button type="button" data-ck-v7-command="undo" title="손글씨 되돌리기" aria-label="손글씨 되돌리기">↶</button>
             <button type="button" data-ck-v7-command="redo" title="손글씨 다시하기" aria-label="손글씨 다시하기">↷</button>
             <button type="button" data-ck-v7-command="clear" title="손글씨 지우기" aria-label="손글씨 지우기">⌫</button>
+            <button type="button" data-ck-v7-command="txt" title="메모 TXT 저장">TXT</button>
+            <button type="button" data-ck-v7-command="pdf" title="메모 PDF 출력">PDF</button>
             <button type="button" data-ck-v7-command="export" title="이 문항 JSON 저장" aria-label="이 문항 JSON 저장">⇩</button>
+          </div>
+          <div class="ck10-ai-launch" aria-label="AI 학습 서비스">
+            <button type="button" data-ck10-ai="chatgpt" title="ChatGPT" aria-label="ChatGPT">◉</button>
+            <button type="button" data-ck10-ai="gemini" title="Gemini" aria-label="Gemini">✦</button>
+            <button type="button" data-ck10-ai="claude" title="Claude" aria-label="Claude">✳</button>
           </div>
         </div>
       </section>
@@ -1548,6 +1556,20 @@ window.addEventListener('beforeunload',()=>{if(localPdfUrl)URL.revokeObjectURL(l
       if(status)status.textContent='✓ 자동 저장';
     });
   }
+  document.addEventListener('input',e=>{
+    if(e.target.matches('[data-ck10-font]')){
+      state.ck10FontSize=Math.max(12,Math.min(36,Number(e.target.value)||18));
+      document.documentElement.style.setProperty('--ck10-chalk-font',state.ck10FontSize+'px');
+      save();
+    }
+    if(e.target.matches('[data-ck10-custom-color]')){
+      state.ck10CustomColor=/^#[0-9a-f]{6}$/i.test(e.target.value)?e.target.value:'#8ee5ff';
+      CHALK_COLORS[4]=state.ck10CustomColor;chalkState().color=4;
+      document.querySelectorAll('[data-chalk-color="4"]').forEach(b=>{b.style.setProperty('--dot-color',state.ck10CustomColor);b.setAttribute('aria-pressed','true');});
+      save();
+    }
+  },true);
+  document.documentElement.style.setProperty('--ck10-chalk-font',(Number(state.ck10FontSize)||18)+'px');
   function setLeftWidth(px){
     const stage=document.querySelector('.ck-v7-stage');
     if(!stage)return;
@@ -1733,6 +1755,7 @@ window.addEventListener('beforeunload',()=>{if(localPdfUrl)URL.revokeObjectURL(l
     if(cmd==='undo'&&list.length){const redos=inkRedo.get(key)||[];redos.push(list.pop());inkRedo.set(key,redos);}
     if(cmd==='redo'){const redos=inkRedo.get(key)||[];if(redos.length)list.push(redos.pop());}
     if(cmd==='clear'){if(!list.length)return;if(!confirm('이 문항의 손글씨를 지울까요? 키보드 메모는 유지됩니다.'))return;state.ink[key]=[];inkRedo.set(key,[]);}
+    if(cmd==='txt'||cmd==='pdf'){window.CK10?.exportBoard?.(cmd,board.dataset.ckV7Key,chalkRecord('notes',key).text);return;}
     if(cmd==='export'){
       const n=chalkRecord('notes',key),prior=state.questionNotes?.[board.dataset.ckV7Key]||{};
       const payload={schema:'conceptknot-note-v1',questionKey:board.dataset.ckV7Key,exportedAt:new Date().toISOString(),text:n.text,colors:n.colors,strokes:list,legacyNote:prior.text||'',updated:Date.now()};
@@ -2139,5 +2162,6 @@ render();setInterval(timerTick,500);
 <script src="./assets/ck-navigation-v5.js" defer></script>
 <script type="module" src="./assets/ck-landscape3d.js"></script>
 <script src="./assets/ck-experience-v9.js" defer></script>
+<script src="./assets/ck-study-extensions-v10.js" defer></script>
 </body>
 </html>
