@@ -70,7 +70,7 @@ test('source scripts parse without installed toolchain',()=>{
  const html=read('index.html');
  for(const m of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))new vm.Script(m[1]);
  for(const f of ['assets/ck-typing-layout-v31.js','assets/ck-shortcuts-v19.js','assets/ck-navigation-v5.js','sw.js'])new vm.Script(read(f));
- assert.match(read('sw.js'),/conceptknot-study-v34/);
+ assert.match(read('sw.js'),/conceptknot-study-v35/);
 });
 
 test('deployed click listeners toggle input rules and move the existing board in four directions',()=>{

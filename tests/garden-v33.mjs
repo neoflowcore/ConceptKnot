@@ -7,7 +7,7 @@ const base=process.cwd();
 const temp=fs.mkdtempSync(path.join(os.tmpdir(),'ck33-'));
 fs.copyFileSync('vendor/three.module.min.js',path.join(temp,'three.mjs'));
 const T=await import(pathToFileURL(path.join(temp,'three.mjs')));
-const kit=await import('data:text/javascript;base64,'+Buffer.from(fs.readFileSync('assets/ck-mascot-kit-v33.js')).toString('base64'));
+const kit=await import('data:text/javascript;base64,'+Buffer.from(fs.readFileSync('assets/ck-mascot-kit-v33.js','utf8').replace("'./ck-face-atlas-v35.js'",JSON.stringify('data:text/javascript;base64,'+Buffer.from(fs.readFileSync('assets/ck-face-atlas-v35.js')).toString('base64')))).toString('base64'));
 const {mascotKit,makeApple}=kit;
 function moduleFunction(file,name){const src=fs.readFileSync(file,'utf8').replace(/^import .*?;\s*/gm,'').replaceAll('export function','function');return new Function('makeApple','mascotKit',src+'; return '+name)(makeApple,mascotKit);}
 const scene=new T.Scene(),h=()=>0;

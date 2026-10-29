@@ -94,11 +94,11 @@ function ground() {
     const x = pos.getX(i), z = pos.getZ(i), y = h(x, z);
     pos.setY(i, y);
     const nr = Math.sin(x * 1.32 + z * 2.17) * .045 + Math.cos(z * 1.59 - x * .62) * .038;
-    const broad = .79 + .21*Math.sin(x*.13 + z*.027)**2;
-    const shade = .84 + .17*Math.cos(z*.094-x*.11) + nr*.42;
+    const broad = .88 + .10*Math.sin(x*.065 + z*.022)**2;
+    const shade = .86 + .065*Math.cos(z*.094-x*.11) + nr*.12;
     const brush = clamp(broad*shade + .055*Math.sin(x*.41+z*.23),.51,1.17);
     const t = clamp(((-z) - 23) / 120, 0, 1);
-    col.setRGB(lerp(.22,.33,t)*brush,lerp(.57,.68,t)*brush,lerp(.055,.14,t)*brush);
+    col.setRGB(lerp(.27,.33,t)*brush,lerp(.45,.53,t)*brush,lerp(.10,.15,t)*brush);
     colors.push(col.r, col.g, col.b);
   }
   geom.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
@@ -214,6 +214,8 @@ function trees(){
 
 function appleTree(x,z,size){
  const root=new THREE.Group();root.name='detailed-apple-tree';root.position.set(x,h(x,z),z);root.scale.setScalar(size);scene.add(root);
+ // Feathered canopy contact shadow: no hard dark disk against pale grass.
+ if(typeof document!=='undefined'){const c=document.createElement('canvas');c.width=c.height=128;const ctx=c.getContext('2d'),gradient=ctx.createRadialGradient(64,64,5,64,64,64);gradient.addColorStop(0,'rgba(47,70,22,.22)');gradient.addColorStop(.55,'rgba(47,70,22,.12)');gradient.addColorStop(1,'rgba(47,70,22,0)');ctx.fillStyle=gradient;ctx.fillRect(0,0,128,128);const shadow=new THREE.Mesh(new THREE.PlaneGeometry(5.6,4.7),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(c),transparent:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2}));shadow.rotation.x=-Math.PI/2;shadow.position.set(.3,.035,.2);root.add(shadow);}
  const bark=pbr(0x987043,.94);
  if(typeof document!=='undefined'){const c=document.createElement('canvas');c.width=128;c.height=128;const ctx=c.getContext('2d');ctx.fillStyle='#888';ctx.fillRect(0,0,128,128);for(let i=0;i<70;i++){ctx.strokeStyle=i%2?'#555':'#bbb';ctx.lineWidth=1+(i%3);ctx.beginPath();const xx=(i*47)%128;ctx.moveTo(xx,0);ctx.bezierCurveTo(xx+7,40,xx-5,85,xx+2,128);ctx.stroke();}const tx=new THREE.CanvasTexture(c);tx.wrapS=tx.wrapT=THREE.RepeatWrapping;tx.repeat.set(2,3);bark.bumpMap=tx;bark.bumpScale=.055;}
 
@@ -223,13 +225,13 @@ function appleTree(x,z,size){
  for(let i=0;i<6;i++){const a=i*2.399;branch([[0,2.2+i*.2,0],[Math.cos(a)*.65,3.1+i*.15,Math.sin(a)*.6],[Math.cos(a)*1.65,4.1+i*.14,Math.sin(a)*1.35]],.12);}
  // Hundreds of individually oriented, pointed leaves in a rounded canopy.
  const leaf=new THREE.Shape();leaf.moveTo(0,-.23);leaf.bezierCurveTo(-.22,-.07,-.17,.16,0,.30);leaf.bezierCurveTo(.17,.16,.22,-.07,0,-.23);
- const geometry=new THREE.ShapeGeometry(leaf,5),leaves=new THREE.InstancedMesh(geometry,pbr(0xffffff,.84,{side:THREE.DoubleSide}),1150);
+ const geometry=new THREE.ShapeGeometry(leaf,5),leaves=new THREE.InstancedMesh(geometry,pbr(0xffffff,.94,{side:THREE.DoubleSide}),1150);
  const veinGeo=new THREE.BufferGeometry();veinGeo.setAttribute('position',new THREE.Float32BufferAttribute([-.005,-.23,.005,.005,-.23,.005,-.005,.27,.005,.005,.27,.005],3));veinGeo.setIndex([0,1,2,1,3,2]);veinGeo.computeVertexNormals();
  const veins=new THREE.InstancedMesh(veinGeo,pbr(0xbed271,.92,{side:THREE.DoubleSide}),1150);
  const obj=new THREE.Object3D(),col=new THREE.Color();
  for(let i=0;i<1150;i++){const a=i*2.399,yy=1-2*(i+.5)/1150,r=Math.sqrt(1-yy*yy),jitter=.82+rand()*.26;
   obj.position.set(Math.cos(a)*r*2.25*jitter,4.65+yy*1.7,Math.sin(a)*r*1.9*jitter);
-  obj.rotation.set((rand()-.5)*1.3,a,(rand()-.5)*1.6);obj.scale.setScalar(.80+rand()*.65);obj.updateMatrix();leaves.setMatrixAt(i,obj.matrix);veins.setMatrixAt(i,obj.matrix);col.setHex([0x62a52e,0x85bd37,0x3d8e2d,0xa0c94d][i%4]);leaves.setColorAt(i,col);
+  obj.rotation.set((rand()-.5)*1.3,a,(rand()-.5)*1.6);obj.scale.setScalar(.80+rand()*.65);obj.updateMatrix();leaves.setMatrixAt(i,obj.matrix);veins.setMatrixAt(i,obj.matrix);col.setHex([0x79a949,0x82b34e,0x6fa143,0x8db955][i%4]);leaves.setColorAt(i,col);
  }
  leaves.instanceMatrix.needsUpdate=true;leaves.instanceColor.needsUpdate=true;veins.instanceMatrix.needsUpdate=true;root.add(leaves,veins);
  // Fruit lies on the visible outer shell, so foliage cannot swallow most apples.
@@ -238,9 +240,9 @@ function appleTree(x,z,size){
 
 function grass(){
  // Curved tapered blades in dense near-field tufts, batched into one draw call.
- const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute([-.045,0,0,.045,0,0,-.025,.25,.025,.025,.25,.025,.045,.51,.09],3));geo.setIndex([0,1,2,1,3,2,2,3,4]);geo.computeVertexNormals();
- const count=QUALITY?36000:13000,inst=new THREE.InstancedMesh(geo,pbr(0xffffff,.92,{side:THREE.DoubleSide}),count),obj=new THREE.Object3D(),col=new THREE.Color();
- for(let i=0;i<count;i++){const near=i<count*.7;const x=(rand()-.5)*(near?78:190),z=near?22-rand()*75:-45-rand()*110;obj.position.set(x,h(x,z)+.015,z);obj.rotation.set(0,rand()*Math.PI*2,(rand()-.5)*.35);const scale=.35+rand()*.95;obj.scale.set(scale,scale,scale);obj.updateMatrix();inst.setMatrixAt(i,obj.matrix);col.setHex([0x6ebc2e,0x87c939,0x439b29,0xa0d049,0x5ca62c][i%5]);inst.setColorAt(i,col);}
+ const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute([-.045,0,0,.045,0,0,-.025,.25,.025,.025,.25,.025,.045,.51,.09],3));geo.setIndex([0,1,2,1,3,2,2,3,4]);geo.setAttribute('color',new THREE.Float32BufferAttribute([.72,.80,.62,.72,.80,.62,.86,.91,.76,.86,.91,.76,1,1,.91],3));geo.computeVertexNormals();
+ const count=QUALITY?24000:9500,inst=new THREE.InstancedMesh(geo,pbr(0xffffff,.96,{side:THREE.DoubleSide,vertexColors:true}),count),obj=new THREE.Object3D(),col=new THREE.Color();
+ for(let i=0;i<count;i++){const near=i<count*.7;const x=(rand()-.5)*(near?78:190),z=near?22-rand()*75:-45-rand()*110;obj.position.set(x,h(x,z)+.015,z);obj.rotation.set(0,rand()*Math.PI*2,(rand()-.5)*.35);const scale=.35+rand()*.55;obj.scale.set(scale,scale,scale);obj.updateMatrix();inst.setMatrixAt(i,obj.matrix);col.setHex([0x7fb14e,0x87b856,0x79aa48,0x91be5f,0x80b151][i%5]);inst.setColorAt(i,col);}
  inst.instanceMatrix.needsUpdate=true;inst.instanceColor.needsUpdate=true;scene.add(inst);
 }
 function flowers(){
@@ -465,6 +467,7 @@ function cleanup(){
   cubButton?.remove();scrollCue?.remove();cubButton=null;scrollCue=null;root?.classList.remove(READY_CLASS);
 }
 function initialize(){
+ window.addEventListener('ck:scene-texture-ready',()=>{if(renderer&&isLanding()&&windowFocused&&!document.hidden)drawScene();});
  window.addEventListener('ck:scene-activity',synchronizeActivity);
  window.addEventListener('blur',()=>{windowFocused=false;synchronizeActivity()});
  window.addEventListener('focus',()=>{windowFocused=true;synchronizeActivity()});
