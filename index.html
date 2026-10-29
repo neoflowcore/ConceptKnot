@@ -1783,7 +1783,7 @@ window.addEventListener('beforeunload',()=>{if(localPdfUrl)URL.revokeObjectURL(l
     const ctx=context(),date=new Date().toLocaleDateString('ko-KR',{timeZone:'Asia/Seoul',month:'long',day:'numeric',weekday:'short'});
     return `<div class="ck-v7-mainframe"><header class="ck-v7-global-nav">
       <div class="ck-v7-nav-pill">
-        <a href="#main" class="ck-v7-logo" data-go="landing" aria-label="CONCEPTKNOT 정원 첫 화면"><img class="ck21-brand-icon" src="./assets/ck-logo-v21.svg" alt="" width="24" height="24">Concept<b>Knot</b></a>
+        <a href="#main" class="ck-v7-logo" data-go="landing" aria-label="CONCEPTKNOT 정원 첫 화면"><img class="ck21-brand-icon" src="./assets/ck-logo-v21.svg" alt="" width="24" height="24"><span class="ck-brand-wordmark">Concept<b>Knot</b></span></a>
         <nav class="board-tabs" aria-label="전체 학습 메뉴">
           ${designNav.map(([page,label])=>`<button type="button" class="board-tab ${page===state.view?'active':''}" data-go="${page}" aria-current="${page===state.view?'page':'false'}">${label}</button>`).join('')}
         </nav>
