@@ -1,3 +1,4 @@
+import {makeApple} from './ck-mascot-kit-v33.js';
 // ConceptKnot v8 kinetic study garden: original Three.js geometry.
 // All active pieces run on ONE 17-second timeline and one CLOSED ball track.
 export function buildStudyMachine(THREE, scene, terrain, quality) {
@@ -12,7 +13,7 @@ export function buildStudyMachine(THREE, scene, terrain, quality) {
     obj.position.set(x,y,z);obj.castShadow=true;obj.receiveShadow=true;
     parent.add(obj);return obj;
   };
-  const colors=[0xf05a55,0xf5b92e,0x137cd4,0xf07da5,0x39b27e,0xff824d];
+  const colors=[0xef403c,0x78c92f,0xffce38,0xef403c,0x78c92f,0xffce38];
   // The island has an actual ring-shaped surface, not a flat lawn.
   const pit=put(center,new THREE.CylinderGeometry(3.12,2.7,1.8,48),
     material(0x173b33,.98),0,-1.16,0);
@@ -50,13 +51,10 @@ export function buildStudyMachine(THREE, scene, terrain, quality) {
     new THREE.MeshBasicMaterial({color:0x9ae9ff,transparent:true,opacity:.78,depthWrite:false}));
   shine.castShadow=false;
   // Colored striped balls have actual rotation proportional to path length.
-  const count=quality>1?6:4,balls=[];
+  const count=6,balls=[];
   for(let i=0;i<count;i++){
     const carrier=new THREE.Group(),body=new THREE.Group();carrier.add(body);center.add(carrier);
-    put(body,new THREE.SphereGeometry(.64,quality>1?24:16,quality>1?16:12),material(colors[i],.31));
-    const stripe=put(body,new THREE.TorusGeometry(.635,.085,8,30),material(0xffefd7,.36));
-    stripe.rotation.set(.42,.62,0);
-    put(body,new THREE.SphereGeometry(.13,8,6),material(0xffe9cc,.38),0,.61,0);
+    body.add(makeApple(THREE,colors[i],.78));
     balls.push({carrier,body,offset:i/count});
   }
   // Funnel at top of loop — same colors as the circulating balls.
@@ -70,18 +68,18 @@ export function buildStudyMachine(THREE, scene, terrain, quality) {
   for(let i=0;i<4;i++)put(funnel,new THREE.SphereGeometry(.39,12,10),
     material(colors[i],.38),(i-1.5)*.77,.83,i%2?-.32:.32);
   put(center,new THREE.BoxGeometry(4.7,.64,1.0),material(0xc47b49,.58),-11.1,9,-5.3).rotation.z=-.11;
-  // Hinged textbook on the central lawn.
-  const book=new THREE.Group();book.position.set(-5.2,6.25,-1.8);book.rotation.y=.18;center.add(book);
-  put(book,new THREE.BoxGeometry(3.4,4.6,.69),material(0x174f41,.52),0,0,-.33);
-  put(book,new THREE.BoxGeometry(3.13,4.25,.58),material(0xfff1d8,.87),.08,0,-.24);
-  put(book,new THREE.BoxGeometry(.32,4.62,.75),material(0xc79f58,.6),-1.7,0,-.17);
-  const cover=new THREE.Group();cover.position.x=-1.7;book.add(cover);
-  put(cover,new THREE.BoxGeometry(3.43,4.65,.16),material(0x287351,.5),1.71,0,.12);
-  const knot=put(cover,new THREE.TorusGeometry(.57,.12,8,28),
-    material(0xf3ca74,.44),1.69,.61,.26);
-  knot.rotation.y=.2;
-  for(let j=0;j<3;j++)put(cover,new THREE.BoxGeometry(1.68,.08,.025),
-    material(0xe0c286,.65),1.69,-.6-j*.48,.24);
+  // Compact cat tower occupies the old upright book's exact footprint.
+  const tower=new THREE.Group();tower.position.set(-5.2,3.95,-1.8);center.add(tower);
+  const fabric=material(0xffe7be,.94),rope=material(0xc9985b,.98);
+  put(tower,new THREE.CylinderGeometry(1.75,1.75,.28,32),fabric,0,-.8,0);
+  put(tower,new THREE.CylinderGeometry(.26,.29,4.7,20),rope,-.75,1.5,0);
+  for(let i=0;i<30;i++){const ring=put(tower,new THREE.TorusGeometry(.275,.035,5,20),material(0xe1bb80,.98),-.75,-.6+i*.145,0);ring.rotation.x=Math.PI/2;}
+  put(tower,new THREE.CylinderGeometry(1.4,1.4,.35,32),fabric,-.75,3.8,0);
+  // Cylindrical hollow cubby, circular front opening and dark padded interior.
+  const cubby=put(tower,new THREE.CylinderGeometry(1.12,1.12,1.65,32,1,true),fabric,.65,.7,.05);cubby.rotation.x=Math.PI/2;
+  const rim=put(tower,new THREE.TorusGeometry(1.12,.15,10,40),fabric,.65,.7,.90);
+  put(tower,new THREE.CircleGeometry(1.08,32),material(0x80664b,.98),.65,.7,-.76);
+  put(tower,new THREE.CylinderGeometry(1.45,1.45,.25,32),fabric,.60,1.98,.05);
   // Moving pencil (not arbitrary bobbing: its angle follows the same lap).
   const pencil=new THREE.Group();pencil.position.set(-8.4,3.1,5.2);center.add(pencil);
   put(pencil,new THREE.CylinderGeometry(.45,.45,5.8,7),material(0xfbb738,.49));
@@ -133,10 +131,10 @@ export function buildStudyMachine(THREE, scene, terrain, quality) {
       axis.set(0,1,0).cross(tangent);
       if(axis.lengthSq()<.006)axis.set(1,0,0);
       else axis.normalize();
-      ball.body.quaternion.setFromAxisAngle(axis,-(seconds/lapSeconds+ball.offset)*pathLength/.64);
+      ball.body.rotation.y=seconds*.45+ball.offset*Math.PI*2;
     }
     pencil.rotation.z=-.84+.12*Math.sin(twopi*phase);
-    cover.rotation.y=.12+.31*(.5+.5*Math.cos(twopi*phase-1.5));
+
     memo.rotation.z=-.05+.034*Math.sin(twopi*phase-2.0);
     for(const bar of bars){
       const rise=.53+.47*(.5+.5*Math.cos(twopi*phase-bar.i*.62-2.1));

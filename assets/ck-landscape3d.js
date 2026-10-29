@@ -1,3 +1,4 @@
+import {makeApple,mascotKit} from './ck-mascot-kit-v33.js';
 import * as THREE from '../vendor/three.module.min.js';
 import { buildStudyMachine } from './ck-kinetic-garden-v8.js';
 import { buildSleepingCub } from './ck-sleeping-cub-v9.js';
@@ -21,7 +22,7 @@ const v3 = (x, y, z) => new THREE.Vector3(x, y, z);
 const scenes = { trees: [], clouds: [], bird: null, machine: null, cub:null, pressCub:null };
 const pastel = [0x3c9a55, 0x287a54, 0x76b939, 0x205f49, 0xe7bf47];
 const flowerColors = [0xffc44f, 0xff789b, 0xffe28a, 0x6db9f3, 0xff8753];
-let root, renderer, camera, scene, materialCache, clock, frameId = 0;
+let root, renderer, camera, scene, foregroundScene, materialCache, clock, frameId = 0;
 let resizeObserver, last = 0, pointer = {x: 0, y: 0}, elapsed = 0, firstDraw = false;
 let windowFocused=true,lastPaint=0,introDone=false,scrollCue=null,rendererFailed=false,cubButton=null,cubTime=0;
 let renderTimer=0;
@@ -37,6 +38,7 @@ function synchronizeActivity(){
  const active=shouldAnimate();
  if(root)root.dataset.ck3dActive=String(active);
  if(!active){
+  if(!renderer&&!rendererFailed&&isLanding()&&windowFocused&&!document.hidden){createRenderer();return;}
   cancelFrames();last=0;
   if(root)root.dataset.ck3dIdle='true';
   if(activeLast&&renderer){
@@ -96,7 +98,7 @@ function ground() {
     const shade = .84 + .17*Math.cos(z*.094-x*.11) + nr*.42;
     const brush = clamp(broad*shade + .055*Math.sin(x*.41+z*.23),.51,1.17);
     const t = clamp(((-z) - 23) / 120, 0, 1);
-    col.setRGB(lerp(.12,.27,t)*brush,lerp(.40,.57,t)*brush,lerp(.13,.22,t)*brush);
+    col.setRGB(lerp(.22,.33,t)*brush,lerp(.57,.68,t)*brush,lerp(.055,.14,t)*brush);
     colors.push(col.r, col.g, col.b);
   }
   geom.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
@@ -116,7 +118,7 @@ function sky() {
     fragmentShader:`varying vec3 worldPoint;
       void main(){ float y=normalize(worldPoint).y;
         float t=smoothstep(-.14,.83,y);
-        vec3 c=mix(vec3(.67,.87,.91),vec3(.11,.56,.91),t);
+        vec3 c=mix(vec3(.63,.84,1.0),vec3(.08,.43,.94),t);
         c=mix(c,vec3(.36,.76,.96),pow(t,.52)*.14);
         float glow=pow(max(0.0,dot(normalize(worldPoint),normalize(vec3(-.49,.71,-.5)))),30.0);
         c+=glow*vec3(.22,.20,.14);
@@ -129,7 +131,7 @@ function sky() {
 }
 function diffuseClouds() {
   const g = new THREE.SphereGeometry(1, 12, 8);
-  const mat = new THREE.MeshLambertMaterial({color:0xf9fff9,transparent:true,opacity:.9,depthWrite:false});
+  const mat = new THREE.MeshLambertMaterial({color:0xffffff,transparent:true,opacity:.9,depthWrite:false});
   for(let i = 0; i < 15; i++) {
     const cloud = new THREE.Group();
     cloud.position.set((rand()-.5)*150, 17+rand()*16, -85-rand()*70);
@@ -140,7 +142,7 @@ function diffuseClouds() {
       item.castShadow = false;
       cloud.add(item);
     }
-    scenes.clouds.push({group:cloud,speed:.06+rand()*.10});
+    scenes.clouds.push({group:cloud,speed:.48+rand()*.22});
     scene.add(cloud);
   }
 }
@@ -206,8 +208,16 @@ function trees(){
     const x=side*(25+rand()*32+(z<-68?7:0));
     tree(x,z,(.72+rand()*.90)*(z<-75?.85:1),i%4,true);
   }
-  tree(-27,-10,1.55,1,true);
-  tree(28,-13,1.72,2,true);
+  appleTree(-27,-23,1.6);
+  appleTree(28,-26,1.72);
+}
+
+function appleTree(x,z,size){
+ const root=new THREE.Group();root.position.set(x,h(x,z),z);root.scale.setScalar(size);scene.add(root);
+ const trunk=mesh(new THREE.CylinderGeometry(.32,.55,4.2,12),pbr(0xa57643));trunk.position.y=2.1;root.add(trunk);
+ const g=new THREE.SphereGeometry(1,20,14);
+ for(let i=0;i<7;i++){const a=i*Math.PI*2/7;root.add(sphere(g,pbr([0x6cbd36,0x55a92c,0x81c944][i%3]),Math.cos(a)*1.15,4.2+(i%3)*.43,Math.sin(a)*.85,1.45,1.4,1.3));}
+ for(let i=0;i<13;i++){const a=i*2.399;const apple=makeApple(THREE,[0xef403c,0x84cf32,0xffcf3a][i%3],.23);apple.position.set(Math.cos(a)*(1.25+(i%2)*.65),3.8+(i%4)*.56,Math.sin(a)*1.6+.25);root.add(apple);}
 }
 
 function grass() {
@@ -225,7 +235,7 @@ function grass() {
     const s=.3+rand()*.7;
     obj.scale.set(s*.7,s*(.5+rand()*.9),s*.7);
     obj.updateMatrix();grass.setMatrixAt(i,obj.matrix);
-    col.setHex(pastel[Math.floor(rand()*pastel.length)]).multiplyScalar(.58+rand()*.44);
+    col.setHex(pastel[Math.floor(rand()*pastel.length)]).multiplyScalar(.84+rand()*.22);
     grass.setColorAt(i,col);
   }
   grass.instanceMatrix.needsUpdate=true;
@@ -262,39 +272,20 @@ function flowers() {
   const f=new THREE.Points(g,m);f.frustumCulled=false;
   scene.add(f);
 }
-function bird() {
-  const bird=new THREE.Group();
-  const bx=-5.55,bz=-21.8;
-  bird.position.set(bx,h(bx,bz)+5.85,bz);
-  bird.scale.setScalar(1.04);
-  const teal=pbr(0x159eb5,.62),blue=pbr(0x137ebe,.52),white=pbr(0xf9f4e7,.92),beak=pbr(0xf3a54d,.58),black=pbr(0x092b3d,.28);
-  const ball=new THREE.SphereGeometry(1,20,12);
-  bird.add(sphere(ball,blue,0,0,0,.68,.93,.57));
-  bird.add(sphere(ball,white,.20,-.17,.43,.43,.57,.21));
-  const wing=sphere(ball,teal,-.5,-.16,.37,.42,.69,.25);wing.rotation.z=-.45;bird.add(wing);
-  const tail=sphere(ball,blue,-1.04,-.48,-.12,.63,.2,.29);tail.rotation.z=.34;bird.add(tail);
-  const head=new THREE.Group();head.position.set(.30,.72,.04);
-  head.add(sphere(ball,teal,0,0,0,.58,.55,.56));
-  head.add(sphere(ball,white,.27,-.22,.38,.29,.28,.15));
-  for(const side of [-1,1]){
-    const eye=sphere(ball,black,.29,.13,side*.49,.105,.118,.059);
-    head.add(eye);
-    const glint=sphere(ball,pbr(0xffffff,.18),.315,.17,side*.55,.03,.04,.024);
-    head.add(glint);
-  }
-  const cone=mesh(new THREE.ConeGeometry(.2,.55,4),beak);
-  cone.rotation.z=-Math.PI/2;cone.position.set(.61,-.04,.18);head.add(cone);
-  bird.add(head);
-  const feet=pbr(0xb97a4b,.72);
-  for(const fz of [-.23,.23]){
-    const foot=mesh(new THREE.CylinderGeometry(.042,.044,.50,6),feet);
-    foot.position.set(.1,-1.0,fz);foot.rotation.z=.15;
-    bird.add(foot);
-  }
-  const perch=mesh(new THREE.CylinderGeometry(.115,.16,3.2,8),pbr(0x785942,.95));
-  perch.rotation.z=Math.PI/2;perch.position.set(0,-1.25,0);bird.add(perch);
-  scene.add(bird);
-  scenes.bird={group:bird,head,baseY:bird.position.y,peckStarted:-100,peckIndex:-1,beakWorld:{x:bx+.91,y:bird.position.y+.72,z:bz+.18}};
+function bird(){
+ const bird=new THREE.Group(),bx=-5.55,bz=-21.8;
+ bird.position.set(bx,h(bx,bz)+5.85,bz);bird.scale.setScalar(1.12);
+ const k=mascotKit(THREE),blue=pbr(0x65bdf6,.68),wingMat=pbr(0x3da4e5,.7),cream=pbr(0xfff4de),orange=pbr(0xffba43),black=pbr(0x191f2c,.22);
+ const ball=(parent,mat,x,y,z,sx,sy,sz)=>k.ball(parent,mat,x,y,z,sx,sy,sz);
+ ball(bird,blue,0,-.08,0,.68,.76,.52);ball(bird,cream,0,-.18,.43,.48,.52,.16);
+ for(const side of [-1,1]){const wing=new THREE.Group();wing.position.set(side*.52,-.04,.02);wing.rotation.z=-side*.45;bird.add(wing);for(let j=0;j<3;j++)ball(wing,wingMat,side*j*.13,-j*.12,.02,.25,.42-j*.04,.13);const foot=ball(bird,orange,side*.23,-.80,.13,.18,.09,.24);}
+ const head=new THREE.Group();head.position.set(.30,.72,.04);bird.add(head);
+ ball(head,blue,0,0,0,.73,.66,.57);ball(head,cream,0,-.18,.38,.64,.40,.18);
+ for(const side of [-1,1]){ball(head,cream,side*.28,.05,.49,.24,.29,.065);ball(head,black,side*.28,.05,.55,.17,.22,.04);ball(head,k.m.white,side*.28-.05,.14,.585,.055,.065,.012);ball(head,k.m.pink,side*.50,-.18,.49,.08,.04,.018);}
+ const beak=mesh(new THREE.ConeGeometry(.16,.33,4),orange);beak.rotation.x=Math.PI/2;beak.position.set(0,-.15,.68);head.add(beak);
+ for(let i=0;i<3;i++){const tuft=ball(head,blue,(i-1)*.15,.62+i*.015,0,.11,.28,.12);tuft.rotation.z=(1-i)*.3;}
+ const perch=mesh(new THREE.CylinderGeometry(.115,.16,3.2,8),pbr(0x956742));perch.rotation.z=Math.PI/2;perch.position.set(0,-.94,0);bird.add(perch);
+ scene.add(bird);scenes.bird={group:bird,head,baseY:bird.position.y,peckStarted:-100,peckIndex:-1,beakWorld:{x:bx+.3,y:bird.position.y+.57,z:bz+.72}};
 }
 function createRenderer() {
   const host=document.getElementById(HOST_ID);
@@ -308,32 +299,35 @@ function createRenderer() {
   renderer.setClearColor(0x65c6e9,1);
   renderer.outputColorSpace=THREE.SRGBColorSpace;
   renderer.toneMapping=THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure=1.09;
+  renderer.toneMappingExposure=1.22;
   // Existing cub contact discs provide soft shadows without a shadow-map pass.
   renderer.shadowMap.enabled=false;
   renderer.shadowMap.type=THREE.PCFSoftShadowMap;
-  scene=new THREE.Scene();scene.fog=new THREE.FogExp2(0x72ac9f,.0064);
-  const hemi=new THREE.HemisphereLight(0xc7eaff,0x345c43,1.25);scene.add(hemi);
-  const sun=new THREE.DirectionalLight(0xffdb9e,2.85);
+  scene=new THREE.Scene();scene.fog=new THREE.FogExp2(0xaddbff,.0038);
+  const hemi=new THREE.HemisphereLight(0xffffff,0xd5d9bb,1.65);scene.add(hemi);
+  const sun=new THREE.DirectionalLight(0xfff3df,3.0);
   sun.position.set(-23,46,12);sun.castShadow=true;
   sun.shadow.mapSize.set(QUALITY>1?768:512,QUALITY>1?768:512);
   sun.shadow.camera.left=-50;sun.shadow.camera.right=50;sun.shadow.camera.top=60;sun.shadow.camera.bottom=-40;
   sun.shadow.normalBias=.016;sun.shadow.bias=-.00025;
   scene.add(sun);
-  const ambience=new THREE.DirectionalLight(0x77c4e5,.32);ambience.position.set(15,16,-20);scene.add(ambience);
+  const ambience=new THREE.DirectionalLight(0xddebff,.55);ambience.position.set(15,16,-20);scene.add(ambience);
   camera=new THREE.PerspectiveCamera(43,1,.1,480);
   camera.position.set(0,11,26);
   camera.lookAt(0,6,-30);
   sky();ground();grass();flowers();diffuseClouds();trees();
    scenes.machine=buildStudyMachine(THREE,scene,h,QUALITY);
-   scenes.cub=buildSleepingCub(THREE,scene,h,QUALITY);
-  scenes.pressCub=buildPencilCub(THREE,scene,h,QUALITY);
+  // True 3D foreground pass: terrain/rail can never cover the baby faces.
+  foregroundScene=new THREE.Scene();
+  foregroundScene.add(hemi.clone(),sun.clone(),ambience.clone());
+  scenes.cub=buildSleepingCub(THREE,foregroundScene,h,QUALITY);
+  scenes.pressCub=buildPencilCub(THREE,foregroundScene,h,QUALITY);
    bird();
   host.insertBefore(canvas,host.firstChild);
   createScrollCue(host);
   root=host;
   resize();
-  try{renderer.render(scene,camera);}catch(err){rendererFailed=true;renderer.dispose();renderer=null;canvas.remove();cubButton?.remove();scrollCue?.remove();host.classList.remove(READY_CLASS);console.info('3D background failed; static background',err);return;}
+  try{drawScene();}catch(err){rendererFailed=true;renderer.dispose();renderer=null;canvas.remove();cubButton?.remove();scrollCue?.remove();host.classList.remove(READY_CLASS);console.info('3D background failed; static background',err);return;}
   host.classList.add(READY_CLASS);
   host.dataset.renderer='webgl3d';firstDraw=true;
   resizeObserver=new ResizeObserver(()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(resize,80);});
@@ -344,8 +338,12 @@ function createRenderer() {
   window.addEventListener('pagehide',cleanup,{once:true});
   synchronizeActivity();
 }
+function drawScene(){
+ renderer.render(scene,camera);
+ if(foregroundScene){renderer.clearDepth();renderer.autoClear=false;renderer.render(foregroundScene,camera);renderer.autoClear=true;}
+}
 function resize(){
-  if(!renderer||!root||!camera||!shouldAnimate())return;
+  if(!renderer||!root||!camera||!isLanding())return;
   const width=Math.max(1,root.clientWidth||window.innerWidth),height=Math.max(1,root.clientHeight||window.innerHeight);
   let dpr=Math.min(window.devicePixelRatio||1,2);
   const pixels=width*height*dpr*dpr;
@@ -356,8 +354,28 @@ function resize(){
   camera.fov=width<600?56:width<900?49:43;
   camera.position.z=width<850?30:26;
   camera.updateProjectionMatrix();
-  scenes.pressCub?.setViewport(width,height);
-  if(firstDraw&&shouldAnimate()){renderer.render(scene,camera);updateScrollCue();}
+  frameMascots(width,height);
+  if(firstDraw&&isLanding()){drawScene();updateScrollCue();}
+}
+function frameMascots(width,height){
+ if(!scenes.pressCub||!scenes.cub)return;
+ camera.updateMatrixWorld(true);
+ const visibleHeight=Math.min(height,window.innerHeight),portrait=width/visibleHeight<.80;
+ function fit(object,cx,bottom,pixelHeight,maxWidth,depth){
+  object.rotation.y=.08;object.scale.setScalar(1);object.position.set(0,0,depth);object.updateMatrixWorld(true);
+  function screenBounds(){const box=new THREE.Box3().setFromObject(object),xs=[],ys=[];
+   for(const x of [box.min.x,box.max.x])for(const y of [box.min.y,box.max.y])for(const z of [box.min.z,box.max.z]){const p=new THREE.Vector3(x,y,z).project(camera);xs.push((p.x*.5+.5)*width);ys.push((.5-p.y*.5)*height);}
+   return {left:Math.min(...xs),right:Math.max(...xs),top:Math.min(...ys),bottom:Math.max(...ys)};
+  }
+  let bounds=screenBounds();object.scale.setScalar(Math.min(pixelHeight/(bounds.bottom-bounds.top),maxWidth/(bounds.right-bounds.left)));
+  const projectAt=(x,y)=>{const ray=new THREE.Vector3(x/width*2-1,1-y/height*2,.5).unproject(camera).sub(camera.position).normalize();return camera.position.clone().addScaledVector(ray,(depth-camera.position.z)/ray.z);};
+  // Correct perspective-projected bounds twice; the head and pencil remain safe.
+  for(let i=0;i<3;i++){object.updateMatrixWorld(true);bounds=screenBounds();const origin=projectAt((bounds.left+bounds.right)/2,bounds.bottom),target=projectAt(cx*width,bottom);object.position.add(target.sub(origin));}
+ }
+ const mainHeight=Math.min(visibleHeight*(portrait?.30:.34),width*(portrait?.56:.31));
+ const floor=visibleHeight-68;
+ fit(scenes.pressCub.root,portrait?.36:.44,floor,mainHeight,width*(portrait?.58:.30),4);
+ fit(scenes.cub.root,portrait?.74:.67,floor-(portrait?mainHeight*.17:6),mainHeight*.62,width*(portrait?.42:.29),-.5);
 }
 function replayCub(){
  if(!renderer||!shouldAnimate())return;
@@ -395,10 +413,12 @@ function updateScrollCue(){
   cubButton.style.top=Math.max(0,Math.min(...ys))+'px';
   cubButton.style.width=(Math.max(...xs)-Math.min(...xs))+'px';
   cubButton.style.height=(Math.max(...ys)-Math.min(...ys))+'px';
+  scrollCue.style.left=Math.max(85,Math.min(root.clientWidth-85,(Math.max(...xs)+Math.min(...xs))/2))+'px';
+  scrollCue.style.bottom=Math.max(12,root.clientHeight-Math.min(root.clientHeight,window.innerHeight)+12)+'px';
  }
  // The hint belongs to the viewport, not to the lion's moving paw.
  // Keep the button centered just above the viewport's safe-area bottom.
- const visible=shouldAnimate();
+ const visible=isLanding()&&!document.hidden;
  scrollCue.style.visibility=visible?'visible':'hidden';
  scrollCue.style.opacity=visible?'1':'0';
 }
@@ -451,7 +471,7 @@ function tick(ms){
   }
   camera.position.x=lerp(camera.position.x,pointer.x*.32*intensity,1-Math.exp(-dt*1.2));
   camera.lookAt(0,6,-30);
-  renderer.render(scene,camera);
+  drawScene();
   frameCount++;updateScrollCue();
   if(cubTime>=INTRO_SECONDS&&!introDone){introDone=true;if(root)root.dataset.ck3dIntroDone='true';}
   queueFrame();

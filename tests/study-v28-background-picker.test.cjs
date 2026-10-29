@@ -14,8 +14,8 @@ test('original study background and the five existing controls are preserved',()
  assert.equal(state.preset,'forest');
  assert.equal(props['--ck17-study-background'],'#244651');
  assert.equal(props['--ck17-study-background-dark'],'#0C2630');
- assert.equal(props['--ck17-bg-saturation'],'0.72');
- assert.equal(props['--ck17-bg-brightness'],'0.92');
+ assert.equal(props['--ck17-bg-saturation'],'1.1');
+ assert.equal(props['--ck17-bg-brightness'],'1.02');
  assert.equal(props['--ck17-bg-hue'],'0deg');
  assert.equal(props['--ck17-brightness'],'1');
  assert.equal(props['--ck17-contrast'],'1');
@@ -45,5 +45,14 @@ test('background change is scoped; brand and palette markup are present',()=>{
  const newCss=css.slice(css.indexOf('/* v28:'),css.indexOf('/* v29'));
  assert.match(newCss,/html body:not\(\[data-ck-v8-tab="landing"\]\)/);
  assert.doesNotMatch(newCss,/\.ck-v7-content|\.ck-v7-board/);
- assert.match(read('sw.js'),/conceptknot-study-v32/);
+ assert.match(read('sw.js'),/conceptknot-study-v33/);
+});
+
+test('new scene defaults migrate stock settings and preserve custom adjustments',()=>{
+ const stock=boot({saturation:72,backgroundBrightness:92});
+ assert.equal(stock.props['--ck17-bg-saturation'],'1.1');
+ assert.equal(stock.props['--ck17-bg-brightness'],'1.02');
+ const custom=boot({saturation:87,backgroundBrightness:96});
+ assert.equal(custom.props['--ck17-bg-saturation'],'0.87');
+ assert.equal(custom.props['--ck17-bg-brightness'],'0.96');
 });

@@ -1,5 +1,5 @@
 /* Screen comfort and compact responsive workspace. */
-:root{--ck17-bg-saturation:.72;--ck17-bg-brightness:.92;--ck17-bg-hue:0deg;--ck17-brightness:1;--ck17-contrast:1}
+:root{--ck17-bg-saturation:1.1;--ck17-bg-brightness:1.02;--ck17-bg-hue:0deg;--ck17-brightness:1;--ck17-contrast:1}
 html{filter:brightness(var(--ck17-brightness)) contrast(var(--ck17-contrast))}
 #ck-v8-ambient{filter:saturate(var(--ck17-bg-saturation)) brightness(var(--ck17-bg-brightness)) hue-rotate(var(--ck17-bg-hue))!important}
 html body #main .quick-card{padding:14px 16px!important;min-height:0!important;gap:6px!important}

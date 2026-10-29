@@ -442,3 +442,11 @@ html[data-ck-theme="dark"] #ck30-analysis-dialog .ck30-analysis-notice{color:#a3
 /* Keep the compact page status anchored across route changes. */
 body .ck4-pager{position:fixed!important;right:12px!important;bottom:calc(env(safe-area-inset-bottom,0px) + 10px)!important;z-index:90!important}
 body .ck4-pager[hidden]{display:none!important}
+
+/* v33: a full-height garden, never a letterboxed panoramic strip. */
+body[data-ck-v8-tab="landing"] #ck-v8-ambient{position:absolute!important;inset:0 0 auto!important;height:max(820px,100svh)!important;min-height:100svh!important}
+body[data-ck-v8-tab="landing"] #ck4-cover{min-height:max(820px,calc(100svh - var(--ck5-nav-height)))!important}
+body[data-ck-v8-tab="landing"] #ck-v8-ambient .ck-3d-canvas{filter:none!important}
+@media(max-width:600px){body[data-ck-v8-tab="landing"] #ck-v8-ambient{height:max(760px,100svh)!important}body[data-ck-v8-tab="landing"] #ck4-cover{min-height:max(760px,calc(100svh - var(--ck5-nav-height)))!important}}
+
+html[data-ck-theme="dark"] body[data-ck-v8-tab="landing"] #ck-v8-ambient .ck-3d-canvas{filter:none!important}
