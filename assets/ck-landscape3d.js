@@ -213,64 +213,46 @@ function trees(){
 }
 
 function appleTree(x,z,size){
- const root=new THREE.Group();root.position.set(x,h(x,z),z);root.scale.setScalar(size);scene.add(root);
- const trunk=mesh(new THREE.CylinderGeometry(.32,.55,4.2,12),pbr(0xa57643));trunk.position.y=2.1;root.add(trunk);
- const g=new THREE.SphereGeometry(1,20,14);
- for(let i=0;i<7;i++){const a=i*Math.PI*2/7;root.add(sphere(g,pbr([0x6cbd36,0x55a92c,0x81c944][i%3]),Math.cos(a)*1.15,4.2+(i%3)*.43,Math.sin(a)*.85,1.45,1.4,1.3));}
- for(let i=0;i<13;i++){const a=i*2.399;const apple=makeApple(THREE,[0xef403c,0x84cf32,0xffcf3a][i%3],.23);apple.position.set(Math.cos(a)*(1.25+(i%2)*.65),3.8+(i%4)*.56,Math.sin(a)*1.6+.25);root.add(apple);}
+ const root=new THREE.Group();root.name='detailed-apple-tree';root.position.set(x,h(x,z),z);root.scale.setScalar(size);scene.add(root);
+ const bark=pbr(0x987043,.94);
+ if(typeof document!=='undefined'){const c=document.createElement('canvas');c.width=128;c.height=128;const ctx=c.getContext('2d');ctx.fillStyle='#888';ctx.fillRect(0,0,128,128);for(let i=0;i<70;i++){ctx.strokeStyle=i%2?'#555':'#bbb';ctx.lineWidth=1+(i%3);ctx.beginPath();const xx=(i*47)%128;ctx.moveTo(xx,0);ctx.bezierCurveTo(xx+7,40,xx-5,85,xx+2,128);ctx.stroke();}const tx=new THREE.CanvasTexture(c);tx.wrapS=tx.wrapT=THREE.RepeatWrapping;tx.repeat.set(2,3);bark.bumpMap=tx;bark.bumpScale=.055;}
+
+ // Tapered trunk and branching silhouette instead of a cylinder under seven balls.
+ const branch=(points,r)=>{const curve=new THREE.CatmullRomCurve3(points.map(p=>new THREE.Vector3(...p)));const g=new THREE.TubeGeometry(curve,12,r,9,false);const v=g.attributes.position;for(let i=0;i<v.count;i++){const taper=1-.55*Math.min(1,Math.max(0,v.getY(i)/6));v.setX(i,v.getX(i)*taper);}g.computeVertexNormals();root.add(mesh(g,bark));};
+ branch([[0,0,0],[.08,1.4,.02],[-.12,2.8,0],[.14,4.0,0],[.1,5.3,-.1]],.32);
+ for(let i=0;i<6;i++){const a=i*2.399;branch([[0,2.2+i*.2,0],[Math.cos(a)*.65,3.1+i*.15,Math.sin(a)*.6],[Math.cos(a)*1.65,4.1+i*.14,Math.sin(a)*1.35]],.12);}
+ // Hundreds of individually oriented, pointed leaves in a rounded canopy.
+ const leaf=new THREE.Shape();leaf.moveTo(0,-.23);leaf.bezierCurveTo(-.22,-.07,-.17,.16,0,.30);leaf.bezierCurveTo(.17,.16,.22,-.07,0,-.23);
+ const geometry=new THREE.ShapeGeometry(leaf,5),leaves=new THREE.InstancedMesh(geometry,pbr(0xffffff,.84,{side:THREE.DoubleSide}),1150);
+ const veinGeo=new THREE.BufferGeometry();veinGeo.setAttribute('position',new THREE.Float32BufferAttribute([-.005,-.23,.005,.005,-.23,.005,-.005,.27,.005,.005,.27,.005],3));veinGeo.setIndex([0,1,2,1,3,2]);veinGeo.computeVertexNormals();
+ const veins=new THREE.InstancedMesh(veinGeo,pbr(0xbed271,.92,{side:THREE.DoubleSide}),1150);
+ const obj=new THREE.Object3D(),col=new THREE.Color();
+ for(let i=0;i<1150;i++){const a=i*2.399,yy=1-2*(i+.5)/1150,r=Math.sqrt(1-yy*yy),jitter=.82+rand()*.26;
+  obj.position.set(Math.cos(a)*r*2.25*jitter,4.65+yy*1.7,Math.sin(a)*r*1.9*jitter);
+  obj.rotation.set((rand()-.5)*1.3,a,(rand()-.5)*1.6);obj.scale.setScalar(.80+rand()*.65);obj.updateMatrix();leaves.setMatrixAt(i,obj.matrix);veins.setMatrixAt(i,obj.matrix);col.setHex([0x62a52e,0x85bd37,0x3d8e2d,0xa0c94d][i%4]);leaves.setColorAt(i,col);
+ }
+ leaves.instanceMatrix.needsUpdate=true;leaves.instanceColor.needsUpdate=true;veins.instanceMatrix.needsUpdate=true;root.add(leaves,veins);
+ // Fruit lies on the visible outer shell, so foliage cannot swallow most apples.
+ for(let i=0;i<24;i++){const a=i*2.399,yy=-.65+(i%6)*.25,r=Math.sqrt(1-yy*yy);const apple=makeApple(THREE,[0xef403c,0x8acb36,0xffd34a][i%3],.29);apple.name='tree-apple';apple.position.set(Math.cos(a)*r*2.3,4.55+yy*1.5,Math.sin(a)*r*2.0);root.add(apple);}
 }
 
-function grass() {
-  const count = QUALITY ? 7900 : 2800;
-  const geometry = new THREE.ConeGeometry(.045,.64,3);
-  geometry.translate(0,.24,0);
-  const mat = pbr(0x328b46,.95,{side:THREE.DoubleSide});
-  const grass = new THREE.InstancedMesh(geometry,mat,count);
-  grass.castShadow = false;grass.receiveShadow = true;
-  const obj=new THREE.Object3D();const col=new THREE.Color();
-  for(let i=0;i<count;i++){
-    const x=(rand()-.5)*190,z=(rand()-.5)*225-42;
-    obj.position.set(x,h(x,z),z);
-    obj.rotation.set((rand()-.5)*.5,rand()*Math.PI*2,(rand()-.5)*.31);
-    const s=.3+rand()*.7;
-    obj.scale.set(s*.7,s*(.5+rand()*.9),s*.7);
-    obj.updateMatrix();grass.setMatrixAt(i,obj.matrix);
-    col.setHex(pastel[Math.floor(rand()*pastel.length)]).multiplyScalar(.84+rand()*.22);
-    grass.setColorAt(i,col);
-  }
-  grass.instanceMatrix.needsUpdate=true;
-  if(grass.instanceColor)grass.instanceColor.needsUpdate=true;
-  grass.frustumCulled=false;
-  scene.add(grass);
+function grass(){
+ // Curved tapered blades in dense near-field tufts, batched into one draw call.
+ const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute([-.045,0,0,.045,0,0,-.025,.25,.025,.025,.25,.025,.045,.51,.09],3));geo.setIndex([0,1,2,1,3,2,2,3,4]);geo.computeVertexNormals();
+ const count=QUALITY?36000:13000,inst=new THREE.InstancedMesh(geo,pbr(0xffffff,.92,{side:THREE.DoubleSide}),count),obj=new THREE.Object3D(),col=new THREE.Color();
+ for(let i=0;i<count;i++){const near=i<count*.7;const x=(rand()-.5)*(near?78:190),z=near?22-rand()*75:-45-rand()*110;obj.position.set(x,h(x,z)+.015,z);obj.rotation.set(0,rand()*Math.PI*2,(rand()-.5)*.35);const scale=.35+rand()*.95;obj.scale.set(scale,scale,scale);obj.updateMatrix();inst.setMatrixAt(i,obj.matrix);col.setHex([0x6ebc2e,0x87c939,0x439b29,0xa0d049,0x5ca62c][i%5]);inst.setColorAt(i,col);}
+ inst.instanceMatrix.needsUpdate=true;inst.instanceColor.needsUpdate=true;scene.add(inst);
 }
-function flowerTexture() {
-  const canvas=document.createElement('canvas');canvas.width=128;canvas.height=128;
-  const ctx=canvas.getContext('2d');
-  ctx.translate(64,64);
-  const white=['#fff5dc','#f8c2d4','#fae69f','#cbe1ff'];
-  for(let i=0;i<5;i++){
-    ctx.save();ctx.rotate(i*Math.PI*2/5);
-    const grad=ctx.createRadialGradient(0,-20,4,0,-22,23);
-    grad.addColorStop(0,'#ffffff');grad.addColorStop(.7,white[i%white.length]);grad.addColorStop(1,'rgba(255,255,255,0)');
-    ctx.fillStyle=grad;ctx.beginPath();ctx.ellipse(0,-21,15,24,0,0,2*Math.PI);ctx.fill();ctx.restore();
-  }
-  ctx.fillStyle='#edac4f';ctx.beginPath();ctx.arc(0,0,8,0,2*Math.PI);ctx.fill();
-  const tx=new THREE.CanvasTexture(canvas);tx.colorSpace=THREE.SRGBColorSpace;
-  return tx;
-}
-function flowers() {
-  const count=QUALITY?1500:390;
-  const positions=new Float32Array(count*3),colors=new Float32Array(count*3),col=new THREE.Color();
-  for(let i=0;i<count;i++){
-    const x=(rand()-.5)*184,z=(rand()-.5)*208-35;
-    positions.set([x,h(x,z)+.19+rand()*.23,z],i*3);
-    col.setHex(flowerColors[Math.floor(rand()*flowerColors.length)]);
-    colors.set([col.r,col.g,col.b],i*3);
-  }
-  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(positions,3));g.setAttribute('color',new THREE.BufferAttribute(colors,3));
-  const m=new THREE.PointsMaterial({size:.47,map:flowerTexture(),transparent:true,alphaTest:.12,depthWrite:false,vertexColors:true,sizeAttenuation:true});
-  const f=new THREE.Points(g,m);f.frustumCulled=false;
-  scene.add(f);
+function flowers(){
+ // Actual petals, yellow centers and stalks replace distant colored points.
+ const n=QUALITY?1050:340,obj=new THREE.Object3D(),stemGeo=new THREE.CylinderGeometry(.014,.022,.30,4),petalGeo=new THREE.SphereGeometry(1,7,5);
+ const petals=new THREE.InstancedMesh(petalGeo,pbr(0xffffff,.87),n*8),centers=new THREE.InstancedMesh(new THREE.SphereGeometry(.065,8,6),pbr(0xffc62f,.86),n),stems=new THREE.InstancedMesh(stemGeo,pbr(0x68a333),n),col=new THREE.Color();
+ for(let i=0;i<n;i++){const near=i<n*.8,x=(rand()-.5)*(near?65:160),z=near?18-rand()*67:-45-rand()*100,y=h(x,z),size=.75+rand()*.8;
+  obj.position.set(x,y+.17,z);obj.rotation.set(0,0,.08);obj.scale.set(1,size,1);obj.updateMatrix();stems.setMatrixAt(i,obj.matrix);
+  obj.position.y=y+.33*size;obj.scale.set(size,size*.5,size);obj.updateMatrix();centers.setMatrixAt(i,obj.matrix);
+  for(let j=0;j<8;j++){const a=j*Math.PI/4;obj.position.set(x+Math.cos(a)*.105*size,y+.32*size,z+Math.sin(a)*.105*size);obj.rotation.set(0,-a,0);obj.scale.set(.13*size,.025*size,.048*size);obj.updateMatrix();const k=i*8+j;petals.setMatrixAt(k,obj.matrix);col.setHex(i%5===0?0xffd647:i%11===0?0xffb2c4:0xfffcf0);petals.setColorAt(k,col);}
+ }
+ petals.instanceColor.needsUpdate=true;for(const group of [petals,centers,stems]){group.instanceMatrix.needsUpdate=true;scene.add(group);}
 }
 function bird(){
  const bird=new THREE.Group(),bx=-5.55,bz=-21.8;

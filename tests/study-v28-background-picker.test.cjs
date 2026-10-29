@@ -45,7 +45,7 @@ test('background change is scoped; brand and palette markup are present',()=>{
  const newCss=css.slice(css.indexOf('/* v28:'),css.indexOf('/* v29'));
  assert.match(newCss,/html body:not\(\[data-ck-v8-tab="landing"\]\)/);
  assert.doesNotMatch(newCss,/\.ck-v7-content|\.ck-v7-board/);
- assert.match(read('sw.js'),/conceptknot-study-v33/);
+ assert.match(read('sw.js'),/conceptknot-study-v34/);
 });
 
 test('new scene defaults migrate stock settings and preserve custom adjustments',()=>{
