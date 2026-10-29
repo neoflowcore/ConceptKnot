@@ -1,7 +1,7 @@
 {
-  "registered": 400,
-  "practiceEligible": 395,
-  "allAccepted": 5,
+  "registered": 800,
+  "practiceEligible": 792,
+  "allAccepted": 8,
   "perYear": [
     {
       "year": 2025,
@@ -37,6 +37,41 @@
       "paperSha256": "2fe3e226deace024223afc58ae0f54e5b9119e5b127347ea8bf8dc074da71dec",
       "answerSha256": "1a7768eacd48ebbad98f21e005d633b76d666298ebeaf12b0702ced65749e9e4",
       "originalUrl": "https://www.q-net.or.kr/cst003.do?artlSeq=5209170&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309"
+    },
+    {
+      "year": 2020,
+      "count": 80,
+      "paperSha256": "7974394dffbcee1f57083fa60b6bcb518908997c0f01e0d86119474e6543cafd",
+      "answerSha256": "18de031be497fa15009184b5ee1b92b830367e9be295fad16f1ebf4b45ffac73",
+      "originalUrl": "https://www.q-net.or.kr/cst003.do?gId=08&gSite=L&id=cst00309"
+    },
+    {
+      "year": 2019,
+      "count": 80,
+      "paperSha256": "cc1dee9d73e0b6bbfbf2058f05fe135392a22b115e3613577f4e7de527c90816",
+      "answerSha256": "2ea4f5882dc1eb97ea124160044c88ecf781cfe62d676d693bcb2abb661416fb",
+      "originalUrl": "https://www.q-net.or.kr/cst003.do?artlSeq=5206494&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00310"
+    },
+    {
+      "year": 2018,
+      "count": 80,
+      "paperSha256": "4d768035802e9eb93d1766d87b6c0eb428eabcd2b6555a3356678af8f4e4c729",
+      "answerSha256": "51ed03958359b75d3e2ba91f6eff7f45b7ad30ed39554824a9efb74573f12265",
+      "originalUrl": "https://www.q-net.or.kr/cst003.do?artlSeq=5204546&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00310"
+    },
+    {
+      "year": 2017,
+      "count": 80,
+      "paperSha256": "27ea7509cded50a8826a5ca3f567997fb203cddb2cc4c0331d379d4a7ff00bbd",
+      "answerSha256": "1dde8cbcddf6534c8ca98d2460b3652e5c259407939a41f65a2f8ff6cf2b9a4d",
+      "originalUrl": "https://www.q-net.or.kr/cst003.do?artlSeq=5202400&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00310"
+    },
+    {
+      "year": 2016,
+      "count": 80,
+      "paperSha256": "ad083044e05e2b39a87f188ddadebd75c097681a0841eb2718971506c33f1b4a",
+      "answerSha256": "d5b07cfa421f0bc5c94312589d9b58bd07e63aa2b495c0ad58a038e25e26511c",
+      "originalUrl": "https://www.q-net.or.kr/cst003.do?artlSeq=5199003&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00310"
     }
   ],
   "answerCheck": {
@@ -56,12 +91,22 @@
     "lowSimilarityVisualChecked": 17
   },
   "sourceAttribution": "한국산업인력공단 Q-Net · 공공누리 제1유형, 전사본 공인패스와 문제지 대조. 해설은 포함하지 않음.",
-  "nextYears": [
-    2020,
-    2019,
-    2018,
-    2017,
-    2016
-  ],
-  "lastUpdated": "2026-10-28"
+  "nextYears": [],
+  "lastUpdated": "2026-10-29",
+  "verificationVersion": "v23",
+  "legacyAddition": {
+    "registered": 400,
+    "answerCellsCompared": 400,
+    "dualExtractionDisagreementsReviewed": 53,
+    "mathRestored": [
+      "2017-23",
+      "2018-7",
+      "2019-10"
+    ],
+    "allAnswerExcluded": [
+      "2019-80",
+      "2016-19",
+      "2016-23"
+    ]
+  }
 }

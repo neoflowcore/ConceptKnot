@@ -228,7 +228,7 @@ window.RECALL_CONTENT = {
 </script>
 <script src="./assets/ck-visual40-v20.js"></script>
 <script src="./assets/ck-mock-v20.js"></script>
-<script src="./assets/ck-exam-drafts-v22.js"></script>
+<script src="./assets/ck-official-legacy-v23.js"></script>
 <script src="./assets/ck-charts-v21.js"></script>
 <script src="./assets/ck-mock-judge-v21.js"></script>
 <script src="./assets/ck-gpu-guard-v21.js" defer></script>
@@ -848,7 +848,7 @@ ${result?`<div class="score-result ${result.score<60?'red':''}"><div class="smal
 <div class="separator"></div><div class="flex" style="gap:7px;flex-wrap:wrap"><button class="btn secondary" data-action="r-exam-analyze">${n}번 문제의 이론 연결 →</button><button class="btn" data-action="exam-grade" ${!key?'disabled title="해당 회차 정답을 먼저 등록해주세요"':''}>${key?'답안 채점하기':'정답 등록 후 채점'}</button><button class="btn secondary" data-action="exam-clear">마킹 초기화</button></div>
 ${graded&&key?`<div class="small muted" style="margin-top:13px">${n}번 최종정답: <strong>${normalKey(key[n-1]).join(' 또는 ')}번</strong> · ${answer!=null?(isCorrect(n,answer)?'맞았습니다':'틀렸습니다'):'미응답'}</div>`:''}
 ${!key?`<div class="callout warn" style="margin-top:13px">${yr}년도 정답은 아직 앱에 입력되지 않았습니다. 공식 정답 PDF를 확인한 뒤 아래에 정답을 등록하면 자동 채점할 수 있습니다. 없는 정답을 추측하지 않습니다.</div><details style="margin-top:13px"><summary class="bold" style="cursor:pointer">정답 80개 직접 등록</summary><p class="small muted">1~80번 순서로 숫자 80개를 공백으로 구분해 입력하세요. 복수정답은 해당 칸에서 2/4처럼 표시할 수 있습니다.</p><textarea id="key-import" class="field" rows="4" placeholder="예: 3 2 5 4 1 ... (총 80개)"></textarea><button class="btn" data-action="key-import" style="margin-top:9px">입력한 80개 정답 저장</button></details>`:''}</section></div>
-<div class="callout warn" style="margin-top:18px"><strong>중요:</strong> 정답은 A형 기준입니다. PDF가 A·B형을 동시에 포함하거나 번호가 다르면 A형 문항에 맞춰 마킹하세요. 2020~2025년만 앱에서 검토한 최종정답으로 자동 채점합니다. 만점 기준 40문항 × 2.5점.</div>${navSource()}`;}
+<div class="callout warn" style="margin-top:18px"><strong>중요:</strong> 정답은 A형 기준입니다. PDF가 A·B형을 동시에 포함하거나 번호가 다르면 A형 문항에 맞춰 마킹하세요. 2016~2025년 A형 최종정답으로 자동 채점합니다. 만점 기준 40문항 × 2.5점.</div>${navSource()}`;}
 function examScore(y,s){const [a,b]=s==='estate'?[1,40]:[41,80];const keys=state.importedKeys[y]||KEYS[y];let correct=0;for(let i=a;i<=b;i++)if(state.answers[`${y}-${i}`]!=null&&normalKey(keys[i-1]).includes(Number(state.answers[`${y}-${i}`])))correct++;return {correct,score:correct*2.5};}
 function renderVenn(){
  const chooser='<div class="ck21-compare-mode" role="group" aria-label="비교 도형 및 차트"><button data-ck21-compare-mode="venn" aria-pressed="'+String(state.ck21CompareMode!=='chart')+'">비교 도형</button><button data-ck21-compare-mode="chart" aria-pressed="'+String(state.ck21CompareMode==='chart')+'">차트·곡선 애니메이션</button></div>';
@@ -1836,7 +1836,7 @@ window.addEventListener('beforeunload',()=>{if(localPdfUrl)URL.revokeObjectURL(l
   renderTyping=function(){
     const c=typingConcept(),items=typingItems(),rec=chalkRecord('practice',c.id),q=typingQuestionData(c);
     const ss=typingStats(rec.text,c.fact,rec.started),length=Array.from(c.fact||'').length,entered=Array.from(rec.text||'').length;
-    const years=[['all','최근 5개년'],...[2025,2024,2023,2022,2021].map(y=>[String(y),y+'년'])];
+    const years=[['all','최근 10개년'],...EXAMS.map(e=>[String(e.year),e.year+'년'])];
     return `<div class="ck-v7-typing" aria-label="타이핑 학습">
       <div class="ck-v7-controls">
         <div class="ck-v7-switch" role="group" aria-label="과목">

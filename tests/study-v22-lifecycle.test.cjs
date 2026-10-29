@@ -37,9 +37,9 @@ test('five inverse-stem sets each contain 80 distinct-source questions and compl
   }
  }
 });
-test('400 legacy drafts remain separate from 400 verified questions and answer memorization',()=>{
+test('archived drafts remain unverified and obsolete runtime bank is empty',()=>{
  const file=JSON.parse(read('data/official-2016-2020-extracted.json')),window={};vm.runInNewContext(read('assets/ck-exam-drafts-v22.js'),{window});
- assert.equal(file.entries.length,400);assert.equal(Object.keys(window.CK22_EXAM_DRAFTS).length,400);
+ assert.equal(file.entries.length,400);assert.equal(Object.keys(window.CK22_EXAM_DRAFTS).length,0);
  for(let year=2016;year<=2020;year++){
   const rows=file.entries.filter(r=>r.year===year);assert.equal(rows.length,80);assert.equal(new Set(rows.map(r=>r.number)).size,80);
   for(const r of rows){assert.equal(r.verified,false);assert.equal(r.correct.length,0);assert.equal(r.options.length,5);assert.ok(r.question.trim());assert.ok(r.options.every(s=>s.trim()));assert.match(r.paperSha256,/^[0-9a-f]{64}$/)}
