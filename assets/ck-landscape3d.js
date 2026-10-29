@@ -23,7 +23,7 @@ const pastel = [0x3c9a55, 0x287a54, 0x76b939, 0x205f49, 0xe7bf47];
 const flowerColors = [0xffc44f, 0xff789b, 0xffe28a, 0x6db9f3, 0xff8753];
 let root, renderer, camera, scene, materialCache, clock, frameId = 0;
 let resizeObserver, last = 0, pointer = {x: 0, y: 0}, elapsed = 0, firstDraw = false;
-let windowFocused=true,lastPaint=0,introDone=false,scrollCue=null;
+let windowFocused=true,lastPaint=0,introDone=false,scrollCue=null,rendererFailed=false;
 let renderTimer=0;
 function queueFrame(){
  if(frameId||renderTimer||!shouldAnimate()||introDone)return;
@@ -296,13 +296,13 @@ function bird() {
 }
 function createRenderer() {
   const host=document.getElementById(HOST_ID);
-  if(!host || QUALITY===0 || REDUCED.matches || !shouldAnimate() || renderer)return;
+  if(!host || QUALITY===0 || REDUCED.matches || !shouldAnimate() || renderer || rendererFailed)return;
   // Fail back to the existing textured SVG. Never hide learning content on error.
   const canvas=document.createElement('canvas');
   canvas.className='ck-3d-canvas';canvas.setAttribute('aria-hidden','true');
   canvas.style.cssText='position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;z-index:0;';
   const opts={canvas,alpha:false,antialias:true,powerPreference:'low-power',stencil:false,depth:true};
-  try{renderer=new THREE.WebGLRenderer(opts);}catch(err){console.info('ConceptKnot uses SVG scenery fallback',err);return;}
+  try{renderer=new THREE.WebGLRenderer(opts);}catch(err){rendererFailed=true;console.info('ConceptKnot uses SVG scenery fallback',err);return;}
   renderer.setClearColor(0x65c6e9,1);
   renderer.outputColorSpace=THREE.SRGBColorSpace;
   renderer.toneMapping=THREE.ACESFilmicToneMapping;
