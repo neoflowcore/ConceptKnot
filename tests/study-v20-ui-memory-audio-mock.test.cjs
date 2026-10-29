@@ -69,7 +69,8 @@ test('one-click full-year audio stays active across tab render, explicit stop re
  const html=read('index.html');
  assert.match(html,/data-tts-official-all/);
  assert.match(html,/id="tts-marathon-mode"/);
- assert.match(html,/ttsPlay\(items,\{continuous:true/);
+ assert.match(html,/ttsPlay\(items,\{continuous,mode/);
+ assert.match(html,/if\(ttsSettings\(\)\.engine==='neural'\)\{neuralSpeak\(items,options\);return\}/);
  assert.match(html,/function render\(\)\{if\(!ttsBatchActive\)ttsStop\(false\)/);
  assert.match(html,/data-tts-stop/);
  assert.match(html,/if\(b\.hasAttribute\('data-tts-official-all'\)\)\{const \[a,z\]=examRange\(\),items=\[\]/);

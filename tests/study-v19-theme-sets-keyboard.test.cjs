@@ -106,10 +106,12 @@ test('keytips and keyboard command scope are explicitly present',()=>{
  assert.match(js,/spatialMove\(letter\)/);
  assert.match(js,/isComposing/);
  assert.match(js,/Alt\+Shift\+WASD/);
+ assert.match(js,/if\(e.key==='Control'\)/);
+ assert.match(js,/if\(mode&&!e.ctrlKey&&!e.altKey&&!e.metaKey\)/);
 });
 test('push does not create CI or installer builds',()=>{
  const config=JSON.parse(read('vercel.json'));
  assert.equal(config.git.deploymentEnabled,false);
  assert.equal(fs.existsSync(path.join(root,'.github/workflows')),false);
- assert.match(read('sw.js'),/conceptknot-study-v19/);
+ assert.match(read('sw.js'),/conceptknot-study-v\d+/);
 });

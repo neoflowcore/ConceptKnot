@@ -1,6 +1,6 @@
 /* ConceptKnot v19: Excel-like keyboard KeyTips and spatial focus.
    All shortcuts are client-only, do not touch typed records or stage state.
-   Alt+digit selects tab; Ctrl+Z/X goes previous/next typing item;
+   Tap Ctrl, release, then digit selects tab; Ctrl+Z/X goes previous/next typing item;
    Ctrl+WASD moves between clickable targets (Alt+Shift+WASD fallback).
 */
 (function(){
@@ -13,7 +13,7 @@
   ['final','정리본']
  ];
  const FOCUSABLE='button:not([disabled]),a[href],input:not([disabled]):not([type="hidden"]),textarea:not([disabled]),select:not([disabled]),[role="button"][tabindex],[role="separator"][tabindex]';
- let mode=false,prefix='',digitTimer=0,altUsed=false,altDown=false,shown=null,refreshScheduled=0;
+ let mode=false,prefix='',digitTimer=0,ctrlUsed=false,ctrlDown=false,shown=null,refreshScheduled=0;
  const view=()=>document.body?.dataset.ckV8Tab||document.querySelector('#main .board-tab.active')?.dataset.go||'home';
  const isEditor=node=>Boolean(node?.closest?.('textarea,input,select,[contenteditable],[role="textbox"]'));
  const printable=key=>/^[0-9]$/.test(key);
@@ -29,7 +29,7 @@
   if(bar)return bar;
   bar=document.createElement('div');bar.id='ck19-keytip-info';
   bar.setAttribute('role','status');bar.setAttribute('aria-live','polite');
-  bar.textContent='Alt+번호: 학습 탭 선택 · 10~13은 숫자를 연속 입력 · Esc: 닫기';
+  bar.textContent='Ctrl을 눌렀다 놓고 번호 입력 · 10~13은 숫자 연속 입력 · Esc: 닫기';
   document.body.append(bar);return bar;
  }
  function highlight(on){
@@ -130,20 +130,26 @@
  }
  function handleKeyboard(e){
   if(e.isComposing||e.key==='Process'||e.keyCode===229)return;
-  if(e.key==='Alt'){
-   altDown=true;altUsed=false;
-   if(!e.repeat&&!e.ctrlKey&&!e.metaKey&&!e.shiftKey){
+  if(e.key==='Control'){
+   ctrlDown=true;ctrlUsed=false;
+   // Show KeyTips when Ctrl is tapped; Ctrl+digit is reserved by browsers,
+   // so release Ctrl before choosing a number.
+   if(!e.repeat&&!e.altKey&&!e.metaKey&&!e.shiftKey&&!isEditor(e.target)){
     e.preventDefault();
     highlight(!mode);
    }
    return;
   }
-  if(altDown&&e.altKey)altUsed=true;
+  if(ctrlDown&&e.ctrlKey){
+   ctrlUsed=true;
+   // A real Ctrl shortcut takes priority (undo, copy, WASD, Enter, etc.).
+   if(mode)highlight(false);
+  }
   if(e.key==='Escape'){
    if(mode){e.preventDefault();highlight(false);return}
    if(shown){clearSpatial();if(isEditor(document.activeElement))document.activeElement.blur();return}
   }
-  if(mode&&!e.ctrlKey&&!e.metaKey){
+  if(mode&&!e.ctrlKey&&!e.altKey&&!e.metaKey){
    if(printable(e.key)){
     e.preventDefault();e.stopImmediatePropagation();digit(e.key);return;
    }
@@ -151,7 +157,7 @@
     e.preventDefault();e.stopImmediatePropagation();jump(1);return;
    }
    if(e.key==='Tab'){highlight(false);return}
-   if(e.key==='Alt')return;
+   if(e.key==='Control')return;
   }
   // Browser Ctrl+W may be reserved for closing a tab, so Alt+Shift+WASD
   // is a second, non-reserved option. No shortcuts while IME is composing.
@@ -179,8 +185,8 @@
   }
  }
  document.addEventListener('keydown',handleKeyboard,true);
- document.addEventListener('keyup',e=>{if(e.key==='Alt'){altDown=false;altUsed=false}},true);
- window.addEventListener('blur',()=>{altDown=false;if(mode)highlight(false)});
+ document.addEventListener('keyup',e=>{if(e.key==='Control'){ctrlDown=false;ctrlUsed=false}},true);
+ window.addEventListener('blur',()=>{ctrlDown=false;if(mode)highlight(false)});
  document.addEventListener('pointerdown',()=>{if(mode)highlight(false);clearSpatial()},true);
  document.addEventListener('focusin',e=>{if(shown&&shown!==e.target)clearSpatial()},true);
  function updateBadges(){
