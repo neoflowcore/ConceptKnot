@@ -448,7 +448,7 @@ function bind(s){
   if(e.target.matches('[data-ck15-color]')){s.color=e.target.value;if(s.second)s.second.color=s.color;}
  });
  if(!s.parent&&typeof ResizeObserver==='function'){
-  const resize=new ResizeObserver(()=>{if(s.host.isConnected&&s.pdf&&s.zoom===1){
+  const resize=new ResizeObserver(()=>{if(s.host?.isConnected&&s.pdf&&s.zoom===1){
    s.baseViewport=null;s.paintToken++;schedulePaint(s,180);
   }});
   resize.observe(scroller);
@@ -460,7 +460,7 @@ function bind(s){
 function attach(){
  attachFrame=0;
  const host=document.querySelector('.ck15-pdf-host');
- if(!host){if(session)session.host=null;return}
+ if(!host){if(session){session.resizeObserver?.disconnect();clearTimeout(session.paintTimer);session.paintToken++;session.host=null;}return}
  if(session?.host===host)return;
  const source=host.dataset.ck15PdfSource,year=Number(host.dataset.ck15PdfYear)||2025;
  const file=pendingYear===year?pendingFile:null;

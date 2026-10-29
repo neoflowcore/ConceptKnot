@@ -48,3 +48,13 @@ test('400 legacy drafts remain separate from 400 verified questions and answer m
  const html=read('index.html');const speech=html.slice(html.indexOf('function officialEntry'),html.indexOf('function practiceSpeech'));
  assert.ok(!speech.includes('CK22_EXAM_DRAFTS'));
 });
+test('PDF resize callback tolerates detached host and schedules only connected documents',()=>{
+ const source=read('assets/ck-pdf-workspace-v15.js');
+ const callback=source.slice(source.indexOf('const resize=new ResizeObserver('),source.indexOf('  resize.observe(scroller);'))+'resize.callback();';
+ const s={host:null,pdf:{},zoom:1,paintToken:0};let paints=0;
+ const run=()=>vm.runInNewContext(callback,{s,schedulePaint:()=>paints++,ResizeObserver:class{constructor(callback){this.callback=callback}}});
+ assert.doesNotThrow(run);assert.equal(paints,0);
+ s.host={isConnected:false};run();assert.equal(paints,0);
+ s.host={isConnected:true};run();assert.equal(paints,1);
+ assert.match(source,/if\(!host\)\{if\(session\)\{session.resizeObserver\?\.disconnect\(\)/);
+});
