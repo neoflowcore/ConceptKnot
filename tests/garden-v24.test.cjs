@@ -40,7 +40,7 @@ test('4K keeps native CSS resolution instead of stretching a 1.8MP image',()=>{
 });
 test('centered smooth cub presses down and holds final scroll cue pose',()=>{
  let cub=fs.readFileSync(__dirname+'/../assets/ck-pointing-cub-v16.js','utf8');
- assert.match(cub,/x=0,z=-11.4/);assert.match(cub,/SphereGeometry\(1,32,24\)/);
+ assert.match(cub,/x=0,z=-1.8/);assert.match(cub,/setViewport/);assert.match(cub,/SphereGeometry\(1,32,24\)/);
  assert.match(cub,/seconds\/3.6/);assert.match(cub,/getPush:/);
  assert.match(source,/antialias:true,powerPreference:'low-power'/);
  assert.match(source,/shadowMap.enabled=false/);

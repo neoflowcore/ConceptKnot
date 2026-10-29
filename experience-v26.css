@@ -112,3 +112,87 @@ html[data-ck-theme="dark"] #ck17-display-dialog input[name="backgroundCustomHex"
  #ck17-display-dialog .ck17-bg-choices{gap:6px}
  #ck17-display-dialog button.ck17-bg-choice{gap:5px;padding:5px;font-size:11px}
 }
+
+/* v29 — restore three-slot mock-exam row; responsive picker sits beside
+   the question unless the study pane genuinely cannot fit both cards.
+   No learning surface/palette colors are changed. */
+#main .ck-v7-content .quiz-layout.ck20-quiz-layout{
+ display:grid!important;gap:10px!important;align-items:start!important;
+ min-width:0!important;max-width:100%!important;
+}
+#main .ck-v7-content .quiz-layout.ck20-quiz-layout:not(.ck16-split-grid){
+ grid-template-columns:minmax(0,1fr) minmax(168px,28%)!important;
+}
+#main .ck-v7-content .quiz-layout.ck20-quiz-layout.ck16-split-grid{
+ grid-template-columns:minmax(0,var(--ck16-left,72%)) 12px minmax(0,1fr)!important;
+ column-gap:0!important;
+}
+#main .ck-v7-content .ck20-quiz-layout>.ck20-quiz-main{
+ grid-column:1!important;grid-row:1!important;
+ min-width:0!important;max-width:100%!important;
+}
+#main .ck-v7-content .ck20-quiz-layout.ck16-split-grid>[data-ck16-split]{
+ grid-column:2!important;grid-row:1!important;
+ align-self:stretch!important;min-height:100%!important;
+}
+#main .ck-v7-content .ck20-quiz-layout>.ck20-quiz-picker{
+ grid-column:2!important;grid-row:1!important;
+ min-width:0!important;max-width:100%!important;
+ position:sticky!important;
+ top:calc(var(--ck5-nav-height,53px) + 12px)!important;
+ max-height:calc(100dvh - var(--ck5-nav-height,53px) - 22px)!important;
+ overflow-y:auto!important;overflow-x:hidden!important;
+}
+#main .ck-v7-content .ck20-quiz-layout.ck16-split-grid>.ck20-quiz-picker{
+ grid-column:3!important;grid-row:1!important;
+}
+#main .ck-v7-content .ck20-quiz-layout .ck20-quiz-picker .quiz-dots{
+ grid-template-columns:repeat(auto-fit,minmax(min(100%,28px),1fr))!important;
+}
+/* A single viewport-relative center anchor for BOTH draggable dividers.
+   The outer rail has additional tools underneath the first drag grip. */
+@media(min-width:851px){
+ #main .ck-v7-stage .ck6-center-rail .ck6-rail-controls{
+  position:sticky!important;
+  top:max(69px,calc(50dvh - 16px))!important;
+  margin-top:0!important;
+  justify-content:flex-start!important;
+ }
+ #main .ck-v7-stage .ck6-center-rail .ck-v7-divider{
+  height:32px!important;min-height:32px!important;
+ }
+ #main .ck-v7-content .ck16-column-divider .ck16-grip{
+  position:sticky!important;
+  top:max(69px,calc(50dvh - 16px))!important;
+  width:20px!important;height:32px!important;
+  transform:translateX(-4px)!important;
+  line-height:1!important;
+ }
+}
+/* A narrow workspace (including a compressed board split) needs one
+   full-width study question above a full-width answer navigator. */
+@container (max-width:620px){
+ #main .ck-v7-content .quiz-layout.ck20-quiz-layout,
+ #main .ck-v7-content .quiz-layout.ck20-quiz-layout.ck16-split-grid{
+  grid-template-columns:minmax(0,1fr)!important;
+  column-gap:0!important;row-gap:12px!important;
+ }
+ #main .ck-v7-content .ck20-quiz-layout>[data-ck16-split]{display:none!important}
+ #main .ck-v7-content .ck20-quiz-layout>.ck20-quiz-picker,
+ #main .ck-v7-content .ck20-quiz-layout.ck16-split-grid>.ck20-quiz-picker{
+  grid-column:1!important;grid-row:2!important;
+  position:static!important;max-height:none!important;overflow:visible!important;
+ }
+}
+@media(max-width:850px){
+ #main .ck-v7-content .quiz-layout.ck20-quiz-layout,
+ #main .ck-v7-content .quiz-layout.ck20-quiz-layout.ck16-split-grid{
+  grid-template-columns:minmax(0,1fr)!important;
+ }
+ #main .ck-v7-content .ck20-quiz-layout>[data-ck16-split]{display:none!important}
+ #main .ck-v7-content .ck20-quiz-layout>.ck20-quiz-picker,
+ #main .ck-v7-content .ck20-quiz-layout.ck16-split-grid>.ck20-quiz-picker{
+  grid-column:1!important;grid-row:2!important;
+  position:static!important;max-height:none!important;overflow:visible!important;
+ }
+}

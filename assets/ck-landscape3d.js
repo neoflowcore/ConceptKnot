@@ -356,6 +356,7 @@ function resize(){
   camera.fov=width<600?56:width<900?49:43;
   camera.position.z=width<850?30:26;
   camera.updateProjectionMatrix();
+  scenes.pressCub?.setViewport(width,height);
   if(firstDraw&&shouldAnimate()){renderer.render(scene,camera);updateScrollCue();}
 }
 function replayCub(){
@@ -374,7 +375,7 @@ function createScrollCue(host){
  scrollCue=document.createElement('button');
  scrollCue.type='button';scrollCue.textContent='SCROLL DOWN ↓';
  scrollCue.setAttribute('aria-label','아래로 스크롤하여 학습 시작');
- scrollCue.style.cssText='position:absolute;z-index:3;pointer-events:auto;white-space:nowrap;border:1px solid rgba(255,255,255,.5);border-radius:99px;padding:9px 13px;background:rgba(238,247,222,.86);color:#284b38;font:600 clamp(10px,1vw,13px)/1.2 Pretendard,sans-serif;letter-spacing:.12em;opacity:0;visibility:hidden;cursor:pointer;box-shadow:0 3px 14px #244b3320;';
+ scrollCue.style.cssText='position:absolute;z-index:3;pointer-events:auto;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + clamp(18px,3.2vh,40px));transform:translateX(-50%);white-space:nowrap;border:1px solid rgba(255,255,255,.5);border-radius:99px;padding:9px 13px;background:rgba(238,247,222,.86);color:#284b38;font:600 clamp(10px,1vw,13px)/1.2 Pretendard,sans-serif;letter-spacing:.12em;opacity:0;visibility:hidden;cursor:pointer;box-shadow:0 3px 14px #244b3320;';
  scrollCue.addEventListener('click',()=>{
   const target=document.querySelector('#main [data-go="home"]');
   if(target)target.click();else window.scrollBy({top:window.innerHeight,behavior:REDUCED.matches?'instant':'smooth'});
@@ -395,14 +396,11 @@ function updateScrollCue(){
   cubButton.style.width=(Math.max(...xs)-Math.min(...xs))+'px';
   cubButton.style.height=(Math.max(...ys)-Math.min(...ys))+'px';
  }
- const point=scenes.pressCub.root.localToWorld(new THREE.Vector3(1.7,1.2,0)).project(camera);
- const width=root.clientWidth,height=root.clientHeight;
- const x=(point.x*.5+.5)*width,y=(-point.y*.5+.5)*height;
- const visible=shouldAnimate()&&scenes.pressCub.getPush()>.4&&point.z<1;
+ // The hint belongs to the viewport, not to the lion's moving paw.
+ // Keep the button centered just above the viewport's safe-area bottom.
+ const visible=shouldAnimate();
  scrollCue.style.visibility=visible?'visible':'hidden';
- scrollCue.style.opacity=visible?String(Math.min(1,(scenes.pressCub.getPush()-.4)/.4)):'0';
- scrollCue.style.left=Math.max(8,Math.min(width-scrollCue.offsetWidth-8,x))+'px';
- scrollCue.style.top=Math.max(8,Math.min(height-45,y))+'px';
+ scrollCue.style.opacity=visible?'1':'0';
 }
 function onPointer(e){
   if(e.pointerType!=='mouse'||!shouldAnimate())return;

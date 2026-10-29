@@ -15,12 +15,18 @@ function save(k,val){try{localStorage.setItem(PREFIX+k,String(val))}catch(e){}}
 function childrenOf(el){
  return Array.from(el.children).filter(child=>child.nodeType===1&&!child.matches('[data-ck16-split]'));
 }
-function defaultWidth(layout){return layout.matches('.exam-layout')?56:layout.matches('.dashboard-grid')?59:50}
+function defaultWidth(layout){return layout.matches('.quiz-layout')?72:layout.matches('.exam-layout')?56:layout.matches('.dashboard-grid')?59:50}
 function keyFor(layout,index){
  return (document.body.dataset.ckV8Tab||'home')+':'+(layout.dataset.ck16SplitGrid||Array.from(layout.classList).find(v=>v.endsWith('-grid')||v.endsWith('-layout'))||'cards')+':'+index;
 }
 function limits(el){
  const w=el.getBoundingClientRect().width;
+ if(el.matches('.quiz-layout')){
+  // Keep questions readable and reserve meaningful width for the number picker.
+  const lo=Math.max(40,Math.min(68,320/Math.max(1,w)*100));
+  const hi=Math.min(82,Math.max(lo,(w-166)/Math.max(1,w)*100));
+  return {lo,hi};
+ }
  const other=el.matches('.exam-layout')?90:65;
  const lo=Math.max(5,Math.min(10,90/w*100));
  const hi=Math.min(95,Math.max(85,(w-other-12)/w*100));
@@ -39,6 +45,8 @@ function eligible(layout){
  const nodes=childrenOf(layout);
  if(nodes.length!==2)return false;
  if(window.innerWidth<MIN_DESKTOP)return false;
+ // Do not inject a third grid child into an already compressed quiz pane.
+ if(layout.matches('.quiz-layout')&&layout.getBoundingClientRect().width<670)return false;
  if(getComputedStyle(layout).display!=='grid')return false;
  const a=nodes[0].getBoundingClientRect(),b=nodes[1].getBoundingClientRect();
  return a.width>90&&b.width>90&&b.left>a.left+35&&Math.abs(b.top-a.top)<18;

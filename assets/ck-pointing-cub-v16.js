@@ -1,7 +1,16 @@
 // Original second baby lion: presses a short, red, downward-pointing pencil.
 export function buildPencilCub(THREE,scene,heightAt,quality=1){
- const root=new THREE.Group(),x=0,z=-11.4;
- root.position.set(x,heightAt(x,z)+.10,z);root.rotation.y=.12;root.scale.setScalar(.92);scene.add(root);
+ const root=new THREE.Group(),x=0,z=-1.8;
+ root.position.set(x,heightAt(x,z)+.10,z);root.rotation.y=.12;root.scale.setScalar(1.42);scene.add(root);
+ // Move forward in perspective rather than faking screen-space enlargement.
+ // Portrait framing keeps the head above the bottom navigation cue.
+ function setViewport(width,height){
+  const portrait=height>width*1.12;
+  const depth=portrait?.4:width<900?-.7:-1.8;
+  const scale=portrait?1.28:width<900?1.34:1.42;
+  root.position.set(x,heightAt(x,depth)+.10,depth);
+  root.scale.setScalar(scale);
+ }
  const geometry=new THREE.SphereGeometry(1,32,24);
  const mat=(color,roughness=.85)=>new THREE.MeshLambertMaterial({color});
  const tan=mat(0xdaa46a),lit=mat(0xefbf85),cream=mat(0xf9ddad),
@@ -84,5 +93,5 @@ export function buildPencilCub(THREE,scene,heightAt,quality=1){
   ring.material.opacity=.23+.38*push;
  }
  animate(0);
- return {root,head,stub,animate,expression:'smiling-freckled-pencil-cub',pencilPointingDown:true,getPush:()=>Math.max(0,Math.min(1,(1.17-stub.position.y)/.14))};
+ return {root,head,stub,animate,setViewport,expression:'smiling-freckled-pencil-cub',pencilPointingDown:true,getPush:()=>Math.max(0,Math.min(1,(1.17-stub.position.y)/.14))};
 }
