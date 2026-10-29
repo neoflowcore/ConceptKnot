@@ -146,6 +146,7 @@ function updateKeys(){
 function updateDock(stage){
  if(!stage)return;
  stage.classList.toggle('ck31-board-bottom',state.ck31BoardBottom===true);
+ stage.classList.toggle('ck32-board-top',state.ck32BoardTop===true);
  stage.classList.toggle('ck31-board-collapsed',state.ck31BoardCollapsed===true);
  const b=stage.querySelector('[data-ck31-board-bottom]'),c=stage.querySelector('[data-ck31-board-collapse]');
  if(b)b.setAttribute('aria-pressed',String(state.ck31BoardBottom===true));
@@ -167,14 +168,17 @@ document.addEventListener('click',e=>{
   el?.querySelector('textarea')?.focus({preventScroll:true});
   return;
  }
- const control=e.target.closest?.('[data-ck31-board-bottom],[data-ck31-board-collapse]');
+ const control=e.target.closest?.('[data-ck31-board-bottom],[data-ck31-board-collapse],[data-ck32-board-top]');
  if(!control)return;
  e.preventDefault();e.stopImmediatePropagation();
  const stage=control.closest('.ck-v7-stage');
  if(!stage)return;
  stage.querySelector('.ck-v7-board')?.__ckV7Finish?.();
- if(control.hasAttribute('data-ck31-board-bottom'))state.ck31BoardBottom=!state.ck31BoardBottom;
+ if(control.hasAttribute('data-ck31-board-bottom')){state.ck31BoardBottom=!state.ck31BoardBottom;state.ck32BoardTop=false;state.ck31BoardCollapsed=false;}
+ else if(control.hasAttribute('data-ck32-board-top')){state.ck32BoardTop=!state.ck32BoardTop;state.ck31BoardBottom=false;state.ck31BoardCollapsed=false;}
  else state.ck31BoardCollapsed=!state.ck31BoardCollapsed;
+ const top=stage.querySelector('[data-ck32-board-top]');
+ if(top)top.setAttribute('aria-pressed',String(state.ck32BoardTop===true));
  updateDock(stage);save();
 },true);
 document.addEventListener('keydown',e=>{

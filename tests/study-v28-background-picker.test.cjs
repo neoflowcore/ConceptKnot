@@ -42,8 +42,8 @@ test('background change is scoped; brand and palette markup are present',()=>{
  assert.match(js,/data-background-toggle/);
  assert.match(js,/type="color" name="backgroundCustomPicker"/);
  assert.match(js,/type="text" name="backgroundCustomHex"/);
- const newCss=css.slice(css.indexOf('/* v28:'));
+ const newCss=css.slice(css.indexOf('/* v28:'),css.indexOf('/* v29'));
  assert.match(newCss,/html body:not\(\[data-ck-v8-tab="landing"\]\)/);
  assert.doesNotMatch(newCss,/\.ck-v7-content|\.ck-v7-board/);
- assert.match(read('sw.js'),/conceptknot-study-v28-background-picker/);
+ assert.match(read('sw.js'),/conceptknot-study-v32/);
 });

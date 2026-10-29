@@ -14,9 +14,14 @@ function harness(settings={}){
   typingGhost(){},typingStats(){return{hit:0,seconds:0,cpm:0,accuracy:100}},typingFeedback(){},
   typingConcept:()=>source,chalkRecord:()=>record,typingItems:()=>[source],chalkState:()=>({practice:{[source.id]:record}}),
   save(){},typingHistoryHtml:()=>'',esc:s=>String(s),clock:s=>String(s)};
- vm.runInNewContext(read('assets/ck-typing-layout-v31.js'),globals);
+ const html=read('index.html');
+ const deployed=html.split('/* CK32 typing extension: executes inside the study engine lexical scope. */\n')[1]?.split('\nrender();setInterval(timerTick,500);')[0];
+ assert.ok(deployed,'typing extension must execute within study engine scope');
+ assert.equal(deployed.trim(),read('assets/ck-typing-layout-v31.js').trim());
+ assert.doesNotMatch(html,/<script src="[^"]*ck-typing-layout-v31/);
+ vm.runInNewContext(deployed,globals);
  function fire(key){let prevented=0;for(const fn of listeners.keydown||[])fn({key,keyCode:13,target:field,isComposing:false,ctrlKey:false,altKey:false,metaKey:false,shiftKey:false,preventDefault(){prevented++},stopImmediatePropagation(){}});return prevented}
- return {state,record,field,source,api:window.CK31Typing,fire,mirror};
+ return {state,record,field,source,api:window.CK31Typing,fire,mirror,listeners};
 }
 test('default-on Space and Enter match and optional-off skips work',()=>{
  const t=harness(),m=t.api.mapText;
@@ -65,5 +70,19 @@ test('source scripts parse without installed toolchain',()=>{
  const html=read('index.html');
  for(const m of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))new vm.Script(m[1]);
  for(const f of ['assets/ck-typing-layout-v31.js','assets/ck-shortcuts-v19.js','assets/ck-navigation-v5.js','sw.js'])new vm.Script(read(f));
- assert.match(read('sw.js'),/conceptknot-study-v31/);
+ assert.match(read('sw.js'),/conceptknot-study-v32/);
+});
+
+test('deployed click listeners toggle input rules and move the existing board in four directions',()=>{
+ const t=harness(),classes=new Set();
+ const stage={classList:{toggle(k,on){on?classes.add(k):classes.delete(k)}},querySelector(){return null}};
+ function click(attr,value){const control={dataset:{ck31Typekey:value},hasAttribute:k=>k===attr,closest:()=>stage};
+  for(const fn of t.listeners.click||[])fn({target:{closest:sel=>sel.includes('['+attr+']')?control:null},preventDefault(){},stopImmediatePropagation(){}});}
+ click('data-ck31-typekey','enter');assert.equal(t.state.ck31EnterRequired,false);
+ click('data-ck31-typekey','space');assert.equal(t.state.ck31SpaceRequired,false);
+ click('data-ck31-board-bottom');assert.equal(classes.has('ck31-board-bottom'),true);
+ click('data-ck32-board-top');assert.equal(classes.has('ck32-board-top'),true);assert.equal(classes.has('ck31-board-bottom'),false);
+ click('data-ck31-board-collapse');assert.equal(classes.has('ck31-board-collapsed'),true);
+ click('data-ck31-board-collapse');assert.equal(classes.has('ck31-board-collapsed'),false);
+ click('data-ck32-board-top');assert.equal(classes.has('ck32-board-top'),false);
 });

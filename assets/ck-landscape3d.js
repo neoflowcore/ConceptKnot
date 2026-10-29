@@ -375,7 +375,7 @@ function createScrollCue(host){
  scrollCue=document.createElement('button');
  scrollCue.type='button';scrollCue.textContent='SCROLL DOWN ↓';
  scrollCue.setAttribute('aria-label','아래로 스크롤하여 학습 시작');
- scrollCue.style.cssText='position:absolute;z-index:3;pointer-events:auto;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + clamp(18px,3.2vh,40px));transform:translateX(-50%);white-space:nowrap;border:1px solid rgba(255,255,255,.5);border-radius:99px;padding:9px 13px;background:rgba(238,247,222,.86);color:#284b38;font:600 clamp(10px,1vw,13px)/1.2 Pretendard,sans-serif;letter-spacing:.12em;opacity:0;visibility:hidden;cursor:pointer;box-shadow:0 3px 14px #244b3320;';
+ scrollCue.style.cssText='position:absolute;z-index:8;pointer-events:auto;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);transform:translateX(-50%);white-space:nowrap;border:1px solid rgba(255,255,255,.5);border-radius:99px;padding:9px 13px;background:rgba(238,247,222,.86);color:#284b38;font:600 clamp(10px,1vw,13px)/1.2 Pretendard,sans-serif;letter-spacing:.12em;opacity:0;visibility:hidden;cursor:pointer;box-shadow:0 3px 14px #244b3320;';
  scrollCue.addEventListener('click',()=>{
   const target=document.querySelector('#main [data-go="home"]');
   if(target)target.click();else window.scrollBy({top:window.innerHeight,behavior:REDUCED.matches?'instant':'smooth'});

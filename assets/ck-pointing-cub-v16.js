@@ -1,13 +1,13 @@
 // Original second baby lion: presses a short, red, downward-pointing pencil.
 export function buildPencilCub(THREE,scene,heightAt,quality=1){
- const root=new THREE.Group(),x=0,z=-1.8;
- root.position.set(x,heightAt(x,z)+.10,z);root.rotation.y=.12;root.scale.setScalar(1.42);scene.add(root);
+ const root=new THREE.Group(),x=0,z=1.2;
+ root.position.set(x,heightAt(x,z)+.10,z);root.rotation.y=.12;root.scale.setScalar(1.72);scene.add(root);
  // Move forward in perspective rather than faking screen-space enlargement.
  // Portrait framing keeps the head above the bottom navigation cue.
  function setViewport(width,height){
   const portrait=height>width*1.12;
-  const depth=portrait?.4:width<900?-.7:-1.8;
-  const scale=portrait?1.28:width<900?1.34:1.42;
+  const depth=portrait?1.8:width<900?1.5:1.2;
+  const scale=portrait?1.42:width<900?1.56:1.72;
   root.position.set(x,heightAt(x,depth)+.10,depth);
   root.scale.setScalar(scale);
  }

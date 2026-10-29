@@ -134,9 +134,9 @@
    ctrlDown=true;ctrlUsed=false;
    // Show KeyTips when Ctrl is tapped; Ctrl+digit is reserved by browsers,
    // so release Ctrl before choosing a number.
-   if(!e.repeat&&!e.altKey&&!e.metaKey&&!e.shiftKey&&!isEditor(e.target)){
+   if(!e.repeat&&!e.altKey&&!e.metaKey&&!e.shiftKey){
     e.preventDefault();
-    highlight(!mode);
+    installBadges();highlight(!mode);
    }
    return;
   }

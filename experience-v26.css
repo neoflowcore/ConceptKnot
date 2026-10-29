@@ -407,3 +407,38 @@ html[data-ck-theme="dark"] #ck30-analysis-dialog .ck30-analysis-notice{color:#a3
 }
 
 #main .ck-v7-stage .ck6-center-rail .ck31-board-option::after{content:none!important;pointer-events:none!important}
+
+/* Above-content docking shares the same persisted DOM as below docking. */
+#main .board-stage.ck-v7-stage.ck32-board-top:not(.ck31-board-collapsed),
+#main .board-stage.ck-v7-stage.is-home.ck32-board-top:not(.ck31-board-collapsed),
+#main .board-stage.ck-v7-stage.ck6-swapped.ck32-board-top:not(.ck31-board-collapsed){
+ display:grid!important;
+ grid-template-columns:minmax(0,1fr) 30px!important;
+ grid-template-rows:auto auto!important;
+ column-gap:var(--ck6-gap,8px)!important;row-gap:12px!important;
+ align-items:start!important;
+}
+#main .ck-v7-stage.ck32-board-top:not(.ck31-board-collapsed)>.ck-v7-content{
+ display:block!important;grid-column:1!important;grid-row:2!important;
+ width:auto!important;min-width:0!important;
+}
+#main .ck-v7-stage.ck32-board-top:not(.ck31-board-collapsed)>.ck-v7-board-shell{
+ display:block;grid-column:1!important;grid-row:1!important;
+ width:100%!important;min-width:0!important;
+}
+#main .ck-v7-stage.ck32-board-top:not(.ck31-board-collapsed)>.ck6-center-rail{
+ grid-column:2!important;grid-row:1 / span 2!important;align-self:stretch!important;
+ min-height:120px!important;
+}
+#main .ck-v7-stage.ck32-board-top:not(.ck31-board-collapsed) .ck-v7-board:not(.ck9-spen-fullscreen){
+ position:relative!important;top:auto!important;min-height:270px!important;
+ height:calc(clamp(285px,42svh,550px) + var(--ck21-board-extend,0px))!important;
+ max-height:none!important;width:100%!important;
+}
+#main .ck-v7-stage.ck32-board-top:not(.ck31-board-collapsed) .ck-v7-writing-surface{min-height:125px!important}
+
+#main .ck-v7-stage.ck31-board-collapsed>.ck-v7-board-shell{display:none!important}
+
+/* Keep the compact page status anchored across route changes. */
+body .ck4-pager{position:fixed!important;right:12px!important;bottom:calc(env(safe-area-inset-bottom,0px) + 10px)!important;z-index:90!important}
+body .ck4-pager[hidden]{display:none!important}

@@ -67,7 +67,7 @@ function backgroundControls(){
  const buttons=Object.entries(presets).map(([id,data])=>
   '<button type="button" class="ck17-bg-choice" data-background-preset="'+id+'" aria-pressed="false"><span class="ck17-bg-swatch" aria-hidden="true" style="--ck17-swatch:'+data.color+'"></span>'+data.label+'</button>'
  ).join('');
- return '<section id="ck17-background-panel" class="ck17-background-panel" aria-label="학습 화면 바탕색" hidden>'+
+ return '<section id="ck17-background-panel" class="ck17-background-panel" aria-label="학습 화면 바탕색">'+
  '<p class="ck17-bg-help">학습 탭의 바깥 배경만 변경합니다. 학습 카드·칠판 색상은 그대로 유지됩니다.</p>'+
  '<div class="ck17-bg-choices" role="group" aria-label="바탕색 선택">'+buttons+
  '<button type="button" class="ck17-bg-choice" data-background-preset="custom" aria-pressed="false"><span class="ck17-bg-custom-swatch" aria-hidden="true"></span>사용자 지정</button></div>'+
@@ -92,7 +92,7 @@ function ensure(){
  if(dialog)return dialog;
  dialog=document.createElement('dialog');dialog.id='ck17-display-dialog';dialog.setAttribute('aria-labelledby','ck17-display-title');
  dialog.innerHTML='<header><h2 id="ck17-display-title">화면 편안함</h2><div class="ck17-header-actions">'+
- '<button type="button" data-background-toggle class="ck17-bg-toggle" aria-expanded="false" aria-controls="ck17-background-panel" title="학습 바탕색 변경"><span class="ck17-bg-current" aria-hidden="true"></span>바탕색</button>'+
+ '<button type="button" data-background-toggle class="ck17-bg-toggle" aria-expanded="true" aria-controls="ck17-background-panel" title="학습 바탕색 변경"><span class="ck17-bg-current" aria-hidden="true"></span>바탕색</button>'+
  '<button type="button" data-close aria-label="화면 설정 닫기">×</button></div></header>'+
  backgroundControls()+
  fields.map(([id,label,min,max,def,unit],i)=>(i===0?'<h3>아기사자 바탕화면</h3>':i===3?'<h3>홈페이지 전체</h3>':'')+
