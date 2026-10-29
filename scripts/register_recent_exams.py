@@ -4,7 +4,7 @@ Use cache in /tmp/ck-exams to avoid repeat requests. Explicitly keeps original-s
 """
 from pathlib import Path
 from lxml import html
-import concurrent.futures,urllib.request,json,re,time,hashlib
+import concurrent.futures,urllib.request,json,re,time,hashlib,argparse
 ROOT=Path(__file__).resolve().parents[1]
 CACHE=Path('/tmp/ck-exams');CACHE.mkdir(exist_ok=True)
 S=(ROOT/'index.html').read_text()
@@ -41,14 +41,15 @@ def register(job):
  return entry
 
 if __name__=='__main__':
- jobs=[(y,s,n) for y in range(2025,2020,-1) for s in ['budongsan','minbeop'] for n in range(1,41)]
+ parser=argparse.ArgumentParser();parser.add_argument('--start',type=int,default=2021);parser.add_argument('--end',type=int,default=2025);parser.add_argument('--workers',type=int,default=5);parser.add_argument('--output',default='data/recent-5-draft.json');args=parser.parse_args()
+ jobs=[(y,s,n) for y in range(args.end,args.start-1,-1) for s in ['budongsan','minbeop'] for n in range(1,41)]
  entries=[];errors=[]
- with concurrent.futures.ThreadPoolExecutor(max_workers=5) as pool:
+ with concurrent.futures.ThreadPoolExecutor(max_workers=max(1,min(args.workers,16))) as pool:
   fs={pool.submit(register,j):j for j in jobs}
   for f in concurrent.futures.as_completed(fs):
    try:entries.append(f.result())
    except Exception as e:errors.append({'job':fs[f],'error':str(e)})
    if (len(entries)+len(errors))%40==0:print('Fetched',len(entries),'errors',len(errors),flush=True)
  entries.sort(key=lambda e:(-e['year'],e['number']))
- (ROOT/'data/recent-5-draft.json').write_text(json.dumps({'entries':entries,'errors':errors},ensure_ascii=False,indent=2))
+ (ROOT/args.output).write_text(json.dumps({'entries':entries,'errors':errors},ensure_ascii=False,indent=2))
  print('DONE',len(entries),'errors',len(errors),flush=True)

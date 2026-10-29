@@ -1,29 +1,41 @@
-/* v21 follow-up: transform official-answer recognition into true/false judgment.
- * We deliberately ask about answer-key acceptance, NOT legal correctness of every
- * distractor, because "best answer" examinations can contain conditionally true text.
+/* Five 80-question inverse-stem practice sets from verified 2021–2025 papers.
+ * Preserve all conditions, reverse only an unambiguous right/wrong stem, and
+ * ask for the combination of the four complementary options. No answer-key trivia.
+ * Exclude best-answer, multiple/all-correct, diagrams and existing combination stems.
  */
 (function(){
 'use strict';
-const cache=new Map();
+const cache=new Map(),letters=['A','B','C','D','E'];
+const pattern=/(옳지 않은 것은|옳은 것은|틀린 것은|적절하지 않은 것은)\?/;
+function eligible(r){return r?.verified===true&&r.year>=2021&&r.year<=2025&&r.correct?.length===1&&r.options?.length===5&&!r.diagrams?.length&&pattern.test(r.question)&&!/가장|모두 고른/.test(r.question)}
 function build(set,subject,records){
- const source=window.CK20_MOCK?.build(set,subject,records)||[];
- const key=set+'/'+subject;
- const saved=cache.get(key);if(saved?.original===source)return saved.list;
- const list=source.map((q,i)=>{
-  const rand=((i*17+set*11+q.sourceNumber*3)%5);
-  const pick=rand+1,wasRight=Array.isArray(q.correct)?q.correct.includes(pick):q.ok===pick;
-  const words=q.a[pick-1];
-  return Object.freeze({
-   id:'judge-'+q.id,s:q.s,set:q.set,sourceYear:q.sourceYear,sourceNumber:q.sourceNumber,
-   topic:q.sourceYear+'년 '+q.sourceNumber+'번 · 정답 선지 판정',
-   q:'다음은 '+q.sourceYear+'년 기출 '+q.sourceNumber+'번의 '+pick+'번 변형 보기입니다.\n\n“'+words+'”\n\n이 보기는 해당 연도 A형의 최종정답으로 인정된 선지인가?',
-   a:['인정된 정답 선지다','최종정답으로 인정된 선지는 아니다'],
-   correct:[wasRight?1:2],ok:wasRight?1:2,
-   why:'해당 연도 최종정답 인정 여부 판정입니다. 원문 5개 선지와 조건을 반드시 함께 확인하세요. 선택한 보기의 원래 번호는 '+q.originalOrder[pick-1]+'번입니다.',
-   verified:true,sourceNote:'원문 자체의 일반적인 참·거짓을 증명하는 문제가 아니라 공식 정답키 판별형 응용입니다.'
+ const key=set+'/'+subject,prior=cache.get(key);if(prior?.records===records)return prior.list;
+ if(!Number.isInteger(set)||set<1||set>5)return [];
+ const preferred=2026-set;
+ const pool=Object.values(records||{}).filter(r=>r.subject===subject&&eligible(r)).sort((a,b)=>Number(b.year===preferred)-Number(a.year===preferred)||b.year-a.year||a.number-b.number);
+ if(pool.length<40)return [];
+ const rows=pool.slice(0,Math.max(40,pool.filter(r=>r.year===preferred).length));
+ // Fill from a different rotation for each set without duplicate source questions.
+ const rest=pool.filter(r=>!rows.includes(r));
+ const offset=(set-1)*13%Math.max(1,rest.length);
+ const ordered=rows.filter(r=>r.year===preferred).concat(rest.slice(offset),rest.slice(0,offset),rows.filter(r=>r.year!==preferred));
+ const selected=[...new Map(ordered.map(r=>[r.id,r])).values()].slice(0,40);
+ const list=selected.map((r,i)=>{
+  const original=r.correct[0]-1;
+  const inverted=r.question.replace(pattern,(_,stem)=>stem==='옳은 것은'?'옳지 않은 보기를 모두 고른 것은?':stem==='적절하지 않은 것은'?'적절한 보기를 모두 고른 것은?':'옳은 보기를 모두 고른 것은?');
+  // Every candidate omits exactly one option; the correct candidate omits the old key.
+  const omissions=[0,1,2,3,4];const rotate=(set+i)%5;
+  const order=omissions.slice(rotate).concat(omissions.slice(0,rotate));
+  const ok=order.indexOf(original)+1;
+  return Object.freeze({id:'inverse22-'+set+'-'+r.id,s:subject,set,sourceYear:r.year,sourceNumber:r.number,
+   topic:r.year+'년 '+r.number+'번 · 옳고 그름 반전 응용',
+   q:inverted+'\n\n'+r.options.map((text,n)=>'보기 '+letters[n]+'. '+text).join('\n\n'),
+   a:order.map(skip=>letters.filter((_,n)=>n!==skip).join(', ')),correct:[ok],ok,
+   why:'원문은 '+r.correct[0]+'번 보기를 최종정답으로 인정합니다. 질문의 옳고 그름을 반대로 바꿨으므로, 원문 정답 '+letters[original]+'를 제외한 네 보기를 함께 선택합니다. 시험 당시의 조건·법령 기준을 유지한 응용문제입니다.',
+   verified:true,originalCorrect:r.correct.slice(),originalOptions:r.options.slice(),omissions:order.slice(),sourceNote:'최근 5개년 원문 조건 보존 · 질문 반전 및 조합형 자체 제작 응용'
   });
  });
- cache.set(key,{original:source,list:Object.freeze(list)});return list;
+ cache.set(key,{records,list:Object.freeze(list)});return list;
 }
-window.CK21Judge=Object.freeze({build});
+window.CK21Judge=Object.freeze({build,eligible});
 })();

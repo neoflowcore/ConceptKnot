@@ -4,13 +4,14 @@
  */
 (function(){
  'use strict';
- let paused=0,activeLast=null;
+ let paused=0,activeLast=null,focused=true;
  const media=window.matchMedia?.('(prefers-reduced-motion: reduce)');
- const active=()=>document.body?.dataset.ckV8Tab==='landing'&&!document.hidden&&!media?.matches;
+ const active=()=>document.body?.dataset.ckV8Tab==='landing'&&focused&&!document.hidden&&!media?.matches;
  const scene=()=>document.getElementById('ck-v8-ambient');
  function sync(){
   const on=active(),el=scene();
-  if(on===activeLast)return;
+  if(on===activeLast&&el?.dataset.ck22Synced===String(on))return;
+  if(el)el.dataset.ck22Synced=String(on);
   activeLast=on;
   document.documentElement.dataset.ck21Garden=on?'running':'suspended';
   document.body?.classList.toggle('ck21-garden-suspended',!on);
@@ -32,8 +33,9 @@
   const body=document.body;if(!body)return;
   new MutationObserver(sync).observe(body,{attributes:true,attributeFilter:['data-ck-v8-tab']});
   document.addEventListener('visibilitychange',sync);
-  window.addEventListener('blur',()=>{document.documentElement.dataset.ck21Garden='suspended';sync()});
-  window.addEventListener('focus',sync);
+  window.addEventListener('ck:scene-activity',sync);
+  window.addEventListener('blur',()=>{focused=false;sync()});
+  window.addEventListener('focus',()=>{focused=true;sync()});
   media?.addEventListener?.('change',sync);
   sync();
  }

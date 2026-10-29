@@ -21,9 +21,10 @@ const pastel = [0x3c9a55, 0x287a54, 0x76b939, 0x205f49, 0xe7bf47];
 const flowerColors = [0xffc44f, 0xff789b, 0xffe28a, 0x6db9f3, 0xff8753];
 let root, renderer, camera, scene, materialCache, clock, frameId = 0;
 let resizeObserver, last = 0, pointer = {x: 0, y: 0}, elapsed = 0, firstDraw = false;
+let windowFocused=true,lastPaint=0;
 let resizeTimer = 0, playTime = 0, activeLast=false, frameCount=0;
 const isLanding=()=>document.body?.dataset?.ckV8Tab==='landing';
-const shouldAnimate=()=>isLanding()&&!document.hidden&&!REDUCED.matches;
+const shouldAnimate=()=>isLanding()&&windowFocused&&!document.hidden&&!REDUCED.matches;
 function synchronizeActivity(){
  const active=shouldAnimate();
  if(root)root.dataset.ck3dActive=String(active);
@@ -355,6 +356,8 @@ window.addEventListener('pointerleave',()=>{pointer.x=0;pointer.y=0;},{passive:t
 function onVisibility(){synchronizeActivity()}
 function tick(ms){
   frameId=0;if(!renderer||!shouldAnimate())return;
+  if(ms-lastPaint<1000/24){frameId=requestAnimationFrame(tick);return;}
+  lastPaint=ms;
   const dt=last?Math.min(.05,(ms-last)/1000):0;last=ms;elapsed+=dt;
   const focused=Boolean(document.body?.classList.contains('ck-v8-study-focus'));
   const intensity=focused?.18:1;
@@ -403,6 +406,9 @@ function cleanup(){
   if(renderer){renderer.forceContextLoss?.();renderer.dispose();renderer=null;activeLast=false;}
 }
 function initialize(){
+ window.addEventListener('ck:scene-activity',synchronizeActivity);
+ window.addEventListener('blur',()=>{windowFocused=false;synchronizeActivity()});
+ window.addEventListener('focus',()=>{windowFocused=true;synchronizeActivity()});
  const main=document.getElementById('main');
  if(main)new MutationObserver(synchronizeActivity).observe(main,{childList:true});
  new MutationObserver(synchronizeActivity).observe(document.body,{attributes:true,attributeFilter:['data-ck-v8-tab']});

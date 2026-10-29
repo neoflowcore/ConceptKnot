@@ -22,13 +22,16 @@ function printable(title,body){
  doc.document.close();doc.focus();setTimeout(()=>doc.print(),300);
 }
 function exportBoard(kind,key,text,title){
- const day=new Date().toLocaleDateString('sv-SE',{timeZone:'Asia/Seoul'});
+ let created;try{created=localStorage.getItem('ck22-note-created:'+key)}catch{}
+ const day=new Date(created||Date.now()).toLocaleDateString('sv-SE',{timeZone:'Asia/Seoul'});
  const heading=String(title||key||'학습 메모').trim().slice(0,90);
  const safe=heading.replace(/[\\/:*?"<>|]/g,'_').replace(/\s+/g,'_').slice(0,65);
  const name=safe+'_'+day+'_ConceptKnot_메모';
  const head=heading+'\n작성일: '+day+'\n\n';
  if(kind==='txt'){file(name+'.txt',head+String(text||''));return;}
- printable(name,'<h2>'+escape(heading)+'</h2><p class="muted">작성일: '+escape(day)+'</p><pre>'+escape(text||'')+'</pre><p class="muted">PDF 저장 시 파일명을 확인하세요.</p>');
+ let ink='';
+ try{const canvas=document.querySelector('.ck-v7-board .ck-v7-pen-layer');if(canvas?.width&&canvas?.height)ink='<img alt="손글씨 메모" style="width:100%;background:#173e3b;break-inside:avoid" src="'+canvas.toDataURL('image/png')+'">'}catch{}
+ printable(name,'<h2>'+escape(heading)+'</h2><p class="muted">작성일: '+escape(day)+'</p><pre>'+escape(text||'')+'</pre>'+ink+'<p class="muted">PDF 저장 시 파일명을 확인하세요.</p>');
 }
 function defaultPages(){
  const s=current(),mistakes=Object.values(s.mistakes||{}).filter(x=>x&&!x.resolved);

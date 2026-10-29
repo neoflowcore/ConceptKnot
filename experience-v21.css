@@ -98,3 +98,15 @@ body.ck21-stylus-writing #main{overscroll-behavior:none!important}
 #main .ck21-mock-mode button{border:1px solid #729c9280;border-radius:10px;background:#163e3d;color:#e3efe8;padding:7px 11px;font-size:11px;cursor:pointer}
 #main .ck21-mock-mode button[aria-pressed=true]{background:#2b7865;color:#fff;border-color:#6cae96}
 #main .ck20-quiz-main .choice{white-space:pre-wrap}
+
+/* v22: preserve a quiet study surface through every navigation frame. */
+.ck-v8-ambient:not(.ck-3d-ready) .ck-v8-art::before,
+.ck-v8-ambient:not(.ck-3d-ready) .ck-v8-art::after{content:none!important}
+body:not([data-ck-v8-tab="landing"]) *{animation-iteration-count:1!important}
+body:not([data-ck-v8-tab="landing"]) .memory-pictures *,
+body:not([data-ck-v8-tab="landing"]) .ck-v7-art{animation:none!important;will-change:auto!important}
+html.ck16-reveal #main .ck-v7-content{animation:ck21-study-appear .19s ease-out both!important}
+#main .ck-v7-board.ck9-spen-active .ck10-font{display:none!important}
+#main .ck-v7-board:not(.ck9-spen-active) .ck21-spen-tools{display:none!important}
+body.ck22-pen-locked{position:fixed!important;width:100%;overflow:hidden!important;overscroll-behavior:none;touch-action:none}
+@media(prefers-reduced-motion:reduce){html.ck16-reveal #main .ck-v7-content{animation:none!important}}

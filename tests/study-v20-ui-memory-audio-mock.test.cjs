@@ -46,7 +46,7 @@ test('five sets contain 80 questions each, correct answers preserved after every
     assert.equal(q.q,original.question);
     assert.notDeepEqual([...q.originalOrder],[1,2,3,4,5],'real shuffled option order');
     const oldAnswer=[...original.correct].sort((a,b)=>a-b);
-    const restored=q.correct.map(pos=>q.originalOrder[pos-1]).sort((a,b)=>a-b);
+    const restored=Array.from(q.correct,pos=>q.originalOrder[pos-1]).sort((a,b)=>a-b);
     assert.deepEqual(restored,oldAnswer,'answer key remapped: '+q.id);
     for(let opt=1;opt<=5;opt++)assert.equal(f.CK20_MOCK.isCorrect(q,opt),q.correct.includes(opt));
     if(q.sourceYear!==f.CK20_MOCK.years[set-1])substituteCount++;
@@ -77,7 +77,7 @@ test('one-click full-year audio stays active across tab render, explicit stop re
  assert.match(html,/function splitSpeechText/);
 });
 test('service worker version change does not enable git push CI',()=>{
- assert.match(read('sw.js'),/conceptknot-study-v20/);
+ assert.match(read('sw.js'),/conceptknot-study-v\d+/);
  for(const asset of ['experience-v20.css','ck-mock-v20.js','ck-visual40-v20.js'])
   assert.ok(read('sw.js').includes(asset));
  const vercel=JSON.parse(read('vercel.json'));

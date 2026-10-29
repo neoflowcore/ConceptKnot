@@ -6,9 +6,20 @@
 const KEY='ck21-board-extend';
 let board=null,handle=null,drag=null,extend=0;
 try{extend=Math.max(-180,Math.min(750,Number(localStorage.getItem(KEY))||0))}catch{}
+let locked=false,scrollY=0;
+function syncLock(){
+ const next=!!document.querySelector('#main .ck9-spen-active')&&matchMedia('(max-width:850px)').matches;
+ if(next===locked)return;
+ locked=next;
+ if(next){scrollY=window.scrollY;document.body.style.top=-scrollY+'px';document.body.classList.add('ck22-pen-locked')}
+ else{document.body.classList.remove('ck22-pen-locked');document.body.style.removeProperty('top');window.scrollTo(0,scrollY)}
+}
 const apply=()=>{
+ syncLock();
  board=document.querySelector('#main .ck-v7-board');
  if(!board)return;
+ const stampKey='ck22-note-created:'+board.dataset.ckV7Key;
+ try{if(!localStorage.getItem(stampKey))localStorage.setItem(stampKey,new Date().toISOString())}catch{}
  board.style.setProperty('--ck21-board-extend',extend+'px');
  handle=board.querySelector('[data-ck21-board-resize]');
  if(handle)handle.setAttribute('aria-valuenow',String(extend));
@@ -38,8 +49,7 @@ function finish(e){
 }
 for(const event of ['pointerup','pointercancel','lostpointercapture'])document.addEventListener(event,finish,true);
 document.addEventListener('touchmove',e=>{
- if(document.body?.classList.contains('ck21-stylus-writing')&&
-  (e.target?.closest?.('.ck-v7-writing-surface')||e.target?.closest?.('.ck-v7-board'))){
+ if(locked||document.body?.classList.contains('ck21-stylus-writing')){
   if(e.cancelable)e.preventDefault();
  }
 },{passive:false,capture:true});
@@ -51,9 +61,11 @@ document.addEventListener('keydown',e=>{
 },true);
 function boot(){
  const main=document.getElementById('main');
- if(main)new MutationObserver(records=>{if(records.some(r=>r.target===main))apply()}).observe(main,{childList:true});
+ if(main)new MutationObserver(records=>{if(records.some(r=>r.type==='childList'&&r.target===main))apply();else syncLock()}).observe(main,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});
+ window.addEventListener('resize',syncLock);
+ window.addEventListener('ck:scene-activity',()=>{if(locked){document.body.classList.remove('ck22-pen-locked');document.body.style.removeProperty('top');locked=false}});
  apply();
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
-window.CK21Board=Object.freeze({getState:()=>({extend,dragging:!!drag}),setHeight:n=>{extend=clamp(Number(n)||0);apply();save()}});
+window.CK21Board=Object.freeze({getState:()=>({extend,dragging:!!drag,scrollLocked:locked}),setHeight:n=>{extend=clamp(Number(n)||0);apply();save()}});
 })();
