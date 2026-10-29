@@ -21,10 +21,14 @@ function printable(title,body){
  doc.document.write('<!doctype html><html lang="ko"><meta charset="utf-8"><title>'+escape(title)+'</title><style>@page{size:A4;margin:17mm}body{font:13px/1.65 "Malgun Gothic",sans-serif;color:#152a24}h1{font-size:20px;line-height:1.3}.page{page-break-after:always;min-height:225mm}.page:last-child{page-break-after:auto}h2{font-size:16px;border-bottom:1px solid #aaa;padding-bottom:8px}pre{white-space:pre-wrap;word-break:break-word;font:inherit}.muted{font-size:10px;color:#666}</style><body><h1>'+escape(title)+'</h1>'+body+'</body></html>');
  doc.document.close();doc.focus();setTimeout(()=>doc.print(),300);
 }
-function exportBoard(kind,key,text){
- const name='ConceptKnot-'+String(key).replace(/[^\w가-힣-]/g,'_');
- if(kind==='txt'){file(name+'.txt',String(text||''));return;}
- printable('ConceptKnot · '+key,'<pre>'+escape(text||'')+'</pre><p class="muted">인쇄 대상에서 PDF로 저장을 선택하세요.</p>');
+function exportBoard(kind,key,text,title){
+ const day=new Date().toLocaleDateString('sv-SE',{timeZone:'Asia/Seoul'});
+ const heading=String(title||key||'학습 메모').trim().slice(0,90);
+ const safe=heading.replace(/[\\/:*?"<>|]/g,'_').replace(/\s+/g,'_').slice(0,65);
+ const name=safe+'_'+day+'_ConceptKnot_메모';
+ const head=heading+'\n작성일: '+day+'\n\n';
+ if(kind==='txt'){file(name+'.txt',head+String(text||''));return;}
+ printable(name,'<h2>'+escape(heading)+'</h2><p class="muted">작성일: '+escape(day)+'</p><pre>'+escape(text||'')+'</pre><p class="muted">PDF 저장 시 파일명을 확인하세요.</p>');
 }
 function defaultPages(){
  const s=current(),mistakes=Object.values(s.mistakes||{}).filter(x=>x&&!x.resolved);

@@ -10,7 +10,7 @@ const READY_CLASS = 'ck-3d-ready';
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)');
 const MOBILE = matchMedia('(max-width: 850px)');
 const LOW_MEMORY = (navigator.deviceMemory || 8) <= 2 || !!navigator.connection?.saveData;
-const MAX_PIXEL_COUNT = 5_600_000;
+const MAX_PIXEL_COUNT = 1_800_000;
 const QUALITY = LOW_MEMORY ? 0 : MOBILE.matches ? 1 : 2;
 const rand = (() => { let seed = 20261028; return () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296); })();
 const lerp = THREE.MathUtils.lerp;
@@ -21,17 +21,31 @@ const pastel = [0x3c9a55, 0x287a54, 0x76b939, 0x205f49, 0xe7bf47];
 const flowerColors = [0xffc44f, 0xff789b, 0xffe28a, 0x6db9f3, 0xff8753];
 let root, renderer, camera, scene, materialCache, clock, frameId = 0;
 let resizeObserver, last = 0, pointer = {x: 0, y: 0}, elapsed = 0, firstDraw = false;
-let resizeTimer = 0, playTime = 0;
+let resizeTimer = 0, playTime = 0, activeLast=false, frameCount=0;
 const isLanding=()=>document.body?.dataset?.ckV8Tab==='landing';
 const shouldAnimate=()=>isLanding()&&!document.hidden&&!REDUCED.matches;
 function synchronizeActivity(){
  const active=shouldAnimate();
  if(root)root.dataset.ck3dActive=String(active);
- if(!active){if(frameId)cancelAnimationFrame(frameId);frameId=0;last=0;return}
+ if(!active){
+  if(frameId)cancelAnimationFrame(frameId);
+  frameId=0;last=0;
+  if(activeLast&&renderer){
+   // Release full-screen render targets: an invisible 3D canvas is not free.
+   renderer.setPixelRatio(1);
+   renderer.setSize(1,1,false);
+   renderer.domElement.style.display='none';
+  }
+  activeLast=false;return;
+ }
  if(!renderer){createRenderer();return}
+ if(!activeLast){
+  renderer.domElement.style.display='block';
+  resize();
+ }
+ activeLast=true;
  if(!frameId){last=0;frameId=requestAnimationFrame(tick)}
 }
-
 
 function h(x, z) {
   // Soft, genuinely triangulated terrain. The far hills have separate ridges.
@@ -279,7 +293,7 @@ function createRenderer() {
   const canvas=document.createElement('canvas');
   canvas.className='ck-3d-canvas';canvas.setAttribute('aria-hidden','true');
   canvas.style.cssText='position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;z-index:0;';
-  const opts={canvas,alpha:false,antialias:!MOBILE.matches,powerPreference:'default',stencil:false,depth:true};
+  const opts={canvas,alpha:false,antialias:false,powerPreference:'default',stencil:false,depth:true};
   try{renderer=new THREE.WebGLRenderer(opts);}catch(err){console.info('ConceptKnot uses SVG scenery fallback',err);return;}
   renderer.setClearColor(0x65c6e9,1);
   renderer.outputColorSpace=THREE.SRGBColorSpace;
@@ -319,9 +333,9 @@ function createRenderer() {
   synchronizeActivity();
 }
 function resize(){
-  if(!renderer||!root||!camera)return;
+  if(!renderer||!root||!camera||!shouldAnimate())return;
   const width=Math.max(1,root.clientWidth||window.innerWidth),height=Math.max(1,root.clientHeight||window.innerHeight);
-  let dpr=Math.min(window.devicePixelRatio||1,MOBILE.matches?1.1:1.5);
+  let dpr=Math.min(window.devicePixelRatio||1,MOBILE.matches?1:1.15);
   const pixels=width*height*dpr*dpr;
   if(pixels>MAX_PIXEL_COUNT)dpr*=Math.sqrt(MAX_PIXEL_COUNT/pixels);
   renderer.setPixelRatio(dpr);renderer.setSize(width,height,false);
@@ -380,12 +394,13 @@ function tick(ms){
   camera.position.x=lerp(camera.position.x,pointer.x*.32*intensity,1-Math.exp(-dt*1.2));
   camera.lookAt(0,6,-30);
   renderer.render(scene,camera);
+  frameCount++;
   if(shouldAnimate())frameId=requestAnimationFrame(tick);
 }
 function cleanup(){
   if(frameId)cancelAnimationFrame(frameId);frameId=0;
   resizeObserver?.disconnect();
-  if(renderer){renderer.dispose();renderer=null;}
+  if(renderer){renderer.forceContextLoss?.();renderer.dispose();renderer=null;activeLast=false;}
 }
 function initialize(){
  const main=document.getElementById('main');
@@ -398,4 +413,4 @@ function initialize(){
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initialize,{once:true});
 else initialize();
-window.CK3DPerformance=Object.freeze({getState:()=>({active:!!frameId,initialized:!!renderer,landing:isLanding(),hidden:document.hidden})});
+window.CK3DPerformance=Object.freeze({getState:()=>({active:!!frameId,initialized:!!renderer,landing:isLanding(),hidden:document.hidden,frames:frameCount,quality:QUALITY,dpr:renderer?.getPixelRatio?.()||0})});

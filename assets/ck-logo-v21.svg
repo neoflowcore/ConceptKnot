@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52" role="img" aria-labelledby="title desc">
+<title id="title">ConceptKnot 연결 매듭</title><desc id="desc">하늘색과 산호색 끈이 교차하며 작은 매듭을 이룬 모양</desc>
+<rect width="52" height="52" rx="15" fill="#073d3b"/>
+<path d="M13 14c-7 6-4 19 4 20s19-6 24-16" fill="none" stroke="#73d4ec" stroke-width="6" stroke-linecap="round"/>
+<path d="M39 38c7-7 3-19-5-20-9-1-18 7-23 17" fill="none" stroke="#ee9b8c" stroke-width="6" stroke-linecap="round"/>
+<path d="M20 28l7-5" fill="none" stroke="#073d3b" stroke-width="7" stroke-linecap="round"/>
+<path d="M21 28l7-5" fill="none" stroke="#73d4ec" stroke-width="5" stroke-linecap="round"/>
+<circle cx="39" cy="15" r="3" fill="#d7f5ec"/>
+</svg>

@@ -1,0 +1,100 @@
+/* v21: restrained motion, accessible chart teaching, mobile one-row workspace.
+   No continuous animation in study views, only one-shot user-triggered chart transitions. */
+html,body{--ck21-sky:#7bd5ed;--ck21-coral:#efaa97}
+body:not([data-ck-v8-tab="landing"]) #ck-v8-ambient,
+body.ck21-garden-suspended #ck-v8-ambient{visibility:hidden!important;pointer-events:none!important;content-visibility:hidden!important}
+body:not([data-ck-v8-tab="landing"]) #ck-v8-ambient *,
+body:not([data-ck-v8-tab="landing"]) #ck-v8-ambient *::before,
+body:not([data-ck-v8-tab="landing"]) #ck-v8-ambient *::after{animation:none!important;transition:none!important;will-change:auto!important}
+body:not([data-ck-v8-tab="landing"]){background:#244651!important;background-image:none!important}
+html[data-ck-theme="dark"] body:not([data-ck-v8-tab="landing"]){background:#0c2630!important;background-image:none!important}
+body:not([data-ck-v8-tab="landing"]) #main .ck-v7-stage,
+html.ck16-reveal #main .ck-v7-stage{animation:none!important;filter:none!important;transform:none!important}
+body:not([data-ck-v8-tab="landing"]) #main .ck-v7-content{animation:none!important;filter:none!important}
+html.ck16-reveal #main .ck-v7-content{animation:ck21-study-appear .19s ease-out both!important}
+@keyframes ck21-study-appear{from{opacity:.72}to{opacity:1}}
+::view-transition-old(ck15-stage),::view-transition-new(ck15-stage){animation:none!important}
+#main .ck-v7-logo{display:flex!important;align-items:center;gap:5px;white-space:nowrap;font-size:clamp(10px,1vw,12px)!important;letter-spacing:-.025em!important;flex:none}
+#main .ck-v7-logo .ck21-brand-icon{width:24px;height:24px;border-radius:7px;flex:none}
+#main .ck-v7-nav-pill .board-tabs{flex-wrap:nowrap!important;overflow-x:auto!important;overflow-y:hidden!important;white-space:nowrap!important;min-width:0;scrollbar-width:none}
+#main .ck-v7-nav-pill .board-tabs::-webkit-scrollbar{display:none}
+#main .ck-v7-nav-pill .board-tab{flex:0 0 auto;white-space:nowrap}
+body[data-ck-v8-tab="landing"] #main .ck4-cover{background:none!important}
+body[data-ck-v8-tab="landing"] #main .ck-v7-art{display:none!important}
+/* Main board: small exported icons beside the title; SPen replaces existing controls. */
+#main .ck-v7-board-overlay{display:flex!important;flex-direction:column;min-height:0}
+#main .ck21-board-title-row{display:flex;gap:5px;align-items:center;min-width:0}
+#main .ck21-board-title-row .ck-v7-board-heading{min-width:0;flex:1;overflow-wrap:anywhere}
+#main .ck21-export-tools{display:flex;gap:3px;flex:none}
+#main .ck21-export-tools button{display:inline-flex;align-items:center;gap:2px;min-height:25px;padding:2px 4px;border:1px solid #badbd25c;border-radius:7px;background:#183b3a88;color:#dcf1e8;cursor:pointer;font-size:9px}
+#main .ck-v7-board .ck-v7-toolrow{display:flex!important;align-items:center;flex-wrap:nowrap!important;gap:3px!important;width:100%;min-width:0;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;padding:4px 0!important}
+#main .ck-v7-board .ck-v7-toolrow>*{flex:0 0 auto}
+#main .ck-v7-board .ck21-spen-tools{display:inline-flex;align-items:center;gap:2px}
+#main .ck-v7-board .ck21-spen-tools[hidden]{display:none!important}
+#main .ck-v7-board .ck21-spen-tools button{font-size:12px;min-width:25px;min-height:25px;border:1px solid #b4d8d365;border-radius:6px;background:#163e3b8c;color:#e1f2ed}
+#main .ck-v7-board .ck21-spen-tools button[aria-pressed=true]{background:#4c9f83;color:#fff}
+#main .ck-v7-board .ck21-spen-tools input{width:54px;max-width:54px}
+#main .ck-v7-board.ck9-spen-active .ck-v7-writing-surface,
+#main .ck-v7-board.ck9-spen-active .ck-v7-pen-layer{touch-action:none!important;overscroll-behavior:contain!important}
+body.ck21-stylus-writing{overscroll-behavior:none!important;touch-action:none!important}
+body.ck21-stylus-writing #main{overscroll-behavior:none!important}
+#main .ck-v7-board{position:relative}
+#main .ck-v7-board .ck-v7-writing-surface{flex:1 1 auto;min-height:130px}
+#main .ck-v7-board .ck21-board-resize{position:absolute;right:4px;bottom:4px;width:30px;height:30px;z-index:8;display:grid;place-items:center;border-radius:9px;border:1px solid #b2dbcf92;background:#153e3dcc;color:#dff4ec;touch-action:none;cursor:ns-resize}
+#main .ck-v7-board .ck21-board-resize svg{pointer-events:none}
+#main .ck-v7-board{--ck21-board-extend:0px}
+@media(max-width:850px){
+ html body #main .ck-v7-stage .ck-v7-board:not(.ck9-spen-fullscreen){height:clamp(240px,calc(60dvh + var(--ck21-board-extend,0px)),calc(100dvh - 45px))!important;max-height:calc(100dvh - 45px)!important}
+ #main .ck-v7-nav-pill{min-width:0!important;overflow:hidden}
+ #main .ck-v7-global-nav{display:flex!important;flex-wrap:nowrap!important}
+ #main .ck-v7-nav-pill .board-tabs{min-width:0!important;flex-wrap:nowrap!important;overflow-x:auto!important}
+ #main .ck-v7-board-overlay{padding:9px!important}
+ #main .ck-v7-board-caption{font-size:8px}
+ #main .ck-v7-board-heading{font-size:clamp(11px,3.6vw,16px)!important;margin:2px 0!important}
+ #main .ck-v7-board .ck-v7-toolrow{gap:2px!important}
+ #main .ck-v7-board .ck-v7-dot{width:18px!important;height:18px!important}
+ #main .ck-v7-board .ck10-font input{width:44px!important}
+ #main .ck-v7-board .ck-v7-tool-spacer{display:none!important}
+ #main .ck-v7-date-pill{flex:none;white-space:nowrap}
+ #main .ck-v7-nav-pill .board-tab{min-height:34px;padding:6px 7px!important;font-size:10px!important}
+ #main .ck-v7-logo{font-size:10px!important}
+ #main .ck-v7-logo .ck21-brand-icon{width:19px;height:19px}
+}
+/* SVG charts have no continuous rAF. */
+#main .ck21-compare-mode{display:flex;gap:6px;margin:10px 0 16px;flex-wrap:wrap}
+#main .ck21-compare-mode button,#main .ck21-chart-tabs button{background:#153b39;color:#e1f0ea;border:1px solid #54908466;border-radius:10px;padding:8px 12px;cursor:pointer}
+#main .ck21-compare-mode [aria-pressed=true],#main .ck21-chart-tabs [aria-pressed=true]{background:#27816c;color:#fff}
+#main .ck21-chart-head p{font-size:12px;line-height:1.6}
+#main .ck21-chart-tabs{display:flex;gap:5px;overflow-x:auto;min-width:0;max-width:100%;padding:7px 0 13px;scrollbar-width:thin}
+#main .ck21-chart-tabs button{flex:none;font-size:11px;white-space:nowrap}
+#main .ck21-chart-card{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.85fr);gap:12px;min-width:0}
+#main .ck21-chart-stage,#main .ck21-chart-copy{min-width:0;padding:13px;background:rgba(24,74,69,.15);border:1px solid #6d9d9163;border-radius:14px}
+#main .ck21-chart-svg{display:block;width:100%;max-width:650px;height:auto;overflow:visible}
+#main .ck21-chart-svg text{font:11px Pretendard,"Malgun Gothic",sans-serif;fill:currentColor}
+#main .ck21-grid{stroke:currentColor;opacity:.12;fill:none;stroke-width:1}
+#main .ck21-axis,#main .ck21-axis-arrow{fill:none;stroke:currentColor;stroke-width:2.1}
+#main .ck21-curve{fill:none;stroke-width:5;stroke-linecap:round}
+#main .ck21-curve.demand{stroke:#5baec9}#main .ck21-curve.supply{stroke:#e69586}
+#main .ck21-chart-svg{color:#adc6c3}
+#main .ck21-transform-target{transform:translateX(0);transition:transform .9s cubic-bezier(.2,.7,.2,1)}
+#main .ck21-transform-target.ck21-shifted{transform:translateX(var(--ck21-dx,55px))}
+#main .ck21-point{fill:#eeb77f;transition:transform .85s ease}
+#main .ck21-point.ck21-moved{transform:translate(80px,40px)}
+#main .ck21-policy{stroke:#c7bb70;stroke-width:3;stroke-dasharray:9 5;opacity:0;transition:opacity .35s}
+#main .ck21-policy-show{opacity:1}
+#main .ck21-step{stroke:#e3d58a;stroke-width:3;fill:none;stroke-dasharray:570;stroke-dashoffset:570;transition:stroke-dashoffset .9s}
+#main .ck21-step-show{stroke-dashoffset:0}
+#main .ck21-chart-copy h3{margin:10px 0}
+#main .ck21-chart-copy p{font-size:13px;line-height:1.7;overflow-wrap:anywhere}
+#main .ck21-chart-copy span,#main .ck21-chart-copy small{font-size:11px;opacity:.85}
+#main .ck21-chart-actions{display:flex;flex-wrap:wrap;gap:7px}
+#main .ck21-chart-actions button{border:1px solid #85b6a95c;background:#1b6f5b;color:#fff;border-radius:9px;padding:9px 10px;cursor:pointer}
+#main .ck21-chart-explanation{min-height:70px;margin-top:15px;padding:10px;border:1px solid #639e8b60;border-radius:10px}
+@container (max-width:680px){#main .ck21-chart-card{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:760px){#main .ck21-chart-card{grid-template-columns:minmax(0,1fr)}}
+@media(prefers-reduced-motion:reduce){#main .ck21-transform-target,#main .ck21-step,#main .ck21-policy,#main .ck21-point{transition:none!important}}
+
+#main .ck21-mock-mode{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 12px}
+#main .ck21-mock-mode button{border:1px solid #729c9280;border-radius:10px;background:#163e3d;color:#e3efe8;padding:7px 11px;font-size:11px;cursor:pointer}
+#main .ck21-mock-mode button[aria-pressed=true]{background:#2b7865;color:#fff;border-color:#6cae96}
+#main .ck20-quiz-main .choice{white-space:pre-wrap}

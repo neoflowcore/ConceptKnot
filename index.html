@@ -97,6 +97,7 @@ body{font-family:Pretendard,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;bac
 <link rel="stylesheet" href="./experience-v17.css">
 <link rel="stylesheet" href="./experience-v19.css">
 <link rel="stylesheet" href="./experience-v20.css">
+<link rel="stylesheet" href="./experience-v21.css">
 <script src="./assets/ck-display-v17.js" defer></script>
 </head>
 <body>
@@ -227,6 +228,10 @@ window.RECALL_CONTENT = {
 </script>
 <script src="./assets/ck-visual40-v20.js"></script>
 <script src="./assets/ck-mock-v20.js"></script>
+<script src="./assets/ck-charts-v21.js"></script>
+<script src="./assets/ck-mock-judge-v21.js"></script>
+<script src="./assets/ck-gpu-guard-v21.js" defer></script>
+<script src="./assets/ck-mobile-board-v21.js" defer></script>
 <script>
 /* RECALLGRAPH First-Exam Sprint. Browser-only, no analytics/server/API. */
 (() => {
@@ -235,7 +240,7 @@ const CONTENT=window.RECALL_CONTENT, EXAMS=window.RECALL_EXAMS, KEYS=window.RECA
 if(!CONTENT || !EXAMS || !KEYS){document.getElementById('main').textContent='학습 데이터를 읽지 못했습니다. 파일을 다시 확인하세요.';return;}
 const STORAGE='recallgraph-first-exam-v1';
 const DAY=86400000;
-const names={landing:'CONCEPTKNOT 첫 화면',listen:'문제·정답 듣기',typing:'분필 타이핑',visual:'그림으로 기억',calc:'계산문제 집중',home:'오늘의 학습',reverse:'기출→이론 학습',theory:'핵심이론·능동회상',quiz:'기출형 연습',exam:'10개년 기출',venn:'비교 다이어그램',wrong:'오답·복습',plan:'4일 학습계획',final:'시험 직전 최종 노트',settings:'내 데이터'};
+const names={landing:'CONCEPTKNOT 첫 화면',listen:'문제·정답 듣기',typing:'분필 타이핑',visual:'그림으로 기억',calc:'계산문제 집중',home:'오늘의 학습',reverse:'기출→이론 학습',theory:'핵심이론·능동회상',quiz:'기출형 연습',exam:'10개년 기출',venn:'비교 도형과 차트',wrong:'오답·복습',plan:'4일 학습계획',final:'시험 직전 최종 노트',settings:'내 데이터'};
 const nav=[['home','▦'],['reverse','⚡'],['theory','◈'],['visual','◇'],['typing','⌨'],['listen','♫'],['quiz','✎'],['calc','÷'],['exam','▤'],['venn','◉'],['wrong','↻'],['plan','▣'],['final','▤']];
 const todayISO=()=>new Date().toLocaleDateString('sv-SE',{timeZone:'Asia/Seoul'});
 const dday=()=>Math.max(0,Math.ceil((new Date('2026-10-31T00:00:00+09:00').getTime()-Date.now())/DAY));
@@ -254,7 +259,8 @@ const subject=()=>CONTENT.subjects[state.subject];
 const theory=()=>CONTENT.theory.filter(x=>x.s===state.subject);
 const quizzes=()=>CONTENT.quiz.filter(x=>x.s===state.subject);
 const mockSet=()=>Math.max(0,Math.min(5,Number(state.mockSet)||0));
-const quizList=()=>mockSet()===0?quizzes():window.CK20_MOCK?.build(mockSet(),state.subject,window.RECALL_OFFICIAL)||quizzes();
+const calcBank=()=>CALC_BANK.concat(window.CK21Charts?.problems||[]);
+const quizList=()=>mockSet()===0?quizzes():state.ck21MockMode==='judge'?window.CK21Judge?.build(mockSet(),state.subject,window.RECALL_OFFICIAL)||[]:window.CK20_MOCK?.build(mockSet(),state.subject,window.RECALL_OFFICIAL)||quizzes();
 const quizCorrect=(q,v)=>Array.isArray(q?.correct)?q.correct.includes(Number(v)):q?.ok===Number(v);
 const quizAnswer=(q)=>Array.isArray(q?.correct)?q.correct.join(' 또는 '):String(q?.ok||'');
 const quizSetName=()=>mockSet()===0?'기존 개념 연습':mockSet()+'세트 · '+(2026-mockSet())+'년 중심';
@@ -786,6 +792,7 @@ function renderQuiz(){
   +Array.from({length:6},(_,i)=>'<button type="button" data-ck20-mock-set="'+i+'" aria-pressed="'+String(i===set)+'" class="ck20-set-pill">'
    +(i===0?'기본 연습 · 15문항':i+'세트 · '+(2026-i)+'년')+'</button>').join('')
   +'</div>';
+ const modePicker=set?'<div class="ck21-mock-mode" role="group" aria-label="기출 응용 유형"><button type="button" data-ck21-mock-mode="shuffle" aria-pressed="'+String(state.ck21MockMode!=='judge')+'">정답 선지 재배열형</button><button type="button" data-ck21-mock-mode="judge" aria-pressed="'+String(state.ck21MockMode==='judge')+'">정답 인정 판정형 · 맞음/아님</button></div>':'';
  const intro=set===0?
   '기존 자체 제작 15문항입니다. 공식 기출 원문이 아닙니다.':
   '최근 5개년 공식 기출의 문제 조건은 유지하고 선택지 배열을 변형한 연습 세트입니다. 각 세트는 과목별 40문항이며 실제 신규 출제문항과 구분하세요.';
@@ -794,13 +801,13 @@ function renderQuiz(){
  const explanation=done?'<div class="explanation"><strong>'+(correct?'정답입니다.':'오답입니다.')+' · 정답 '+quizAnswer(q)+'번</strong><p>'+esc(q.why)+'</p>'
   +(set?'<button class="panel-link" data-ck20-exam-source="'+q.sourceYear+'-'+q.sourceNumber+'">원문에서 확인하기 →</button>':'<button class="panel-link" data-r-from-quiz="'+q.id+'">이 문제에서 이론 뽑기 →</button>')+'</div>':'';
  return titleBlock('기출형 연습 · 모의고사 5세트','','PRACTICE / OFFICIAL-DERIVED')
- +tabs()+setPicker+'<p class="ck20-mock-hint">'+intro+'</p>'
+ +tabs()+setPicker+modePicker+'<p class="ck20-mock-hint">'+intro+'</p>'
  +'<div class="quiz-layout ck20-quiz-layout"><section class="panel ck20-quiz-main">'
  +'<div class="flex flex-between ck20-quiz-top"><span class="pill purple">'+esc(q.topic)+'</span><span class="question-count">'+(index+1)+' / '+list.length+'</span></div>'
  +'<div class="progress-shell" style="margin:16px 0 24px"><div class="progress-fill" style="width:'+((index+1)/list.length*100).toFixed(2)+'%"></div></div>'
  +'<h2 class="question">'+esc(q.q)+'</h2>'+source
  +'<button class="btn secondary" data-tts-current>문제와 정답 듣기</button>'
- +'<p class="small muted">숫자키 1~5로 정답 선택. 선택 후 원문 근거를 복습하세요.</p>'
+ +'<p class="small muted">정답 보기 숫자키를 누른 뒤 원문·최종정답 근거를 복습하세요.</p>'
  +'<div class="choices">'+choices+'</div>'+explanation
  +'<div class="quiz-nav"><button class="btn secondary" data-action="quiz-prev" '+(index===0?'disabled':'')+'>← 이전</button>'
  +'<button class="btn" data-action="quiz-next" '+(index===list.length-1?'disabled':'')+'>다음 문제 →</button></div></section>'
@@ -842,8 +849,31 @@ ${graded&&key?`<div class="small muted" style="margin-top:13px">${n}번 최종�
 ${!key?`<div class="callout warn" style="margin-top:13px">${yr}년도 정답은 아직 앱에 입력되지 않았습니다. 공식 정답 PDF를 확인한 뒤 아래에 정답을 등록하면 자동 채점할 수 있습니다. 없는 정답을 추측하지 않습니다.</div><details style="margin-top:13px"><summary class="bold" style="cursor:pointer">정답 80개 직접 등록</summary><p class="small muted">1~80번 순서로 숫자 80개를 공백으로 구분해 입력하세요. 복수정답은 해당 칸에서 2/4처럼 표시할 수 있습니다.</p><textarea id="key-import" class="field" rows="4" placeholder="예: 3 2 5 4 1 ... (총 80개)"></textarea><button class="btn" data-action="key-import" style="margin-top:9px">입력한 80개 정답 저장</button></details>`:''}</section></div>
 <div class="callout warn" style="margin-top:18px"><strong>중요:</strong> 정답은 A형 기준입니다. PDF가 A·B형을 동시에 포함하거나 번호가 다르면 A형 문항에 맞춰 마킹하세요. 2020~2025년만 앱에서 검토한 최종정답으로 자동 채점합니다. 만점 기준 40문항 × 2.5점.</div>${navSource()}`;}
 function examScore(y,s){const [a,b]=s==='estate'?[1,40]:[41,80];const keys=state.importedKeys[y]||KEYS[y];let correct=0;for(let i=a;i<=b;i++)if(state.answers[`${y}-${i}`]!=null&&normalKey(keys[i-1]).includes(Number(state.answers[`${y}-${i}`])))correct++;return {correct,score:correct*2.5};}
-function renderVenn(){const c=venns().find(x=>x.id===state.compare)||venns()[0];if(c.s!==state.subject){state.compare=venns()[0].id;return renderVenn();}const li=(arr)=>arr.map(x=>`<li>${esc(x)}</li>`).join('');return `${titleBlock('헷갈리는 개념 한눈에 비교','같은 점과 다른 점을 분리해서 보면 선택지의 함정을 더 빨리 구별할 수 있습니다.','VISUAL MEMORY / VENN')}${tabs()}
+function renderVenn(){
+ const chooser='<div class="ck21-compare-mode" role="group" aria-label="비교 도형 및 차트"><button data-ck21-compare-mode="venn" aria-pressed="'+String(state.ck21CompareMode!=='chart')+'">비교 도형</button><button data-ck21-compare-mode="chart" aria-pressed="'+String(state.ck21CompareMode==='chart')+'">차트·곡선 애니메이션</button></div>';
+ if(state.ck21CompareMode==='chart')return titleBlock('비교 도형과 차트 · 기출 연결')+tabs()+chooser+window.CK21Charts.render()+navSource();
+ const c=venns().find(x=>x.id===state.compare)||venns()[0];if(c.s!==state.subject){state.compare=venns()[0].id;return renderVenn();}const li=(arr)=>arr.map(x=>`<li>${esc(x)}</li>`).join('');return `${titleBlock('헷갈리는 개념 한눈에 비교','같은 점과 다른 점을 분리해서 보면 선택지의 함정을 더 빨리 구별할 수 있습니다.','VISUAL MEMORY / VENN')}${tabs()}${chooser}
 <div class="year-row">${venns().map(v=>`<button class="year-tab ${c.id===v.id?'active':''}" data-compare="${v.id}">${esc(v.title)}</button>`).join('')}</div><div class="venn-box"><div class="flex flex-between"><h2>${esc(c.title)}</h2><span class="pill purple">차이 + 공통점</span></div><div class="venn-stage" role="img" aria-label="${esc(c.leftTitle)}와 ${esc(c.rightTitle)}의 공통점 및 차이"><div class="venn-circle left"><div class="venn-inner"><h4>${esc(c.leftTitle)}</h4>${c.left.slice(0,2).map(x=>`<div>${esc(x)}</div>`).join('')}</div></div><div class="venn-circle right"><div class="venn-inner"><h4>${esc(c.rightTitle)}</h4>${c.right.slice(0,2).map(x=>`<div>${esc(x)}</div>`).join('')}</div></div><div class="venn-center">공통 영역<br>${esc(c.mid[0])}<br>${esc(c.mid[1]||'')}</div></div><div class="venn-info-grid"><div class="venn-info"><strong>${esc(c.leftTitle)}</strong><ul>${li(c.left)}</ul></div><div class="venn-info"><strong>공통점</strong><ul>${li(c.mid)}</ul></div><div class="venn-info"><strong>${esc(c.rightTitle)}</strong><ul>${li(c.right)}</ul></div></div></div><div class="callout" style="margin-top:17px">학습 방법: 두 개념의 이름을 가리고 차이점을 2개씩 떠올리세요. 다음에 공통점을 1개 설명하세요. 읽기만 하는 것보다 스스로 설명하는 연습을 권합니다.</div><div style="margin-top:17px">${btn('연습문제로 확인하기 →','quiz','btn')}</div>${navSource()}`;}
+document.addEventListener('click',event=>{
+ const t=event.target.closest?.('[data-ck21-compare-mode],[data-ck21-chart],[data-ck21-play],[data-ck21-exam]');
+ if(!t)return;
+ if(t.dataset.ck21CompareMode){state.ck21CompareMode=t.dataset.ck21CompareMode==='chart'?'chart':'venn';save();render();return;}
+ if(t.dataset.ck21Chart!=null){window.CK21Charts.choose(Number(t.dataset.ck21Chart));render();return;}
+ if(t.hasAttribute('data-ck21-play')){
+   const on=window.CK21Charts.play(),card=t.closest('.ck21-chart-section');
+   card?.querySelectorAll('.ck21-transform-target').forEach(x=>x.classList.toggle('ck21-shifted',on));
+   card?.querySelectorAll('.ck21-along').forEach(x=>x.classList.toggle('ck21-moved',on));
+   card?.querySelectorAll('.ck21-step').forEach(x=>x.classList.toggle('ck21-step-show',on));
+   card?.querySelectorAll('.ck21-policy').forEach(x=>x.classList.toggle('ck21-policy-show',on));
+   const desc=card?.querySelector('.ck21-chart-explanation'),c=window.CK21Charts.charts[window.CK21Charts.getState().selected];
+   if(desc)desc.textContent=on?c.answer:'움직임을 실행하면 개념·정답 근거가 나타납니다.';
+   t.textContent=on?'↩ 시작 상태로':'▶ 차트 움직임 보기';return;
+ }
+ if(t.dataset.ck21Exam){
+   const [y,n]=t.dataset.ck21Exam.split('-').map(Number);
+   if(Number.isInteger(y)&&Number.isInteger(n)){state.year=y;state.examQuestion=n;changeView('exam');}return;
+ }
+});
 function renderWrong(){const all=Object.values(state.mistakes).filter(Boolean);const filtered=all.filter(x=>x.s===state.subject);const due=theory().filter(x=>state.reviews[x.id]&&new Date(state.reviews[x.id]).getTime()<=Date.now());const existing=filtered.filter(x=>!x.resolved);return `${titleBlock('오답 노트 · 약점만 다시 보기','정답을 맞힌 횟수보다 왜 틀렸는지 설명할 수 있는지가 중요합니다.','ERROR ANALYSIS / RETRIEVAL')}${tabs()}<div class="compact-grid"><div class="panel">${stat(existing.length,'미해결 오답 · 현재 과목')}<p class="small muted">실전 기출 채점 오답과 자체 연습 오답을 합산합니다.</p></div><div class="panel">${stat(due.length,'복습 시점이 된 개념')}<p class="small muted">능동회상에서 ‘다시 외우기’로 등록한 카드입니다.</p></div></div>
 <div class="section-heading"><h2>틀린 문제와 메모</h2></div>${existing.length?`<div class="stack">${existing.sort((a,b)=>(b.updated||0)-(a.updated||0)).map((x)=>`<div class="mistake-item"><div class="badge-line"><span class="pill ${x.type==='exam'?'orange':'purple'}">${x.type==='exam'?'실제 기출 OMR':'기출형 연습'}</span><span class="muted tiny">${x.type==='exam'?`${x.year}년 ${x.number}번`:esc(x.topic||'핵심개념')}</span></div><h3>${esc(x.label)}</h3><p>내 답: ${x.answer||'-'}번 · 정답: ${esc(x.correct)}</p>${x.why?`<div class="small">${esc(x.why)}</div>`:''}<label class="field-label" for="note-${esc(x.id)}">오답 원인 / 다시 외울 핵심</label><textarea class="note-area" id="note-${esc(x.id)}" data-note="${esc(x.id)}" rows="2" placeholder="예: 문제의 '아닌 것은'을 놓침">${esc(state.notes[x.id]||'')}</textarea><div class="flex flex-between" style="gap:9px;flex-wrap:wrap"><button class="btn secondary" data-action="note-save" data-id="${esc(x.id)}">메모 저장</button><button class="btn" data-action="wrong-resolve" data-id="${esc(x.id)}">✓ 복습 완료</button></div></div>`).join('')}</div>`:`<div class="empty">아직 등록된 미해결 오답이 없습니다. 기출 OMR을 채점하거나 연습문제를 풀어보세요.<div style="margin-top:18px">${btn('연습문제 풀기','quiz','btn')}</div></div>`}
 <div class="section-heading"><h2>오늘 복습할 개념 ${due.length}개</h2></div>${due.length?`<div class="stack">${due.map(x=>`<div class="note-item"><strong>${esc(x.t)}</strong><p>${esc(x.recall)}</p><div class="flex flex-between"><span class="small muted">오늘 복습</span><button class="panel-link" data-action="review-concept" data-concept-id="${x.id}">카드에서 확인 →</button></div></div>`).join('')}</div>`:`<div class="callout">복습 기한이 지난 이론 카드가 없습니다. '핵심이론' 메뉴의 회상 테스트를 이어가세요.</div>`}${navSource()}`;}
@@ -863,12 +893,13 @@ const CALC_BANK=[
  {id:'noi',t:'순영업소득',q:'가능총소득 1,000만 원, 공실손실 100만 원, 운영경비 300만 원. NOI는?',a:['400만 원','500만 원','600만 원','700만 원','900만 원'],ok:3,f:'가능총소득 − 공실·대손손실 + 기타소득 − 운영경비',fast:'1,000 − 100 − 300 = 600만 원',guard:'여기서는 기타소득이 없습니다. 부채서비스와 감가상각은 NOI 계산의 운영경비에서 제외합니다.'}
 ];
 let calcIndex=0,calcAnswer=0,calcHint=false;
-function renderCalc(){const c=CALC_BANK[calcIndex];return `${titleBlock('계산문제만 바로 풀기','숫자키 1~5로 선택 · 공식 보기 → 숫자 대입 → 조건 확인','CALCULATION / STEP 1')}<div class="tag-row" style="margin-bottom:18px">${CALC_BANK.map((x,i)=>`<button class="btn ${i===calcIndex?'':'secondary'}" data-calc-index="${i}">${esc(x.t)}</button>`).join('')}</div><section class="panel"><span class="pill">직접 제작한 연습 · ${calcIndex+1}/${CALC_BANK.length}</span><h2 class="question">${esc(c.q)}</h2><p class="small muted">키보드 위쪽 숫자키와 숫자패드 1~5 모두 사용 가능합니다.</p><div class="choices">${c.a.map((a,i)=>`<button class="choice ${calcAnswer===i+1?(calcAnswer===c.ok?'correct':'wrong'):''}" data-calc-choice="${i+1}" ${calcAnswer?'disabled':''}><span class="option-index">${i+1}</span>${esc(a)}</button>`).join('')}</div><div class="quiz-nav"><button class="btn secondary" data-calc-hint>짧은 공식 ${calcHint?'접기':'보기'}</button><button class="btn" data-calc-next>다음 유형 →</button></div>${calcHint||calcAnswer?`<div class="callout"><strong>한 줄 공식</strong><p>${esc(c.f)}</p></div>`:''}${calcAnswer?`<div class="explanation" role="status"><strong>${calcAnswer===c.ok?'정답':'다시 기억하기'} · ${c.ok}번</strong><p>${esc(c.fast)}</p><p>${esc(c.guard)}</p><button class="btn secondary" data-calc-retry>다시 풀기</button></div>`:''}<p class="small muted">기출 출제개념을 연습하는 창작 문항입니다. 시중 교재 전체의 풀이속도를 비교·검증한 결과는 아닙니다.</p></section>`;}
+function renderCalc(){const c=calcBank()[calcIndex]||calcBank()[0];return `${titleBlock('계산문제만 바로 풀기','숫자키 1~5로 선택 · 공식 보기 → 숫자 대입 → 조건 확인','CALCULATION / STEP 1')}<div class="tag-row" style="margin-bottom:18px">${calcBank().map((x,i)=>`<button class="btn ${i===calcIndex?'':'secondary'}" data-calc-index="${i}">${esc(x.t)}</button>`).join('')}</div><section class="panel"><span class="pill">직접 제작한 연습 · ${calcIndex+1}/${calcBank().length}</span><h2 class="question">${esc(c.q)}</h2><p class="small muted">키보드 위쪽 숫자키와 숫자패드 1~5 모두 사용 가능합니다.</p><div class="choices">${c.a.map((a,i)=>`<button class="choice ${calcAnswer===i+1?(calcAnswer===c.ok?'correct':'wrong'):''}" data-calc-choice="${i+1}" ${calcAnswer?'disabled':''}><span class="option-index">${i+1}</span>${esc(a)}</button>`).join('')}</div><div class="quiz-nav"><button class="btn secondary" data-calc-hint>짧은 공식 ${calcHint?'접기':'보기'}</button><button class="btn" data-calc-next>다음 유형 →</button></div>${calcHint||calcAnswer?`<div class="callout"><strong>한 줄 공식</strong><p>${esc(c.f)}</p></div>`:''}${calcAnswer?`<div class="explanation" role="status"><strong>${calcAnswer===c.ok?'정답':'다시 기억하기'} · ${c.ok}번</strong><p>${esc(c.fast)}</p><p>${esc(c.guard)}</p><button class="btn secondary" data-calc-retry>다시 풀기</button></div>`:''}${c.chart?`<button class="btn secondary" data-ck21-open-from-calc="${esc(c.chart)}">해당 차트에서 이동 보기 →</button>`:''}<p class="small muted">기출 출제개념을 연습하는 창작 문항입니다. 시중 교재 전체의 풀이속도를 비교·검증한 결과는 아닙니다.</p></section>`;}
 document.addEventListener('click',e=>{
+ const link=e.target.closest('[data-ck21-open-from-calc]');if(link){if(window.CK21Charts?.selectProblem(link.dataset.ck21OpenFromCalc)){state.ck21CompareMode='chart';changeView('venn')}return;}
  const t=e.target.closest('[data-calc-index],[data-calc-choice],[data-calc-next],[data-calc-hint],[data-calc-retry]');if(!t)return;
  if(t.hasAttribute('data-calc-index')){calcIndex=Number(t.dataset.calcIndex);calcAnswer=0;calcHint=false;}
  else if(t.hasAttribute('data-calc-choice')){if(calcAnswer)return;calcAnswer=Number(t.dataset.calcChoice);}
- else if(t.hasAttribute('data-calc-next')){calcIndex=(calcIndex+1)%CALC_BANK.length;calcAnswer=0;calcHint=false;}
+ else if(t.hasAttribute('data-calc-next')){calcIndex=(calcIndex+1)%calcBank().length;calcAnswer=0;calcHint=false;}
  else if(t.hasAttribute('data-calc-retry')){calcAnswer=0;calcHint=false;}
  else calcHint=!calcHint;
  render();
@@ -905,7 +936,7 @@ const BOOK_CHAPTERS={
  settings:['13','나의 공부를 간직하다','배운 것과 적은 것을 안전하게 보관하세요.','내 데이터','cream',2]
 };
 const BOOK_ART_META=[['일본식 다리','1899','74796'],['일본식 다리','1899','74796'],['일본식 다리','1899','74796']];
-function boardFrame(content){const links=[['home','오늘의 학습'],['theory','핵심 이론 · 능동회상'],['visual','그림 연상'],['typing','분필 타이핑'],['listen','문제·정답 듣기'],['reverse','기출 → 이론'],['quiz','문제 풀기'],['calc','계산 집중'],['exam','10개년 기출'],['venn','비교 도형'],['wrong','오답 복습'],['plan','학습계획']];const ch=BOOK_CHAPTERS[state.view]||BOOK_CHAPTERS.home,art=BOOK_ART_META[ch[5]];return `<div class="atelier-heading"><a class="atelier-wordmark" href="#main">Concept<span>Knot</span><small>개념을 엮는 작은 서재</small></a><span class="atelier-caption">STUDY AT YOUR OWN PACE / 매일, 한 장씩</span></div><nav class="board-tabs" aria-label="칠판 학습 탭">${links.map(([v,n])=>`<button class="board-tab ${state.view===v?'active':''}" data-go="${v}" ${state.view===v?'aria-current="page"':''}>${n}</button>`).join('')}</nav><div class="board-stage ${state.view==='home'?'is-home':''}"><div class="book-rail"><aside class="board-ticket book-${ch[4]}" aria-label="${esc(ch[3])} 책 표지"><div class="book-spine" aria-hidden="true"></div><div class="book-art"><img src="${BOOK_ART_IMAGES[ch[5]]}" alt="클로드 모네, ${art[0]}, ${art[1]}" width="520" height="600"><span class="book-collection">THE STUDY COLLECTION<br>No. ${ch[0]}</span></div><div class="book-paper"><div class="book-meta"><span>CONCEPTKNOT</span><span>CHAPTER ${ch[0]}</span></div><h2>${esc(ch[1])}</h2><p>${esc(ch[2])}</p><div class="ticket-stub"><span>${esc(ch[3])}</span><span aria-hidden="true">↗</span></div></div></aside><div class="book-credit"><a href="https://www.nga.gov/artworks/74796-japanese-footbridge" target="_blank" rel="noopener noreferrer">Claude Monet · ${art[1]}<br>${art[0]} / NGA · Public Domain</a></div></div><div class="board-content">${state.view==='home'?`<button class="memory-entry" data-go="visual"><span>작은 기억 연습</span> 그림 네 장으로 떠올리는 토지의 특성 <b>↗</b></button>`:''}${content}</div></div>${chalkFooter()}`;}
+function boardFrame(content){const links=[['home','오늘의 학습'],['theory','핵심 이론 · 능동회상'],['visual','그림 연상'],['typing','분필 타이핑'],['listen','문제·정답 듣기'],['reverse','기출 → 이론'],['quiz','문제 풀기'],['calc','계산 집중'],['exam','10개년 기출'],['venn','비교 도형과 차트'],['wrong','오답 복습'],['plan','학습계획']];const ch=BOOK_CHAPTERS[state.view]||BOOK_CHAPTERS.home,art=BOOK_ART_META[ch[5]];return `<div class="atelier-heading"><a class="atelier-wordmark" href="#main">Concept<span>Knot</span><small>개념을 엮는 작은 서재</small></a><span class="atelier-caption">STUDY AT YOUR OWN PACE / 매일, 한 장씩</span></div><nav class="board-tabs" aria-label="칠판 학습 탭">${links.map(([v,n])=>`<button class="board-tab ${state.view===v?'active':''}" data-go="${v}" ${state.view===v?'aria-current="page"':''}>${n}</button>`).join('')}</nav><div class="board-stage ${state.view==='home'?'is-home':''}"><div class="book-rail"><aside class="board-ticket book-${ch[4]}" aria-label="${esc(ch[3])} 책 표지"><div class="book-spine" aria-hidden="true"></div><div class="book-art"><img src="${BOOK_ART_IMAGES[ch[5]]}" alt="클로드 모네, ${art[0]}, ${art[1]}" width="520" height="600"><span class="book-collection">THE STUDY COLLECTION<br>No. ${ch[0]}</span></div><div class="book-paper"><div class="book-meta"><span>CONCEPTKNOT</span><span>CHAPTER ${ch[0]}</span></div><h2>${esc(ch[1])}</h2><p>${esc(ch[2])}</p><div class="ticket-stub"><span>${esc(ch[3])}</span><span aria-hidden="true">↗</span></div></div></aside><div class="book-credit"><a href="https://www.nga.gov/artworks/74796-japanese-footbridge" target="_blank" rel="noopener noreferrer">Claude Monet · ${art[1]}<br>${art[0]} / NGA · Public Domain</a></div></div><div class="board-content">${state.view==='home'?`<button class="memory-entry" data-go="visual"><span>작은 기억 연습</span> 그림 네 장으로 떠올리는 토지의 특성 <b>↗</b></button>`:''}${content}</div></div>${chalkFooter()}`;}
 let bookScrollFrame=0;
 function bookScroll(){cancelAnimationFrame(bookScrollFrame);bookScrollFrame=requestAnimationFrame(()=>{const rail=document.querySelector('.book-rail'),book=rail?.querySelector('.board-ticket');if(!book)return;const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;if(reduced){book.style.removeProperty('transform');book.style.opacity='1';return;}const top=rail.getBoundingClientRect().top;const progress=Math.max(0,Math.min(1,(100-top)/280));book.style.transform=`translateY(${progress*76}px) rotate(${(1-progress)*-1.5}deg) scale(${1-progress*.08})`;book.style.opacity=String(1-progress);rail.classList.toggle('book-buried',progress>.98);});}
 window.addEventListener('scroll',bookScroll,{passive:true});window.addEventListener('resize',bookScroll,{passive:true});
@@ -1336,6 +1367,7 @@ if(visualExam){
  if(EXAMS.some(x=>x.year===year)&&n>=1&&n<=80){state.year=year;state.examQuestion=n;changeView('exam');}
  return;
 }
+const mockType=t.closest('[data-ck21-mock-mode]');if(mockType){state.ck21MockMode=mockType.dataset.ck21MockMode==='judge'?'judge':'shuffle';state.quizIndex=0;save();render();return;}
 const setPick=t.closest('[data-ck20-mock-set]');if(setPick){state.mockSet=Math.max(0,Math.min(5,Number(setPick.dataset.ck20MockSet)||0));state.quizIndex=0;save();render();return;}
 const source=t.closest('[data-ck20-exam-source]');if(source){const parts=source.dataset.ck20ExamSource.split('-').map(Number);if(parts.length===2&&Number.isInteger(parts[0])&&Number.isInteger(parts[1])){state.year=parts[0];state.examQuestion=parts[1];changeView('exam')}return;}
 const qbtn=t.closest('[data-quiz]');if(qbtn){state.quizIndex=Number(qbtn.dataset.quiz);save();render();return;}
@@ -1626,7 +1658,7 @@ window.addEventListener('beforeunload',()=>{if(localPdfUrl)URL.revokeObjectURL(l
     ['home','오늘의 학습'],['theory','핵심 이론'],['visual','그림 연상'],
     ['typing','분필 타이핑'],['listen','문제·정답'],['reverse','기출 → 이론'],
     ['quiz','문제 풀이'],['calc','계산 집중'],['exam','10개년 기출'],
-    ['venn','비교 도형'],['wrong','오답 복습'],['plan','학습 계획'],['final','최종 정리본']
+    ['venn','비교 도형과 차트'],['wrong','오답 복습'],['plan','학습 계획'],['final','최종 정리본']
   ];
   defaults.v7LeftWidth=null;
   defaults.ck6Swapped=false;
@@ -1644,7 +1676,7 @@ window.addEventListener('beforeunload',()=>{if(localPdfUrl)URL.revokeObjectURL(l
   }catch(e){console.warn('보조 화면 상태 복원 실패',e);}
   if(!state.questionNotes||typeof state.questionNotes!=='object'||Array.isArray(state.questionNotes))state.questionNotes={};
   if(!state.v7MigratedNotes||typeof state.v7MigratedNotes!=='object'||Array.isArray(state.v7MigratedNotes))state.v7MigratedNotes={};
-  if(!Number.isFinite(Number(state.v7LeftWidth))||Number(state.v7LeftWidth)<132.5)state.v7LeftWidth=null;
+  if(!Number.isFinite(Number(state.v7LeftWidth))||Number(state.v7LeftWidth)<86)state.v7LeftWidth=null;
   state.v7HistoryOpen=Boolean(state.v7HistoryOpen);
   state.ck6Swapped=Boolean(state.ck6Swapped);
   state.ck9SpenMode=Boolean(state.ck9SpenMode);
@@ -1702,29 +1734,27 @@ window.addEventListener('beforeunload',()=>{if(localPdfUrl)URL.revokeObjectURL(l
         <div class="ck-v7-art-shade"></div>
         <div class="ck-v7-board-overlay">
           <div class="ck-v7-board-caption"><span>CONCEPTKNOT / NOTE</span><span>● LOCAL</span></div>
-          <h2 class="ck-v7-board-heading">${esc(ctx.label)}</h2>
+          <div class="ck21-board-title-row"><h2 class="ck-v7-board-heading">${esc(ctx.label)}</h2>
+<div class="ck21-export-tools" role="group" aria-label="현재 칠판 내보내기">
+<button type="button" data-ck-v7-command="txt" aria-label="제목과 날짜를 포함한 메모 TXT 저장" title="TXT 내려받기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" width="17" height="17"><path d="M5 3h10l4 4v14H5zM14 3v5h5"/><path d="M8 13h8m-8 4h8"/></svg><span>TXT</span></button>
+<button type="button" data-ck-v7-command="pdf" aria-label="제목과 날짜를 포함한 메모 PDF 인쇄" title="PDF로 저장"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" width="17" height="17"><path d="M5 3h10l4 4v14H5zM14 3v5h5"/><path d="M8 12h8m-8 4h8"/></svg><span>PDF</span></button></div></div>
           <div class="ck-v7-board-small" id="ck-v7-note-status">✓ 자동 저장</div>
           
-          <div class="ck9-spen-toolbar" data-ck9-spen-toolbar ${state.ck9SpenMode?'':'hidden'} aria-label="S Pen 전용 필기 도구">
-            <div role="group" aria-label="필기 도구 선택">
-              <button type="button" data-ck9-spen-tool="pen" aria-pressed="${state.ck9SpenTool==='pen'}">펜</button>
-              <button type="button" data-ck9-spen-tool="highlighter" aria-pressed="${state.ck9SpenTool==='highlighter'}">형광펜</button>
-              <button type="button" data-ck9-spen-tool="eraser" aria-pressed="${state.ck9SpenTool==='eraser'}">지우개</button>
-            </div>
-            <label>굵기 <input data-ck9-spen-width type="range" min="1" max="13" step=".5" value="${state.ck9SpenWidth}" aria-label="S Pen 굵기"></label>
-            <div role="group" aria-label="필기 작업">
-              <button type="button" data-ck9-spen-action="undo" title="되돌리기">↶</button>
-              <button type="button" data-ck9-spen-action="redo" title="다시하기">↷</button>
-              <button type="button" data-ck9-spen-action="fullscreen" title="집중 필기">⛶</button>
-              <button type="button" data-ck9-spen-action="clear" title="전체 지우기">⌫</button>
-            </div>
-          </div>
           <div class="ck-v7-writing-surface" data-ck-v7-surface title="키보드 입력 · S펜 직접 필기">
             ${chalkEditor('notes','workspace:'+ctx.key,'현재 문항의 통합 학습 메모')}
             <canvas class="ck-v7-pen-layer" role="img" aria-label="문항별 S펜 손글씨"></canvas>
           </div>
-          <div class="ck-v7-toolrow" aria-label="분필과 필기 도구">
+          <button type="button" class="ck21-board-resize" data-ck21-board-resize aria-label="칠판 높이 늘리기·줄이기" title="칠판 높이 드래그" aria-valuemin="240" aria-valuemax="95" aria-valuenow="60">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 18 18 6M10 18h8v-8"/></svg>
+          </button>
+          <div class="ck-v7-toolrow ck21-toolrow" aria-label="분필과 S펜 공통 필기 도구">
             <button class="ck9-spen-toggle" type="button" data-ck9-spen="toggle" aria-pressed="${!!state.ck9SpenMode}" title="S Pen 모드">S</button>
+<span class="ck21-spen-tools" data-ck9-spen-toolbar ${state.ck9SpenMode?'':'hidden'}>
+<button type="button" data-ck9-spen-tool="pen" aria-pressed="${state.ck9SpenTool==='pen'}" title="펜" aria-label="펜">✎</button>
+<button type="button" data-ck9-spen-tool="highlighter" aria-pressed="${state.ck9SpenTool==='highlighter'}" title="형광펜" aria-label="형광펜">▰</button>
+<button type="button" data-ck9-spen-tool="eraser" aria-pressed="${state.ck9SpenTool==='eraser'}" title="지우개" aria-label="지우개">⌫</button>
+<label title="S Pen 굵기"><input data-ck9-spen-width type="range" min="1" max="13" step=".5" value="${state.ck9SpenWidth}" aria-label="S Pen 굵기"></label>
+</span>
             ${CHALK_COLORS.map((x,i)=>`<button class="ck-v7-dot" type="button" data-chalk-color="${i}" aria-label="${esc(CHALK_NAMES[i])} 분필" title="${esc(CHALK_NAMES[i])} 분필" aria-pressed="${i===mode?'true':'false'}" style="--dot-color:${x}"><i></i></button>`).join('')}
             <label class="ck10-color" title="사용자 분필색"><input type="color" data-ck10-custom-color value="${esc(state.ck10CustomColor||'#8ee5ff')}" aria-label="사용자 분필 색상"></label>
             <label class="ck10-font" title="칠판 글자 크기">가 <input type="range" data-ck10-font min="12" max="36" step="1" value="${Number(state.ck10FontSize)||18}" aria-label="칠판 글자 크기"></label>
@@ -1732,9 +1762,7 @@ window.addEventListener('beforeunload',()=>{if(localPdfUrl)URL.revokeObjectURL(l
             <button type="button" data-ck-v7-command="undo" title="손글씨 되돌리기" aria-label="손글씨 되돌리기">↶</button>
             <button type="button" data-ck-v7-command="redo" title="손글씨 다시하기" aria-label="손글씨 다시하기">↷</button>
             <button type="button" data-ck-v7-command="clear" title="손글씨 지우기" aria-label="손글씨 지우기">⌫</button>
-            <button type="button" data-ck-v7-command="txt" title="메모 TXT 저장">TXT</button>
-            <button type="button" data-ck-v7-command="pdf" title="메모 PDF 출력">PDF</button>
-            <button type="button" data-ck-v7-command="export" title="이 문항 JSON 저장" aria-label="이 문항 JSON 저장">⇩</button>
+                        <button type="button" data-ck-v7-command="export" title="이 문항 JSON 저장" aria-label="이 문항 JSON 저장">⇩</button>
           </div>
 
         </div>
@@ -1745,7 +1773,7 @@ window.addEventListener('beforeunload',()=>{if(localPdfUrl)URL.revokeObjectURL(l
     const ctx=context(),date=new Date().toLocaleDateString('ko-KR',{timeZone:'Asia/Seoul',month:'long',day:'numeric',weekday:'short'});
     return `<div class="ck-v7-mainframe"><header class="ck-v7-global-nav">
       <div class="ck-v7-nav-pill">
-        <a href="#main" class="ck-v7-logo" data-go="landing" aria-label="CONCEPTKNOT 정원 첫 화면">Concept<b>Knot</b></a>
+        <a href="#main" class="ck-v7-logo" data-go="landing" aria-label="CONCEPTKNOT 정원 첫 화면"><img class="ck21-brand-icon" src="./assets/ck-logo-v21.svg" alt="" width="24" height="24">Concept<b>Knot</b></a>
         <nav class="board-tabs" aria-label="전체 학습 메뉴">
           ${designNav.map(([page,label])=>`<button type="button" class="board-tab ${page===state.view?'active':''}" data-go="${page}" aria-current="${page===state.view?'page':'false'}">${label}</button>`).join('')}
         </nav>
@@ -1900,13 +1928,14 @@ window.addEventListener('beforeunload',()=>{if(localPdfUrl)URL.revokeObjectURL(l
         if(status)status.textContent=ok?'✓ 자동 저장':'저장 공간 부족 · JSON 백업 필요';
       }
       try{surface.releasePointerCapture(pointer)}catch{}
-      pointer=null;draw();
+      pointer=null;document.body.classList.remove('ck21-stylus-writing');draw();
     };
     surface.addEventListener('pointerdown',e=>{
       if(pointer!==null)return;
       if(e.pointerType!=='pen'&&!(e.pointerType==='mouse'&&e.shiftKey))return;
       // Stylus only; ignore finger/palm input even while dedicated mode is on.
       e.preventDefault();e.stopPropagation();
+      document.body.classList.add('ck21-stylus-writing');
       pointer=e.pointerId;surface.setPointerCapture(e.pointerId);
       const x=inkPoint(e,surface.getBoundingClientRect());
       const chosen=state.ck9SpenMode?state.ck9SpenTool:'pen';
@@ -2044,7 +2073,7 @@ window.addEventListener('beforeunload',()=>{if(localPdfUrl)URL.revokeObjectURL(l
       if(strip)strip.hidden=!state.ck9SpenMode;
       save();
       requestAnimationFrame(()=>surface?.__ckV7Draw?.());
-      toast(state.ck9SpenMode?'S Pen 전용 모드 · 펜으로 필기, 손가락으로 스크롤':'일반 입력 모드');
+      toast(state.ck9SpenMode?'S Pen 모드 · 펜이 닿는 동안 페이지 이동을 막습니다.':'일반 입력 모드');
       return;
     }
     if(chosen){
@@ -2131,7 +2160,7 @@ window.addEventListener('beforeunload',()=>{if(localPdfUrl)URL.revokeObjectURL(l
     if(cmd==='undo'&&list.length){const redos=inkRedo.get(key)||[];redos.push(list.pop());inkRedo.set(key,redos);}
     if(cmd==='redo'){const redos=inkRedo.get(key)||[];if(redos.length)list.push(redos.pop());}
     if(cmd==='clear'){if(!list.length)return;if(!confirm('이 문항의 손글씨를 지울까요? 키보드 메모는 유지됩니다.'))return;state.ink[key]=[];inkRedo.set(key,[]);}
-    if(cmd==='txt'||cmd==='pdf'){window.CK10?.exportBoard?.(cmd,board.dataset.ckV7Key,chalkRecord('notes',key).text);return;}
+    if(cmd==='txt'||cmd==='pdf'){window.CK10?.exportBoard?.(cmd,board.dataset.ckV7Key,chalkRecord('notes',key).text,board.querySelector('.ck-v7-board-heading')?.textContent?.trim());return;}
     if(cmd==='export'){
       const n=chalkRecord('notes',key),prior=state.questionNotes?.[board.dataset.ckV7Key]||{};
       const payload={schema:'conceptknot-note-v1',questionKey:board.dataset.ckV7Key,exportedAt:new Date().toISOString(),text:n.text,colors:n.colors,strokes:list,legacyNote:prior.text||'',updated:Date.now()};
@@ -2236,7 +2265,7 @@ window.addEventListener('beforeunload',()=>{if(localPdfUrl)URL.revokeObjectURL(l
   const lowMemory=Number(navigator?.deviceMemory||8)<=2;
   let lastPointer=null,raf=0,sceneX=0,sceneY=0;
   function animationsDisabled(){
-    return Boolean(reduced?.matches||hasBatterySave||lowMemory||document.hidden);
+    return Boolean(state.view!=='landing'||document.body?.dataset.ckV8Tab!=='landing'||reduced?.matches||hasBatterySave||lowMemory||document.hidden);
   }
   function applyPausedState(){
     if(!document.body)return;
@@ -2294,9 +2323,12 @@ window.addEventListener('beforeunload',()=>{if(localPdfUrl)URL.revokeObjectURL(l
 
   const priorRender=render;
   render=function(){
-    if(document.body)ensureScene();
+    if(document.body){
+      document.body.dataset.ckV8Tab=state.view;
+      applyPausedState();
+      if(state.view==='landing')ensureScene();
+    }
     priorRender();
-    if(document.body)document.body.dataset.ckV8Tab=state.view;
     updateStudyFocus();
   };
 })();
