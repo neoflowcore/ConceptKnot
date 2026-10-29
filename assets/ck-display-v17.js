@@ -3,8 +3,8 @@
 'use strict';
 const key='conceptknot-display-v17',root=document.documentElement;
 const fields=[
- ['saturation','배경 채도',0,150,110,'%','--ck17-bg-saturation'],
- ['backgroundBrightness','배경 밝기',40,130,102,'%','--ck17-bg-brightness'],
+ ['saturation','배경 채도',0,150,100,'%','--ck17-bg-saturation'],
+ ['backgroundBrightness','배경 밝기',40,130,100,'%','--ck17-bg-brightness'],
  ['hue','배경 색조',-180,180,0,'°','--ck17-bg-hue'],
  ['brightness','전체 밝기',50,130,100,'%','--ck17-brightness'],
  ['contrast','전체 명암',50,150,100,'%','--ck17-contrast']
@@ -29,7 +29,7 @@ const custom=()=>validHex(values.backgroundCustom)||customDefault;
 const baseColor=()=>chosen()==='custom'?custom():presets[chosen()].color;
 function tint(hex){
  const hue=values.hue||0,sat=values.saturation,bright=values.backgroundBrightness;
- if(hue===0&&sat===110&&bright===102)return hex;
+ if(hue===0&&sat===100&&bright===100)return hex;
  const rgb=[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255);
  const hi=Math.max(...rgb),lo=Math.min(...rgb),delta=hi-lo;
  let h=0,l=(hi+lo)/2,a=0;
@@ -39,8 +39,8 @@ function tint(hex){
   h*=60;
  }
  h=(h+hue+720)%360;
- a=Math.max(0,Math.min(1,a*sat/110));
- l=Math.max(0,Math.min(1,l*bright/102));
+ a=Math.max(0,Math.min(1,a*sat/100));
+ l=Math.max(0,Math.min(1,l*bright/100));
  const c=(1-Math.abs(2*l-1))*a,x=c*(1-Math.abs(h/60%2-1)),m=l-c/2;
  const trio=h<60?[c,x,0]:h<120?[x,c,0]:h<180?[0,c,x]:h<240?[0,x,c]:h<300?[x,0,c]:[c,0,x];
  return '#'+trio.map(v=>Math.round(Math.max(0,Math.min(1,v+m))*255).toString(16).padStart(2,'0')).join('').toUpperCase();
@@ -78,10 +78,10 @@ function backgroundControls(){
 }
 
 try{values=JSON.parse(localStorage.getItem(key)||'{}')||{}}catch(e){}
-if(values.scenePaletteVersion!==33){
- if(values.saturation==null||values.saturation===72)values.saturation=110;
- if(values.backgroundBrightness==null||values.backgroundBrightness===92)values.backgroundBrightness=102;
- values.scenePaletteVersion=33;
+if(values.scenePaletteVersion!==36){
+ if(values.saturation==null||(values.saturation===72||values.saturation===110))values.saturation=100;
+ if(values.backgroundBrightness==null||(values.backgroundBrightness===92||values.backgroundBrightness===102))values.backgroundBrightness=100;
+ values.scenePaletteVersion=36;
  try{localStorage.setItem(key,JSON.stringify(values))}catch{}
 }
 function apply(){

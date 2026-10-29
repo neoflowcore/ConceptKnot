@@ -1,0 +1,5 @@
+const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const js=fs.readFileSync('assets/ck-garden-25d-v36.js','utf8'),html=fs.readFileSync('index.html','utf8');
+test('active scene parses and has no WebGL import',()=>{new vm.Script(js);assert.ok(html.includes('ck-garden-25d-v36.js'));assert.ok(!html.includes('<script type="module" src="./assets/ck-landscape3d.js"'));});
+test('hidden scene cannot reset responsive height to zero',()=>{const source=js.slice(js.indexOf('function layout()'),js.indexOf('function sync()'));let value='936px';const host={clientHeight:0,style:{setProperty:(key,v)=>value=v}};const run=new Function('host','innerHeight',source+';layout();');run(host,936);assert.equal(value,'936px');host.clientHeight=1000;run(host,844);assert.equal(value,'844px');});
+test('production images are locally available and modest in size',()=>{for(const f of ['garden-plate','cub-pencil','cub-sleep']){const b=fs.readFileSync('assets/'+f+'-v36.webp');assert.equal(b.toString('ascii',8,12),'WEBP');assert.ok(b.length<500000);}});
