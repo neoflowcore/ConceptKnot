@@ -26,7 +26,7 @@ let resizeObserver, last = 0, pointer = {x: 0, y: 0}, elapsed = 0, firstDraw = f
 let windowFocused=true,lastPaint=0,introDone=false,scrollCue=null,rendererFailed=false,cubButton=null,cubTime=0;
 let renderTimer=0;
 function queueFrame(){
- if(frameId||renderTimer||!shouldAnimate()||introDone)return;
+ if(frameId||renderTimer||!shouldAnimate())return;
  renderTimer=setTimeout(()=>{renderTimer=0;if(shouldAnimate())frameId=requestAnimationFrame(tick)},FRAME_MS);
 }
 function cancelFrames(){if(frameId)cancelAnimationFrame(frameId);clearTimeout(renderTimer);renderTimer=0;frameId=0;}
@@ -38,6 +38,7 @@ function synchronizeActivity(){
  if(root)root.dataset.ck3dActive=String(active);
  if(!active){
   cancelFrames();last=0;
+  if(root)root.dataset.ck3dIdle='true';
   if(activeLast&&renderer){
    // Release full-screen render targets: an invisible 3D canvas is not free.
    renderer.setPixelRatio(1);
@@ -52,7 +53,8 @@ function synchronizeActivity(){
   resize();
  }
  activeLast=true;
- if(!introDone)queueFrame();
+ if(root)root.dataset.ck3dIdle='false';
+ queueFrame();
 }
 
 function h(x, z) {
@@ -359,7 +361,7 @@ function resize(){
 function replayCub(){
  if(!renderer||!shouldAnimate())return;
  cancelFrames();cubTime=0;introDone=false;last=0;
- if(root)root.dataset.ck3dIdle='false';
+ if(root)root.dataset.ck3dIntroDone='false';
  queueFrame();
 }
 function createScrollCue(host){
@@ -453,8 +455,8 @@ function tick(ms){
   camera.lookAt(0,6,-30);
   renderer.render(scene,camera);
   frameCount++;updateScrollCue();
-  if(cubTime>=INTRO_SECONDS){introDone=true;if(root)root.dataset.ck3dIdle="true";}
-  else queueFrame();
+  if(cubTime>=INTRO_SECONDS&&!introDone){introDone=true;if(root)root.dataset.ck3dIntroDone='true';}
+  queueFrame();
 }
 function cleanup(){
   cancelFrames();
@@ -476,4 +478,4 @@ function initialize(){
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initialize,{once:true});
 else initialize();
-window.CK3DPerformance=Object.freeze({getState:()=>({active:!!(frameId||renderTimer),idle:introDone,antialias:true,fpsCap:24,shadowPasses:0,initialized:!!renderer,landing:isLanding(),hidden:document.hidden,frames:frameCount,quality:QUALITY,dpr:renderer?.getPixelRatio?.()||0})});
+window.CK3DPerformance=Object.freeze({getState:()=>({active:!!(frameId||renderTimer),idle:!shouldAnimate(),cubSettled:introDone,antialias:true,fpsCap:24,shadowPasses:0,initialized:!!renderer,landing:isLanding(),hidden:document.hidden,frames:frameCount,quality:QUALITY,dpr:renderer?.getPixelRatio?.()||0})});

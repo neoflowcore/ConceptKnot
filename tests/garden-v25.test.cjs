@@ -14,12 +14,14 @@ test('smiling cub has visible face marks and a continuous complete replay cycle'
  near.forEach((n,i)=>assert.ok(Math.abs(n-end[i])<.00001));
  cub.animate(0);assert.deepEqual(pose(),start);
 });
-test('click replay resets only cub clock and retains idle GPU stop',()=>{
+test('click replay resets only cub clock while the landing landscape keeps rendering',()=>{
  const s=read('assets/ck-landscape3d.js');
  assert.match(s,/cubButton.addEventListener\('click',replayCub\)/);
  assert.match(s,/cubTime=0;introDone=false;last=0/);
  assert.match(s,/scenes.pressCub\?\.animate\(cubTime\)/);
- assert.match(s,/if\(cubTime>=INTRO_SECONDS\)/);
+ assert.match(s,/if\(cubTime>=INTRO_SECONDS&&!introDone\)/);
+ assert.doesNotMatch(s,/if\(!introDone\)queueFrame\(\)/);
+ assert.match(s,/queueFrame\(\);\n}\nfunction cleanup\(\)/);
  assert.doesNotMatch(s.slice(s.indexOf('function replayCub'),s.indexOf('function createScrollCue')),/playTime=0/);
  new vm.Script(s.replace(/^import .*;$/gm,''));
 });
