@@ -177,7 +177,7 @@
    if(moved){e.preventDefault();e.stopImmediatePropagation()}
    return;
   }
-  if((e.ctrlKey||e.altKey)&&e.key==='Enter'&&shown&&accessible(shown)&&!isEditor(shown)){
+  if(e.ctrlKey&&!e.altKey&&!e.metaKey&&e.key==='Enter'&&shown&&accessible(shown)&&!isEditor(shown)){
    e.preventDefault();shown.click();return;
   }
   if(e.key==='F2'&&!e.ctrlKey&&!e.altKey&&!e.metaKey){

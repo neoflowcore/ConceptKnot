@@ -198,7 +198,7 @@
   document.addEventListener('touchcancel',()=>{touchStart=null;},{passive:true});
 
   document.addEventListener('keydown',e=>{
-    if(e.defaultPrevented||inEditor(e.target)||!e.altKey||e.ctrlKey||e.metaKey||e.shiftKey)return;
+    if(e.defaultPrevented||inEditor(e.target)||!e.ctrlKey||e.altKey||e.metaKey||e.shiftKey)return;
     if(e.key==='ArrowDown'){e.preventDefault();step(1);}
     if(e.key==='ArrowUp'){e.preventDefault();step(-1);}
   });

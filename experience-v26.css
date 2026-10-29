@@ -286,3 +286,124 @@ html[data-ck-theme="dark"] #ck30-analysis-dialog .ck30-analysis-notice{color:#a3
  #main .ck-v7-content .page-intro:has(.ck30-exam-toggle) h1{font-size:clamp(17px,5vw,23px)}
  #main .ck-v7-content .ck30-voice-settings{width:29px;min-width:29px}
 }
+
+/* v31 · typing keys & board placement: no changes to study-card palettes. */
+#main .ck-v7-typing .ck31-typing-keyset{
+ display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-inline:auto 0;
+}
+#main .ck-v7-typing .ck31-typing-keyset button{
+ display:inline-flex;align-items:center;justify-content:center;gap:5px;
+ min-height:28px;padding:4px 8px;font-size:11px;font-weight:700;
+ border:1px solid #bbd0cb;border-radius:7px;background:#ebf0ec;
+ color:#5b6e67;cursor:pointer;white-space:nowrap;
+}
+#main .ck-v7-typing .ck31-typing-keyset button[aria-pressed="true"]{
+ border-color:#6fa899;background:#dbeee8;color:#246151;
+ box-shadow:inset 0 0 0 1px rgba(107,169,148,.25);
+}
+#main .ck-v7-typing .ck31-typing-keyset button:focus-visible,
+#main .ck-v7-stage .ck31-board-option:focus-visible{outline:2px solid #5a9ac4;outline-offset:3px}
+#main .ck-v7-typing .ck-v7-ihead{flex-wrap:wrap}
+#main .ck-v7-typing .ck-v7-ihead small{flex:0 0 auto}
+/* All source glyphs occupy their original slots. No font-weight, transform,
+   letter substitution or moving entire target lines on input. */
+#main .ck-v7-typing .chalk-mirror.ck31-fixed-underlay .ck-v3-unit{
+ font-weight:500!important;font-kerning:none!important;letter-spacing:inherit!important;
+ animation:none!important;transform:none!important;transition:none!important;
+}
+#main .ck-v7-typing .chalk-mirror.ck31-fixed-underlay .ck31-skipped{
+ opacity:.4;color:#91a5ad!important;
+}
+#main .ck-v7-typing .chalk-mirror.ck31-fixed-underlay .ck31-optional{
+ opacity:.62;color:#98abb2!important;
+}
+#main .ck-v7-typing .chalk-mirror.ck31-fixed-underlay::before{
+ transition:none!important;
+}
+/* Keep icons in their exact requested order: resize, swap, vertical dock,
+   collapse, then ChatGPT / Gemini / Claude on the same rail. */
+#main .ck-v7-stage .ck6-center-rail .ck31-board-option{
+ display:grid!important;place-items:center!important;flex:none!important;
+ width:var(--ck9-handle-width,19px)!important;height:var(--ck9-handle-width,19px)!important;
+ min-height:var(--ck9-handle-width,19px)!important;padding:0!important;
+ border-radius:50%!important;
+}
+#main .ck-v7-stage .ck6-center-rail .ck31-board-option svg{
+ width:13px!important;height:13px!important;
+}
+#main .ck-v7-stage .ck6-center-rail .ck31-board-option[aria-pressed="true"]{
+ background:rgba(232,249,241,.95)!important;border-color:#91bfb0!important;
+ box-shadow:0 0 0 2px rgba(186,225,207,.2)!important;
+}
+#main .board-stage.ck-v7-stage.ck31-board-bottom,
+#main .board-stage.ck-v7-stage.is-home.ck31-board-bottom,
+#main .board-stage.ck-v7-stage.ck6-swapped.ck31-board-bottom{
+ display:grid!important;
+ grid-template-columns:minmax(0,1fr) 30px!important;
+ grid-template-rows:auto auto!important;
+ column-gap:var(--ck6-gap,8px)!important;row-gap:12px!important;
+ align-items:start!important;
+}
+#main .ck-v7-stage.ck31-board-bottom>.ck-v7-content{
+ display:block!important;grid-column:1!important;grid-row:1!important;
+ width:auto!important;min-width:0!important;
+}
+#main .ck-v7-stage.ck31-board-bottom>.ck-v7-board-shell{
+ display:block;grid-column:1!important;grid-row:2!important;
+ width:100%!important;min-width:0!important;
+}
+#main .ck-v7-stage.ck31-board-bottom>.ck6-center-rail{
+ grid-column:2!important;grid-row:1 / span 2!important;align-self:stretch!important;
+ min-height:120px!important;
+}
+#main .ck-v7-stage.ck31-board-bottom .ck-v7-board:not(.ck9-spen-fullscreen){
+ position:relative!important;top:auto!important;min-height:270px!important;
+ height:calc(clamp(285px,42svh,550px) + var(--ck21-board-extend,0px))!important;
+ max-height:none!important;width:100%!important;
+}
+#main .ck-v7-stage.ck31-board-bottom .ck-v7-writing-surface{min-height:125px!important}
+/* Collapsing removes the board column rather than leaving a hidden blank pane;
+   the editor and S Pen strokes remain in the DOM and in local persistence. */
+#main .board-stage.ck-v7-stage.ck31-board-collapsed,
+#main .board-stage.ck-v7-stage.ck6-swapped.ck31-board-collapsed,
+#main .board-stage.ck-v7-stage.is-home.ck31-board-collapsed{
+ display:grid!important;grid-template-columns:0px 26px minmax(0,1fr)!important;
+ grid-template-rows:auto!important;column-gap:var(--ck6-gap,8px)!important;
+ align-items:stretch!important;
+}
+#main .ck-v7-stage.ck31-board-collapsed>.ck-v7-board-shell{display:none!important}
+#main .ck-v7-stage.ck31-board-collapsed>.ck6-center-rail{
+ grid-column:2!important;grid-row:1!important;min-height:120px!important;
+}
+#main .ck-v7-stage.ck31-board-collapsed>.ck-v7-content{
+ grid-column:3!important;grid-row:1!important;min-width:0!important;width:auto!important;
+}
+#main .ck-v7-stage:is(.ck31-board-bottom,.ck31-board-collapsed) [data-ck-v7-resize]{
+ opacity:.38!important;pointer-events:none!important;cursor:default!important;
+}
+@media(max-width:850px){
+ #main .board-stage.ck-v7-stage:is(.ck31-board-bottom,.ck31-board-collapsed),
+ #main .board-stage.ck-v7-stage.ck6-swapped:is(.ck31-board-bottom,.ck31-board-collapsed){
+  display:flex!important;flex-direction:column!important;gap:9px!important;
+ }
+ #main .ck-v7-stage:is(.ck31-board-bottom,.ck31-board-collapsed)>.ck6-center-rail{
+  order:0!important;width:100%!important;height:auto!important;min-height:30px!important;
+ }
+ #main .ck-v7-stage:is(.ck31-board-bottom,.ck31-board-collapsed)>.ck-v7-content{
+  order:1!important;width:100%!important;
+ }
+ #main .ck-v7-stage.ck31-board-bottom>.ck-v7-board-shell{
+  order:2!important;width:100%!important;
+ }
+ #main .ck-v7-stage.ck31-board-bottom .ck-v7-board:not(.ck9-spen-fullscreen){
+  height:clamp(280px,43svh,540px)!important;max-height:none!important;
+ }
+ #main .ck-v7-stage.ck31-board-collapsed>.ck-v7-board-shell{display:none!important}
+ #main .ck-v7-stage .ck6-center-rail .ck31-board-option{width:25px!important;height:25px!important;min-height:25px!important}
+ #main .ck-v7-typing .ck31-typing-keyset button{min-height:27px;padding:3px 6px}
+}
+@media(prefers-reduced-motion:reduce){
+ #main .ck-v7-stage .ck31-board-option{transition:none!important}
+}
+
+#main .ck-v7-stage .ck6-center-rail .ck31-board-option::after{content:none!important;pointer-events:none!important}
