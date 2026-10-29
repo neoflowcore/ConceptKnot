@@ -7,10 +7,10 @@
  'use strict';
  const routes=[
   ['home','오늘의 학습'],['theory','핵심 이론'],['visual','그림 연상'],
-  ['typing','분필 타이핑'],['listen','문제·정답'],['reverse','기출 → 이론'],
+  ['typing','타이핑'],['listen','문제·정답'],['reverse','기출 → 이론'],
   ['quiz','모의고사'],['calc','계산 집중'],['exam','10개년 기출'],
   ['venn','비교 도형'],['wrong','오답 복습'],['plan','학습 계획'],
-  ['final','최종 정리본']
+  ['final','정리본']
  ];
  const FOCUSABLE='button:not([disabled]),a[href],input:not([disabled]):not([type="hidden"]),textarea:not([disabled]),select:not([disabled]),[role="button"][tabindex],[role="separator"][tabindex]';
  let mode=false,prefix='',digitTimer=0,altUsed=false,altDown=false,shown=null,refreshScheduled=0;

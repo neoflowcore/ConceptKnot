@@ -23,3 +23,55 @@ html[data-ck-theme="dark"] #main :is(.ck26-question,.ck26-statements,.ck26-answe
 #ck-v8-ambient>:is(.ck-v8-art,.ck-v8-ground-texture,.ck-v8-cloud,.ck-v8-ornament,.ck-v8-bird){display:none!important;animation:none!important}
 body:not([data-ck-v8-tab="landing"]) #ck-v8-ambient{display:none!important}
 #ck-v8-ambient::before,#ck-v8-ambient::after{content:none!important}
+
+/* v27: compact study pager layout only; keep all existing colors and visual effects unchanged. */
+body .ck4-pager{
+  display:flex!important;
+  flex-direction:row!important;
+  flex-wrap:nowrap!important;
+  align-items:center!important;
+  box-sizing:border-box!important;
+  height:16px!important;
+  min-height:16px!important;
+  padding:0 4px!important;
+  gap:3px!important;
+}
+body .ck4-pager .ck4-pager-label{
+  position:static!important;
+  inset:auto!important;
+  display:block!important;
+  flex:0 1 auto!important;
+  max-width:min(29vw,116px)!important;
+  min-width:0!important;
+  margin:0 5px 0 2px!important;
+  padding:0!important;
+  line-height:14px!important;
+  white-space:nowrap!important;
+  text-overflow:ellipsis!important;
+  overflow:hidden!important;
+}
+body .ck4-pager button{
+  position:relative!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  flex:0 0 19px!important;
+  width:19px!important;
+  min-width:19px!important;
+  height:14px!important;
+  min-height:14px!important;
+  padding:0!important;
+  font-size:13px!important;
+  line-height:1!important;
+}
+body .ck4-pager button::before{
+  content:"";
+  position:absolute;
+  inset:-11px -2px;
+}
+body .ck4-pager .ck4-pager-count{
+  flex:0 0 auto!important;
+  min-width:39px!important;
+  font-size:10px!important;
+  line-height:14px!important;
+}

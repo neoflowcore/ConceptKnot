@@ -4,9 +4,9 @@
   'use strict';
   const pages=[
     ['landing','CONCEPTKNOT'],['home','오늘의 학습'],['theory','핵심 이론'],['visual','그림 연상'],
-    ['typing','분필 타이핑'],['listen','문제·정답'],['reverse','기출 → 이론'],
+    ['typing','타이핑'],['listen','문제·정답'],['reverse','기출 → 이론'],
     ['quiz','모의고사'],['calc','계산 집중'],['exam','10개년 기출'],
-    ['venn','비교 도형'],['wrong','오답 복습'],['plan','학습 계획'],['final','최종 정리본']
+    ['venn','비교 도형'],['wrong','오답 복습'],['plan','학습 계획'],['final','정리본']
   ];
   const main=document.getElementById('main');
   if(!main)return;
@@ -50,6 +50,7 @@
     const i=pageIndex();
     pager.querySelector('.ck4-pager-count').textContent=String(i+1).padStart(2,'0')+' / '+pages.length;
     pager.querySelector('.ck4-pager-label').textContent=pages[i][1];
+    pager.querySelector('.ck4-pager-label').title=pages[i][1];
     const before=pager.querySelector('[data-ck4-prev]'),after=pager.querySelector('[data-ck4-next]');
     before.disabled=i===0;after.disabled=i===pages.length-1;
     before.title=i>0?pages[i-1][1]:'첫 번째 페이지';
