@@ -17,3 +17,9 @@
 #main .ck26-answer-options{margin-top:24px}
 html[data-ck-theme="dark"] #main :is(.ck26-question,.ck26-statements,.ck26-answer-options){color:#dbe3e1}
 @container (max-width:380px){#main .ck-v7-content .ck20-quiz-picker :is(.small,.metrics-row){font-size:10px}#main .ck-v7-content .ck20-quiz-picker h3{font-size:12px}}
+
+/* Single scenery surface; no old image/pseudo-element can appear during routing. */
+#ck-v8-ambient{transition:none!important;animation:none!important}
+#ck-v8-ambient>:is(.ck-v8-art,.ck-v8-ground-texture,.ck-v8-cloud,.ck-v8-ornament,.ck-v8-bird){display:none!important;animation:none!important}
+body:not([data-ck-v8-tab="landing"]) #ck-v8-ambient{display:none!important}
+#ck-v8-ambient::before,#ck-v8-ambient::after{content:none!important}

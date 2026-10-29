@@ -2193,143 +2193,24 @@ window.addEventListener('beforeunload',()=>{if(localPdfUrl)URL.revokeObjectURL(l
       .replace('<div class="ck-v7-art-shade"></div>','');
   };
 
-  const sceneryMarkup=`
-  <div class="ck-v8-art"></div>
-  <div class="ck-v8-ground-texture"></div>
-  <div class="ck-v8-cloud ck-v8-cloud--a"></div>
-  <div class="ck-v8-cloud ck-v8-cloud--b"></div>
-
-  <svg class="ck-v8-ornament ck-v8-ornament--left" viewBox="0 0 210 300" aria-hidden="true">
-    <defs><radialGradient id="ck-v8-leaf-left" cx="30%" cy="22%" r="86%"><stop stop-color="#ddf5a2"/><stop offset=".35" stop-color="#9bd477"/><stop offset=".8" stop-color="#398e60"/><stop offset="1" stop-color="#236f56"/></radialGradient>
-    <linearGradient id="ck-v8-trunk-left" x2="1" y2="0"><stop stop-color="#3d5b43"/><stop offset=".45" stop-color="#b5a273"/><stop offset="1" stop-color="#4d6244"/></linearGradient></defs>
-    <g class="ck-v8-sway">
-      <path d="M105 292C100 246 98 183 101 130" fill="none" stroke="url(#ck-v8-trunk-left)" stroke-width="19" stroke-linecap="round"/>
-      <g class="ck-v8-leaf-sway">
-        <ellipse cx="92" cy="126" rx="68" ry="72" fill="#267a5b"/>
-        <ellipse cx="132" cy="96" rx="60" ry="77" fill="url(#ck-v8-leaf-left)"/>
-        <ellipse cx="72" cy="83" rx="58" ry="65" fill="url(#ck-v8-leaf-left)"/>
-        <ellipse cx="116" cy="39" rx="35" ry="38" fill="#b9e28f" opacity=".32"/>
-        <g fill="#d5efaf" opacity=".2"><circle cx="54" cy="75" r="5"/><circle cx="72" cy="123" r="3"/><circle cx="115" cy="77" r="3"/><circle cx="157" cy="108" r="5"/><circle cx="104" cy="138" r="4"/></g>
-      </g>
-    </g>
-    <g fill="#fff3ca"><circle cx="25" cy="279" r="8"/><circle cx="40" cy="282" r="6"/></g>
-  </svg>
-
-  <svg class="ck-v8-ornament ck-v8-ornament--right" viewBox="0 0 230 290" aria-hidden="true">
-    <defs><radialGradient id="ck-v8-leaf-right" cx="30%" cy="19%" r="90%"><stop stop-color="#d9f0a9"/><stop offset=".35" stop-color="#8bc989"/><stop offset=".76" stop-color="#2e9779"/><stop offset="1" stop-color="#125d55"/></radialGradient>
-    <linearGradient id="ck-v8-trunk-right" x2="1" y2="0"><stop stop-color="#4a634f"/><stop offset=".5" stop-color="#ae9667"/><stop offset="1" stop-color="#4d654a"/></linearGradient></defs>
-    <g class="ck-v8-sway">
-      <path d="M120 285C119 235 125 171 116 126" fill="none" stroke="url(#ck-v8-trunk-right)" stroke-width="18" stroke-linecap="round"/>
-      <g class="ck-v8-leaf-sway">
-        <ellipse cx="76" cy="102" rx="58" ry="74" fill="url(#ck-v8-leaf-right)"/>
-        <ellipse cx="143" cy="119" rx="66" ry="77" fill="url(#ck-v8-leaf-right)"/>
-        <ellipse cx="112" cy="54" rx="59" ry="60" fill="url(#ck-v8-leaf-right)"/>
-        <ellipse cx="92" cy="39" rx="25" ry="29" fill="#eef9c0" opacity=".3"/>
-        <g fill="#e4faaf" opacity=".2"><circle cx="59" cy="106" r="4"/><circle cx="152" cy="107" r="3"/><circle cx="121" cy="63" r="5"/><circle cx="178" cy="130" r="5"/></g>
-      </g>
-    </g>
-  </svg>
-
-  <svg class="ck-v8-bird" viewBox="0 0 180 155" aria-hidden="true">
-    <defs>
-      <radialGradient id="ck-v8-bird-body" cx="33%" cy="22%" r="82%">
-        <stop stop-color="#b1f0e2"/><stop offset=".36" stop-color="#63bdbb"/><stop offset=".8" stop-color="#258a9f"/><stop offset="1" stop-color="#165779"/>
-      </radialGradient>
-      <radialGradient id="ck-v8-bird-head-light" cx="25%" cy="16%" r="87%">
-        <stop stop-color="#c4f1e5"/><stop offset=".48" stop-color="#73c4c1"/><stop offset="1" stop-color="#277f96"/>
-      </radialGradient>
-    </defs>
-    <path d="M18 136Q86 140 158 125" fill="none" stroke="#6e7f51" stroke-width="7" stroke-linecap="round"/>
-    <path d="M110 129l3 10m17-12l7 11" stroke="#b97946" stroke-width="3.6" stroke-linecap="round"/>
-    <path d="M60 98Q18 75 29 52Q57 55 84 79Z" fill="#348da1" opacity=".88"/>
-    <ellipse cx="104" cy="93" rx="50" ry="40" fill="url(#ck-v8-bird-body)"/>
-    <path d="M64 85Q98 73 115 99Q109 131 81 126Q69 115 64 85Z" fill="#3e9cae" opacity=".78"/>
-    <g class="ck-v8-bird-head" id="ck-v8-bird-head">
-      <circle cx="127" cy="58" r="29" fill="url(#ck-v8-bird-head-light)"/>
-      <path d="M148 65l25 10-25 8Z" fill="#f4a94f" stroke="#d48346" stroke-width="1.3"/>
-      <g class="ck-v8-bird-eye" id="ck-v8-bird-eye">
-        <circle cx="136" cy="52" r="4.7" fill="#142b39"/>
-        <circle cx="137.1" cy="50.5" r="1.2" fill="#fff"/>
-        <ellipse class="ck-v8-bird-blink" cx="136" cy="52" rx="5" ry="4.7" fill="transparent"/>
-      </g>
-      <path d="M112 34Q119 19 132 28" fill="none" stroke="#287e90" stroke-width="5" stroke-linecap="round"/>
-    </g>
-  </svg>`;
-
-  let scene=null;
+  // One scenery host, one renderer. Retired SVG scenery is never mounted.
   function ensureScene(){
-    if(!document.body||typeof document.createElement!=='function')return;
-    if(document.getElementById('ck-v8-ambient')){scene=document.getElementById('ck-v8-ambient');return;}
-    scene=document.createElement('div');
-    scene.id='ck-v8-ambient';
-    scene.className='ck-v8-ambient';
+    if(!document.body||document.getElementById('ck-v8-ambient'))return;
+    const scene=document.createElement('div');
+    scene.id='ck-v8-ambient';scene.className='ck-v8-ambient';
     scene.setAttribute('aria-hidden','true');
-    scene.innerHTML=sceneryMarkup;
     document.body.prepend(scene);
-    applyPausedState();
-  }
-
-  const reduced=typeof window.matchMedia==='function'
-    ?window.matchMedia('(prefers-reduced-motion: reduce)'):null;
-  const hasBatterySave=Boolean(navigator?.connection?.saveData);
-  const lowMemory=Number(navigator?.deviceMemory||8)<=2;
-  let lastPointer=null,raf=0,sceneX=0,sceneY=0;
-  function animationsDisabled(){
-    return Boolean(state.view!=='landing'||document.body?.dataset.ckV8Tab!=='landing'||reduced?.matches||hasBatterySave||lowMemory||document.hidden);
   }
   function applyPausedState(){
-    if(!document.body)return;
-    document.body.classList.toggle('ck-v8-paused',animationsDisabled());
-    if(animationsDisabled()&&scene)resetMovement();
+    document.body?.classList.toggle('ck-v8-paused',state.view!=='landing'||document.hidden);
   }
-  function resetMovement(){
-    if(!scene)return;
-    scene.style.setProperty('--ck-v8-x','0');
-    scene.style.setProperty('--ck-v8-y','0');
-    scene.style.setProperty('--ck-v8-bird-angle','0deg');
-    scene.style.setProperty('--ck-v8-eye-x','0px');
-    scene.style.setProperty('--ck-v8-eye-y','0px');
-    sceneX=0;sceneY=0;
-  }
-  function updatePointer(){
-    raf=0;
-    if(!scene||!lastPointer||animationsDisabled()||document.body?.classList.contains('ck-v8-study-focus'))return;
-    const e=lastPointer,winW=Math.max(1,window.innerWidth),winH=Math.max(1,window.innerHeight);
-    sceneX=Math.max(-1,Math.min(1,(e.x/winW-.5)*2));
-    sceneY=Math.max(-1,Math.min(1,(e.y/winH-.5)*2));
-    scene.style.setProperty('--ck-v8-x',sceneX.toFixed(3));
-    scene.style.setProperty('--ck-v8-y',sceneY.toFixed(3));
-    const bird=scene.querySelector('.ck-v8-bird');
-    if(bird){
-      const rect=bird.getBoundingClientRect();
-      const cx=rect.left+rect.width*.72,cy=rect.top+rect.height*.4;
-      const bx=Math.max(-1,Math.min(1,(e.x-cx)/350));
-      const by=Math.max(-1,Math.min(1,(e.y-cy)/260));
-      scene.style.setProperty('--ck-v8-bird-angle',(bx*9).toFixed(2)+'deg');
-      scene.style.setProperty('--ck-v8-eye-x',(bx*2).toFixed(2)+'px');
-      scene.style.setProperty('--ck-v8-eye-y',(by*1.4).toFixed(2)+'px');
-    }
-  }
-  window.addEventListener('pointermove',e=>{
-    if(e.pointerType!=='mouse'||animationsDisabled())return;
-    lastPointer={x:e.clientX,y:e.clientY};
-    if(!raf)raf=requestAnimationFrame(updatePointer);
-  },{passive:true});
-  window.addEventListener('blur',()=>{lastPointer=null;resetMovement();});
-  document.addEventListener('visibilitychange',applyPausedState);
-  reduced?.addEventListener?.('change',applyPausedState);
-
   function updateStudyFocus(){
-    if(!document.body)return;
     const el=document.activeElement;
-    const focused=Boolean(el?.matches?.('textarea,[contenteditable="true"],input[type="text"]')||
-      el?.closest?.('.ck-v7-input .chalk-editor,.ck-v7-writing-surface'));
-    document.body.classList.toggle('ck-v8-study-focus',focused);
-    if(focused)resetMovement();
+    document.body?.classList.toggle('ck-v8-study-focus',Boolean(el?.matches?.('textarea,[contenteditable="true"],input[type="text"]')||el?.closest?.('.ck-v7-writing-surface')));
   }
+  document.addEventListener('visibilitychange',applyPausedState);
   document.addEventListener('focusin',updateStudyFocus);
-  document.addEventListener('focusout',()=>requestAnimationFrame(updateStudyFocus));
-  window.addEventListener('pointerleave',()=>{lastPointer=null;resetMovement();});
+  document.addEventListener('focusout',updateStudyFocus);
 
   const priorRender=render;
   render=function(){

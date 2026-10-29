@@ -331,7 +331,7 @@ function createRenderer() {
   createScrollCue(host);
   root=host;
   resize();
-  try{renderer.render(scene,camera);}catch(err){renderer.dispose();canvas.remove();console.info('3D background failed; SVG fallback',err);return;}
+  try{renderer.render(scene,camera);}catch(err){rendererFailed=true;renderer.dispose();renderer=null;canvas.remove();cubButton?.remove();scrollCue?.remove();host.classList.remove(READY_CLASS);console.info('3D background failed; static background',err);return;}
   host.classList.add(READY_CLASS);
   host.dataset.renderer='webgl3d';firstDraw=true;
   resizeObserver=new ResizeObserver(()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(resize,80);});
@@ -459,7 +459,8 @@ function tick(ms){
 function cleanup(){
   cancelFrames();
   resizeObserver?.disconnect();
-  if(renderer){renderer.forceContextLoss?.();renderer.dispose();renderer=null;activeLast=false;}
+  if(renderer){renderer.domElement.remove();renderer.forceContextLoss?.();renderer.dispose();renderer=null;activeLast=false;}
+  cubButton?.remove();scrollCue?.remove();cubButton=null;scrollCue=null;root?.classList.remove(READY_CLASS);
 }
 function initialize(){
  window.addEventListener('ck:scene-activity',synchronizeActivity);
