@@ -1,9 +1,9 @@
 // Original second baby lion: presses a short, red, downward-pointing pencil.
 export function buildPencilCub(THREE,scene,heightAt,quality=1){
- const root=new THREE.Group(),x=-8.6,z=-11.4;
+ const root=new THREE.Group(),x=0,z=-11.4;
  root.position.set(x,heightAt(x,z)+.10,z);root.rotation.y=.12;root.scale.setScalar(.92);scene.add(root);
- const geometry=new THREE.SphereGeometry(1,quality>1?22:14,quality>1?16:10);
- const mat=(color,roughness=.85)=>new THREE.MeshPhysicalMaterial({color,roughness,metalness:0,clearcoat:.08});
+ const geometry=new THREE.SphereGeometry(1,32,24);
+ const mat=(color,roughness=.85)=>new THREE.MeshLambertMaterial({color});
  const tan=mat(0xdaa46a),lit=mat(0xefbf85),cream=mat(0xf9ddad),
   dark=mat(0x46392e),ear=mat(0x774a3a),red=mat(0xe8504b,.5),
   blush=mat(0xff7771,.45),wood=mat(0xf2c791),graphite=mat(0x2b343a),silver=mat(0xddc8bd,.52);
@@ -56,7 +56,8 @@ export function buildPencilCub(THREE,scene,heightAt,quality=1){
   new THREE.MeshBasicMaterial({color:0xffe79c,side:THREE.DoubleSide,transparent:true,opacity:.4,depthWrite:false}),.76,.055,1.05);
  ring.rotation.x=-Math.PI/2;ring.castShadow=false;
  function animate(seconds){
-  const cycle=seconds*2*Math.PI/2.65,push=Math.pow(Math.max(0,Math.sin(cycle)),1.6);
+  const cycle=seconds*2*Math.PI/2.65;
+  const push=seconds>=3.3?1:Math.pow(Math.max(0,Math.sin(cycle)),1.6);
   stub.position.y=1.17-.14*push;
   paw.position.y=1.47-.12*push;paw.rotation.z=.06*push;
   head.rotation.x=-.02+.105*push;
@@ -67,5 +68,5 @@ export function buildPencilCub(THREE,scene,heightAt,quality=1){
   ring.material.opacity=.23+.38*push;
  }
  animate(0);
- return {root,head,stub,animate,expression:'pressing-red-stub',pencilPointingDown:true};
+ return {root,head,stub,animate,expression:'pressing-red-stub',pencilPointingDown:true,getPush:()=>Math.max(0,Math.min(1,(1.17-stub.position.y)/.14))};
 }

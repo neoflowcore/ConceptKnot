@@ -10,7 +10,9 @@ const READY_CLASS = 'ck-3d-ready';
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)');
 const MOBILE = matchMedia('(max-width: 850px)');
 const LOW_MEMORY = (navigator.deviceMemory || 8) <= 2 || !!navigator.connection?.saveData;
-const MAX_PIXEL_COUNT = 1_800_000;
+// Native CSS resolution at 4K; up to 2x on smaller high-DPI screens.
+const MAX_PIXEL_COUNT = 16_777_216;
+const INTRO_SECONDS=3.6, FRAME_MS=1000/24;
 const QUALITY = LOW_MEMORY ? 0 : MOBILE.matches ? 1 : 2;
 const rand = (() => { let seed = 20261028; return () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296); })();
 const lerp = THREE.MathUtils.lerp;
@@ -21,7 +23,13 @@ const pastel = [0x3c9a55, 0x287a54, 0x76b939, 0x205f49, 0xe7bf47];
 const flowerColors = [0xffc44f, 0xff789b, 0xffe28a, 0x6db9f3, 0xff8753];
 let root, renderer, camera, scene, materialCache, clock, frameId = 0;
 let resizeObserver, last = 0, pointer = {x: 0, y: 0}, elapsed = 0, firstDraw = false;
-let windowFocused=true,lastPaint=0;
+let windowFocused=true,lastPaint=0,introDone=false,scrollCue=null;
+let renderTimer=0;
+function queueFrame(){
+ if(frameId||renderTimer||!shouldAnimate()||introDone)return;
+ renderTimer=setTimeout(()=>{renderTimer=0;if(shouldAnimate())frameId=requestAnimationFrame(tick)},FRAME_MS);
+}
+function cancelFrames(){if(frameId)cancelAnimationFrame(frameId);clearTimeout(renderTimer);renderTimer=0;frameId=0;}
 let resizeTimer = 0, playTime = 0, activeLast=false, frameCount=0;
 const isLanding=()=>document.body?.dataset?.ckV8Tab==='landing';
 const shouldAnimate=()=>isLanding()&&windowFocused&&!document.hidden&&!REDUCED.matches;
@@ -29,8 +37,7 @@ function synchronizeActivity(){
  const active=shouldAnimate();
  if(root)root.dataset.ck3dActive=String(active);
  if(!active){
-  if(frameId)cancelAnimationFrame(frameId);
-  frameId=0;last=0;
+  cancelFrames();last=0;
   if(activeLast&&renderer){
    // Release full-screen render targets: an invisible 3D canvas is not free.
    renderer.setPixelRatio(1);
@@ -45,7 +52,7 @@ function synchronizeActivity(){
   resize();
  }
  activeLast=true;
- if(!frameId){last=0;frameId=requestAnimationFrame(tick)}
+ if(!introDone)queueFrame();
 }
 
 function h(x, z) {
@@ -294,13 +301,14 @@ function createRenderer() {
   const canvas=document.createElement('canvas');
   canvas.className='ck-3d-canvas';canvas.setAttribute('aria-hidden','true');
   canvas.style.cssText='position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none;z-index:0;';
-  const opts={canvas,alpha:false,antialias:false,powerPreference:'default',stencil:false,depth:true};
+  const opts={canvas,alpha:false,antialias:true,powerPreference:'low-power',stencil:false,depth:true};
   try{renderer=new THREE.WebGLRenderer(opts);}catch(err){console.info('ConceptKnot uses SVG scenery fallback',err);return;}
   renderer.setClearColor(0x65c6e9,1);
   renderer.outputColorSpace=THREE.SRGBColorSpace;
   renderer.toneMapping=THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure=1.09;
-  renderer.shadowMap.enabled=QUALITY>1;
+  // Existing cub contact discs provide soft shadows without a shadow-map pass.
+  renderer.shadowMap.enabled=false;
   renderer.shadowMap.type=THREE.PCFSoftShadowMap;
   scene=new THREE.Scene();scene.fog=new THREE.FogExp2(0x72ac9f,.0064);
   const hemi=new THREE.HemisphereLight(0xc7eaff,0x345c43,1.25);scene.add(hemi);
@@ -320,6 +328,7 @@ function createRenderer() {
   scenes.pressCub=buildPencilCub(THREE,scene,h,QUALITY);
    bird();
   host.insertBefore(canvas,host.firstChild);
+  createScrollCue(host);
   root=host;
   resize();
   try{renderer.render(scene,camera);}catch(err){renderer.dispose();canvas.remove();console.info('3D background failed; SVG fallback',err);return;}
@@ -336,7 +345,7 @@ function createRenderer() {
 function resize(){
   if(!renderer||!root||!camera||!shouldAnimate())return;
   const width=Math.max(1,root.clientWidth||window.innerWidth),height=Math.max(1,root.clientHeight||window.innerHeight);
-  let dpr=Math.min(window.devicePixelRatio||1,MOBILE.matches?1:1.15);
+  let dpr=Math.min(window.devicePixelRatio||1,2);
   const pixels=width*height*dpr*dpr;
   if(pixels>MAX_PIXEL_COUNT)dpr*=Math.sqrt(MAX_PIXEL_COUNT/pixels);
   renderer.setPixelRatio(dpr);renderer.setSize(width,height,false);
@@ -345,20 +354,42 @@ function resize(){
   camera.fov=width<600?56:width<900?49:43;
   camera.position.z=width<850?30:26;
   camera.updateProjectionMatrix();
-  if(firstDraw&&shouldAnimate())renderer.render(scene,camera);
+  if(firstDraw&&shouldAnimate()){renderer.render(scene,camera);updateScrollCue();}
+}
+function createScrollCue(host){
+ scrollCue=document.createElement('button');
+ scrollCue.type='button';scrollCue.textContent='SCROLL DOWN ↓';
+ scrollCue.setAttribute('aria-label','아래로 스크롤하여 학습 시작');
+ scrollCue.style.cssText='position:absolute;z-index:3;pointer-events:auto;white-space:nowrap;border:1px solid rgba(255,255,255,.5);border-radius:99px;padding:9px 13px;background:rgba(238,247,222,.86);color:#284b38;font:600 clamp(10px,1vw,13px)/1.2 Pretendard,sans-serif;letter-spacing:.12em;opacity:0;visibility:hidden;cursor:pointer;box-shadow:0 3px 14px #244b3320;';
+ scrollCue.addEventListener('click',()=>{
+  const target=document.querySelector('#main [data-go="home"]');
+  if(target)target.click();else window.scrollBy({top:window.innerHeight,behavior:REDUCED.matches?'instant':'smooth'});
+ });
+ host.append(scrollCue);
+}
+function updateScrollCue(){
+ if(!scrollCue||!scenes.pressCub||!camera)return;
+ const point=scenes.pressCub.root.localToWorld(new THREE.Vector3(1.7,1.2,0)).project(camera);
+ const width=root.clientWidth,height=root.clientHeight;
+ const x=(point.x*.5+.5)*width,y=(-point.y*.5+.5)*height;
+ const visible=shouldAnimate()&&scenes.pressCub.getPush()>.4&&point.z<1;
+ scrollCue.style.visibility=visible?'visible':'hidden';
+ scrollCue.style.opacity=visible?String(Math.min(1,(scenes.pressCub.getPush()-.4)/.4)):'0';
+ scrollCue.style.left=Math.max(8,Math.min(width-scrollCue.offsetWidth-8,x))+'px';
+ scrollCue.style.top=Math.max(8,Math.min(height-45,y))+'px';
 }
 function onPointer(e){
   if(e.pointerType!=='mouse'||!shouldAnimate())return;
   pointer.x=clamp((e.clientX/window.innerWidth-.5)*2,-1,1);
   pointer.y=clamp((e.clientY/window.innerHeight-.5)*2,-1,1);
+  // Keep the settled frame entirely idle, including mouse movement.
 }
 window.addEventListener('pointerleave',()=>{pointer.x=0;pointer.y=0;},{passive:true});
 function onVisibility(){synchronizeActivity()}
 function tick(ms){
   frameId=0;if(!renderer||!shouldAnimate())return;
-  if(ms-lastPaint<1000/24){frameId=requestAnimationFrame(tick);return;}
   lastPaint=ms;
-  const dt=last?Math.min(.05,(ms-last)/1000):0;last=ms;elapsed+=dt;
+  const dt=last?Math.min(.1,(ms-last)/1000):FRAME_MS/1000;last=ms;elapsed+=dt;
   const focused=Boolean(document.body?.classList.contains('ck-v8-study-focus'));
   const intensity=focused?.18:1;
   if(!focused)playTime+=dt;
@@ -397,11 +428,12 @@ function tick(ms){
   camera.position.x=lerp(camera.position.x,pointer.x*.32*intensity,1-Math.exp(-dt*1.2));
   camera.lookAt(0,6,-30);
   renderer.render(scene,camera);
-  frameCount++;
-  if(shouldAnimate())frameId=requestAnimationFrame(tick);
+  frameCount++;updateScrollCue();
+  if(playTime>=INTRO_SECONDS){introDone=true;if(root)root.dataset.ck3dIdle="true";}
+  else queueFrame();
 }
 function cleanup(){
-  if(frameId)cancelAnimationFrame(frameId);frameId=0;
+  cancelFrames();
   resizeObserver?.disconnect();
   if(renderer){renderer.forceContextLoss?.();renderer.dispose();renderer=null;activeLast=false;}
 }
@@ -419,4 +451,4 @@ function initialize(){
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initialize,{once:true});
 else initialize();
-window.CK3DPerformance=Object.freeze({getState:()=>({active:!!frameId,initialized:!!renderer,landing:isLanding(),hidden:document.hidden,frames:frameCount,quality:QUALITY,dpr:renderer?.getPixelRatio?.()||0})});
+window.CK3DPerformance=Object.freeze({getState:()=>({active:!!(frameId||renderTimer),idle:introDone,antialias:true,fpsCap:24,shadowPasses:0,initialized:!!renderer,landing:isLanding(),hidden:document.hidden,frames:frameCount,quality:QUALITY,dpr:renderer?.getPixelRatio?.()||0})});
