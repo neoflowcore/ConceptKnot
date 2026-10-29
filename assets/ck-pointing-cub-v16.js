@@ -24,13 +24,26 @@ export function buildPencilCub(THREE,scene,heightAt,quality=1){
  for(const side of [-1,1]){
   add(head,geometry,tan,side*.67,.64,-.26,.30,.33,.23);
   add(head,geometry,ear,side*.68,.65,-.02,.175,.20,.057);
-  add(head,geometry,dark,side*.27,.17,.64,.095,.12,.042);
-  add(head,geometry,mat(0xffffff,.2),side*.30,.20,.677,.025,.031,.012);
+  // Raised crescent eyes stay in front of the forehead, never buried in it.
+  const eyePath=new THREE.CatmullRomCurve3([
+   new THREE.Vector3(side*.27-.10,.13,.81),
+   new THREE.Vector3(side*.27,.21,.83),
+   new THREE.Vector3(side*.27+.10,.13,.81)
+  ]);
+  add(head,new THREE.TubeGeometry(eyePath,16,.026,6,false),dark,0,0,0);
+  add(head,geometry,blush,side*.49,-.12,.74,.105,.065,.025);
   add(head,geometry,cream,side*.23,-.28,.58,.30,.22,.31);
-  for(let j=0;j<2;j++)add(head,geometry,dark,side*(.23+j*.14),-.28-j*.08,.865-j*.02,.025,.024,.012);
+  for(const [dx,dy] of [[.16,-.23],[.31,-.25],[.25,-.35]])
+   add(head,geometry,dark,side*dx,dy,.925,.038,.036,.017);
  }
  const nose=add(head,new THREE.ConeGeometry(.12,.19,3),dark,0,-.22,.85);nose.rotation.x=Math.PI/2;
- add(head,geometry,dark,0,-.44,.82,.024,.06,.018);
+ const smilePath=new THREE.CatmullRomCurve3([
+  new THREE.Vector3(-.24,-.40,.91),new THREE.Vector3(-.13,-.49,.94),
+  new THREE.Vector3(0,-.52,.95),new THREE.Vector3(.13,-.49,.94),
+  new THREE.Vector3(.24,-.40,.91)
+ ]);
+ add(head,new THREE.TubeGeometry(smilePath,24,.025,6,false),dark,0,0,0);
+ add(head,geometry,dark,0,-.36,.945,.019,.07,.018);
  const tail=new THREE.Group();root.add(tail);
  const path=new THREE.CatmullRomCurve3([
   new THREE.Vector3(-.90,.56,-.55),new THREE.Vector3(-1.31,.67,-.85),
@@ -56,17 +69,20 @@ export function buildPencilCub(THREE,scene,heightAt,quality=1){
   new THREE.MeshBasicMaterial({color:0xffe79c,side:THREE.DoubleSide,transparent:true,opacity:.4,depthWrite:false}),.76,.055,1.05);
  ring.rotation.x=-Math.PI/2;ring.castShadow=false;
  function animate(seconds){
-  const cycle=seconds*2*Math.PI/2.65;
-  const push=seconds>=3.3?1:Math.pow(Math.max(0,Math.sin(cycle)),1.6);
+  const progress=Math.max(0,Math.min(1,seconds/3.6));
+  const eased=progress*progress*(3-2*progress);
+  const envelope=Math.sin(Math.PI*progress)**2;
+  const cycle=eased*4*Math.PI;
+  const push=.5+.5*Math.cos(cycle);
   stub.position.y=1.17-.14*push;
   paw.position.y=1.47-.12*push;paw.rotation.z=.06*push;
   head.rotation.x=-.02+.105*push;
-  head.rotation.z=.032*Math.sin(cycle*.5);
-  torso.scale.y=1+.012*Math.sin(seconds*1.24);
-  tail.rotation.z=.06*Math.sin(seconds*.9);
+  head.rotation.z=.032*Math.sin(cycle*.5)*envelope;
+  torso.scale.y=1+.012*Math.sin(seconds*1.24)*envelope;
+  tail.rotation.z=.06*Math.sin(seconds*.9)*envelope;
   ring.scale.setScalar(1+.32*push);
   ring.material.opacity=.23+.38*push;
  }
  animate(0);
- return {root,head,stub,animate,expression:'pressing-red-stub',pencilPointingDown:true,getPush:()=>Math.max(0,Math.min(1,(1.17-stub.position.y)/.14))};
+ return {root,head,stub,animate,expression:'smiling-freckled-pencil-cub',pencilPointingDown:true,getPush:()=>Math.max(0,Math.min(1,(1.17-stub.position.y)/.14))};
 }

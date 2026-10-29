@@ -23,7 +23,7 @@ const pastel = [0x3c9a55, 0x287a54, 0x76b939, 0x205f49, 0xe7bf47];
 const flowerColors = [0xffc44f, 0xff789b, 0xffe28a, 0x6db9f3, 0xff8753];
 let root, renderer, camera, scene, materialCache, clock, frameId = 0;
 let resizeObserver, last = 0, pointer = {x: 0, y: 0}, elapsed = 0, firstDraw = false;
-let windowFocused=true,lastPaint=0,introDone=false,scrollCue=null,rendererFailed=false;
+let windowFocused=true,lastPaint=0,introDone=false,scrollCue=null,rendererFailed=false,cubButton=null,cubTime=0;
 let renderTimer=0;
 function queueFrame(){
  if(frameId||renderTimer||!shouldAnimate()||introDone)return;
@@ -356,7 +356,19 @@ function resize(){
   camera.updateProjectionMatrix();
   if(firstDraw&&shouldAnimate()){renderer.render(scene,camera);updateScrollCue();}
 }
+function replayCub(){
+ if(!renderer||!shouldAnimate())return;
+ cancelFrames();cubTime=0;introDone=false;last=0;
+ if(root)root.dataset.ck3dIdle='false';
+ queueFrame();
+}
 function createScrollCue(host){
+ cubButton=document.createElement('button');cubButton.type='button';
+ cubButton.setAttribute('aria-label','사자를 눌러 몽당연필 애니메이션 다시 재생');
+ cubButton.title='눌러서 몽당연필 다시 움직이기';
+ cubButton.style.cssText='position:absolute;z-index:2;pointer-events:auto;border:0;background:transparent;padding:0;border-radius:35%;cursor:pointer;';
+ cubButton.addEventListener('click',replayCub);
+ host.append(cubButton);
  scrollCue=document.createElement('button');
  scrollCue.type='button';scrollCue.textContent='SCROLL DOWN ↓';
  scrollCue.setAttribute('aria-label','아래로 스크롤하여 학습 시작');
@@ -369,6 +381,18 @@ function createScrollCue(host){
 }
 function updateScrollCue(){
  if(!scrollCue||!scenes.pressCub||!camera)return;
+ // Project the real character bounds, so the entire lion and pencil are clickable.
+ if(cubButton){
+  const box=new THREE.Box3().setFromObject(scenes.pressCub.root);
+  const points=[];
+  for(const x of [box.min.x,box.max.x])for(const y of [box.min.y,box.max.y])for(const z of [box.min.z,box.max.z])
+   points.push(new THREE.Vector3(x,y,z).project(camera));
+  const xs=points.map(p=>(p.x*.5+.5)*root.clientWidth),ys=points.map(p=>(-p.y*.5+.5)*root.clientHeight);
+  cubButton.style.left=Math.max(0,Math.min(...xs))+'px';
+  cubButton.style.top=Math.max(0,Math.min(...ys))+'px';
+  cubButton.style.width=(Math.max(...xs)-Math.min(...xs))+'px';
+  cubButton.style.height=(Math.max(...ys)-Math.min(...ys))+'px';
+ }
  const point=scenes.pressCub.root.localToWorld(new THREE.Vector3(1.7,1.2,0)).project(camera);
  const width=root.clientWidth,height=root.clientHeight;
  const x=(point.x*.5+.5)*width,y=(-point.y*.5+.5)*height;
@@ -392,13 +416,13 @@ function tick(ms){
   const dt=last?Math.min(.1,(ms-last)/1000):FRAME_MS/1000;last=ms;elapsed+=dt;
   const focused=Boolean(document.body?.classList.contains('ck-v8-study-focus'));
   const intensity=focused?.18:1;
-  if(!focused)playTime+=dt;
+  if(!focused){playTime+=dt;cubTime=Math.min(INTRO_SECONDS,cubTime+dt);}
   for(const tr of scenes.trees){const breeze=Math.sin(elapsed*2*Math.PI/tr.tempo+tr.phase)*tr.amp;const cursor=pointer.x*tr.amp*.72;tr.crown.rotation.z=lerp(tr.crown.rotation.z,(breeze+cursor)*intensity,1-Math.exp(-dt*2.3));}
   for(const cl of scenes.clouds){cl.group.position.x+=dt*cl.speed*intensity;if(cl.group.position.x>105)cl.group.position.x=-110;}
   // Time-locked ball passes animate before the bird's peck decisions.
   scenes.machine?.animate(playTime);
   scenes.cub?.animate(playTime);
-  scenes.pressCub?.animate(playTime);
+  scenes.pressCub?.animate(cubTime);
   if(scenes.bird){
     const b=scenes.bird;
     const targetX=clamp(pointer.x*.16,-.16,.16)*intensity;
@@ -429,7 +453,7 @@ function tick(ms){
   camera.lookAt(0,6,-30);
   renderer.render(scene,camera);
   frameCount++;updateScrollCue();
-  if(playTime>=INTRO_SECONDS){introDone=true;if(root)root.dataset.ck3dIdle="true";}
+  if(cubTime>=INTRO_SECONDS){introDone=true;if(root)root.dataset.ck3dIdle="true";}
   else queueFrame();
 }
 function cleanup(){

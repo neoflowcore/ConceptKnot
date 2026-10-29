@@ -99,6 +99,7 @@ body{font-family:Pretendard,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;bac
 <link rel="stylesheet" href="./experience-v20.css">
 <link rel="stylesheet" href="./experience-v21.css">
 <script src="./assets/ck-display-v17.js" defer></script>
+<link rel="stylesheet" href="./experience-v26.css">
 </head>
 <body>
 <a href="#main" class="skip-link">본문으로 이동</a>
@@ -778,6 +779,14 @@ return `${titleBlock('기출에서 추출한 핵심개념 카드','','ACTIVE REC
 <div class="flash-controls"><div class="flex" style="gap:8px;flex-wrap:wrap"><button class="btn secondary" data-visual-for="${esc(c.id)}">◈ 이 개념 그림연상</button>${state.flashShown?`<button class="btn secondary" data-action="flash-fail">다시 외우기</button><button class="btn" data-action="flash-pass">✓ 기억함</button>`:`<button class="btn" data-action="flash-show">정답 확인  →</button>`}</div><div class="flex" style="gap:8px"><button class="btn secondary" data-action="flash-prev" ${index===0?'disabled':''}>← 이전</button><button class="btn secondary" data-action="flash-next" ${index===cs.length-1?'disabled':''}>다음 →</button></div></div>
 <p class="small muted" style="margin-top:16px">${seen?(seen.correct?'✓ 이미 기억한 개념':'⏱ 다시 복습할 개념'):'아직 학습하지 않은 개념'} · 중요: 현행 법령은 개정 여부를 별도 확인하세요.</p></section>
 <aside class="panel"><div class="panel-head"><h3>개념 목록</h3><span class="muted small">${selected}개 기억</span></div><div class="concept-list ck20-linked-concepts" style="overflow:auto;max-height:590px">${cs.map((x,i)=>`<div class="ck20-linked-concept"><button class="concept-item ${i===index?'active':''}" data-concept="${i}" type="button"><span>${i+1}. ${esc(x.t)}</span><small>${state.flashVisits[x.id]?.correct?'✓ 기억함':state.flashVisits[x.id]?'↻ 복습':'미학습'}</small></button><button class="ck20-concept-image" data-visual-for="${esc(x.id)}" aria-label="${esc(x.t)} 그림연상 보기" title="그림연상 · 연결 기출">◈</button></div>`).join('')}</div></aside></div>${navSource()}`;}
+function quizPromptHtml(q){
+ const text=String(q.q||'');
+ const marker=/\n\s*\n(?=보기 A[.．])/;
+ const parts=text.split(marker),stem=parts.shift();
+ const statements=Array.isArray(q.originalOptions)?q.originalOptions:null;
+ const body=statements?'<section class="ck26-statements" aria-label="보기"><h3>보기</h3><ol>'+statements.map((v,i)=>'<li><b>'+String.fromCharCode(65+i)+'.</b><span>'+esc(v)+'</span></li>').join('')+'</ol></section>':parts.length?'<section class="ck26-statements"><h3>보기</h3><p>'+esc(parts.join('\n\n'))+'</p></section>':'';
+ return '<section class="ck26-question" aria-label="문제"><h3>문제</h3><h2 class="question">'+esc(stem)+'</h2></section>'+body;
+}
 function renderQuiz(){
  const list=quizList();
  if(!list.length)return titleBlock('문항을 불러오지 못했습니다','저장된 기출 문항을 확인하세요.');
@@ -806,10 +815,10 @@ function renderQuiz(){
  +'<div class="quiz-layout ck20-quiz-layout"><section class="panel ck20-quiz-main">'
  +'<div class="flex flex-between ck20-quiz-top"><span class="pill purple">'+esc(q.topic)+'</span><span class="question-count">'+(index+1)+' / '+list.length+'</span></div>'
  +'<div class="progress-shell" style="margin:16px 0 24px"><div class="progress-fill" style="width:'+((index+1)/list.length*100).toFixed(2)+'%"></div></div>'
- +'<h2 class="question">'+esc(q.q)+'</h2>'+source
+ +quizPromptHtml(q)+source
  +'<button class="btn secondary" data-tts-current>문제와 정답 듣기</button>'
  +'<p class="small muted">정답 보기 숫자키를 누른 뒤 원문·최종정답 근거를 복습하세요.</p>'
- +'<div class="choices">'+choices+'</div>'+explanation
+ +'<section class="ck26-answer-options" aria-label="정답 선택"><h3>정답 선택</h3><div class="choices">'+choices+'</div></section>'+explanation
  +'<div class="quiz-nav"><button class="btn secondary" data-action="quiz-prev" '+(index===0?'disabled':'')+'>← 이전</button>'
  +'<button class="btn" data-action="quiz-next" '+(index===list.length-1?'disabled':'')+'>다음 문제 →</button></div></section>'
  +'<aside class="panel ck20-quiz-picker"><div class="panel-head"><h3>문항 선택</h3><span class="pill green">'+stats.done+' / '+stats.total+' 응답</span></div>'
@@ -1658,7 +1667,7 @@ window.addEventListener('beforeunload',()=>{if(localPdfUrl)URL.revokeObjectURL(l
   const designNav=[
     ['home','오늘의 학습'],['theory','핵심 이론'],['visual','그림 연상'],
     ['typing','분필 타이핑'],['listen','문제·정답'],['reverse','기출 → 이론'],
-    ['quiz','문제 풀이'],['calc','계산 집중'],['exam','10개년 기출'],
+    ['quiz','모의고사'],['calc','계산 집중'],['exam','10개년 기출'],
     ['venn','비교 도형과 차트'],['wrong','오답 복습'],['plan','학습 계획'],['final','최종 정리본']
   ];
   defaults.v7LeftWidth=null;
