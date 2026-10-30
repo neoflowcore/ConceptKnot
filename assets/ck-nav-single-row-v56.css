@@ -1,0 +1,90 @@
+/* ConceptKnot v56: ONE line, all widths. The entire ribbon is the scroll surface.
+   Overrides v55's two-row mobile grid without changing the logo, tab data or tools. */
+#main .ck-v7-global-nav {
+  min-width: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: visible !important;
+}
+#main .ck-v7-nav-pill.ck4-unified {
+  display: flex !important;
+  flex-flow: row nowrap !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  grid-template-columns: none !important;
+  grid-template-rows: none !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  height: 51px !important;
+  min-height: 51px !important;
+  max-height: 51px !important;
+  gap: clamp(5px, .65vw, 10px) !important;
+  padding: 3px clamp(7px, .9vw, 13px) !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  overscroll-behavior-x: contain;
+  touch-action: pan-x;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none !important;
+  scroll-snap-type: none !important;
+  scroll-behavior: auto !important;
+  cursor: grab;
+  -webkit-user-select: none;
+  user-select: none;
+}
+#main .ck-v7-nav-pill.ck4-unified::-webkit-scrollbar {display:none !important;}
+#main .ck-v7-nav-pill.ck4-unified.ck56-dragging {cursor: grabbing !important;}
+#main .ck-v7-nav-pill.ck4-unified > .ck-v7-logo,
+#main .ck-v7-nav-pill.ck4-unified > .ck-v7-date-pill {
+  flex: 0 0 auto !important;
+  align-self: center !important;
+  min-width: max-content !important;
+  max-width: none !important;
+  margin: 0 !important;
+  order: 0 !important;
+}
+#main .ck-v7-nav-pill.ck4-unified > .board-tabs {
+  flex: 0 0 auto !important;
+  display: flex !important;
+  flex-flow: row nowrap !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  gap: 1px !important;
+  width: max-content !important;
+  min-width: max-content !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 2px 1px !important;
+  overflow: visible !important;
+  white-space: nowrap !important;
+  touch-action: auto !important;
+  scroll-snap-type: none !important;
+  order: 0 !important;
+}
+#main .ck-v7-nav-pill.ck4-unified > .board-tabs > .board-tab {
+  flex: 0 0 auto !important;
+  display: inline-flex !important;
+  visibility: visible !important;
+  align-items: center !important;
+  white-space: nowrap !important;
+  scroll-snap-align: none !important;
+}
+@media (max-width: 850px) {
+  #main .ck-v7-nav-pill.ck4-unified {
+    height: 49px !important;
+    min-height: 49px !important;
+    max-height: 49px !important;
+  }
+  #main .ck-v7-nav-pill.ck4-unified > .ck-v7-logo,
+  #main .ck-v7-nav-pill.ck4-unified > .ck-v7-date-pill,
+  #main .ck-v7-nav-pill.ck4-unified > .board-tabs {
+    grid-column: auto !important;
+    grid-row: auto !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #main .ck-v7-nav-pill.ck4-unified {scroll-behavior: auto !important;}
+}
