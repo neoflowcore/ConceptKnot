@@ -110,3 +110,13 @@ body[data-ck-v8-tab="landing"] #ck-v8-ambient.ck-dot-landing {
 /* v50: viewport-aware offscreen recycling. Preserve parent SVG overflow so the
    drifters can enter from outside the cloud image's 1244-unit viewBox. */
 .ck-dot-landing .ck-dot-small-cloud { pointer-events: none; }
+
+/* PREVIEW_WHITE_GUARD: isolated verification branch only.
+   Prevent automatic browser darkening of the monochrome white Dot landscape.
+   Original production commit and all study features remain unchanged. */
+:root { color-scheme: only light !important; background-color: #ffffff !important; }
+html body[data-ck-v8-tab="landing"] { background: #ffffff !important; }
+html body[data-ck-v8-tab="landing"] #ck-v8-ambient.ck-dot-landing {
+  color-scheme: only light !important; background-color: #ffffff !important;
+  background-image: none !important; filter: none !important;
+}

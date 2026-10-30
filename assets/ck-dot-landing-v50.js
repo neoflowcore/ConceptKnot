@@ -4,6 +4,8 @@
   'use strict';
   const NS = 'http://www.w3.org/2000/svg';
   const scenePath = './assets/';
+  // PREVIEW_WHITE_GUARD: local preview URLs must match the original white-paper palette.
+  document.documentElement.style.setProperty('color-scheme', 'only light', 'important');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const legacy = window.CKLegacyMotion37;
   const state = { host: null, frame: 0, last: 0, time: 0, frames: 0, active: false,
