@@ -180,3 +180,45 @@ html body:not([data-ck-v8-tab="landing"]) #ck-v8-ambient.ck-dot-landing > .ck-do
 
 html body:not([data-ck-v8-tab="landing"]) #ck-v8-ambient.ck-dot-landing > :is(.ck-dot-backdrop,.ck-dot-cloud,.ck-dot-lawn,.ck-dot-orbit,.ck-dot-bird,.ck-dot-notes,.ck-dot-search-placeholder) {display:block!important}
 html body:not([data-ck-v8-tab="landing"]) #ck-v8-ambient.ck-dot-landing > .ck-dot-scroll {display:none!important}
+
+
+/* v55: study tabs preserve the wood-brown backing, and stop painting the
+   dormant Dot scene. Existing JS keeps RAF cancelled outside landing. */
+html body:not([data-ck-v8-tab="landing"]) #ck-v8-ambient.ck-dot-landing {
+ display:none!important;visibility:hidden!important;content-visibility:hidden!important;
+}
+html body:not([data-ck-v8-tab="landing"]) {
+ background-color:var(--ck17-study-background,#A58A73)!important;background-image:none!important;
+}
+html[data-ck-theme="dark"] body:not([data-ck-v8-tab="landing"]) {
+ background-color:var(--ck17-study-background-dark,#A58A73)!important;
+}
+@media(max-width:850px){
+ #main .ck-v7-global-nav { min-width:0!important;width:100%!important;overflow:visible!important; }
+ #main .ck-v7-nav-pill.ck4-unified {
+  display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;
+  grid-template-rows:auto auto!important;column-gap:6px!important;row-gap:2px!important;
+  height:auto!important;min-height:74px!important;max-height:none!important;
+  padding:5px 8px!important;overflow:hidden!important;
+ }
+ #main .ck-v7-nav-pill.ck4-unified>.ck-v7-logo {
+  grid-column:1!important;grid-row:1!important;justify-self:start!important;min-width:0!important;
+ }
+ #main .ck-v7-nav-pill.ck4-unified>.ck-v7-date-pill {
+  grid-column:2!important;grid-row:1!important;justify-self:end!important;
+  margin:0!important;min-width:0!important;
+ }
+ #main .ck-v7-nav-pill.ck4-unified>.board-tabs {
+  grid-column:1/-1!important;grid-row:2!important;display:flex!important;
+  width:100%!important;max-width:100%!important;min-width:0!important;
+  flex-wrap:nowrap!important;overflow-x:auto!important;overflow-y:hidden!important;
+  white-space:nowrap!important;touch-action:pan-x!important;
+  -webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;
+  scrollbar-width:none;scroll-snap-type:x proximity;cursor:grab;
+ }
+ #main .ck-v7-nav-pill.ck4-unified>.board-tabs:active {cursor:grabbing;}
+ #main .ck-v7-nav-pill.ck4-unified>.board-tabs>.board-tab {
+  flex:0 0 auto!important;display:inline-flex!important;visibility:visible!important;
+  scroll-snap-align:start!important;white-space:nowrap!important;
+ }
+}
