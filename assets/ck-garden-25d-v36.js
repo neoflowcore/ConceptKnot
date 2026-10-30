@@ -85,6 +85,6 @@ function boot(){
  new MutationObserver(sync).observe(document.body,{attributes:true,attributeFilter:['data-ck-v8-tab']});
  window.addEventListener('ck:scene-activity',sync);window.addEventListener('blur',()=>{focused=false;sync()});window.addEventListener('focus',()=>{focused=true;sync()});document.addEventListener('visibilitychange',sync);reduced.addEventListener('change',sync);window.addEventListener('pagehide',()=>{cancelAnimationFrame(frame);frame=0},{once:true});sync();
 }
-window.CK3DPerformance=Object.freeze({getState:()=>({renderer:'artwork-25d',active,idle:!active,frames,landing:isLanding(),webgl:false,fpsCap:24})});
+window.CK3DPerformance=Object.freeze({getState:()=>({renderer:rail3d?'hybrid-25d-webgl':'artwork-25d',active,idle:!active,frames,landing:isLanding(),webgl:!!rail3d,fpsCap:24})});
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();

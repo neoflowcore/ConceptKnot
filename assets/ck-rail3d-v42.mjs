@@ -14,7 +14,7 @@ export function mountRail(host,motion){
  const curve=new T.CatmullRomCurve3(pts,true,'centripetal');
  const tube=new T.Mesh(new T.TubeGeometry(curve,480,7.0,18,true),new T.MeshPhysicalMaterial({color:0x1786bf,roughness:.24,metalness:.25,clearcoat:1,clearcoatRoughness:.16}));scene.add(tube);
  const fruit=[0xe43927,0x8fc52d,0xf1c337,0xde3425,0x87bd29,0xf3c637].map(c=>{const apple=makeApple(T,c,26);scene.add(apple);return apple;});
- function resize(){const aspect=host.clientWidth/Math.max(1,host.clientHeight),w=Math.max(1536,1024*aspect),h=w/aspect;camera.left=-w/2;camera.right=w/2;camera.top=h/2;camera.bottom=-h/2;camera.updateProjectionMatrix();renderer.setSize(Math.max(1,host.clientWidth),Math.max(1,host.clientHeight),false);}
+ function resize(){const aspect=host.clientWidth/Math.max(1,host.clientHeight),w=Math.min(1536,1024*aspect),h=w/aspect;camera.left=-w/2;camera.right=w/2;camera.top=h/2;camera.bottom=-h/2;camera.updateProjectionMatrix();renderer.setSize(Math.max(1,host.clientWidth),Math.max(1,host.clientHeight),false);}
  function paint(seconds){fruit.forEach((apple,i)=>{const u=(seconds/motion.lapSeconds+i/6)%1;apple.position.copy(curve.getPointAt(u));apple.rotation.y=seconds*.45+i;apple.rotation.z=.08*Math.sin(seconds*.3+i);});renderer.render(scene,camera);}
  resize();paint(0);host.append(canvas);host.classList.add('ck42-webgl-ready');host.dataset.ck42Renderer='webgl';
  const observer=new ResizeObserver(()=>{if(host.clientHeight>0){resize();paint(lastTime);}});observer.observe(host);let lastTime=0;
