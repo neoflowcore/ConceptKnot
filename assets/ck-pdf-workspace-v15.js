@@ -100,7 +100,7 @@ function pageMetrics(s){
  if(output&&document.activeElement!==output)output.value=Math.round(s.zoom*100);
  const count=els(s.host,'[data-ck15-page-label]');
  if(count&&document.activeElement!==count)count.value=s.page;
- const total=els(s.host,'[data-ck42-page-total]');if(total)total.textContent=' / '+(s.pdf?.numPages||'—');
+ const total=els(s.host,'[data-ck42-page-total]');if(total)total.textContent='/'+(s.pdf?.numPages||'—');
  const prev=els(s.host,'[data-ck15-prev]'),next=els(s.host,'[data-ck15-next]');
  if(prev)prev.disabled=s.page<=1;
  if(next)next.disabled=s.page+(s.spread?1:0)>=s.pdf.numPages;
@@ -108,7 +108,7 @@ function pageMetrics(s){
   const toggle=els(s.host,'[data-ck17-spread]');
   if(toggle){toggle.setAttribute('aria-pressed',String(!!s.spread));toggle.setAttribute('aria-label',s.spread?'PDF 한 페이지씩 보기':'PDF 두 페이지 나란히 보기');toggle.title=s.spread?'한 페이지 보기':'두 페이지 펼쳐보기'}
  }
- if(total&&s.spread)total.textContent='–'+Math.min(s.page+1,s.pdf.numPages)+' / '+s.pdf.numPages;
+ if(total&&s.spread)total.textContent='–'+Math.min(s.page+1,s.pdf.numPages)+'/'+s.pdf.numPages;
  if(s.second){s.second.zoom=s.zoom;pageMetrics(s.second)}
  redrawInk(s);
 }
@@ -426,6 +426,8 @@ async function act(s,button){
 }
 function bind(s){
  const host=s.host,ink=els(host,'[data-ck15-ink-canvas]'),scroller=els(host,'[data-ck15-scroll]');
+ const save=els(host,'[data-ck15-save]');if(save){save.textContent='PDF 저장';save.setAttribute('aria-label','필기 PDF 저장');}
+ const eraser=els(host,'[data-ck15-tool=eraser]');if(eraser)eraser.title='누른 채 드래그하여 지우기';
  if(!ink||!scroller)return;
  if(!s.parent){
   const oldZoom=els(host,'output[data-ck15-zoom-value]'),oldPage=els(host,'output[data-ck15-page-label]');
