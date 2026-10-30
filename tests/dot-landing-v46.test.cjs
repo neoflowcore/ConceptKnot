@@ -1,0 +1,18 @@
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const root = path.resolve(__dirname, '..');
+const js = fs.readFileSync(path.join(root, 'assets/ck-dot-landing-v1.js'), 'utf8');
+const css = fs.readFileSync(path.join(root, 'assets/ck-dot-landing-v1.css'), 'utf8');
+assert.ok(js.includes('monochromeImage('), 'Source illustration converted into dots once');
+assert.ok(js.includes('ctx.arc(') && js.includes('output.toDataURL'), 'Raster source becomes monochrome dots');
+assert.ok(js.includes('seededCloud()') && js.includes('class: \'ck-dot-cloud\''), 'Exactly one large cloud component');
+assert.equal((js.match(/flower\(ground,/g) || []).length, 3, 'Exactly three intentional lawn flowers');
+assert.ok(js.includes('state.birdHead') && js.includes('state.pecks++'), 'Moving bird head pecks apples');
+assert.ok(js.includes('state.apples[i].setAttribute') && js.includes('state.time / lap'), 'Moving apples reuse the existing orbit timer');
+assert.ok(js.includes('state.lids?.setAttribute') && js.includes('state.pupils?.setAttribute'), 'Cub eyes blink and track');
+assert.ok(js.includes("document.body.dataset.ckV8Tab === 'landing'"), 'No animations in study tabs');
+assert.ok(js.includes('!document.hidden') && js.includes('!reduced.matches'), 'Background pauses on hidden or reduced-motion');
+assert.ok(js.includes('webgl: false') && js.includes('1000 / 24'), 'No WebGL and capped animation loop');
+assert.ok(css.includes('.ck-dot-paused *') && css.includes('prefers-reduced-motion'), 'CSS pause and reduced motion');
+console.log('Dot landing v46 contract: OK');
