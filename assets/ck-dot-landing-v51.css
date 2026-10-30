@@ -1,0 +1,54 @@
+/* ConceptKnot v51: deliberate white negative-space foreground.
+   Preserve v50 sky, apple rail, baby owl, and floating SCROLL DOWN button. */
+body[data-ck-v8-tab="landing"] #ck-v8-ambient.ck-dot-landing {
+  position: relative;
+  height: max(760px,100svh) !important;
+  min-height: 100svh !important;
+  isolation: isolate;
+  overflow: hidden;
+  background: #fff !important;
+  color: #151515;
+}
+.ck-dot-landing .ck-dot-orbit,
+.ck-dot-landing .ck-dot-bird {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  pointer-events: none;
+}
+.ck-dot-landing .ck-dot-cloud {
+  position: absolute; z-index: 1;
+  width: clamp(490px, 78vw, 1080px); height: auto;
+  left: 50%; top: 1%; transform: translateX(-50%);
+  pointer-events: none; overflow: visible; opacity: .94;
+}
+.ck-dot-landing .ck-dot-orbit { z-index: 3; }
+.ck-dot-landing .ck-dot-bird { z-index: 4; }
+.ck-dot-landing .ck-dot-small-cloud,
+.ck-dot-landing .ck-dot-cumulus-edge-dot,
+.ck-dot-landing .ck-dot-orbit-rail { pointer-events: none; }
+.ck-dot-landing .ck-dot-scroll {
+  position: absolute; z-index: 8; left: 36%;
+  bottom: calc(100% - var(--ck-dot-viewport-height,100svh) + 17px);
+  transform: translateX(-50%);
+  border: 1px solid #444; border-radius: 30px;
+  background: #fff; color: #111;
+  padding: 10px 17px;
+  font: 700 11px/1.2 Nunito, sans-serif;
+  letter-spacing: .13em; cursor: pointer;
+  box-shadow: 0 5px 12px #0001; white-space: nowrap;
+  animation: ck-dot-scroll-float-v48 2.9s ease-in-out infinite;
+}
+@keyframes ck-dot-scroll-float-v48 {
+  0%, 100% { transform: translate(-50%, 0); }
+  50% { transform: translate(-50%, -4px); }
+}
+.ck-dot-landing .ck-dot-scroll:focus-visible {
+  outline: 2px solid #111; outline-offset: 4px;
+}
+.ck-dot-paused * { animation-play-state: paused !important; will-change: auto !important; }
+@media (max-width:600px) {
+  .ck-dot-landing .ck-dot-cloud { width: 95vw; top: 8%; left: 52%; }
+  .ck-dot-landing .ck-dot-scroll { left: 28%; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .ck-dot-landing * { animation: none !important; transition: none !important; }
+}
