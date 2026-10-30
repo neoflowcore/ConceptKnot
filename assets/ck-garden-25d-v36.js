@@ -87,6 +87,6 @@ function boot(){
  window.addEventListener('ck:scene-activity',sync);window.addEventListener('blur',()=>{focused=false;sync()});window.addEventListener('focus',()=>{focused=true;sync()});document.addEventListener('visibilitychange',sync);reduced.addEventListener('change',sync);window.addEventListener('pagehide',()=>{cancelAnimationFrame(frame);frame=0},{once:true});sync();
 }
 window.CK3DPerformance=Object.freeze({getState:()=>({renderer:rail3d?'hybrid-25d-webgl':'artwork-25d',active,idle:!active,frames,landing:isLanding(),webgl:!!rail3d,fpsCap:24})});
-const launchDot=()=>import('./ck-dot-landing-v50.js').catch(err=>{console.error('Dot landing could not load; restoring previous garden',err);boot();});
+const launchDot=()=>import('./ck-dot-landing-v53.js').catch(err=>{console.error('Dot landing could not load; restoring previous garden',err);boot();});
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',launchDot,{once:true});else launchDot();
 })();
