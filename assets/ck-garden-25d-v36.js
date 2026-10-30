@@ -22,9 +22,9 @@ function rail(){
  });
  const color=(q,nx,ny)=>{
   const front=Math.sqrt(Math.max(0,1-q*q)),diffuse=Math.max(0,-.44*nx*q-.68*ny*q+.58*front);
-  const specular=Math.pow(Math.max(0,-.25*nx*q-.39*ny*q+.886*front),42);
-  const rim=Math.pow(front,.7),light=.24+.72*diffuse;
-  const rgb=[15*light+115*specular+6*rim,116*light+119*specular+15*rim,172*light+83*specular+21*rim];
+  const specular=Math.pow(Math.max(0,-.25*nx*q-.39*ny*q+.886*front),18);
+  const rim=Math.pow(front,.7),light=.36+.72*diffuse;
+  const rgb=[24*light+160*specular+10*rim,148*light+140*specular+16*rim,212*light+110*specular+20*rim];
   return '#'+rgb.map(v=>Math.round(Math.min(255,v)/3)*3).map(v=>v.toString(16).padStart(2,'0')).join('');
  };
  const xy=(p,q)=>`${(p.x+p.nx*p.r*q).toFixed(2)},${(p.y+p.ny*p.r*q).toFixed(2)}`;
@@ -38,7 +38,7 @@ function rail(){
   }
  }
  const center=motion.points.map((p,i)=>(i?'L':'M')+p[0]+' '+p[1]).join(' ')+'Z';
- return `<path id="ck36-rail-path" d="${center}" fill="none" stroke="none"/><g class="ck41-ceramic-tube">${[...buckets].map(([fill,d])=>`<path d="${d}" fill="${fill}"/>`).join('')}</g>`;
+ return `<path id="ck36-rail-path" d="${center}" fill="none" stroke="none"/><g class="ck41-ceramic-tube">${[...buckets].map(([fill,d])=>`<path d="${d}" fill="${fill}" stroke="${fill}" stroke-width=".35" stroke-linejoin="round"/>`).join('')}</g>`;
 }
 function perch(){return `<defs><linearGradient id="ck40-wood" x2="0" y2="1"><stop stop-color="#ebc891"/><stop offset=".32" stop-color="#bc8b50"/><stop offset=".7" stop-color="#916038"/><stop offset="1" stop-color="#5b3b27"/></linearGradient></defs><ellipse cx="46" cy="96" rx="63" ry="6" fill="#314327" opacity=".18"/><path d="M-13 80Q40 77 103 81L103 94Q40 90-13 94Z" fill="url(#ck40-wood)" stroke="#795336" stroke-width="1.2"/><ellipse cx="103" cy="87.5" rx="5" ry="6.5" fill="#d7ac72" stroke="#865b38"/><ellipse cx="103" cy="87.5" rx="2.5" ry="3.6" fill="none" stroke="#a67a48"/><path d="M-8 84Q21 81 50 84T96 85M-4 89Q23 86 45 89T94 90" stroke="#f2d2a0" stroke-opacity=".5" fill="none"/><path d="M28 88q8-6 14 0q-7 5-14 0M59 85q14 4 32 1" stroke="#784b2e" stroke-width="1" fill="none"/>`;}
 function eyelids(){return `<svg class="ck38-eyelids" viewBox="0 0 1312 1184" aria-hidden="true"><defs><radialGradient id="ck38-lid"><stop offset="0" stop-color="#ffe593"/><stop offset=".7" stop-color="#f8cd6b"/><stop offset="1" stop-color="#dfa441"/></radialGradient></defs><g fill="url(#ck38-lid)"><path d="M488 373C485 275 646 265 663 371C683 486 493 495 488 373Z"/><path d="M834 449C843 346 980 350 1004 445C1023 566 825 564 834 449Z"/></g><g fill="none" stroke="#58311c" stroke-width="12" stroke-linecap="round"><path d="M505 401Q572 445 645 399"/><path d="M850 477Q920 520 988 468"/></g></svg>`;}
