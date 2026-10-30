@@ -33,3 +33,11 @@ body[data-ck-v8-tab="landing"] #ck-v8-ambient.ck36-garden{height:max(760px,100sv
 @keyframes ck38-sleep{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.055) translateY(-.3%)}}
 .ck36-press .ck38-main-rig{animation:ck36-press 1.1s ease-in-out 2}
 @media(prefers-reduced-motion:reduce){.ck38-eyelids{opacity:0}.ck38-main-rig,.ck36-sleep>img.ck38-sleep-body{animation:none}}
+
+/* v39: sculpted clouds, grounded perch and separated cub composition. */
+.ck36-cloud{height:clamp(64px,7.1vw,105px);filter:drop-shadow(1px 5px 3px #426c8829)}
+.ck36-cloud i{background:radial-gradient(ellipse at 34% 18%,#fff 8%,#f6f9fc 32%,#dce4eb 57%,#b7c7d3 80%,#8fa7b9 100%);box-shadow:inset -5px -8px 9px #708da333,inset 2px 3px 5px #ffffffb3}
+.ck36-main,.ck36-contact-main,.ck36-scroll{left:36%}
+.ck36-sleep{left:64%;width:min(25.6vw,336px,calc(var(--ck36-visible-height,100svh)*.368))}
+.ck36-contact-sleep{left:64%;width:22.4vw}
+@media(max-width:600px){.ck36-main,.ck36-contact-main,.ck36-scroll{left:28%}.ck36-sleep{left:70%;width:37.6vw}.ck36-contact-sleep{left:70%;width:33.6vw}}
