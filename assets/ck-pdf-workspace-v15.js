@@ -272,9 +272,8 @@ function eraseAt(s,event){
  for(let i=line.length-1;i>=0;i--){for(let j=0;j<=steps;j++){const f=j/steps;if(hitTest(line[i],prior[0]+(point[0]-prior[0])*f,prior[1]+(point[1]-prior[1])*f,rect)){line.splice(i,1);changed=true;break;}}}
  s.erasePoint=point;if(changed){s.eraseDirty=true;s.redo[String(s.page)]=[];redrawInk(s);}
 }
-function penEraser(event){
- return event.pointerType==='pen'&&(event.button===2||event.button===5||!!(event.buttons&34));
-}
+function penEraser(event){return window.CKPen60?.eraser(event)===true;}
+
 function commitStroke(s){
  if(!s.activeStroke)return;
  if(s.activeStroke.points.length){strokes(s).push(s.activeStroke);s.redo[String(s.page)]=[];persist(s);}
@@ -300,8 +299,9 @@ function endPenSession(s){
 function onPointerDown(s,event){
  if(!s.pdf||!s.host.isConnected)return;
  if(event.pointerType==='touch'&&(s.penMode||s.strokePointer!=null))return;
- if(event.pointerType!=='touch'&&event.button!==0&&!penEraser(event))return;
- if(event.pointerType!=='touch'&&s.strokePointer!=null)return;
+ if(event.pointerType==='pen'&&!window.CKPen60?.contact(event))return;
+ if(event.pointerType!=='touch'&&event.pointerType!=='pen'&&event.button!==0)return;
+ if(event.pointerType!=='touch'&&s.strokePointer!=null){if(s.strokePointer===event.pointerId)onPointerMove(s,event);return;}
  s.lastZoomGestureMoved=false;
  if(s.parent)s.parent.activePage=s;else s.activePage=s;
  const ink=els(s.host,'[data-ck15-ink-canvas]'),scroller=els(s.host,'[data-ck15-scroll]');
@@ -328,6 +328,7 @@ function onPointerDown(s,event){
 }
 function onPointerMove(s,event){
  if(!s.pdf||!s.host.isConnected)return;
+ if(s.strokePointer==null&&window.CKPen60?.contact(event)){onPointerDown(s,event);return;}
  if(event.pointerType==='touch'&&s.touchPoints.has(event.pointerId)){
   s.touchPoints.set(event.pointerId,{x:event.clientX,y:event.clientY});
   if(s.touchPoints.size>=2&&s.pinch){
@@ -369,6 +370,7 @@ function onPointerMove(s,event){
  }
 }
 function onPointerUp(s,event){
+ if(event.type==='pointerup'&&s.strokePointer===event.pointerId&&window.CKPen60?.contact(event)){onPointerMove(s,event);return;}
  const drawing=s.strokePointer===event.pointerId;
  if(!drawing&&!s.touchPoints.has(event.pointerId)&&!s.gesture)return;
  if(drawing){

@@ -99,27 +99,8 @@
       suppressClickUntil = 0;
     }, true);
 
-    // Preserve Ctrl+tab and keyboard navigation: bring activated offscreen tab into view.
-    const ensureActiveVisible = () => {
-      autoScrollFrame = 0;
-      if (!pill.isConnected || down?.moved) return;
-      const selected = pill.querySelector('.board-tabs > .board-tab.active');
-      if (!selected) return;
-      const rail = pill.getBoundingClientRect();
-      const tab = selected.getBoundingClientRect();
-      const inset = 12;
-      const overflow = tab.left < rail.left + inset ? tab.left - rail.left - inset :
-        tab.right > rail.right - inset ? tab.right - rail.right + inset : 0;
-      if (Math.abs(overflow) > 1) {
-        cancelMomentum();
-        pill.scrollBy({left: overflow, behavior: reduced.matches ? 'instant' : 'smooth'});
-      }
-    };
-    activeObserver = new MutationObserver(records => {
-      if (!records.some(r => r.target.matches?.('.board-tab'))) return;
-      if (!autoScrollFrame) autoScrollFrame = requestAnimationFrame(ensureActiveVisible);
-    });
-    activeObserver.observe(pill.querySelector('.board-tabs'), {attributes:true, attributeFilter:['class'], subtree:true});
+    // Navigation preserves the user's exact rail position. No active-tab auto-pan.
+
   }
 
   const main = document.getElementById('main');

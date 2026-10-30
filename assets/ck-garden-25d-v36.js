@@ -3,7 +3,7 @@
 'use strict';
 const motion=window.CKLegacyMotion37;
 import('./ck-color-picker-v43.js');
-import('./ck-nav-drag-v56.js').catch(err=>console.error('Navigation drag module failed',err));
+import('./ck-nav-drag-v56.js?v=60').catch(err=>console.error('Navigation drag module failed',err));
 const reduced=matchMedia('(prefers-reduced-motion: reduce)'),svgNS='http://www.w3.org/2000/svg';
 let rail3d=null;
 let host,frame=0,last=0,time=0,frames=0,focused=true,samples=[],apples=[],path,active=false,birdHead,birdBody,peckStarted=-100,peckIndex=-1,headTilt=0,clouds=[],width=1536,pecks=0;
