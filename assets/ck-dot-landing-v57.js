@@ -19,7 +19,7 @@
   };
   const part = (parent, tag, attrs) => { const node = svg(tag, attrs); parent.appendChild(node); return node; };
   const addStyle = () => {
-    if (document.querySelector('link[data-ck-dot-style]')) return;
+    if (document.querySelector('link[data-ck-dot-style],link[href="./assets/ck-dot-landing-v57.css"]')) return;
     const link = document.createElement('link');
     link.rel = 'stylesheet'; link.href = scenePath + 'ck-dot-landing-v57.css';
     link.dataset.ckDotStyle = '1'; document.head.appendChild(link);

@@ -9,7 +9,8 @@ let mode='light';
 try{mode=localStorage.getItem(themeKey)==='dark'?'dark':'light'}catch(e){}
 function themeApply(next){
  mode=next==='dark'?'dark':'light';
- root.dataset.ckTheme=mode;root.style.colorScheme=mode;
+ root.dataset.ckTheme=mode;root.style.colorScheme='only light'; // App CSS owns both themes; disable browser auto-dark recoloring.
+ root.style.setProperty('--ck-native-color-scheme',mode);
  try{localStorage.setItem(themeKey,mode)}catch(e){}
  document.querySelectorAll('[data-ck14-theme]').forEach(b=>{
   b.setAttribute('aria-pressed',String(mode==='dark'));

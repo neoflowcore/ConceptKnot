@@ -1,0 +1,42 @@
+/* One desktop palette at every width. Layout breakpoints never choose a theme.
+   `only light` opts out of Chromium/Brave automatic page darkening; the app's
+   explicit data-ck-theme styles still render its own dark theme normally. */
+html, html[data-ck-theme] { color-scheme:only light!important; }
+:root {
+ --ck58-ribbon:#fcfcf9;
+ --ck58-tab-ink:#203930;
+ --ck58-tab-hover:#e6f1e8;
+ --ck58-tab-active:#185e4a;
+}
+html[data-ck-theme="dark"] {
+ --ck58-ribbon:rgba(13,29,35,.91);
+ --ck58-tab-ink:#dcefe9;
+ --ck58-tab-hover:rgba(68,133,114,.25);
+ --ck58-tab-active:rgba(68,133,114,.65);
+}
+html body #main .ck-v7-nav-pill.ck4-unified {
+ background:var(--ck58-ribbon)!important;
+}
+html body #main .ck-v7-nav-pill.ck4-unified .board-tab {
+ color:var(--ck58-tab-ink)!important;
+ background:transparent!important;
+}
+html body #main .ck-v7-nav-pill.ck4-unified .board-tab:hover:not(.active) {
+ background:var(--ck58-tab-hover)!important;
+}
+html body #main .ck-v7-nav-pill.ck4-unified .board-tab.active {
+ background:var(--ck58-tab-active)!important;color:#fff!important;
+}
+/* Keep the same white paper and black stipple artwork in both app themes.
+   Dark mode changes study panels and controls, not the landing illustration. */
+html body[data-ck-v8-tab="landing"] #ck-v8-ambient.ck-dot-landing {
+ background:#fff!important;color:#151515!important;color-scheme:only light!important;
+}
+html body:not([data-ck-v8-tab="landing"]) {
+ background-color:var(--ck17-study-background,#A58A73)!important;
+ background-image:none!important;
+}
+html[data-ck-theme="dark"] body:not([data-ck-v8-tab="landing"]) {
+ background-color:var(--ck17-study-background-dark,#A58A73)!important;
+}
+html[data-ck-theme="dark"] :is(input,select,textarea) {color-scheme:dark;}
