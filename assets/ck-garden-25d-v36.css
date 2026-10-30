@@ -48,3 +48,7 @@ body[data-ck-v8-tab="landing"] #ck-v8-ambient.ck36-garden{height:max(760px,100sv
 .ck40-cumulus-left{left:3%}.ck40-cumulus-right{right:1%;top:5%;width:clamp(160px,25vw,400px)}
 .ck36-clouds{z-index:2}.ck36-orbit{z-index:3}
 @media(max-width:600px){.ck40-cumulus{top:13%;width:49vw}.ck40-cumulus-right{top:8%;width:44vw}}
+
+/* v41: lower both cloud depths together, retaining the foreground drift. */
+.ck40-cumulus{margin-top:clamp(46px,8svh,96px)}
+.ck36-clouds{top:clamp(46px,8svh,96px)}
