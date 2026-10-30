@@ -41,3 +41,10 @@ body[data-ck-v8-tab="landing"] #ck-v8-ambient.ck36-garden{height:max(760px,100sv
 .ck36-sleep{left:64%;width:min(25.6vw,336px,calc(var(--ck36-visible-height,100svh)*.368))}
 .ck36-contact-sleep{left:64%;width:22.4vw}
 @media(max-width:600px){.ck36-main,.ck36-contact-main,.ck36-scroll{left:28%}.ck36-sleep{left:70%;width:37.6vw}.ck36-contact-sleep{left:70%;width:33.6vw}}
+
+/* v40: still cumulus behind moving clouds; no extra animation loop. */
+.ck40-cumulus{position:absolute;z-index:1;top:9%;width:clamp(180px,29vw,470px);pointer-events:none;opacity:.95}
+.ck40-cumulus svg{display:block;width:100%;height:auto}
+.ck40-cumulus-left{left:3%}.ck40-cumulus-right{right:1%;top:5%;width:clamp(160px,25vw,400px)}
+.ck36-clouds{z-index:2}.ck36-orbit{z-index:3}
+@media(max-width:600px){.ck40-cumulus{top:13%;width:49vw}.ck40-cumulus-right{top:8%;width:44vw}}
