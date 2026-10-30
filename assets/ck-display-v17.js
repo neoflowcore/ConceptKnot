@@ -24,7 +24,7 @@ function validHex(value){
  if(/^[0-9a-f]{6}$/i.test(s))return '#'+s.toUpperCase();
  return null;
 }
-const chosen=()=>Object.prototype.hasOwnProperty.call(presets,values.backgroundPreset)||values.backgroundPreset==='custom'?values.backgroundPreset:'forest';
+const chosen=()=>Object.prototype.hasOwnProperty.call(presets,values.backgroundPreset)||values.backgroundPreset==='custom'?values.backgroundPreset:'wood';
 const custom=()=>validHex(values.backgroundCustom)||customDefault;
 const baseColor=()=>chosen()==='custom'?custom():presets[chosen()].color;
 function tint(hex){
@@ -78,10 +78,12 @@ function backgroundControls(){
 }
 
 try{values=JSON.parse(localStorage.getItem(key)||'{}')||{}}catch(e){}
-if(values.scenePaletteVersion!==36){
+if(values.scenePaletteVersion!==54){
+ // New system default is wood brown; migrate the previous green default once.
+ if(values.backgroundPreset==null || values.backgroundPreset==='forest') values.backgroundPreset='wood';
  if(values.saturation==null||(values.saturation===72||values.saturation===110))values.saturation=100;
  if(values.backgroundBrightness==null||(values.backgroundBrightness===92||values.backgroundBrightness===102))values.backgroundBrightness=100;
- values.scenePaletteVersion=36;
+ values.scenePaletteVersion=54;
  try{localStorage.setItem(key,JSON.stringify(values))}catch{}
 }
 function apply(){
