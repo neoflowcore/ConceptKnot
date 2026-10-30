@@ -176,7 +176,7 @@ function decorate(){
  });
  document.querySelectorAll('.ck-v7-toolrow').forEach(row=>{
   const clear=row.querySelector('[data-ck-v7-command="clear"]');
-  if(clear&&!row.querySelector('[data-ck11-eraser]')){
+  if(clear&&!row.querySelector('[data-ck11-eraser],[data-ck9-spen-tool=eraser]')){
    const b=document.createElement('button');b.type='button';b.dataset.ck11Eraser='true';
    b.className='ck11-eraser';b.title='S Pen 지우개';b.setAttribute('aria-label','S Pen 지우개');
    b.innerHTML='<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M20 14.5 12 22H6l-4-4 11.7-11.7a2 2 0 0 1 2.8 0l3.5 3.5a3 3 0 0 1 0 4.7Z"/><path d="m8 12 6 6M12 22h9"/></svg>';

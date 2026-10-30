@@ -1,0 +1,7 @@
+/* Palm rejection is local to a drawing surface. Never lock the whole page. */
+html body.ck22-pen-locked {position:static!important;overflow:visible!important;touch-action:auto!important;overscroll-behavior:auto!important;}
+html body.ck21-stylus-writing,html body.ck21-stylus-writing #main {touch-action:auto!important;overscroll-behavior:auto!important;}
+#main .ck9-spen-active .ck-v7-writing-surface {touch-action:none!important;}
+#main .ck59-pdf-spen [data-ck15-ink-canvas] {touch-action:none!important;}
+#main .ck15-pdf-tools [data-ck15-spen][aria-pressed="true"] {background:#3b947d!important;color:#fff!important;}
+#main .ck21-spen-tools {align-items:center;gap:4px;}

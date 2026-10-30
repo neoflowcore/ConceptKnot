@@ -8,12 +8,12 @@ let board=null,handle=null,drag=null,extend=0;
 try{extend=Math.max(-180,Math.min(750,Number(localStorage.getItem(KEY))||0))}catch{}
 let locked=false,scrollY=0;
 function syncLock(){
- const next=!!document.querySelector('#main .ck9-spen-active')&&matchMedia('(max-width:850px)').matches;
- if(next===locked)return;
- locked=next;
- if(next){scrollY=window.scrollY;document.body.style.top=-scrollY+'px';document.body.classList.add('ck22-pen-locked')}
- else{document.body.classList.remove('ck22-pen-locked');document.body.style.removeProperty('top');window.scrollTo(0,scrollY)}
+ // Palm rejection belongs to the drawing surface, never the whole document.
+ locked=false;
+ document.body.classList.remove('ck22-pen-locked');
+ document.body.style.removeProperty('top');
 }
+
 const apply=()=>{
  syncLock();
  board=document.querySelector('#main .ck-v7-board');
@@ -48,11 +48,6 @@ function finish(e){
  if(e.pointerType==='pen')document.body?.classList.remove('ck21-stylus-writing');
 }
 for(const event of ['pointerup','pointercancel','lostpointercapture'])document.addEventListener(event,finish,true);
-document.addEventListener('touchmove',e=>{
- if(locked||document.body?.classList.contains('ck21-stylus-writing')){
-  if(e.cancelable)e.preventDefault();
- }
-},{passive:false,capture:true});
 document.addEventListener('keydown',e=>{
  if(!e.target.closest?.('[data-ck21-board-resize]'))return;
  if(!['ArrowUp','ArrowDown','Home'].includes(e.key))return;
