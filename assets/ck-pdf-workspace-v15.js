@@ -97,9 +97,10 @@ function pageMetrics(s){
  page.style.width=width+'px';page.style.height=height+'px';
  display.style.width=width+'px';display.style.height=height+'px';
  const output=els(s.host,'[data-ck15-zoom-value]');
- if(output)output.textContent=Math.round(s.zoom*100)+'%';
+ if(output&&document.activeElement!==output)output.value=Math.round(s.zoom*100);
  const count=els(s.host,'[data-ck15-page-label]');
- if(count)count.textContent=s.page+' / '+(s.pdf?.numPages||'—');
+ if(count&&document.activeElement!==count)count.value=s.page;
+ const total=els(s.host,'[data-ck42-page-total]');if(total)total.textContent=' / '+(s.pdf?.numPages||'—');
  const prev=els(s.host,'[data-ck15-prev]'),next=els(s.host,'[data-ck15-next]');
  if(prev)prev.disabled=s.page<=1;
  if(next)next.disabled=s.page+(s.spread?1:0)>=s.pdf.numPages;
@@ -107,7 +108,7 @@ function pageMetrics(s){
   const toggle=els(s.host,'[data-ck17-spread]');
   if(toggle){toggle.setAttribute('aria-pressed',String(!!s.spread));toggle.setAttribute('aria-label',s.spread?'PDF 한 페이지씩 보기':'PDF 두 페이지 나란히 보기');toggle.title=s.spread?'한 페이지 보기':'두 페이지 펼쳐보기'}
  }
- if(count&&s.spread)count.textContent=s.page+'–'+Math.min(s.page+1,s.pdf.numPages)+' / '+s.pdf.numPages;
+ if(total&&s.spread)total.textContent='–'+Math.min(s.page+1,s.pdf.numPages)+' / '+s.pdf.numPages;
  if(s.second){s.second.zoom=s.zoom;pageMetrics(s.second)}
  redrawInk(s);
 }
@@ -256,11 +257,18 @@ function pointerPoint(s,event){
  return [clamp((event.clientX-rect.left)/rect.width,0,1),clamp((event.clientY-rect.top)/rect.height,0,1),event.pointerType==='pen'?clamp(event.pressure||.5,.05,1):.5];
 }
 function hitTest(stroke,x,y,rect){
+ const px=x*rect.width,py=y*rect.height;
  for(let i=0;i<stroke.points.length;i++){
-  const p=stroke.points[i],dx=(p[0]-x)*rect.width,dy=(p[1]-y)*rect.height;
-  if(dx*dx+dy*dy<169)return true;
- }
- return false;
+  const a=stroke.points[i],b=stroke.points[Math.min(i+1,stroke.points.length-1)],ax=a[0]*rect.width,ay=a[1]*rect.height,bx=b[0]*rect.width,by=b[1]*rect.height;
+  const dx=bx-ax,dy=by-ay,t=clamp(((px-ax)*dx+(py-ay)*dy)/(dx*dx+dy*dy||1),0,1);
+  if(Math.hypot(px-ax-t*dx,py-ay-t*dy)<13+stroke.width/2)return true;
+ }return false;
+}
+function eraseAt(s,event){
+ const point=pointerPoint(s,event),rect=els(s.host,'[data-ck15-page]').getBoundingClientRect(),line=strokes(s),prior=s.erasePoint||point;
+ const steps=Math.max(1,Math.ceil(Math.hypot((point[0]-prior[0])*rect.width,(point[1]-prior[1])*rect.height)/6));let changed=false;
+ for(let i=line.length-1;i>=0;i--){for(let j=0;j<=steps;j++){const f=j/steps;if(hitTest(line[i],prior[0]+(point[0]-prior[0])*f,prior[1]+(point[1]-prior[1])*f,rect)){line.splice(i,1);changed=true;break;}}}
+ s.erasePoint=point;if(changed){s.eraseDirty=true;s.redo[String(s.page)]=[];redrawInk(s);}
 }
 function onPointerDown(s,event){
  if(!s.pdf||(event.button!==0&&!(event.pointerType==='pen'&&event.button===5))||!s.host.isConnected)return;
@@ -275,18 +283,12 @@ function onPointerDown(s,event){
    s.gesture=null;const touches=[...s.touchPoints.values()];
    s.pinch={distance:Math.hypot(touches[0].x-touches[1].x,touches[0].y-touches[1].y),zoom:s.zoom};
   }
- }else if(event.detail>=2){
-  s.gesture={type:'zoom',y:event.clientY,initial:s.zoom,moved:false};
+ }else if(s.tool==='eraser'||event.pointerType==='pen'&&event.button===5){
+  s.erasing=event.pointerId;s.erasePoint=null;eraseAt(s,event);
+ }else if(event.detail>=2||(s.tool==='hand'&&s.lastTap&&performance.now()-s.lastTap.time<360&&Math.hypot(event.clientX-s.lastTap.x,event.clientY-s.lastTap.y)<12)){
+  s.gesture={type:'zoom',x:event.clientX,y:event.clientY,initial:(s.parent||s).zoom,moved:false};
  }else if(s.tool==='pen'||event.pointerType==='pen'){
   s.activeStroke={color:s.color,width:s.width,points:[pointerPoint(s,event)]};
- }else if(s.tool==='eraser'||event.pointerType==='pen'&&event.button===5){
-  const point=pointerPoint(s,event),rect=els(s.host,'[data-ck15-page]').getBoundingClientRect(),line=strokes(s);
-  const index=line.findLastIndex(st=>hitTest(st,point[0],point[1],rect));
-  if(index>=0){
-   const removed=line.splice(index,1)[0];
-   s.redo[String(s.page)]=[];persist(s);redrawInk(s);
-   alertStatus(s,'획을 지웠습니다. 이 쪽 '+line.length+'획');
-  }
  }else{
   s.gesture={type:'pan',x:event.clientX,y:event.clientY,left:scroller.scrollLeft,top:scroller.scrollTop};
  }
@@ -305,18 +307,20 @@ function onPointerMove(s,event){
    event.preventDefault();return;
   }
  }
+ if(s.erasing===event.pointerId){eraseAt(s,event);event.preventDefault();return;}
  if(s.activeStroke){
   const coalesced=event.getCoalescedEvents?.()||[event];
   for(const sample of coalesced.length?coalesced:[event])s.activeStroke.points.push(pointerPoint(s,sample));
   redrawInk(s);event.preventDefault();return;
  }
  if(s.gesture?.type==='zoom'){
-  const delta=(s.gesture.y-event.clientY)/210;
+  const delta=(event.clientY-s.gesture.y)/220;
   if(Math.abs(delta)>.025)s.gesture.moved=true;
-  applyZoom(s,s.gesture.initial*Math.exp(delta),event.clientX,event.clientY);
+  applyZoom(s,s.gesture.initial+delta,s.gesture.x,s.gesture.y);
   event.preventDefault();return;
  }
  if(s.gesture?.type==='pan'){
+  if(Math.hypot(event.clientX-s.gesture.x,event.clientY-s.gesture.y)>4)s.gesture.moved=true;
   const scroller=els(s.host,'[data-ck15-scroll]');
   scroller.scrollLeft=s.gesture.left+s.gesture.x-event.clientX;
   scroller.scrollTop=s.gesture.top+s.gesture.y-event.clientY;
@@ -324,6 +328,9 @@ function onPointerMove(s,event){
  }
 }
 function onPointerUp(s,event){
+ if(event.type==='pointerup')s.lastZoomGestureMoved=s.gesture?.type==='zoom'&&!!s.gesture.moved;
+ if(event.type==='pointerup'&&!s.gesture?.moved)s.lastTap={time:performance.now(),x:event.clientX,y:event.clientY};
+ if(s.erasing===event.pointerId){s.erasing=null;s.erasePoint=null;if(s.eraseDirty){persist(s);s.eraseDirty=false;alertStatus(s,'드래그한 영역의 필기를 지웠습니다.');}}
  const ink=els(s.host,'[data-ck15-ink-canvas]');
  try{if(ink?.hasPointerCapture(event.pointerId))ink.releasePointerCapture(event.pointerId)}catch(e){}
  if(s.touchPoints.has(event.pointerId))s.touchPoints.delete(event.pointerId);
@@ -336,7 +343,6 @@ function onPointerUp(s,event){
   }
   s.activeStroke=null;redrawInk(s);
  }
- s.lastZoomGestureMoved=!!s.gesture?.type&&s.gesture.type==='zoom'&&!!s.gesture.moved;
  s.gesture=null;
 }
 function updateTool(s,tool){
@@ -421,6 +427,17 @@ async function act(s,button){
 function bind(s){
  const host=s.host,ink=els(host,'[data-ck15-ink-canvas]'),scroller=els(host,'[data-ck15-scroll]');
  if(!ink||!scroller)return;
+ if(!s.parent){
+  const oldZoom=els(host,'output[data-ck15-zoom-value]'),oldPage=els(host,'output[data-ck15-page-label]');
+  if(oldZoom)oldZoom.outerHTML='<label class="ck42-pdf-number"><input data-ck15-zoom-value aria-label="PDF 배율 직접 입력" inputmode="decimal" value="100" size="4">%</label>';
+  if(oldPage)oldPage.outerHTML='<label class="ck42-pdf-number"><input data-ck15-page-label aria-label="PDF 페이지 직접 입력" inputmode="numeric" value="1" size="3"><span data-ck42-page-total> / —</span></label>';
+  const zoom=els(host,'[data-ck15-zoom-value]'),page=els(host,'[data-ck15-page-label]');
+  for(const input of [zoom,page])if(input){
+   input.addEventListener('focus',()=>input.select());
+   input.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();e.stopPropagation();const value=Number(input.value.replace('%','').trim());if(Number.isFinite(value)&&value>0){if(input===zoom)applyZoom(s,value/100);else goPage(s,value);}input.blur();pageMetrics(s);}else if(e.key==='Escape'){input.blur();pageMetrics(s);}});
+   input.addEventListener('blur',()=>pageMetrics(s));
+  }
+ }
  ink.addEventListener('pointerdown',e=>onPointerDown(s,e));
  ink.addEventListener('pointermove',e=>onPointerMove(s,e));
  for(const ev of ['pointerup','pointercancel','lostpointercapture'])ink.addEventListener(ev,e=>onPointerUp(s,e));

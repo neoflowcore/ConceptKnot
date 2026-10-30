@@ -3,6 +3,7 @@
 'use strict';
 const motion=window.CKLegacyMotion37;
 const reduced=matchMedia('(prefers-reduced-motion: reduce)'),svgNS='http://www.w3.org/2000/svg';
+let rail3d=null;
 let host,frame=0,last=0,time=0,frames=0,focused=true,samples=[],apples=[],path,active=false,birdHead,birdBody,peckStarted=-100,peckIndex=-1,headTilt=0,clouds=[],width=1536,pecks=0;
 function apple(color,id){return `<g class="ck36-apple" data-fruit="${id}"><defs><radialGradient id="fruit${id}" cx=".3" cy=".22"><stop stop-color="${color[0]}"/><stop offset=".55" stop-color="${color[1]}"/><stop offset="1" stop-color="${color[2]}"/></radialGradient></defs><path d="M0 -14 C-8 -23 -28 -17 -27 1 C-26 20 -13 31 -2 26 Q0 24 3 26 C18 29 29 12 27 -3 C25 -20 10 -22 0 -14Z" fill="url(#fruit${id})"/><path d="M0 -14q-1 -13 5 -19" fill="none" stroke="#815333" stroke-width="4" stroke-linecap="round"/><path d="M3 -21q12 -15 24 -10q-4 16 -24 10" fill="#619d2d"/><ellipse cx="-13" cy="-7" rx="5" ry="8" fill="#fff" opacity=".35" transform="rotate(28 -13 -7)"/></g>`;}
 function cloud(id){
@@ -47,6 +48,7 @@ function allowed(){return isLanding()&&!document.hidden&&focused&&!reduced.match
 function layout(){if(!host||host.clientHeight<1)return;host.style.setProperty('--ck36-visible-height',Math.min(host.clientHeight,innerHeight)+'px');width=host.clientWidth;}
 function sync(){if(isLanding())layout();active=allowed();host?.classList.toggle('ck36-paused',!active);if(host)host.dataset.ck36Active=String(active);if(!active){cancelAnimationFrame(frame);frame=0;last=0;}else if(!frame)frame=requestAnimationFrame(tick);}
 function paint(dt=0){
+ rail3d?.paint(time);
  const positions=[];
  for(let i=0;i<apples.length;i++){
   const u=(time/motion.lapSeconds+i/6)%1,n=u*(samples.length-1),a=samples[Math.floor(n)],b=samples[Math.min(samples.length-1,Math.floor(n)+1)],f=n%1;
@@ -75,6 +77,7 @@ function boot(){
  const colors=[['#ff9d78','#ee332c','#a31e20'],['#dbef73','#91c932','#4b8a24'],['#fff2a0','#f8c631','#c28b21']];
  host.innerHTML=`<img class="ck36-background" src="./assets/garden-clean-v37.webp" alt="" fetchpriority="high" decoding="async"><div class="ck40-cumulus ck40-cumulus-left">${cumulus(0)}</div><div class="ck40-cumulus ck40-cumulus-right">${cumulus(1)}</div><div class="ck36-clouds" aria-hidden="true">${[0,1,2,3,4,5].map(i=>`<div class="ck36-cloud ck36-cloud-${i}">${cloud(i)}</div>`).join('')}</div><svg class="ck36-orbit" viewBox="0 0 1536 1024" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${rail()}${Array.from({length:6},(_,i)=>apple(colors[i%3],i)).join('')}<g transform="translate(600 491)"><defs><clipPath id="ck37-bird-upper"><rect width="92" height="63"/></clipPath><clipPath id="ck37-bird-lower"><rect y="57" width="92" height="38"/></clipPath></defs>${perch()}<g id="ck37-bird-body"><image href="./assets/bird-v37.webp" width="92" height="94" preserveAspectRatio="xMidYMid meet" clip-path="url(#ck37-bird-lower)"/><g id="ck37-bird-head"><image href="./assets/bird-v37.webp" width="92" height="94" preserveAspectRatio="xMidYMid meet" clip-path="url(#ck37-bird-upper)"/></g></g></g></svg><div class="ck36-contact ck36-contact-main"></div><button type="button" class="ck36-cub ck36-main" aria-label="아기사자를 눌러 몽당연필 동작 다시 재생"><span class="ck38-main-rig"><img src="./assets/cub-pencil-v36.webp" alt="빨간 몽당연필을 든 웃는 아기사자" decoding="async" draggable="false">${eyelids()}</span></button><div class="ck36-contact ck36-contact-sleep"></div><div class="ck36-cub ck36-sleep"><img src="./assets/cub-sleep-v36.webp" alt="눌린 상자를 베고 잠자는 동생 사자" decoding="async" draggable="false"><img class="ck38-sleep-body" src="./assets/cub-sleep-v36.webp" alt="" aria-hidden="true" draggable="false"></div><button type="button" class="ck36-scroll" aria-label="아래로 스크롤하여 학습 시작">SCROLL DOWN ↓</button>`;
  path=host.querySelector('#ck36-rail-path');samples=motion.points.map(p=>({x:p[0],y:p[1],z:p[2]}));apples=Array.from(host.querySelectorAll('.ck36-apple'));birdHead=host.querySelector('#ck37-bird-head');birdBody=host.querySelector('#ck37-bird-body');clouds=Array.from(host.querySelectorAll('.ck36-cloud'));layout();paint();
+ import('./ck-rail3d-v42.mjs').then(m=>{rail3d=m.mountRail(host,motion);rail3d.paint(time);}).catch(()=>{host.dataset.ck42Renderer='unavailable';});
  host.querySelector('.ck36-main').addEventListener('click',e=>{if(reduced.matches)return;const el=e.currentTarget;el.classList.remove('ck36-press');void el.offsetWidth;el.classList.add('ck36-press');});
  host.querySelector('.ck36-main').addEventListener('animationend',e=>{if(e.animationName==='ck36-press')e.currentTarget.classList.remove('ck36-press');});
  host.querySelector('.ck36-scroll').addEventListener('click',()=>document.querySelector('#main [data-go="home"]')?.click());

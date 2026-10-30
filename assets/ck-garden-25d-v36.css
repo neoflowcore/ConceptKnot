@@ -52,3 +52,11 @@ body[data-ck-v8-tab="landing"] #ck-v8-ambient.ck36-garden{height:max(760px,100sv
 /* v41: lower both cloud depths together, retaining the foreground drift. */
 .ck40-cumulus{margin-top:clamp(46px,8svh,96px)}
 .ck36-clouds{top:clamp(46px,8svh,96px)}
+
+.ck42-rail3d{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none}
+.ck36-orbit{z-index:4}
+.ck42-webgl-ready .ck41-ceramic-tube,.ck42-webgl-ready .ck36-apple{display:none}
+
+.ck42-pdf-number{display:inline-flex;align-items:center;gap:2px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.ck42-pdf-number input{width:4.2em;min-width:0;padding:4px 2px;border:1px solid transparent;border-radius:5px;background:transparent;color:inherit;text-align:center;font:inherit;cursor:text}
+.ck42-pdf-number input:hover,.ck42-pdf-number input:focus{border-color:#739d9b;background:#fff2;outline:none}
