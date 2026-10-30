@@ -106,3 +106,13 @@ body[data-ck-v8-tab="landing"] #ck-v8-ambient.ck-dot-landing {
   .ck-dot-landing .ck-dot-note-icon[data-side="left"] {left:3%;}
   .ck-dot-landing .ck-dot-note-icon[data-side="right"] {right:3%;}
 }
+
+/* PREVIEW_WHITE_GUARD: isolated verification branch only.
+   Prevent automatic browser darkening of the monochrome white Dot landscape.
+   Original production commit and all study features remain unchanged. */
+:root { color-scheme: only light !important; background-color: #ffffff !important; }
+html body[data-ck-v8-tab="landing"] { background: #ffffff !important; }
+html body[data-ck-v8-tab="landing"] #ck-v8-ambient.ck-dot-landing {
+  color-scheme: only light !important; background-color: #ffffff !important;
+  background-image: none !important; filter: none !important;
+}
