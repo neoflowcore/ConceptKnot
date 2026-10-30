@@ -15,3 +15,8 @@ body[data-ck-v8-tab="landing"] #ck-v8-ambient.ck36-garden{height:max(760px,100sv
 @keyframes ck36-cloud{from{transform:translateX(0)}to{transform:translateX(650%)}}
 @media(max-width:600px){.ck36-main{left:34%;width:min(59vw,calc(var(--ck36-visible-height,100svh)*.39))}.ck36-sleep{left:75%;width:47vw;bottom:calc(100% - var(--ck36-visible-height,100svh) + 88px)}.ck36-scroll{left:34%}.ck36-contact-main{left:34%;width:46vw}.ck36-contact-sleep{left:75%;width:42vw;bottom:calc(100% - var(--ck36-visible-height,100svh) + 81px)}.ck36-cloud{width:40vw}.ck36-cloud-1{width:34vw}.ck36-cloud-3{width:28vw}}
 @media(prefers-reduced-motion:reduce){.ck36-garden *{animation:none!important}}
+
+/* v37 legacy drift now shares the apple/bird clock, so all three freeze together. */
+.ck36-cloud{left:0;animation:none!important;width:clamp(160px,22vw,340px)}
+.ck36-cloud-0{top:7%}.ck36-cloud-1{top:2%;width:19vw}.ck36-cloud-2{top:17%}.ck36-cloud-3{top:21%;width:16vw}.ck36-cloud-4{top:12%;width:18vw}.ck36-cloud-5{top:26%;width:15vw}
+@media(max-width:600px){.ck36-cloud{width:43vw}.ck36-cloud-1,.ck36-cloud-4{width:36vw}.ck36-cloud-3,.ck36-cloud-5{width:30vw}}
