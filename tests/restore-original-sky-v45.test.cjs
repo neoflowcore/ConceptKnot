@@ -1,0 +1,14 @@
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const src=fs.readFileSync(path.join(__dirname,'../assets/ck-garden-25d-v36.js'),'utf8');
+const css=fs.readFileSync(path.join(__dirname,'../assets/ck-garden-25d-v36.css'),'utf8');
+const sw=fs.readFileSync(path.join(__dirname,'../sw.js'),'utf8');
+assert.ok(src.includes('src="./assets/garden-clean-v37.webp"'), 'Original garden restored');
+assert.equal((src.match(/class="ck36-background"/g)||[]).length,1,'Only one garden background');
+assert.equal((src.match(/class="ck45-drifter"/g)||[]).length,3,'Three independent cloud layers');
+assert.ok(src.includes('time*cloud.speed')&&src.includes('%span'),'Clouds cross the screen and wrap');
+assert.ok(!src.includes('ck43-cloud-panorama')&&!src.includes('ck43-garden-foreground'),'No obsolete sky replacement layers');
+assert.ok(src.includes('function allowed(){return isLanding()&&!document.hidden&&focused&&!reduced.matches;}'),'Cloud/scene clock pauses outside landing');
+assert.ok(css.includes('.ck45-cloud-sky')&&sw.includes('v45-original-sky-drift'),'Cloud CSS and cache version present');
+console.log('Original background + floating clouds: OK');

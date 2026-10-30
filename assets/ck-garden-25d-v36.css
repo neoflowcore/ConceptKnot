@@ -77,6 +77,8 @@ body[data-ck-v8-tab="landing"] #ck-v8-ambient.ck36-garden{height:max(760px,100sv
 .ck43-wheel{position:relative;width:200px;height:200px;margin:auto}.ck43-wheel canvas{display:block;touch-action:none;cursor:crosshair}.ck43-wheel i{position:absolute;width:10px;height:10px;border:2px solid white;box-shadow:0 0 0 1px #213c33;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none}
 .ck43-value input{flex:1;min-width:0}.ck43-preview{height:23px;border-radius:6px;border:1px solid #4565}.ck43-color-dialog small{font:10px/1.4 sans-serif;opacity:.75}.ck43-color-dialog p{font-size:11px;margin:0;color:#9a382e}
 
-.ck43-cloud-panorama{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
-
-.ck43-garden-foreground{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none}
+/* Restore the single approved garden image, with only the cloud sprites layered over its sky.
+   The scene clock pauses on study tabs and document blur; no second full-scene image is drawn. */
+.ck45-cloud-sky{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;overflow:hidden}
+.ck45-drifter{pointer-events:none}
+.ck36-paused .ck45-cloud-sky{will-change:auto}
