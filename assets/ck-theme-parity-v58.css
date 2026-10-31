@@ -82,3 +82,8 @@ html body.ck67-brand-closing:not([data-ck-v8-tab="landing"]) #main .ck-v7-nav-pi
 @media(prefers-reduced-motion:reduce) {
  html body.ck67-brand-closing:not([data-ck-v8-tab="landing"]) #main .ck-v7-nav-pill .ck-v7-logo .ck-brand-wordmark {animation:none;}
 }
+
+/* v68: paused motion must never blank the landing illustration. */
+html body[data-ck-v8-tab="landing"] #ck-v8-ambient.ck-dot-landing {
+ visibility:visible!important;content-visibility:visible!important;
+}

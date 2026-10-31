@@ -10,13 +10,15 @@
  const scene=()=>document.getElementById('ck-v8-ambient');
  function sync(){
   const on=active(),el=scene();
+  const show=document.body?.dataset.ckV8Tab==='landing';
+  if(el){el.style.visibility=show?'visible':'hidden';el.style.contentVisibility=show?'visible':'hidden';}
   if(on===activeLast&&el?.dataset.ck22Synced===String(on))return;
   if(el)el.dataset.ck22Synced=String(on);
   activeLast=on;
   document.documentElement.dataset.ck21Garden=on?'running':'suspended';
   document.body?.classList.toggle('ck21-garden-suspended',!on);
   if(!el)return;
-  el.style.visibility=on?'visible':'hidden';
+  el.style.visibility=show?'visible':'hidden';
   el.style.pointerEvents='none';
   // Pause actual SVG/CSS/WAAPI animations, not only the parent animation flag.
   if(typeof el.getAnimations==='function'){
@@ -32,7 +34,8 @@
  function boot(){
   const body=document.body;if(!body)return;
   new MutationObserver(sync).observe(body,{attributes:true,attributeFilter:['data-ck-v8-tab']});
-  document.addEventListener('visibilitychange',sync);
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)focused=true;sync()});
+  window.addEventListener('pageshow',()=>{focused=true;activeLast=null;sync()});
   window.addEventListener('ck:scene-activity',sync);
   window.addEventListener('blur',()=>{focused=false;sync()});
   window.addEventListener('focus',()=>{focused=true;sync()});

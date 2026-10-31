@@ -493,7 +493,8 @@
     new ResizeObserver(layout).observe(state.host);
     window.addEventListener('resize', layout, { passive: true });
     new MutationObserver(sync).observe(document.body, { attributes: true, attributeFilter: ['data-ck-v8-tab'] });
-    document.addEventListener('visibilitychange', sync);
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) state.focus = true; sync(); });
+    window.addEventListener('pageshow', () => { state.focus = true; state.last = 0; layout(); paint(0); sync(); });
     window.addEventListener('ck:scene-activity', sync);
     window.addEventListener('blur', () => { state.focus = false; sync(); });
     window.addEventListener('focus', () => { state.focus = true; sync(); });
