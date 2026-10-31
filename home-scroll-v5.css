@@ -57,10 +57,10 @@ html,body,button,input,textarea,select,option,label,#main,#main *,.ck4-pager{
 .ck-v7-mainframe > .ck-v7-stage{margin:19px clamp(10px,1.5vw,26px) 0!important}
 .ck-v7-board{top:calc(var(--ck5-nav-height) + 10px)!important}
 body::after{
- background:linear-gradient(180deg,rgba(8,95,135,.025),transparent 54%,rgba(9,105,54,.025))!important;
+ content:none!important;background:none!important;
 }
 .ck-v8-ambient{
- background:linear-gradient(180deg,#29b6e5 0%,#68cdec 31%,#7ec66b 69%,#228658 100%)!important;
+ background:#fff!important;
 }
 .ck-v8-art{filter:saturate(1.32) contrast(1.065)!important}
 .ck-v8-ambient.ck-3d-ready .ck-3d-canvas{filter:saturate(1.055) contrast(1.025)}

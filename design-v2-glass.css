@@ -16,15 +16,16 @@
  --ck-v8-accent-soft:rgba(126,182,247,.25);
  --ck-v8-note-ink:#f6fffa;
 }
-html{background:#8acdad!important}
-body{background:#a3ddbb!important;min-height:100vh;color:#1b3044;font-family:var(--ck-v8-font)!important}
+html{background:#fff!important}
+body{background:#fff!important;min-height:100vh;color:#1b3044;font-family:var(--ck-v8-font)!important}
 body,button,input,textarea,select,option,label,summary,h1,h2,h3,h4,h5,h6,p,small,span,div,a,table,th,td{
  font-family:var(--ck-v8-font)!important
 }
 button,input,select,textarea{font-size:inherit}
-body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background:linear-gradient(180deg,rgba(170,230,253,.16),transparent 39%,rgba(9,107,66,.08) 100%)}
+/* Retired garden tint must not cover monochrome paper or study backdrop. */
+body::after{content:none!important;background:none!important}
 #root{position:relative;z-index:1;background:transparent!important}
-.ck-v8-ambient{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:linear-gradient(180deg,#68c9ee 0%,#c5edf2 32%,#9cda84 69%,#48ad74 100%);--ck-v8-x:0;--ck-v8-y:0}
+.ck-v8-ambient{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;background:#fff;--ck-v8-x:0;--ck-v8-y:0}
 .ck-v8-art{position:absolute;inset:-1.5%;background-image:url('./assets/ck-landscape-textured-v2.svg');background-size:cover;background-position:center 48%;background-repeat:repeat-x;transform:translate3d(calc(var(--ck-v8-x)*-4px),calc(var(--ck-v8-y)*-1.5px),0);transition:transform .45s ease-out}
 .ck-v8-ground-texture{position:absolute;bottom:0;left:0;right:0;height:45%;background:radial-gradient(ellipse at 25% 90%,rgba(234,250,166,.12),transparent 49%),radial-gradient(ellipse at 70% 80%,rgba(34,90,53,.13),transparent 50%);mix-blend-mode:multiply;pointer-events:none}
 .ck-v8-cloud{position:absolute;width:21vw;min-width:210px;max-width:390px;height:65px;filter:blur(16px);border-radius:60%;background:radial-gradient(ellipse,rgba(255,255,255,.28),rgba(245,254,250,0) 70%);opacity:.44;will-change:transform}
