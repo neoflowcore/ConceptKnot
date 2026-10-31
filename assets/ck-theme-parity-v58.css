@@ -47,21 +47,3 @@ html,html[data-ck-theme] {background:#fff!important;background-image:none!import
 html body[data-ck-v8-tab="landing"] {background:#fff!important;background-image:none!important;}
 html body::after {content:none!important;display:none!important;background:none!important;}
 
-/* v63: make the owl's pencil legible inside the scrolling ribbon. */
-html body #main .ck-v7-nav-pill .ck-v7-logo .ck21-brand-icon {
- width:76px!important;height:76px!important;min-width:76px!important;
- flex:0 0 76px!important;object-fit:contain!important;border-radius:0!important;
-}
-html body #main .ck-v7-global-nav .ck-v7-nav-pill.ck4-unified {
- height:88px!important;min-height:88px!important;max-height:88px!important;
-}
-:root {--ck5-nav-height:88px;}
-@media(max-width:850px) {
- html body #main .ck-v7-nav-pill .ck-v7-logo .ck21-brand-icon {
-  width:68px!important;height:68px!important;min-width:68px!important;flex-basis:68px!important;
- }
- html body #main .ck-v7-global-nav .ck-v7-nav-pill.ck4-unified {
-  height:80px!important;min-height:80px!important;max-height:80px!important;
- }
- :root {--ck5-nav-height:80px;}
-}
