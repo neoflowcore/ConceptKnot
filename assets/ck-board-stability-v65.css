@@ -1,0 +1,30 @@
+/* v65: keep the board compositor stable when typing mirror glyphs update. */
+body[data-ck-v8-tab="typing"] #main .ck-v7-board {
+ backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+ background:linear-gradient(145deg,rgba(38,68,60,.92),rgba(45,72,64,.90))!important;
+ background-color:rgba(42,71,63,.94)!important;
+}
+body[data-ck-v8-tab="typing"] #main .ck-v7-board::before,
+body[data-ck-v8-tab="typing"] #main .ck-v7-board::after {
+ transition:none!important;animation:none!important;
+}
+.ck64-selection-menu.ck65-movable-menu .ck65-drag-handle{
+ cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;
+ padding-bottom:4px;
+}
+.ck64-selection-menu.ck65-movable-menu.ck65-dragging .ck65-drag-handle{cursor:grabbing;}
+.ck64-selection-menu.ck65-movable-menu .ck65-drag-hint{
+ font-size:10px;opacity:.62;font-weight:500;margin-left:8px;
+}
+.ck64-selection-menu.ck65-movable-menu .ck65-menu-footer{
+ display:flex;align-items:center;justify-content:space-between;
+ gap:8px;border-top:1px solid rgba(88,141,130,.24);padding-top:9px;
+}
+.ck64-selection-menu.ck65-movable-menu .ck65-menu-footer small{
+ font-size:10px;opacity:.75;
+}
+.ck64-selection-menu.ck65-movable-menu .ck65-done{
+ border:1px solid rgba(73,155,133,.4);background:rgba(76,161,139,.24);
+ border-radius:8px;padding:7px 17px;min-height:29px;
+ color:inherit;font-weight:750;cursor:pointer;
+}

@@ -9,7 +9,7 @@ let mode='light';
 try{mode=localStorage.getItem(themeKey)==='dark'?'dark':'light'}catch(e){}
 function themeApply(next){
  mode=next==='dark'?'dark':'light';
- root.dataset.ckTheme=mode;root.style.colorScheme='only light'; // App CSS owns both themes; disable browser auto-dark recoloring.
+ if(root.dataset.ckTheme!==mode)root.dataset.ckTheme=mode;root.style.colorScheme='only light'; // App CSS owns both themes; disable browser auto-dark recoloring.
  root.style.setProperty('--ck-native-color-scheme',mode);
  try{localStorage.setItem(themeKey,mode)}catch(e){}
  document.querySelectorAll('[data-ck14-theme]').forEach(b=>{
@@ -287,7 +287,8 @@ window.addEventListener('ck:pomodoro-complete',event=>{
 function observe(){
  const main=document.getElementById('main');
  if(main&&typeof MutationObserver==='function'){
-  const observer=new MutationObserver(()=>{
+  const observer=new MutationObserver(records=>{
+   if(!records.some(record=>record.target===main&&record.type==='childList'))return;
    requestAnimationFrame(()=>{themeApply(mode);updateClock();scheduleCaret()});
   });
   observer.observe(main,{childList:true});

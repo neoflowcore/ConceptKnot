@@ -3,7 +3,7 @@
 'use strict';
 const NOTE_SELECTOR='.ck-v7-board .ck-v7-writing-surface .chalk-editor[data-chalk-kind="notes"] textarea';
 const VALID_HEX=/^#[0-9a-f]{6}$/i;
-let menu=null,selection=null,requestId=0;
+let menu=null,selection=null,requestId=0,drag=null;
 const noteField=node=>node?.closest?.(NOTE_SELECTOR)||null;
 const validRange=sel=>sel&&sel.area?.isConnected&&sel.editor?.isConnected&&
   sel.from>=0&&sel.to>sel.from&&sel.to<=sel.area.value.length;
@@ -16,7 +16,7 @@ const safeLabel=text=>String(text??'').replace(/\s+/g,' ').trim().slice(0,90);
 function buildMenu(){
  if(menu)return menu;
  menu=document.createElement('div');
- menu.className='ck64-selection-menu';
+ menu.className='ck64-selection-menu ck65-movable-menu';
  menu.setAttribute('role','dialog');
  menu.setAttribute('aria-label','칠판 선택 글자 편집');
  menu.setAttribute('aria-modal','false');
@@ -25,7 +25,7 @@ function buildMenu(){
  const palettes=CHALK_COLORS.map((hex,index)=>'<button type="button" class="ck64-swatch" '+
   'data-ck64-color="'+index+'" aria-label="'+CHALK_NAMES[index]+' 글자 색상" '+
   'title="'+CHALK_NAMES[index]+'" style="--ck64-swatch:'+hex+'"></button>').join('');
- menu.innerHTML='<header class="ck64-menu-head"><strong>선택한 글자</strong>'+
+ menu.innerHTML='<header class="ck64-menu-head ck65-drag-handle" data-ck65-drag-handle title="이 부분을 드래그해 창 이동"><strong>선택한 글자 <span class="ck65-drag-hint">⋮⋮ 이동</span></strong>'+
   '<button type="button" class="ck64-close" data-ck64-action="close" aria-label="편집 메뉴 닫기">×</button></header>'+
   '<p class="ck64-selection-preview" data-ck64-preview></p>'+
   '<div class="ck64-menu-actions" role="group" aria-label="선택 글자 편집">'+
@@ -37,17 +37,31 @@ function buildMenu(){
   '<label class="ck64-custom-color" title="선택 글자에 사용자 색상 적용">'+
   '<input type="color" data-ck64-custom-color aria-label="사용자 글자 색상" value="#8ee5ff">'+
   '</label></div>'+
-  '<div class="ck64-menu-status" data-ck64-status role="status" aria-live="polite"></div>';
+  '<div class="ck64-menu-status" data-ck64-status role="status" aria-live="polite"></div>'+ 
+  '<div class="ck65-menu-footer"><small>서식을 연속 적용할 수 있습니다.</small>'+ 
+  '<button type="button" class="ck65-done" data-ck64-action="done">완료</button></div>';
  document.body.append(menu);
- // Holding the existing textarea selection is vital while the user clicks a button.
+ // Preserve selection while pressing controls; drag only the title strip.
  menu.addEventListener('pointerdown',event=>{
+  if(event.button!==0&&event.pointerType==='mouse')return;
+  const handle=event.target.closest?.('[data-ck65-drag-handle]');
+  if(handle&&!event.target.closest?.('button,input,a')){
+   event.preventDefault();
+   const rect=menu.getBoundingClientRect();
+   drag={id:event.pointerId,startX:event.clientX,startY:event.clientY,
+    left:rect.left,top:rect.top,handle};
+   menu.classList.add('ck65-dragging');
+   try{handle.setPointerCapture(event.pointerId)}catch{}
+   return;
+  }
   if(event.target?.matches?.('input[type="color"]'))return;
   event.preventDefault();
  });
  return menu;
 }
 function close(){
- if(menu)menu.hidden=true;
+ if(menu){menu.hidden=true;menu.classList.remove('ck65-dragging');}
+ drag=null;
  selection=null;
  requestId++;
 }
@@ -68,6 +82,40 @@ function restore(){
 function setStatus(text){
  if(menu)menu.querySelector('[data-ck64-status]').textContent=text;
 }
+function updatePreview(){
+ if(validRange(selection)&&menu)
+  menu.querySelector('[data-ck64-preview]').textContent=safeLabel(
+   selection.area.value.slice(selection.from,selection.to));
+}
+function constrain(left,top){
+ const w=menu?.offsetWidth||300,h=menu?.offsetHeight||200,pad=8;
+ const vw=Math.max(240,document.documentElement.clientWidth||window.innerWidth);
+ const vh=Math.max(240,document.documentElement.clientHeight||window.innerHeight);
+ return {left:Math.min(Math.max(pad,left),Math.max(pad,vw-w-pad)),
+  top:Math.min(Math.max(pad,top),Math.max(pad,vh-h-pad))};
+}
+function onDragMove(event){
+ if(!drag||event.pointerId!==drag.id||!menu||menu.hidden)return;
+ if(event.cancelable)event.preventDefault();
+ const point=constrain(drag.left+event.clientX-drag.startX,drag.top+event.clientY-drag.startY);
+ menu.style.left=point.left+'px';
+ menu.style.top=point.top+'px';
+}
+function endDrag(event){
+ if(!drag||event.pointerId!==drag.id)return;
+ const prior=drag;drag=null;
+ menu?.classList.remove('ck65-dragging');
+ try{if(prior.handle.hasPointerCapture?.(prior.id))prior.handle.releasePointerCapture(prior.id)}catch{}
+}
+window.addEventListener('pointermove',onDragMove,{passive:false});
+window.addEventListener('pointerup',endDrag);
+window.addEventListener('pointercancel',endDrag);
+window.addEventListener('blur',()=>{if(drag){menu?.classList.remove('ck65-dragging');drag=null;}});
+window.addEventListener('resize',()=>{
+ if(!menu||menu.hidden)return;
+ const rect=menu.getBoundingClientRect(),point=constrain(rect.left,rect.top);
+ menu.style.left=point.left+'px';menu.style.top=point.top+'px';
+});
 function syncBoldButton(){
  if(!validRange(selection)||!menu)return;
  const r=noteRecord(selection.editor),mask=ensureArray(r,'ck64BoldChars');
@@ -88,8 +136,10 @@ function setBold(){
  const mask=ensureArray(r,'ck64BoldChars');
  let all=true;
  for(let i=selection.from;i<selection.to;i++)if(mask[i]!==true){all=false;break;}
+ requestId++;
  for(let i=selection.from;i<selection.to;i++)mask[i]=!all;
- repaint();restore();close();
+ repaint();restore();
+ setStatus(all?'굵게 해제됨 · 다른 서식도 적용할 수 있습니다.':'굵게 적용됨 · 색상도 연속 변경할 수 있습니다.');
 }
 function setColor(index,custom){
  const r=selectedRecord();if(!r)return;
@@ -97,12 +147,14 @@ function setColor(index,custom){
  if(custom!=null){if(!VALID_HEX.test(custom))return;hex=custom.toLowerCase();}
  if(hex===null&&!(Number.isInteger(index)&&index>=0&&index<CHALK_COLORS.length))return;
  if(hex===null&&index===4)hex=CHALK_COLORS[4];
+ requestId++;
  const colors=ensureArray(r,'colors'),overrides=ensureArray(r,'ck64ColorHex');
  for(let i=selection.from;i<selection.to;i++){
   if(hex===null){colors[i]=index;overrides[i]=null;}
   else{overrides[i]=hex;}
  }
- repaint();restore();close();
+ repaint();restore();
+ setStatus('색상 변경 완료 · 다른 서식도 적용할 수 있습니다.');
 }
 async function copySelection(){
  const r=selectedRecord();if(!r)return;
@@ -110,12 +162,12 @@ async function copySelection(){
  try{
   if(!navigator.clipboard?.writeText)throw new Error('unsupported');
   await navigator.clipboard.writeText(value);
-  if(id===requestId){restore();close();}
+  if(id===requestId){restore();setStatus('복사 완료 · 다른 서식도 적용할 수 있습니다.');}
  }catch{
   // Native selection is preserved, so execCommand(copy) is usable on older Brave.
   if(id!==requestId||!validRange(selection))return;
   restore();
-  try{if(document.execCommand?.('copy')){close();return;}}catch{}
+  try{if(document.execCommand?.('copy')){setStatus('복사 완료 · 계속 편집할 수 있습니다.');return;}}catch{}
   setStatus('브라우저 복사 권한이 차단되었습니다. Ctrl+C를 사용하세요.');
  }
 }
@@ -124,15 +176,24 @@ async function pasteSelection(){
  const id=++requestId;
  try{
   if(!navigator.clipboard?.readText)throw new Error('unsupported');
-  const text=await navigator.clipboard.readText();
+  const raw=await navigator.clipboard.readText();
   if(id!==requestId||!validRange(selection)||!selection.area.isConnected)return;
   const sel=selection;
+  const max=Number(sel.area.maxLength)>0?Number(sel.area.maxLength):12000;
+  const allowed=Math.max(0,max-(sel.area.value.length-(sel.to-sel.from)));
+  const text=String(raw).slice(0,allowed);
+  if(!text){setStatus('붙여넣을 내용이 없거나 글자 수 제한에 도달했습니다.');return;}
   sel.area.focus({preventScroll:true});
   // setRangeText does not dispatch input. Fire it so colors, bold masks and
   // persistence pass through the original note editor input reconciliation.
   sel.area.setRangeText(text,sel.from,sel.to,'end');
+  sel.to=sel.from+text.length;
   sel.area.dispatchEvent(new Event('input',{bubbles:true}));
-  close();
+  if(id!==requestId||!validRange(selection))return;
+  updatePreview();
+  syncBoldButton();
+  restore();
+  setStatus('붙여넣기 완료 · 붙인 글자에 굵게·색상을 추가할 수 있습니다.');
  }catch{
   if(id!==requestId||!validRange(selection))return;
   restore();
@@ -148,9 +209,8 @@ function placeMenu(event){
  const width=menu.offsetWidth||300,height=menu.offsetHeight||190;
  const rawX=event.clientX>0?event.clientX:rect.left+Math.min(rect.width*.35,100);
  const rawY=event.clientY>0?event.clientY:rect.top+Math.min(rect.height*.35,75);
- const x=Math.min(Math.max(pad,rawX),Math.max(pad,vw-width-pad));
- const y=Math.min(Math.max(pad,rawY),Math.max(pad,vh-height-pad));
- menu.style.left=x+'px';menu.style.top=y+'px';
+ const point=constrain(rawX,rawY);
+ menu.style.left=point.left+'px';menu.style.top=point.top+'px';
 }
 document.addEventListener('contextmenu',event=>{
  const area=noteField(event.target);
@@ -164,7 +224,7 @@ document.addEventListener('contextmenu',event=>{
  selection={area,editor,from:Math.min(from,to),to:Math.max(from,to)};
  requestId++;
  panel.hidden=false;
- panel.querySelector('[data-ck64-preview]').textContent=safeLabel(area.value.slice(selection.from,selection.to));
+ updatePreview();
  panel.querySelector('[data-ck64-custom-color]').value=VALID_HEX.test(state.ck10CustomColor||'')?state.ck10CustomColor:'#8ee5ff';
  panel.querySelector('[data-ck64-status]').textContent='';
  syncBoldButton();
@@ -179,7 +239,7 @@ document.addEventListener('click',event=>{
   event.preventDefault();event.stopImmediatePropagation();
   if(action){
    const what=action.dataset.ck64Action;
-   if(what==='close'){close();return;}
+   if(what==='close'||what==='done'){close();return;}
    if(what==='bold'){setBold();return;}
    if(what==='copy'){void copySelection();return;}
    if(what==='paste'){void pasteSelection();return;}
@@ -221,5 +281,6 @@ chalkPaint=function(editor,fresh=false){
   at+=char.length;
  }
 };
-window.CK64Notes=Object.freeze({isActive:()=>Boolean(menu&&!menu.hidden)});
+window.CK64Notes=Object.freeze({isActive:()=>Boolean(menu&&!menu.hidden),isDragging:()=>Boolean(drag)});
+window.CK65Notes=window.CK64Notes;
 })();

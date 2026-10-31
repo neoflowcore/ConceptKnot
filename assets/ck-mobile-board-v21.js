@@ -56,7 +56,7 @@ document.addEventListener('keydown',e=>{
 },true);
 function boot(){
  const main=document.getElementById('main');
- if(main)new MutationObserver(records=>{if(records.some(r=>r.type==='childList'&&r.target===main))apply();else syncLock()}).observe(main,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});
+ if(main)new MutationObserver(records=>{if(records.some(r=>r.type==='childList'&&r.target===main))apply();}).observe(main,{childList:true});
  window.addEventListener('resize',syncLock);
  window.addEventListener('ck:scene-activity',()=>{if(locked){document.body.classList.remove('ck22-pen-locked');document.body.style.removeProperty('top');locked=false}});
  apply();
