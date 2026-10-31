@@ -1,0 +1,106 @@
+/* ConceptKnot v61 — two clear keyboard modes, no moving reference layer. */
+#main .ck-v7-typing .ck61-typing-mode{
+ display:flex;align-items:center;gap:4px;margin-inline:auto 0;
+ padding:3px;border:1px solid rgba(142,165,168,.32);border-radius:11px;
+ background:rgba(136,160,162,.12);
+}
+#main .ck-v7-typing .ck61-typing-mode button{
+ min-height:30px;padding:5px 11px;white-space:nowrap;
+ font-size:12px;font-weight:700;line-height:1.2;
+ border:0!important;border-radius:8px;background:transparent!important;
+ color:var(--ink,#43555f)!important;box-shadow:none!important;cursor:pointer;
+}
+#main .ck-v7-typing .ck61-typing-mode button[aria-pressed="true"]{
+ background:rgba(108,161,151,.21)!important;color:var(--ink,#264f4b)!important;
+ box-shadow:inset 0 0 0 1px rgba(105,161,148,.5)!important;
+}
+#main .ck-v7-typing .ck61-typing-mode button:focus-visible{
+ outline:2px solid #80bad1!important;outline-offset:2px;
+}
+#main .ck-v7-typing .ck-v7-ihead{flex-wrap:wrap;gap:8px}
+#main .ck-v7-typing .ck61-input-hint{
+ display:block;margin:4px 0 8px;color:var(--muted,#778e94);
+ font-size:11px;line-height:1.5;
+}
+#main .ck-v7-typing .chalk-editor.ck61-normal-editor textarea{
+ caret-color:#8cb9f4!important;
+}
+#main .ck-v7-typing .chalk-editor.ck61-letters-editor textarea{
+ caret-color:transparent!important;
+}
+#main .ck-v7-typing .chalk-mirror.ck61-normal,
+#main .ck-v7-typing .chalk-mirror.ck61-letters{
+ position:relative!important;min-height:150px;
+ font:inherit!important;letter-spacing:inherit!important;
+ font-variant-ligatures:none!important;
+}
+#main .ck-v7-typing .chalk-mirror.ck61-normal .ck61-guide{
+ display:block;position:relative;z-index:0;pointer-events:none;
+ white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;
+ font:inherit;line-height:inherit;letter-spacing:inherit;
+ color:#bacbd0!important;-webkit-text-fill-color:#bacbd0!important;
+ opacity:.55;
+}
+#main .ck-v7-typing .chalk-mirror.ck61-normal .ck61-ink-layer{
+ position:absolute;inset:0;z-index:2;pointer-events:none;
+ display:block;width:100%;height:auto;
+ white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;
+ font:inherit;line-height:inherit;letter-spacing:inherit;
+}
+#main .ck-v7-typing .chalk-mirror.ck61-normal .ck61-typed-unit{
+ white-space:pre-wrap;font:inherit;line-height:inherit;
+ animation:none!important;transition:none!important;
+}
+#main .ck-v7-typing .chalk-mirror.ck61-normal .ck61-typed-unit.ck61-correct{
+ color:#f0fff2!important;-webkit-text-fill-color:#f0fff2!important;
+}
+#main .ck-v7-typing .chalk-mirror.ck61-normal .ck61-typed-unit.ck61-incorrect{
+ color:#ffbbc7!important;-webkit-text-fill-color:#ffbbc7!important;
+ text-decoration:underline;text-decoration-color:#ffbbc7;
+}
+#main .ck-v7-typing .chalk-mirror.ck61-normal .ck-v3-caret{display:none!important}
+#main .ck-v7-typing .chalk-mirror.ck61-letters .ck61-cell{
+ position:relative!important;display:inline-block!important;
+ white-space:pre!important;vertical-align:baseline;
+ font-weight:500!important;letter-spacing:inherit!important;
+ animation:none!important;transform:none!important;transition:none!important;
+ overflow:visible;isolation:isolate;
+}
+#main .ck-v7-typing .chalk-mirror.ck61-letters .ck61-guide-glyph{
+ display:inline!important;opacity:1;pointer-events:none;
+ white-space:pre!important;letter-spacing:inherit;
+}
+#main .ck-v7-typing .chalk-mirror.ck61-letters .ck61-cell.ck-v3-right .ck61-guide-glyph,
+#main .ck-v7-typing .chalk-mirror.ck61-letters .ck61-cell.ck-v3-wrong .ck61-guide-glyph{
+ opacity:.18!important;
+}
+#main .ck-v7-typing .chalk-mirror.ck61-letters .ck61-overwrite{
+ position:absolute;left:0;top:0;z-index:2;white-space:pre!important;
+ line-height:inherit;letter-spacing:inherit;
+ pointer-events:none;
+}
+#main .ck-v7-typing .chalk-mirror.ck61-letters .ck61-cell.ck-v3-right .ck61-overwrite{
+ color:#f0fff2!important;-webkit-text-fill-color:#f0fff2!important;
+}
+#main .ck-v7-typing .chalk-mirror.ck61-letters .ck61-cell.ck-v3-wrong .ck61-overwrite{
+ color:#ffbbc7!important;-webkit-text-fill-color:#ffbbc7!important;
+}
+#main .ck-v7-typing .chalk-mirror.ck61-letters .ck61-cell.ck31-optional{
+ opacity:.60!important;background:transparent!important;
+}
+#main .ck-v7-typing .chalk-mirror.ck61-letters .ck61-cell.ck-v3-wrong{
+ background:transparent!important;
+}
+/* Mirror text is the visible ink. Textarea keeps real selection and edit behavior. */
+#main .ck-v7-typing .chalk-editor textarea{
+ color:transparent!important;-webkit-text-fill-color:transparent!important;
+}
+@media(max-width:700px){
+ #main .ck-v7-typing .ck61-typing-mode{margin-inline:0}
+ #main .ck-v7-typing .ck61-typing-mode button{padding:5px 8px;font-size:11px}
+ #main .ck-v7-typing .ck61-input-hint{font-size:10px}
+}
+@media(prefers-reduced-motion:reduce){
+ #main .ck-v7-typing .chalk-mirror.ck61-normal *,
+ #main .ck-v7-typing .chalk-mirror.ck61-letters *{animation:none!important}
+}
