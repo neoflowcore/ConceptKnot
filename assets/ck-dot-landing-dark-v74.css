@@ -151,3 +151,11 @@ html[data-ck-theme="dark"] #ck-v8-ambient.ck-dot-landing .ck-dot-lawn {
     backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
   }
 }
+/* v75 — Only the OUTSIDE background of study tabs is locked to the same
+   charcoal as the dark landing. Content cards, the ribbon, and light-mode
+   user-selected background colors are intentionally not modified.
+   The display dialog can still save presets for light mode. */
+html[data-ck-theme="dark"] body:not([data-ck-v8-tab="landing"]) {
+  background-color:var(--ck74-night-paper,#111518)!important;
+  background-image:none!important;
+}
