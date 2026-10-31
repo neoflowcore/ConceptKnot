@@ -112,19 +112,19 @@ test('separate mode drafts preserve text, chalk colors and time',()=>{
 test('actual typed ink overlays an unmoving original guide in both modes',()=>{
  const t=harness();
  t.record.text='가';t.field.value='가';t.paint();
- assert.match(t.mirror.innerHTML,/ck61-guide/);
- assert.match(t.mirror.innerHTML,/ck61-ink-layer/);
- assert.match(t.mirror.innerHTML,/ck61-incorrect/);
+ assert.match(t.mirror.innerHTML,/ck62-guide/);
+ assert.match(t.mirror.innerHTML,/ck62-live/);
+ assert.match(t.mirror.innerHTML,/ck62-wrong/);
  t.switchMode('letters');
  t.record.text='문제정답';t.field.value='문제정답';t.paint();
  const c=t.api.mapText(t.source.fact,t.record);
  assert.equal(c.done,true);
  assert.equal(c.target.join(''),'문제\n\n정답');
  assert.equal(c.mapped.get(0).typed,'문');
- assert.match(t.mirror.innerHTML,/ck61-guide-glyph/);
- assert.match(t.mirror.innerHTML,/ck61-overwrite/);
+ assert.match(t.mirror.innerHTML,/ck62-cell-source/);
+ assert.match(t.mirror.innerHTML,/ck62-cell-input/);
  t.switchMode('normal');
- assert.match(t.mirror.innerHTML,/ck61-ink-layer/);
+ assert.match(t.mirror.innerHTML,/ck62-live/);
 });
 test('board docking and collapsing still work',()=>{
  const t=harness();
@@ -149,10 +149,29 @@ test('UI, IME handling, offline cache and source syntax stay consistent',()=>{
  assert.match(html,/if\(state\.ckTypingInputMode!=='letters'\)return;/);
  assert.match(html,/const field=e\.target,raw=field\.value,clean=letters\(raw\)\.join\(''\)/);
  assert.match(html,/const field=e\.target,clean=letters\(field\.value\)\.join\(''\)/);
- assert.match(css,/ck61-ink-layer/);assert.match(css,/ck61-overwrite/);
- assert.match(sw,/conceptknot-study-v69-typing-native/);
+ assert.match(css,/ck61-typing-mode/);assert.match(read('assets/ck-typing-precision-v62.css'),/ck62-live/);
+ assert.match(sw,/conceptknot-study-v70-typing-precision/);
  assert.match(sw,/ck-typing-modes-v61.css/);
  assert.equal(JSON.parse(read('vercel.json')).git.deploymentEnabled,false);
  for(const m of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))new vm.Script(m[1]);
  new vm.Script(read('assets/ck-typing-layout-v31.js'));
+});
+test('v62 paragraph progress, aligned typography, active line and themed glass',()=>{
+ const html=read('index.html'),css=read('assets/ck-typing-precision-v62.css'),script=read('assets/ck-typing-layout-v31.js');
+ assert.match(html,/id="ck62-progress"/);
+ assert.match(html,/role="progressbar"/);
+ assert.match(html,/id="ck62-progress-label"/);
+ assert.match(css,/grid-template-columns:minmax\(0,1fr\)/);
+ assert.match(css,/ck62-normal/);
+ assert.match(css,/ck62-letters/);
+ assert.match(css,/font-size:var\(--ck62-font-size\)!important/);
+ assert.match(css,/ck62-fixed.ck-v3-line-active::before/);
+ assert.match(css,/html:not\(\[data-ck-theme="dark"\]\)/);
+ assert.match(css,/html\[data-ck-theme="dark"\]/);
+ assert.match(css,/ck62-wrong/);
+ assert.match(css,/ck62-cell-input/);
+ assert.match(script,/function paintNormal/);
+ assert.match(script,/function paintLetters/);
+ assert.match(script,/function locateLine/);
+ assert.match(script,/ck62-progress-label/);
 });

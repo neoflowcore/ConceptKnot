@@ -60,59 +60,80 @@ typingStats=function(input,target,started){
  return {hit:m.matched,seconds:started?Math.round(elapsed):0,
   cpm:elapsed?Math.round(m.entered*60/elapsed):0,accuracy:m.accuracy};
 };
-function cursorForLetters(m,mirror,area){
- const at=typeof area.selectionStart==='number'?area.selectionStart:area.value.length;
- const position=letters(area.value.slice(0,at)).length;
+function caretIndex(area,mode){
+ const raw=area.value||'',offset=typeof area.selectionStart==='number'?area.selectionStart:raw.length;
+ return mode==='letters'?letters(raw.slice(0,offset)).length:chars(raw.slice(0,offset)).length;
+}
+function locateLine(mirror,selector){
+ const el=mirror.querySelector(selector);
+ if(!el?.getBoundingClientRect)return false;
+ const rect=el.getBoundingClientRect(),base=mirror.getBoundingClientRect();
+ const height=parseFloat(getComputedStyle(mirror).lineHeight)||28;
+ const top=Math.max(0,rect.top-base.top-(el.classList?.contains('ck62-anchor')?height*.12:0));
+ mirror.style.setProperty('--ck-v3-line-top',top.toFixed(1)+'px');
+ mirror.style.setProperty('--ck-v3-line-height',Math.max(24,height).toFixed(1)+'px');
+ return {rect,base,height,top};
+}
+function paintNormal(m,mirror,area){
+ const position=Math.min(caretIndex(area,'normal'),m.typed.length);
+ const live=[];
+ for(let i=0;i<=m.typed.length;i++){
+  if(i===position)live.push('<span class="ck62-anchor" data-ck62-anchor="1" aria-hidden="true"></span>');
+  if(i===m.typed.length)break;
+  const ch=m.typed[i];
+  if(ch==='\n'){live.push('\n');continue;}
+  live.push('<span class="ck62-live-char '+
+   (m.mapped.get(i)?.ok?'ck62-right':'ck62-wrong')+
+   '" data-ck62-input="'+i+'">'+esc(ch)+'</span>');
+ }
+ // The original paragraph and the typed text share a grid cell but never affect
+ // one another's line wrapping. The native textarea is aligned to this grid.
+ mirror.innerHTML='<div class="ck62-guide">'+esc(m.target.join(''))+'</div>'+
+  '<div class="ck62-live">'+live.join('')+'</div>';
+ locateLine(mirror,'[data-ck62-anchor]');
+}
+function paintLetters(m,mirror,area){
+ const position=Math.min(caretIndex(area,'letters'),m.positions.length);
+ mirror.innerHTML=m.target.map((ch,i)=>{
+  if(ch==='\n')return '\n';
+  const match=m.mapped.get(i);
+  const status=match?(match.ok?'ck62-right':'ck62-wrong'):
+   printable.test(ch)?'ck62-pending':'ck62-separator';
+  return '<span class="ck62-cell '+status+'" data-ck62-reference="'+i+'">'+
+   '<span class="ck62-cell-source">'+esc(ch)+'</span>'+
+   (match?'<span class="ck62-cell-input">'+esc(match.typed)+'</span>':'')+'</span>';
+ }).join('')+'<span class="ck-v3-caret" aria-hidden="true"></span>';
  const index=m.positions[position]??m.positions[m.positions.length-1];
- if(index===undefined)return;
- const node=mirror.querySelector('[data-ck61-index="'+index+'"]');
- if(!node?.getBoundingClientRect)return;
- const rect=node.getBoundingClientRect(),base=mirror.getBoundingClientRect();
- const after=position>=m.positions.length;
- const x=Math.max(0,(after?rect.right:rect.left)-base.left);
- const y=Math.max(0,rect.top-base.top),height=Math.max(16,rect.height||24);
- mirror.style.setProperty('--ck-v3-caret-x',x.toFixed(1)+'px');
- mirror.style.setProperty('--ck-v3-caret-y',y.toFixed(1)+'px');
- mirror.style.setProperty('--ck-v3-caret-height',height.toFixed(1)+'px');
- mirror.style.setProperty('--ck-v3-line-top',y.toFixed(1)+'px');
- mirror.style.setProperty('--ck-v3-line-height',height.toFixed(1)+'px');
+ const atEnd=position>=m.positions.length;
+ const selector='[data-ck62-reference="'+index+'"]';
+ const line=locateLine(mirror,selector);
+ if(!line)return;
+ const {rect,base,height,top}=line;
+ mirror.style.setProperty('--ck-v3-caret-x',Math.max(0,(atEnd?rect.right:rect.left)-base.left).toFixed(1)+'px');
+ mirror.style.setProperty('--ck-v3-caret-y',top.toFixed(1)+'px');
+ mirror.style.setProperty('--ck-v3-caret-height',Math.max(18,height).toFixed(1)+'px');
 }
 typingGhost=function(el){
  const c=typingConcept(),r=chalkRecord('practice',c.id);
  const mirror=el?.querySelector('.chalk-mirror'),area=el?.querySelector('textarea');
  if(!mirror||!area)return;
  if(!c.fact){mirror.innerHTML='<span class="chalk-placeholder">연습할 공식 문항이 없습니다.</span>';area.disabled=true;return;}
- const m=mapText(c.fact,r);
- el.classList.toggle('ck61-normal-editor',m.mode==='normal');
- el.classList.toggle('ck61-letters-editor',m.mode==='letters');
- mirror.classList.add('ck31-fixed-underlay');
- mirror.classList.toggle('ck61-normal',m.mode==='normal');
- mirror.classList.toggle('ck61-letters',m.mode==='letters');
- mirror.classList.toggle('ck-v3-line-active',m.mode==='letters');
- if(m.mode==='normal'){
-  // The guide has its own layout; input ink does not change its glyph positions.
-  const guide='<span class="ck61-guide">'+esc(m.target.join(''))+'</span>';
-  const ink=m.typed.map((ch,i)=>{
-   if(ch==='\n')return '\n';
-   const matched=m.mapped.get(i)?.ok;
-   return '<span class="ck61-typed-unit '+(matched?'ck61-correct':'ck61-incorrect')+'">'+esc(ch)+'</span>';
-  }).join('');
-  mirror.innerHTML=guide+'<span class="ck61-ink-layer">'+ink+'</span>';
- }else{
-  mirror.innerHTML=m.target.map((ch,i)=>{
-   if(ch==='\n')return '\n';
-   const match=m.mapped.get(i),status=match?(match.ok?'ck-v3-right':'ck-v3-wrong'):
-    printable.test(ch)?'ck-v3-pending':'ck31-optional';
-   return '<span class="ck-v3-unit '+status+' ck61-cell" data-ck61-index="'+i+'">'+
-    '<span class="ck61-guide-glyph">'+esc(ch)+'</span>'+
-    (match?'<span class="ck61-overwrite">'+esc(match.typed)+'</span>':'')+'</span>';
-  }).join('')+'<span class="ck-v3-caret" aria-hidden="true"></span>';
-  cursorForLetters(m,mirror,area);
- }
- const inkLayer=mirror.querySelector('.ck61-ink-layer');
- const height=Math.max(165,mirror.scrollHeight,inkLayer?.scrollHeight||0)+18;
+ const m=mapText(c.fact,r),normal=m.mode==='normal';
+ el.classList.toggle('ck61-normal-editor',normal);
+ el.classList.toggle('ck61-letters-editor',!normal);
+ el.classList.toggle('ck62-editor',true);
+ mirror.classList.add('ck31-fixed-underlay','ck-v3-line-active','ck62-fixed');
+ mirror.classList.toggle('ck61-normal',normal);
+ mirror.classList.toggle('ck61-letters',!normal);
+ mirror.classList.toggle('ck62-normal',normal);
+ mirror.classList.toggle('ck62-letters',!normal);
+ if(normal)paintNormal(m,mirror,area);
+ else paintLetters(m,mirror,area);
+ // The two text layers are never aligned by guessing the length of their words.
+ // Give the textarea exactly the same content rectangle as the mirror.
+ const height=Math.max(165,mirror.scrollHeight||0)+32;
  el.style.setProperty('min-height',height+'px','important');
- area.style.height=Math.max(120,height-32)+'px';
+ area.style.height=Math.max(133,height-32)+'px';
 };
 function completion(){
  const finished=new Set((Array.isArray(state.typingHistory)?state.typingHistory:[])
@@ -148,14 +169,24 @@ typingFeedback=function(){
   const list=document.getElementById('typing-history-list');
   if(list)list.innerHTML=typingHistoryHtml();
  }
+ const entered=Math.min(m.required,m.entered);
+ const percentage=m.required?Math.min(100,100*entered/m.required):0;
  const values={'ck-v7-stat-time':clock(s.seconds),
   'ck-v7-stat-cpm':String(s.cpm),'ck-v7-stat-accuracy':s.accuracy+'%',
-  'ck-v7-stat-count':m.matched+'/'+m.required,'ck-v7-typed-count':String(m.matched)};
+  'ck-v7-stat-count':entered+'/'+m.required,'ck-v7-typed-count':String(entered)};
  for(const [id,value]of Object.entries(values)){
   const node=document.getElementById(id);if(node&&node.textContent!==value)node.textContent=value;
  }
+ const progress=document.getElementById('ck62-progress');
+ if(progress){
+  progress.style.setProperty('--ck62-progress',percentage.toFixed(2)+'%');
+  progress.setAttribute('aria-valuenow',String(Math.round(percentage)));
+  progress.setAttribute('aria-valuetext',entered+' / '+m.required+' · '+Math.round(percentage)+'%');
+ }
+ const progressText=document.getElementById('ck62-progress-label');
+ if(progressText)progressText.textContent=entered+' / '+m.required+' · '+Math.round(percentage)+'%';
  const fill=document.getElementById('ck-v3-progress-fill');
- if(fill)fill.style.setProperty('--ck-v3-progress',(m.required?Math.min(100,100*m.matched/m.required):0).toFixed(2)+'%');
+ if(fill)fill.style.setProperty('--ck-v3-progress',percentage.toFixed(2)+'%');
  const p=completion(),label=document.getElementById('ck-v3-completion-text'),dots=document.getElementById('ck-v3-completion-dots');
  if(label)label.textContent=p.done+'/'+p.total;
  if(dots){
@@ -238,18 +269,18 @@ document.addEventListener('beforeinput',e=>{
  if(e.inputType==='insertParagraph'||e.inputType==='insertLineBreak'||
     (e.inputType==='insertText'&&e.data===' '))e.preventDefault();
 },true);
-document.addEventListener('keyup',e=>{
- if(state.view!=='typing'||currentMode()!=='letters'||!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End'].includes(e.key))return;
- const area=e.target;
- if(area?.tagName!=='TEXTAREA'||!area.closest?.('.ck-v7-input .chalk-editor'))return;
- const editor=area.closest('.chalk-editor');
+function refreshCaret(e){
+ if(state.view!=='typing'||e.target?.tagName!=='TEXTAREA'||
+    !e.target.closest?.('.ck-v7-input .chalk-editor'))return;
+ const editor=e.target.closest('.chalk-editor');
  if(editor)typingGhost(editor);
+}
+document.addEventListener('keyup',e=>{
+ if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End','Backspace','Delete'].includes(e.key))return;
+ refreshCaret(e);
 });
-document.addEventListener('click',e=>{
- if(state.view!=='typing'||currentMode()!=='letters')return;
- const area=e.target.closest?.('.ck-v7-input .chalk-editor textarea');
- if(area)typingGhost(area.closest('.chalk-editor'));
-});
+document.addEventListener('mouseup',refreshCaret);
+document.addEventListener('compositionend',refreshCaret);
 window.CK31Typing=Object.freeze({mapText,mode:currentMode,letters,clean:normalized,
  options:()=>({mode:currentMode(),enter:currentMode()==='normal',space:currentMode()==='normal'})});
 })();

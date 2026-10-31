@@ -1,0 +1,213 @@
+/* ConceptKnot v62: one shared typography/geometry model, two themed glass surfaces. */
+html {
+ --ck62-font:var(--ck-v8-font,"NanumSquare Neo","NanumSquareNeo","Malgun Gothic",sans-serif);
+ --ck62-ink:#23474b;
+ --ck62-ghost:rgba(55,80,86,.45);
+ --ck62-wrong:#9b656b;
+ --ck62-caret:#2c817c;
+ --ck62-highlight:rgba(57,129,150,.11);
+ --ck62-border:rgba(53,128,147,.46);
+ --ck62-track:rgba(57,103,113,.18);
+ --ck62-fill:#3c9d98;
+}
+html[data-ck-theme="dark"] {
+ --ck62-ink:#edf5f1;
+ --ck62-ghost:rgba(198,220,218,.48);
+ --ck62-wrong:#d4a3a7;
+ --ck62-caret:#b6e8df;
+ --ck62-highlight:rgba(125,205,204,.125);
+ --ck62-border:rgba(116,201,197,.52);
+ --ck62-track:rgba(205,228,225,.2);
+ --ck62-fill:#8edcd0;
+}
+/* Force the typing card to respect the explicit site theme. */
+html:not([data-ck-theme="dark"]) body #main .ck-v7-content .ck-v7-typing .ck-v7-input {
+ background:linear-gradient(145deg,rgba(255,255,255,.66),rgba(235,250,248,.48))!important;
+ border:1px solid rgba(255,255,255,.84)!important;
+ backdrop-filter:blur(17px) saturate(123%)!important;
+ -webkit-backdrop-filter:blur(17px) saturate(123%)!important;
+ color:#29494c!important;
+ box-shadow:0 14px 32px -19px rgba(56,100,101,.19),inset 0 1px rgba(255,255,255,.9)!important;
+}
+html[data-ck-theme="dark"] body #main .ck-v7-content .ck-v7-typing .ck-v7-input {
+ background:linear-gradient(145deg,rgba(17,42,49,.70),rgba(24,49,53,.57))!important;
+ border:1px solid rgba(211,239,233,.16)!important;
+ backdrop-filter:blur(17px) saturate(112%)!important;
+ -webkit-backdrop-filter:blur(17px) saturate(112%)!important;
+ color:#dcebe7!important;
+ box-shadow:0 15px 33px -20px rgba(5,24,30,.5),inset 0 1px rgba(245,255,251,.13)!important;
+}
+html:not([data-ck-theme="dark"]) body #main .ck-v7-typing .ck-v7-input .chalk-editor.ck62-editor {
+ background:rgba(255,255,255,.48)!important;
+ border:1px solid rgba(255,255,255,.76)!important;
+ box-shadow:inset 0 1px 0 rgba(255,255,255,.83),0 4px 15px rgba(52,89,97,.08)!important;
+ backdrop-filter:blur(10px)!important;
+ -webkit-backdrop-filter:blur(10px)!important;
+}
+html[data-ck-theme="dark"] body #main .ck-v7-typing .ck-v7-input .chalk-editor.ck62-editor {
+ background:rgba(7,23,29,.42)!important;
+ border:1px solid rgba(185,229,225,.10)!important;
+ box-shadow:inset 0 1px rgba(230,252,250,.08),0 8px 17px rgba(0,0,0,.09)!important;
+ backdrop-filter:blur(10px)!important;
+ -webkit-backdrop-filter:blur(10px)!important;
+}
+html body #main .ck-v7-typing .ck-v7-input .ck-v7-ihead{
+ display:flex!important;align-items:center!important;flex-wrap:wrap!important;gap:8px!important;
+ color:var(--ck62-ink)!important;
+}
+html body #main .ck-v7-typing .ck-v7-input .ck61-typing-mode{
+ margin-left:auto!important;margin-right:0!important;gap:4px!important;
+ border-color:var(--ck62-track)!important;
+}
+html body #main .ck-v7-typing .ck-v7-input .ck61-typing-mode button {
+ color:var(--ck62-ink)!important;
+}
+html body #main .ck-v7-typing .ck-v7-input .ck61-typing-mode button[aria-pressed="true"]{
+ background:var(--ck62-highlight)!important;
+ box-shadow:inset 0 0 0 1px var(--ck62-border)!important;
+ color:var(--ck62-ink)!important;
+}
+html body #main .ck-v7-typing .ck-v7-input :is(.ck61-input-hint,.ck-v7-ihead small){
+ color:var(--ck62-ink)!important;opacity:.78!important;
+}
+html body #main .ck-v7-typing .ck-v7-input .ck62-progress{
+ display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;
+ margin:7px 0 12px;min-height:20px;
+}
+html body #main .ck-v7-typing .ck-v7-input .ck62-progress-track{
+ display:block;position:relative;width:100%;height:4px;overflow:hidden;
+ border-radius:99px;background:var(--ck62-track);
+}
+html body #main .ck-v7-typing .ck-v7-input .ck62-progress-track>span{
+ display:block;height:100%;width:var(--ck62-progress,0%);
+ border-radius:99px;background:var(--ck62-fill);transition:width 130ms ease-out;
+}
+html body #main .ck-v7-typing .ck-v7-input .ck62-progress-label{
+ min-width:94px;text-align:right;white-space:nowrap;
+ color:var(--ck62-ink);font-size:11px;font-weight:700;
+ font-variant-numeric:tabular-nums;
+}
+/* Exactly matching font, line metrics, wrapping and geometry for textarea and
+   mirror. Avoid font-weight changes that would make the mirror reflow. */
+html body #main .ck-v7-typing .ck-v7-input .chalk-editor.ck62-editor{
+ --ck62-font-size:clamp(15px,1.17vw,19px);
+ position:relative!important;box-sizing:border-box!important;
+ padding:16px!important;min-height:190px!important;
+ border-radius:14px!important;overflow:visible!important;
+ font-family:var(--ck62-font)!important;
+ font-size:var(--ck62-font-size)!important;
+ font-weight:500!important;line-height:1.84!important;letter-spacing:0!important;
+}
+html body #main .ck-v7-typing .ck-v7-input .chalk-editor.ck62-editor :is(.chalk-mirror,textarea){
+ box-sizing:border-box!important;
+ width:100%!important;max-width:100%!important;margin:0!important;
+ padding:0!important;border:0!important;
+ font-family:var(--ck62-font)!important;
+ font-size:var(--ck62-font-size)!important;
+ font-weight:500!important;line-height:1.84!important;letter-spacing:0!important;
+ font-kerning:none!important;font-variant-ligatures:none!important;
+ font-feature-settings:"kern" 0,"liga" 0!important;
+ white-space:pre-wrap!important;overflow-wrap:anywhere!important;word-break:break-all!important;
+ text-indent:0!important;text-align:left!important;tab-size:4!important;
+}
+html body #main .ck-v7-typing .ck-v7-input .chalk-editor.ck62-editor .chalk-mirror.ck62-fixed{
+ position:relative!important;display:block;z-index:1!important;
+ min-height:154px!important;overflow:visible!important;
+ color:var(--ck62-ghost)!important;-webkit-text-fill-color:initial!important;
+ text-shadow:none!important;pointer-events:none;
+}
+html body #main .ck-v7-typing .ck-v7-input .chalk-editor.ck62-editor textarea{
+ position:absolute!important;top:16px!important;left:16px!important;
+ right:16px!important;bottom:16px!important;
+ width:calc(100% - 32px)!important;height:calc(100% - 32px)!important;
+ background:transparent!important;box-shadow:none!important;resize:none!important;
+ outline:0!important;overflow:hidden!important;
+ color:transparent!important;-webkit-text-fill-color:transparent!important;
+ caret-color:var(--ck62-caret)!important;
+ opacity:1!important;z-index:4!important;
+}
+html body #main .ck-v7-typing .ck-v7-input .chalk-editor.ck61-letters-editor textarea{
+ caret-color:transparent!important;
+}
+html body #main .ck-v7-typing .ck-v7-input .chalk-mirror.ck62-normal{
+ display:grid!important;grid-template-columns:minmax(0,1fr)!important;align-items:start!important;
+}
+/* Both children share the same grid area, avoiding the original block + absolute
+   inline-flow mismatch. Each contributes natural height independently. */
+html body #main .ck-v7-typing .ck-v7-input .ck62-guide,
+html body #main .ck-v7-typing .ck-v7-input .ck62-live{
+ grid-area:1/1;position:relative;min-width:0;max-width:100%;
+ white-space:pre-wrap!important;overflow-wrap:anywhere!important;word-break:break-all!important;
+ font:inherit!important;font-weight:500!important;line-height:inherit!important;
+ letter-spacing:inherit!important;font-kerning:none!important;font-variant-ligatures:none!important;
+}
+html body #main .ck-v7-typing .ck-v7-input .ck62-guide{
+ z-index:1;color:var(--ck62-ghost)!important;-webkit-text-fill-color:var(--ck62-ghost)!important;
+}
+html body #main .ck-v7-typing .ck-v7-input .ck62-live{z-index:2;color:var(--ck62-ink)}
+html body #main .ck-v7-typing .ck-v7-input .ck62-live-char,
+html body #main .ck-v7-typing .ck-v7-input .ck62-cell{
+ display:inline!important;position:relative;font:inherit!important;
+ font-weight:500!important;line-height:inherit!important;letter-spacing:inherit!important;
+ white-space:pre-wrap!important;vertical-align:baseline!important;
+ border:0!important;background:transparent!important;
+ transform:none!important;animation:none!important;transition:none!important;
+}
+html body #main .ck-v7-typing .ck-v7-input .ck62-live-char.ck62-right,
+html body #main .ck-v7-typing .ck-v7-input .ck62-cell.ck62-right .ck62-cell-input{
+ color:var(--ck62-ink)!important;-webkit-text-fill-color:var(--ck62-ink)!important;
+ text-decoration:none!important;
+}
+html body #main .ck-v7-typing .ck-v7-input .ck62-live-char.ck62-wrong,
+html body #main .ck-v7-typing .ck-v7-input .ck62-cell.ck62-wrong .ck62-cell-input{
+ color:var(--ck62-wrong)!important;-webkit-text-fill-color:var(--ck62-wrong)!important;
+ background:transparent!important;
+ text-decoration:underline!important;text-decoration-thickness:1px!important;
+ text-decoration-color:color-mix(in srgb,var(--ck62-wrong),transparent 55%)!important;
+}
+html body #main .ck-v7-typing .ck-v7-input .ck62-cell .ck62-cell-source{
+ font:inherit!important;display:inline!important;color:var(--ck62-ghost)!important;
+ -webkit-text-fill-color:var(--ck62-ghost)!important;
+}
+html body #main .ck-v7-typing .ck-v7-input .ck62-cell:is(.ck62-right,.ck62-wrong) .ck62-cell-source{
+ opacity:.22!important;
+}
+html body #main .ck-v7-typing .ck-v7-input .ck62-cell .ck62-cell-input{
+ display:inline!important;position:absolute!important;left:0;top:0;z-index:2;
+ font:inherit!important;font-weight:500!important;white-space:pre!important;
+ pointer-events:none;
+}
+/* Invisible source-position anchor reveals the actual native caret line.
+   Its zero width does not push glyphs or change source reflow. */
+html body #main .ck-v7-typing .ck-v7-input .ck62-anchor{
+ display:inline-block!important;position:relative!important;width:0!important;height:1em!important;
+ padding:0!important;margin:0!important;border:0!important;vertical-align:baseline!important;
+ font-size:inherit!important;line-height:0!important;pointer-events:none;
+}
+html body #main .ck-v7-typing .ck-v7-input .chalk-mirror.ck62-fixed.ck-v3-line-active::before{
+ content:""!important;position:absolute!important;z-index:0!important;
+ top:var(--ck-v3-line-top,0px)!important;left:-7px!important;right:-7px!important;
+ height:var(--ck-v3-line-height,28px)!important;
+ border-radius:7px!important;border:0!important;
+ background:var(--ck62-highlight)!important;
+ box-shadow:inset 3px 0 var(--ck62-border)!important;
+ transform:none!important;transition:top 95ms ease-out!important;pointer-events:none!important;
+}
+html body #main .ck-v7-typing .ck-v7-input .chalk-mirror.ck62-normal .ck-v3-caret{display:none!important}
+html body #main .ck-v7-typing .ck-v7-input .chalk-mirror.ck62-letters .ck-v3-caret{
+ display:block!important;background:var(--ck62-caret)!important;
+}
+@media(max-width:520px){
+ html body #main .ck-v7-typing .ck-v7-input .chalk-editor.ck62-editor{padding:12px!important}
+ html body #main .ck-v7-typing .ck-v7-input .chalk-editor.ck62-editor textarea{
+  top:12px!important;left:12px!important;right:12px!important;bottom:12px!important;
+  width:calc(100% - 24px)!important;height:calc(100% - 24px)!important;
+ }
+ html body #main .ck-v7-typing .ck-v7-input .ck62-progress{gap:8px}
+}
+@media(prefers-reduced-motion:reduce){
+ html body #main .ck-v7-typing .ck-v7-input .ck62-progress-track>span,
+ html body #main .ck-v7-typing .ck-v7-input .chalk-mirror.ck62-fixed.ck-v3-line-active::before{
+  transition:none!important;
+ }
+}
