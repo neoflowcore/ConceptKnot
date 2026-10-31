@@ -109,6 +109,7 @@ body{font-family:Pretendard,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;bac
 <link rel="stylesheet" href="./assets/ck-theme-parity-v58.css?v=61">
 <link rel="stylesheet" href="./assets/ck-pen-scope-v59.css">
 <link rel="stylesheet" href="./assets/ck-typing-precision-v62.css?v=62">
+<link rel="stylesheet" href="./assets/ck-board-compact-v63.css?v=63">
 </head>
 <body>
 <a href="#main" class="skip-link">본문으로 이동</a>
@@ -255,7 +256,7 @@ const names={landing:'CONCEPTKNOT 첫 화면',listen:'문제·정답 듣기',typ
 const nav=[['home','▦'],['reverse','⚡'],['theory','◈'],['visual','◇'],['typing','⌨'],['listen','♫'],['quiz','✎'],['calc','÷'],['exam','▤'],['venn','◉'],['wrong','↻'],['plan','▣'],['final','▤']];
 const todayISO=()=>new Date().toLocaleDateString('sv-SE',{timeZone:'Asia/Seoul'});
 const dday=()=>Math.max(0,Math.ceil((new Date('2026-10-31T00:00:00+09:00').getTime()-Date.now())/DAY));
-const defaults={typingMode:'official',typingPick:0,typingYear:'all',typingHistory:[],tts:{rate:1.5,voice:''},spokenTexts:{},ink:{},chalk:{color:0,notes:{},practice:{}},view:'landing',reverseState:{mode:'practice',id:'',step:0,firstChoice:0,transferChoice:0,retryChoice:0,recallRating:null,year:2025,number:1,showOfficialKey:false},reverseProgress:{},officialLinks:{},subject:'estate',year:2025,examQuestion:1,answers:{},graded:{},importedKeys:{},quizIndex:0,mockSet:0,quizAnswers:{},visualIndex:0,visualRevealed:false,theoryIndex:0,flashShown:false,flashVisits:{},reviews:{},compare:'v1',mistakes:{},notes:{},timerRemaining:1500,timerRunning:false,timerEnd:0,pomodoros:0,pomodoroPhase:'focus',pomodoroFocusSeconds:1500,pomodoroBreakSeconds:300,pomoProgram:null,dailyTotals:{},studySubject:{},topicFilter:'all',showPdf:true,showExamKey:false,showAllMarks:false,examInstantGrade:false,ckTypingInputMode:'normal',ck31BoardBottom:false,ck31BoardCollapsed:false,ck10FontSize:18,ck10CustomColor:'#8ee5ff',ck9SpenMode:false,ck9SpenTool:'pen',ck9SpenWidth:3.2};
+const defaults={typingMode:'official',typingPick:0,typingYear:'all',typingHistory:[],tts:{rate:1.5,voice:''},spokenTexts:{},ink:{},chalk:{color:0,notes:{},practice:{}},view:'landing',reverseState:{mode:'practice',id:'',step:0,firstChoice:0,transferChoice:0,retryChoice:0,recallRating:null,year:2025,number:1,showOfficialKey:false},reverseProgress:{},officialLinks:{},subject:'estate',year:2025,examQuestion:1,answers:{},graded:{},importedKeys:{},quizIndex:0,mockSet:0,quizAnswers:{},visualIndex:0,visualRevealed:false,theoryIndex:0,flashShown:false,flashVisits:{},reviews:{},compare:'v1',mistakes:{},notes:{},timerRemaining:1500,timerRunning:false,timerEnd:0,pomodoros:0,pomodoroPhase:'focus',pomodoroFocusSeconds:1500,pomodoroBreakSeconds:300,pomoProgram:null,dailyTotals:{},studySubject:{},topicFilter:'all',showPdf:true,showExamKey:false,showAllMarks:false,examInstantGrade:false,ckTypingInputMode:'normal',ck31BoardBottom:false,ck31BoardCollapsed:false,ck10FontSize:18,ck63NoteBold:false,ck10CustomColor:'#8ee5ff',ck9SpenMode:false,ck9SpenTool:'pen',ck9SpenWidth:3.2};
 let state={...defaults};
 try{const p=JSON.parse(localStorage.getItem(STORAGE)||'{}');if(p && typeof p==='object'){for(const k in defaults){if(Object.prototype.hasOwnProperty.call(p,k))state[k]=p[k];}}}catch(e){console.warn('기존 학습기록을 읽지 못했습니다',e);}
 if(!['estate','civil'].includes(state.subject))state.subject='estate';
@@ -1730,6 +1731,7 @@ window.addEventListener('beforeunload',()=>{if(localPdfUrl)URL.revokeObjectURL(l
   if(!state.v7MigratedNotes||typeof state.v7MigratedNotes!=='object'||Array.isArray(state.v7MigratedNotes))state.v7MigratedNotes={};
   if(!Number.isFinite(Number(state.v7LeftWidth))||Number(state.v7LeftWidth)<86)state.v7LeftWidth=null;
   state.v7HistoryOpen=Boolean(state.v7HistoryOpen);
+  state.ck63NoteBold=state.ck63NoteBold===true;
   state.ck6Swapped=Boolean(state.ck6Swapped);
   state.ckTypingInputMode=state.ckTypingInputMode==='letters'?'letters':'normal';
   state.ck31BoardBottom=state.ck31BoardBottom===true;
@@ -1784,7 +1786,7 @@ window.addEventListener('beforeunload',()=>{if(localPdfUrl)URL.revokeObjectURL(l
     migrateMemo(ctx);
     const mode=chalkState().color;
     return `<aside class="ck-v7-board-shell" aria-label="문항별 통합 메모·필기">
-      <section class="ck-v7-board ${state.ck9SpenMode?'ck9-spen-active':''}" data-ck-v7-key="${esc(ctx.key)}">
+      <section class="ck-v7-board ${state.ck63NoteBold?'ck63-note-bold ':''}${state.ck9SpenMode?'ck9-spen-active':''}" data-ck-v7-key="${esc(ctx.key)}">
         <img class="ck-v7-art" src="${BOOK_LANDSCAPE}" alt="" aria-hidden="true">
         <div class="ck-v7-art-shade"></div>
         <div class="ck-v7-board-overlay">
@@ -1804,6 +1806,7 @@ window.addEventListener('beforeunload',()=>{if(localPdfUrl)URL.revokeObjectURL(l
           </button>
           <div class="ck-v7-toolrow ck21-toolrow" aria-label="분필과 S펜 공통 필기 도구">
             <button class="ck9-spen-toggle" type="button" data-ck9-spen="toggle" aria-pressed="${!!state.ck9SpenMode}" title="S Pen 모드">S</button>
+             <button class="ck63-bold-toggle" type="button" data-ck63-note-bold aria-label="칠판 글씨 굵게" aria-pressed="${state.ck63NoteBold===true}" title="글씨 굵게 켜기/끄기">B</button>
 <span class="ck21-spen-tools" data-ck9-spen-toolbar ${state.ck9SpenMode?'':'hidden'}>
 <button type="button" data-ck9-spen-tool="pen" aria-pressed="${state.ck9SpenTool==='pen'}" title="펜" aria-label="펜">✎</button>
 <button type="button" data-ck9-spen-tool="highlighter" aria-pressed="${state.ck9SpenTool==='highlighter'}" title="형광펜" aria-label="형광펜">▰</button>
@@ -1812,12 +1815,12 @@ window.addEventListener('beforeunload',()=>{if(localPdfUrl)URL.revokeObjectURL(l
 </span>
             ${CHALK_COLORS.map((x,i)=>`<button class="ck-v7-dot" type="button" data-chalk-color="${i}" aria-label="${esc(CHALK_NAMES[i])} 분필" title="${esc(CHALK_NAMES[i])} 분필" aria-pressed="${i===mode?'true':'false'}" style="--dot-color:${x}"><i></i></button>`).join('')}
             <label class="ck10-color" title="사용자 분필색"><input type="color" data-ck10-custom-color value="${esc(state.ck10CustomColor||'#8ee5ff')}" aria-label="사용자 분필 색상"></label>
-            <label class="ck10-font" title="칠판 글자 크기">가 <input type="range" data-ck10-font min="12" max="36" step="1" value="${Number(state.ck10FontSize)||18}" aria-label="칠판 글자 크기"></label>
             <span class="ck-v7-tool-spacer"></span>
             <button type="button" data-ck-v7-command="undo" title="손글씨 되돌리기" aria-label="손글씨 되돌리기">↶</button>
             <button type="button" data-ck-v7-command="redo" title="손글씨 다시하기" aria-label="손글씨 다시하기">↷</button>
             <button type="button" data-ck-v7-command="clear" title="손글씨 지우기" aria-label="손글씨 지우기">⌫</button>
                         <button type="button" data-ck-v7-command="export" title="이 문항 JSON 저장" aria-label="이 문항 JSON 저장">⇩</button>
+            <label class="ck10-font" title="칠판 글자 크기">가 <input type="range" data-ck10-font min="12" max="36" step="1" value="${Number(state.ck10FontSize)||18}" aria-label="칠판 글자 크기"></label>
           </div>
 
         </div>
@@ -2069,6 +2072,25 @@ window.addEventListener('beforeunload',()=>{if(localPdfUrl)URL.revokeObjectURL(l
       document.querySelectorAll('[data-chalk-color="4"]').forEach(b=>{b.style.setProperty('--dot-color',state.ck10CustomColor);b.setAttribute('aria-pressed','true');});
       save();
     }
+  },true);
+  // Note typography is a presentation preference. Toggle without a full render;
+  // existing memo text, pen ink, editor scroll and selected question stay in place.
+  document.addEventListener('click',e=>{
+    const toggle=e.target.closest?.('[data-ck63-note-bold]');
+    if(!toggle)return;
+    e.preventDefault();e.stopImmediatePropagation();
+    const board=toggle.closest('.ck-v7-board');
+    state.ck63NoteBold=!state.ck63NoteBold;
+    board?.classList.toggle('ck63-note-bold',state.ck63NoteBold);
+    toggle.setAttribute('aria-pressed',String(state.ck63NoteBold));
+    toggle.title=state.ck63NoteBold?'기본 굵기로 돌아가기':'글씨 굵게';
+    save();
+    if(!state.ck9SpenMode){
+      const field=board?.querySelector('.ck-v7-writing-surface .chalk-editor textarea');
+      field?.focus({preventScroll:true});
+    }
+    // The measured visual caret uses selectionchange to refresh its glyph range.
+    document.dispatchEvent(new Event('selectionchange'));
   },true);
   document.documentElement.style.setProperty('--ck10-chalk-font',(Number(state.ck10FontSize)||18)+'px');
   function setLeftWidth(px){
