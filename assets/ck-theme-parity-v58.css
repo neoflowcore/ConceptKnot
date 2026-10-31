@@ -47,3 +47,25 @@ html,html[data-ck-theme] {background:#fff!important;background-image:none!import
 html body[data-ck-v8-tab="landing"] {background:#fff!important;background-image:none!important;}
 html body::after {content:none!important;display:none!important;background:none!important;}
 
+
+/* v66: compact study brand; one reveal when returning to landing. */
+html body #main .ck-v7-nav-pill .ck-v7-logo {
+ display:inline-flex!important;align-items:center!important;gap:7px!important;
+}
+html body #main .ck-v7-nav-pill .ck-v7-logo .ck-brand-wordmark {
+ display:none!important;
+}
+html body[data-ck-v8-tab="landing"] #main .ck-v7-nav-pill .ck-v7-logo .ck-brand-wordmark {
+ display:inline-block!important;overflow:hidden;white-space:nowrap;
+ vertical-align:middle;max-width:180px;
+ animation:ck66-brand-reveal .4s cubic-bezier(.2,.75,.25,1) both;
+}
+@keyframes ck66-brand-reveal {
+ from {max-width:0;opacity:0;transform:translateX(-14px);clip-path:inset(0 100% 0 0);}
+ to {max-width:180px;opacity:1;transform:translateX(0);clip-path:inset(0);}
+}
+@media(prefers-reduced-motion:reduce) {
+ html body[data-ck-v8-tab="landing"] #main .ck-v7-nav-pill .ck-v7-logo .ck-brand-wordmark {
+  animation:none;transform:none;clip-path:none;opacity:1;
+ }
+}
