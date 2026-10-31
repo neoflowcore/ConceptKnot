@@ -1,0 +1,153 @@
+/* ConceptKnot v74 | dedicated dark pointillist landing theme.
+   Color-only theme: scene geometry, motion, event handling and light mode untouched.
+   The legacy parity sheet intentionally locked paper to white; this late-loaded
+   sheet wins only when the user enables the explicit dark-mode button. */
+html[data-ck-theme="dark"] {
+  --ck74-night-paper:#111518;
+  --ck74-night-ink:#737b80;
+  --ck74-night-soft-ink:#5f686d;
+  --ck74-night-detail:#8e979a;
+  --ck74-night-ui:#20282b;
+  background-color:var(--ck74-night-paper)!important;
+  background-image:none!important;
+}
+html[data-ck-theme="dark"] body[data-ck-v8-tab="landing"] {
+  background-color:var(--ck74-night-paper)!important;
+  background-image:none!important;
+  color:#bac0c2;
+}
+html[data-ck-theme="dark"] body[data-ck-v8-tab="landing"] #ck-v8-ambient.ck-dot-landing {
+  background:var(--ck74-night-paper)!important;
+  background-color:var(--ck74-night-paper)!important;
+  color:var(--ck74-night-detail)!important;
+  color-scheme:only light!important;
+}
+/* The original landscape is a transparent raster of nearly black dots.
+   Recolor its pixels, rather than invert the entire scene (which would also
+   invert the red/green/yellow apples and make the owl too bright). */
+html[data-ck-theme="dark"] #ck-v8-ambient.ck-dot-landing > img.ck-dot-backdrop:not(.ck-dot-fallback) {
+  filter:brightness(0) invert(.55)!important;
+  opacity:.88;
+}
+html[data-ck-theme="dark"] #ck-v8-ambient.ck-dot-landing > img.ck-dot-backdrop.ck-dot-fallback {
+  filter:grayscale(1) invert(1) brightness(.50)!important;
+  mix-blend-mode:screen;
+  opacity:.88;
+}
+/* Cloud and owl sprites retain their hand-drawn halftone contrast.
+   Screen compositing makes a white source pixel (now black after invert)
+   disappear into the charcoal paper instead of drawing a bright rectangle. */
+html[data-ck-theme="dark"] #ck-v8-ambient.ck-dot-landing .ck-dot-cloud image,
+html[data-ck-theme="dark"] #ck-v8-ambient.ck-dot-landing .ck-dot-bird image {
+  filter:grayscale(1) invert(1) brightness(.53)!important;
+  mix-blend-mode:screen;
+}
+html[data-ck-theme="dark"] #ck-v8-ambient.ck-dot-landing .ck-dot-cloud [data-dot-cloud-micro] circle {
+  fill:var(--ck74-night-ink)!important;
+}
+html[data-ck-theme="dark"] #ck-v8-ambient.ck-dot-landing .ck-dot-small-cloud path {
+  fill:#788186!important;
+}
+/* SVG fill attribute changes in the existing 24-fps loop still light up
+   the tiny RGB accent dots. Only the resting monochrome attribute is themed. */
+html[data-ck-theme="dark"] #ck-v8-ambient.ck-dot-landing .ck-dot-cumulus-edge-dot[fill="#212121"] {
+  fill:#768085!important;
+}
+html[data-ck-theme="dark"] #ck-v8-ambient.ck-dot-landing .ck-dot-note-static {
+  fill:#788186!important;
+}
+html[data-ck-theme="dark"] #ck-v8-ambient.ck-dot-landing .ck-dot-note-top[fill="#282828"] {
+  fill:#7b8488!important;
+}
+/* Tone down the rare RGB cloud/note glints rather than rendering white. */
+html[data-ck-theme="dark"] #ck-v8-ambient.ck-dot-landing
+  :is(.ck-dot-cumulus-edge-dot,.ck-dot-note-top)[fill="#ef4348"] {fill:#b9676e!important;}
+html[data-ck-theme="dark"] #ck-v8-ambient.ck-dot-landing
+  :is(.ck-dot-cumulus-edge-dot,.ck-dot-note-top)[fill="#42bf67"] {fill:#6d9b7b!important;}
+html[data-ck-theme="dark"] #ck-v8-ambient.ck-dot-landing
+  :is(.ck-dot-cumulus-edge-dot,.ck-dot-note-top)[fill="#4384ee"] {fill:#698cbe!important;}
+/* The garden is a separate SVG: its white hillside matte must also become
+   charcoal or it will leave the lower half of the page bright white. */
+html[data-ck-theme="dark"] #ck-v8-ambient.ck-dot-landing .ck-dot-lawn > path:first-of-type {
+  fill:var(--ck74-night-paper)!important;
+}
+html[data-ck-theme="dark"] #ck-v8-ambient.ck-dot-landing .ck-dot-lawn .ck-dot-contour {
+  stroke:#7a8285!important;
+  stroke-opacity:.50!important;
+}
+html[data-ck-theme="dark"] #ck-v8-ambient.ck-dot-landing .ck-dot-lawn > path:not(.ck-dot-contour):not(:first-of-type) {
+  stroke:#838a8d!important;
+  stroke-opacity:.68!important;
+}
+html[data-ck-theme="dark"] #ck-v8-ambient.ck-dot-landing .ck-dot-flower > path {
+  stroke:#848d91!important;
+}
+html[data-ck-theme="dark"] #ck-v8-ambient.ck-dot-landing .ck-dot-flower ellipse {
+  fill:#20272a!important;
+  stroke:#929b9e!important;
+}
+html[data-ck-theme="dark"] #ck-v8-ambient.ck-dot-landing .ck-dot-flower circle {
+  fill:#8a9497!important;
+}
+/* Retain the RGB apples, but remove their white plates and black-only outlines. */
+html[data-ck-theme="dark"] #ck-v8-ambient.ck-dot-landing .ck-dot-orbit-rail {
+  stroke:#858d91!important;
+  opacity:.79!important;
+}
+html[data-ck-theme="dark"] #ck-v8-ambient.ck-dot-landing .ck-dot-apple > path:first-of-type {
+  fill:#202629!important;
+  stroke:#98a0a2!important;
+}
+html[data-ck-theme="dark"] #ck-v8-ambient.ck-dot-landing .ck-dot-apple > path:nth-of-type(2) {
+  opacity:.77!important;
+}
+html[data-ck-theme="dark"] #ck-v8-ambient.ck-dot-landing .ck-dot-apple > path:nth-of-type(3) {
+  stroke:#9ba3a4!important;
+}
+html[data-ck-theme="dark"] #ck-v8-ambient.ck-dot-landing .ck-dot-orbit pattern circle:nth-of-type(2) {
+  fill:#9da5a6!important;
+  opacity:.32!important;
+}
+html[data-ck-theme="dark"] #ck-v8-ambient.ck-dot-landing .ck-dot-bird > g > path {
+  stroke:#848c90!important;
+}
+html[data-ck-theme="dark"] #ck-v8-ambient.ck-dot-landing .ck-dot-bird [data-dot-owl-blink] ellipse {
+  fill:#171b1e!important;
+}
+html[data-ck-theme="dark"] #ck-v8-ambient.ck-dot-landing .ck-dot-bird [data-dot-owl-blink] path {
+  stroke:#8f989c!important;
+}
+/* Usable, subdued search placeholder and scroll control on both desktop/mobile. */
+html[data-ck-theme="dark"] #ck-v8-ambient.ck-dot-landing .ck-dot-search-placeholder {
+  background:rgba(30,38,42,.91)!important;
+  border:1.5px solid #555f63!important;
+  color:#b6bdc0!important;
+  box-shadow:0 9px 25px rgba(0,0,0,.22)!important;
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+}
+html[data-ck-theme="dark"] #ck-v8-ambient.ck-dot-landing .ck-dot-search-help {
+  background:#4d575c!important;
+  color:#d5dadb!important;
+}
+html[data-ck-theme="dark"] #ck-v8-ambient.ck-dot-landing .ck-dot-scroll {
+  background:rgba(34,41,45,.92)!important;
+  border:1px solid #657075!important;
+  color:#c2c7c8!important;
+  box-shadow:0 6px 17px rgba(0,0,0,.24)!important;
+}
+html[data-ck-theme="dark"] #ck-v8-ambient.ck-dot-landing .ck-dot-scroll:focus-visible {
+  outline:2px solid #8e9da0!important;
+  outline-offset:3px;
+}
+/* No theme transitions on large rasters. Changing the sun/moon button simply
+   switches CSS rules without reinitializing the scene or its animation clock. */
+html[data-ck-theme="dark"] #ck-v8-ambient.ck-dot-landing > .ck-dot-backdrop,
+html[data-ck-theme="dark"] #ck-v8-ambient.ck-dot-landing .ck-dot-lawn {
+  transition:none!important;
+}
+@media(prefers-reduced-motion:reduce) {
+  html[data-ck-theme="dark"] #ck-v8-ambient.ck-dot-landing .ck-dot-search-placeholder {
+    backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+  }
+}
