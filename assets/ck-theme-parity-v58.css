@@ -53,7 +53,8 @@ html body #main .ck-v7-nav-pill .ck-v7-logo {
  display:inline-flex!important;align-items:center!important;gap:7px!important;
 }
 html body #main .ck-v7-nav-pill .ck-v7-logo .ck-brand-wordmark {
- display:none!important;
+ display:inline-block!important;overflow:hidden;white-space:nowrap;
+ max-width:0;opacity:0;vertical-align:middle;
 }
 html body[data-ck-v8-tab="landing"] #main .ck-v7-nav-pill .ck-v7-logo .ck-brand-wordmark {
  display:inline-block!important;overflow:hidden;white-space:nowrap;
@@ -68,4 +69,16 @@ html body[data-ck-v8-tab="landing"] #main .ck-v7-nav-pill .ck-v7-logo .ck-brand-
  html body[data-ck-v8-tab="landing"] #main .ck-v7-nav-pill .ck-v7-logo .ck-brand-wordmark {
   animation:none;transform:none;clip-path:none;opacity:1;
  }
+}
+
+/* v67: retract toward the fixed owl only when leaving the landing page. */
+html body.ck67-brand-closing:not([data-ck-v8-tab="landing"]) #main .ck-v7-nav-pill .ck-v7-logo .ck-brand-wordmark {
+ animation:ck67-brand-retract .4s cubic-bezier(.2,.75,.25,1) both;
+}
+@keyframes ck67-brand-retract {
+ from {max-width:180px;opacity:1;transform:translateX(0);clip-path:inset(0);}
+ to {max-width:0;opacity:0;transform:translateX(-14px);clip-path:inset(0 100% 0 0);}
+}
+@media(prefers-reduced-motion:reduce) {
+ html body.ck67-brand-closing:not([data-ck-v8-tab="landing"]) #main .ck-v7-nav-pill .ck-v7-logo .ck-brand-wordmark {animation:none;}
 }

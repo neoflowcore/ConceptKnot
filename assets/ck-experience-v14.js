@@ -298,3 +298,21 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 else observe();
 setInterval(updateClock,1000);
 })();
+
+/* Wordmark exit tracks route state rather than replaying on every study render. */
+(()=>{
+ function initBrandExit(){
+  const body=document.body;let previous=body.getAttribute('data-ck-v8-tab'),timer;
+  new MutationObserver(()=>{
+   const next=body.getAttribute('data-ck-v8-tab');
+   if(next===previous)return;
+   clearTimeout(timer);body.classList.remove('ck67-brand-closing');
+   if(previous==='landing'&&next!=='landing'){
+    body.classList.add('ck67-brand-closing');
+    timer=setTimeout(()=>body.classList.remove('ck67-brand-closing'),420);
+   }
+   previous=next;
+  }).observe(body,{attributes:true,attributeFilter:['data-ck-v8-tab']});
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initBrandExit,{once:true});else initBrandExit();
+})();
