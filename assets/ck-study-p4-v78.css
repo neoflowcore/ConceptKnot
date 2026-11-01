@@ -1,0 +1,42 @@
+/* P4/P5 analysis and verified-source study tools */
+.ck78-analysis-dialog{box-sizing:border-box;width:min(94vw,820px);max-width:820px;max-height:min(90dvh,940px);padding:0;border-radius:16px;border:1px solid rgba(125,152,139,.46);background:#f8f9f6;color:#213b36;box-shadow:0 22px 75px rgba(15,30,24,.28);overscroll-behavior:contain}
+html[data-ck-theme=dark] .ck78-analysis-dialog{background:#142522;color:#e2ebe6;border-color:#567067}
+.ck78-analysis-dialog::backdrop{background:rgba(0,0,0,.55)}
+.ck78-analysis-dialog :is(button,textarea){font:inherit}
+.ck78-analysis-dialog button{cursor:pointer;border:1px solid currentColor;color:inherit;background:transparent;border-radius:8px;padding:6px 11px;font-size:13px}
+.ck78-analysis-dialog button:disabled{opacity:.35;cursor:default}
+.ck78-analysis-dialog .ck78-modal-head{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:16px 18px 11px;border-bottom:1px solid rgba(110,142,130,.25)}
+.ck78-analysis-dialog .ck78-modal-head h2{margin:0;font-size:18px}
+.ck78-analysis-dialog .ck78-modal-head small{font-size:11px;opacity:.72}
+.ck78-analysis-dialog .ck78-modal-head button{font-size:20px;padding:3px 12px}
+.ck78-analysis-dialog .ck78-modal-scroll{overflow:auto;max-height:calc(90dvh - 140px);padding:14px 20px 18px}
+.ck78-analysis-dialog section{margin:16px 0;border-top:1px solid rgba(115,135,127,.23);padding-top:12px}
+.ck78-analysis-dialog :is(h3,p){margin:8px 0}
+.ck78-analysis-dialog h3{font-size:15px}
+.ck78-analysis-dialog .ck78-raw>p{white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px}
+.ck78-analysis-dialog .ck78-status-line{font-size:14px}
+.ck78-analysis-dialog .ck78-warning{padding:10px;border-left:3px solid #b28b57;background:rgba(201,149,74,.12)}
+.ck78-analysis-dialog .ck78-options{padding-left:0;list-style:none;display:grid;gap:7px}
+.ck78-analysis-dialog .ck78-options li{border-radius:9px;padding:10px;border:1px solid rgba(120,143,132,.28)}
+.ck78-analysis-dialog .ck78-options li>div{display:flex;gap:9px;align-items:flex-start}
+.ck78-analysis-dialog .ck78-options li strong{white-space:nowrap;min-width:82px}
+.ck78-analysis-dialog .ck78-options li p{font-size:12px;opacity:.72;margin:5px 0 0}
+.ck78-analysis-dialog .ck78-recognized{color:#257d60}
+html[data-ck-theme=dark] .ck78-analysis-dialog .ck78-recognized{color:#a2dbbe}
+.ck78-analysis-dialog .ck78-draft{padding:12px;background:rgba(136,178,146,.11);border-radius:9px}
+.ck78-analysis-dialog .ck78-review-disclaimer{font-size:12px;opacity:.8}
+.ck78-analysis-dialog .ck78-concept{display:inline-block;border:1px dotted rgba(108,143,121,.7);border-radius:20px;padding:2px 7px;font-size:12px;margin:2px}
+.ck78-analysis-dialog .ck78-notes textarea{display:block;box-sizing:border-box;width:100%;resize:vertical;min-height:80px;border-radius:9px;padding:10px;border:1px solid rgba(110,143,130,.45);color:inherit;background:rgba(140,160,150,.08)}
+.ck78-analysis-dialog .ck78-note-actions{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-top:9px}
+.ck78-analysis-dialog [data-ck78-status]{font-size:12px}
+.ck78-analysis-dialog [data-ck78-copy-fallback][hidden]{display:none}
+.ck78-analysis-dialog .ck78-related>div{display:flex;gap:8px;flex-wrap:wrap}
+.ck78-analysis-dialog .ck78-modal-footer{display:flex;gap:9px;justify-content:flex-end;border-top:1px solid rgba(115,135,127,.25);padding:13px 18px}
+.ck78-analysis-dialog .ck78-modal-source{font-size:12px}
+.ck78-analysis-dialog .ck78-modal-source a{text-decoration:underline;text-underline-offset:3px}
+.ck78-analysis-dialog .ck78-review-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.ck78-analysis-dialog .ck78-review-grid div{border:1px solid rgba(125,155,140,.3);border-radius:9px;padding:12px}
+.ck78-analysis-dialog .ck78-review-grid dt{font-size:12px;opacity:.75}
+.ck78-analysis-dialog .ck78-review-grid dd{font-size:20px;font-weight:750;margin:3px 0}
+#ck76-search [data-ck78-review-report]{margin-left:auto;font-size:11px;white-space:nowrap}
+@media(max-width:520px){.ck78-analysis-dialog{width:96vw;max-height:95dvh}.ck78-analysis-dialog .ck78-modal-scroll{padding:11px;max-height:calc(95dvh - 130px)}.ck78-analysis-dialog .ck78-review-grid{grid-template-columns:1fr}.ck78-analysis-dialog .ck78-modal-footer{padding:9px;gap:6px}}

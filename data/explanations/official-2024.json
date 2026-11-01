@@ -15,7 +15,10 @@
         4
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_correct"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -76,7 +79,58 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "estate.land.economic",
+          "word": "용도의 다양성",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "estate.market.efficiency",
+          "word": "외부효과",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "estate.land.physical",
+          "word": "부증성",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-2",
@@ -88,7 +142,11 @@
         2
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_correct",
+        "compound_statements"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -149,7 +207,44 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "estate.location",
+          "word": "상권",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-3",
@@ -161,7 +256,12 @@
         4
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_correct",
+        "compound_statements",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -222,7 +322,36 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-4",
@@ -234,7 +363,11 @@
         1
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "compound_statements",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -270,7 +403,32 @@
           "sourceChecked": false
         }
       ],
-      "compoundStatements": [],
+      "compoundStatements": [
+        {
+          "key": "ㄱ",
+          "sourceText": "총톤수 25톤인 기선(機船)",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㄴ",
+          "sourceText": "적재용량 25톤인 덤프트럭",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㄷ",
+          "sourceText": "최대 이륙중량 400톤인 항공기",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㄹ",
+          "sourceText": "토지에 부착된 한 그루의 수목",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        }
+      ],
       "traps": [],
       "sourceRefs": [
         {
@@ -295,7 +453,36 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-5",
@@ -307,7 +494,11 @@
         5
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_incorrect",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -368,7 +559,44 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "estate.development",
+          "word": "환지방식",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Question seeks the incorrect statement"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-6",
@@ -380,7 +608,10 @@
         5
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_incorrect"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -441,7 +672,44 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "estate.development",
+          "word": "개발방식",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Question seeks the incorrect statement"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-7",
@@ -453,7 +721,10 @@
         2
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "compound_statements"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -489,7 +760,44 @@
           "sourceChecked": false
         }
       ],
-      "compoundStatements": [],
+      "compoundStatements": [
+        {
+          "key": "ㄱ",
+          "sourceText": "Price(가격)",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㄴ",
+          "sourceText": "Product(제품)",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㄷ",
+          "sourceText": "Place(유통경로)",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㄹ",
+          "sourceText": "Positioning(차별화)",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㅁ",
+          "sourceText": "Promotion(판매촉진)",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㅂ",
+          "sourceText": "Partnership(동반자관계)",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        }
+      ],
       "traps": [],
       "sourceRefs": [
         {
@@ -514,7 +822,36 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-8",
@@ -526,7 +863,11 @@
         4
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_correct",
+        "visual_original_check"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -587,7 +928,65 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "estate.land.market",
+          "word": "주택시장",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "estate.land.demand",
+          "word": "수요곡선",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "estate.land.supply",
+          "word": "공급곡선",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "estate.supply-demand.simultaneous",
+          "word": "수요와 공급",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-9",
@@ -599,7 +998,10 @@
         1
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "calculation_or_numeric"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -660,7 +1062,51 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "estate.elasticity.demand",
+          "word": "수요의 가격탄력성",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "estate.land.demand",
+          "word": "수요량",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-10",
@@ -672,7 +1118,11 @@
         3
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "calculation_or_numeric",
+        "visual_original_check"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -733,7 +1183,58 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "estate.land.demand",
+          "word": "수요곡선",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "estate.land.supply",
+          "word": "공급곡선",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "estate.finance",
+          "word": "대출",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-11",
@@ -745,7 +1246,10 @@
         2
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "compound_statements"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -806,7 +1310,51 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "estate.land.demand",
+          "word": "수요량",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "estate.land.supply",
+          "word": "공급량",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-12",
@@ -818,7 +1366,9 @@
         1
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -879,7 +1429,44 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "estate.land.supply",
+          "word": "공급량",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-13",
@@ -891,7 +1478,9 @@
         5
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -952,7 +1541,44 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "estate.development",
+          "word": "정비사업",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-14",
@@ -964,7 +1590,10 @@
         4
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "calculation_or_numeric"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -1025,7 +1654,44 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "estate.location",
+          "word": "상권",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-15",
@@ -1037,7 +1703,10 @@
         2
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_incorrect"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -1098,7 +1767,36 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Question seeks the incorrect statement"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-16",
@@ -1110,7 +1808,10 @@
         3
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "visual_original_check"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -1171,7 +1872,44 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "estate.rent",
+          "word": "지대",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-17",
@@ -1183,7 +1921,10 @@
         3
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "calculation_or_numeric"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -1244,7 +1985,44 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "estate.investment.npv",
+          "word": "현재가치",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-18",
@@ -1256,7 +2034,10 @@
         1
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_incorrect"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -1317,7 +2098,44 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "estate.market.efficiency",
+          "word": "부동산정책",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Question seeks the incorrect statement"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-19",
@@ -1329,7 +2147,12 @@
         5
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_correct",
+        "calculation_or_numeric",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -1390,7 +2213,36 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-20",
@@ -1402,7 +2254,9 @@
         5
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -1463,7 +2317,51 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "estate.market.efficiency",
+          "word": "부동산정책",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "estate.finance",
+          "word": "원리금",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-21",
@@ -1475,7 +2373,11 @@
         4
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_incorrect",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -1536,7 +2438,36 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Question seeks the incorrect statement"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-22",
@@ -1548,7 +2479,11 @@
         1
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_correct",
+        "compound_statements"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -1584,7 +2519,32 @@
           "sourceChecked": false
         }
       ],
-      "compoundStatements": [],
+      "compoundStatements": [
+        {
+          "key": "ㄱ",
+          "sourceText": "양도소득세의 중과는 부동산 보유자로 하여금 매각을 앞당기게 하는 동결효과(lock-in effect)를 발생시킬 수 있다.",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㄴ",
+          "sourceText": "재산세와 종합부동산세의 과세기준일은 매년 6월 1일로 동일하다.",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㄷ",
+          "sourceText": "취득세와 상속세는 취득단계에서 부과하는 지방세이다.",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㄹ",
+          "sourceText": "증여세와 양도소득세는 처분단계에서 부과하는 국세이다.",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        }
+      ],
       "traps": [],
       "sourceRefs": [
         {
@@ -1609,7 +2569,44 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "estate.tax",
+          "word": "조세",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-23",
@@ -1621,7 +2618,11 @@
         4
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "compound_statements",
+        "calculation_or_numeric"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -1682,7 +2683,58 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "estate.investment.cashflow",
+          "word": "현금흐름",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "estate.tax",
+          "word": "재산세",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "estate.finance",
+          "word": "대출",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-24",
@@ -1694,7 +2746,11 @@
         3
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_incorrect",
+        "calculation_or_numeric"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -1755,7 +2811,36 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Question seeks the incorrect statement"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-25",
@@ -1767,7 +2852,10 @@
         5
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_incorrect"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -1828,7 +2916,51 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "estate.investment.cashflow",
+          "word": "현금흐름",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "estate.investment.npv",
+          "word": "현재가치",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Question seeks the incorrect statement"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-26",
@@ -1840,7 +2972,9 @@
         4
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -1901,7 +3035,44 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "estate.tax",
+          "word": "조세",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-27",
@@ -1913,7 +3084,11 @@
         3
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_incorrect",
+        "calculation_or_numeric"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -1974,7 +3149,58 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "estate.investment.cap-rate",
+          "word": "환원율",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "estate.land.market",
+          "word": "부동산시장",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "estate.investment.cashflow",
+          "word": "순영업소득",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Question seeks the incorrect statement"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-28",
@@ -1986,7 +3212,10 @@
         2
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "calculation_or_numeric"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -2047,7 +3276,36 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-29",
@@ -2059,7 +3317,10 @@
         3
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "calculation_or_numeric"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -2120,7 +3381,44 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "estate.finance",
+          "word": "저당",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-30",
@@ -2132,7 +3430,9 @@
         2
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -2193,7 +3493,36 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-31",
@@ -2205,7 +3534,12 @@
         4
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_correct",
+        "compound_statements",
+        "calculation_or_numeric"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -2241,7 +3575,32 @@
           "sourceChecked": false
         }
       ],
-      "compoundStatements": [],
+      "compoundStatements": [
+        {
+          "key": "ㄱ",
+          "sourceText": "만기일시상환대출은 대출기간 동안 차입자가 원금만 상환하기 때문에 원리금상환구조가 간단하다.",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㄴ",
+          "sourceText": "체증식분할상환대출은 대출기간 초기에는 원리금상환액을 적게 하고 시간의 경과에 따라 늘려가는 방식이다.",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㄷ",
+          "sourceText": "원리금균등분할상환대출이나 원금균등분할상환대출에서 거치기간이 있을 경우, 이자지급총액이 증가하므로 원리금지급총액도 증가하게 된다.",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㄹ",
+          "sourceText": "대출채권의 가중평균상환기간(duration)은 원금균등분할상환대출에 비해 원리금균등분할상환대출이 더 길다.",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        }
+      ],
       "traps": [],
       "sourceRefs": [
         {
@@ -2266,7 +3625,51 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "estate.land.economic",
+          "word": "분할",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "estate.finance",
+          "word": "대출",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-32",
@@ -2278,7 +3681,10 @@
         2
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_correct"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -2339,7 +3745,44 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "estate.finance",
+          "word": "저당",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-33",
@@ -2351,7 +3794,11 @@
         3
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "compound_statements",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -2387,7 +3834,32 @@
           "sourceChecked": false
         }
       ],
-      "compoundStatements": [],
+      "compoundStatements": [
+        {
+          "key": "ㄱ",
+          "sourceText": "감정평가사로서 해당 분야에 3년을 종사한 사람",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㄴ",
+          "sourceText": "공인중개사로서 해당 분야에 5년을 종사한 사람",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㄷ",
+          "sourceText": "부동산투자회사에서 3년을 근무한 사람",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㄹ",
+          "sourceText": "부동산학 석사학위 소지자로서 부동산의 투자·운용과 관련된 업무에 3년을 종사한 사람",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        }
+      ],
       "traps": [],
       "sourceRefs": [
         {
@@ -2412,7 +3884,36 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-34",
@@ -2424,7 +3925,10 @@
         5
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_correct"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -2485,7 +3989,51 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "estate.finance",
+          "word": "저당",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "estate.investment.cashflow",
+          "word": "현금흐름",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-35",
@@ -2497,7 +4045,11 @@
         1
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_incorrect",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -2558,7 +4110,36 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Question seeks the incorrect statement"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-36",
@@ -2570,7 +4151,10 @@
         1
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "calculation_or_numeric"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -2631,7 +4215,44 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "estate.investment.cap-rate",
+          "word": "환원율",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-37",
@@ -2643,7 +4264,10 @@
         2
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "calculation_or_numeric"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -2704,7 +4328,44 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "estate.appraisal.comparison",
+          "word": "거래사례비교법",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-38",
@@ -2716,7 +4377,10 @@
         3
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_incorrect"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -2777,7 +4441,36 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Question seeks the incorrect statement"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-39",
@@ -2789,7 +4482,11 @@
         5
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_incorrect",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -2850,7 +4547,51 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "estate.land.market",
+          "word": "주택시장",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "estate.land.economic",
+          "word": "분할",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Question seeks the incorrect statement"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-40",
@@ -2862,7 +4603,12 @@
         1
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_correct",
+        "compound_statements",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -2898,7 +4644,32 @@
           "sourceChecked": false
         }
       ],
-      "compoundStatements": [],
+      "compoundStatements": [
+        {
+          "key": "ㄱ",
+          "sourceText": "건물의 주된 감정평가방법은 원가법이다.",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㄴ",
+          "sourceText": "「집합건물의 소유 및 관리에 관한 법률」에 따른 구분소유권의 대상이 되는 건물부분과 그 대지사용권을 일괄하여 감정평가하는 경우의 주된 감정평가방법은 거래사례비교법이다.",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㄷ",
+          "sourceText": "자동차와 선박의 주된 감정평가방법은 거래사례비교법이다. 다만, 본래 용도의 효용가치가 없는 물건은 해체처분가액으로 감정평가할 수 있다.",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㄹ",
+          "sourceText": "영업권과 특허권의 주된 감정평가방법은 수익분석법이다.",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        }
+      ],
       "traps": [],
       "sourceRefs": [
         {
@@ -2923,7 +4694,44 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "estate.appraisal.comparison",
+          "word": "거래사례비교법",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-41",
@@ -2935,7 +4743,10 @@
         3
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -2996,7 +4807,58 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "civil.general.juristic-act",
+          "word": "법률행위",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.real.mortgage",
+          "word": "저당권",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.contract.sale",
+          "word": "매매",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-42",
@@ -3008,7 +4870,11 @@
         5
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_incorrect",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -3069,7 +4935,65 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "civil.real.rights",
+          "word": "소유권",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.real.registration",
+          "word": "등기",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.general.expression",
+          "word": "허위표시",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.general.nullification",
+          "word": "무효",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Question seeks the incorrect statement"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-43",
@@ -3081,7 +5005,12 @@
         3
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_correct",
+        "compound_statements",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -3117,7 +5046,26 @@
           "sourceChecked": false
         }
       ],
-      "compoundStatements": [],
+      "compoundStatements": [
+        {
+          "key": "ㄱ",
+          "sourceText": "착오로 인한 의사표시의 취소는 선의의 제3자에게 대항하지 못한다.",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㄴ",
+          "sourceText": "의사표시의 상대방이 의사표시자의 착오를 알고 이용한 경우, 착오가 중대한 과실로 인한 것이라도 의사표시자는 의사표시를 취소할 수 있다.",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㄷ",
+          "sourceText": "X토지를 계약의 목적물로 삼은 당사자가 모두 지번에 착오를 일으켜 계약서에 목적물을 Y토지로 표시한 경우, 착오를 이유로 의사표시를 취소할 수 있다.",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        }
+      ],
       "traps": [],
       "sourceRefs": [
         {
@@ -3142,7 +5090,51 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "civil.general.expression",
+          "word": "의사표시",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.general.nullification",
+          "word": "취소",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-44",
@@ -3154,7 +5146,12 @@
         3
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_correct",
+        "compound_statements",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -3190,7 +5187,26 @@
           "sourceChecked": false
         }
       ],
-      "compoundStatements": [],
+      "compoundStatements": [
+        {
+          "key": "ㄱ",
+          "sourceText": "아파트 분양자가 아파트단지 인근에 대규모 공동묘지가 조성된 사실을 알면서 수분양자에게 고지하지 않은 경우, 이는 기망행위에 해당한다.",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㄴ",
+          "sourceText": "교환계약의 당사자가 목적물의 시가를 묵비한 것은 원칙적으로 기망행위에 해당한다.",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㄷ",
+          "sourceText": "'제3자의 강박'에 의한 의사표시에서 상대방의 대리인은 제3자에 포함되지 않는다.",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        }
+      ],
       "traps": [],
       "sourceRefs": [
         {
@@ -3215,7 +5231,51 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "civil.general.expression",
+          "word": "의사표시",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.general.agent",
+          "word": "대리인",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-45",
@@ -3227,7 +5287,12 @@
         2
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_correct",
+        "compound_statements",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -3263,7 +5328,26 @@
           "sourceChecked": false
         }
       ],
-      "compoundStatements": [],
+      "compoundStatements": [
+        {
+          "key": "ㄱ",
+          "sourceText": "취소권은 추인할 수 있는 날로부터 10년이 경과하더라도 행사할 수 있다.",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㄴ",
+          "sourceText": "강박에 의한 의사표시를 한 자는 강박상태를 벗어나기 전에도 이를 취소할 수 있다.",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㄷ",
+          "sourceText": "취소할 수 있는 법률행위의 상대방이 확정되었더라도 상대방이 그 법률행위로부터 취득한 권리를 제3자에게 양도하였다면 취소의 의사표시는 그 제3자에게 해야 한다.",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        }
+      ],
       "traps": [],
       "sourceRefs": [
         {
@@ -3288,7 +5372,58 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "civil.general.juristic-act",
+          "word": "법률행위",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.general.expression",
+          "word": "의사표시",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.general.nullification",
+          "word": "취소",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-46",
@@ -3300,7 +5435,11 @@
         5
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_correct",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -3361,7 +5500,65 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "civil.general.expression",
+          "word": "의사표시",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.real.registration",
+          "word": "등기",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.contract.formation",
+          "word": "청약",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.contract.cancellation",
+          "word": "해지",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-47",
@@ -3373,7 +5570,11 @@
         5
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_correct",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -3434,7 +5635,58 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "civil.general.agent",
+          "word": "무권대리",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.general.expression",
+          "word": "의사표시",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.general.nullification",
+          "word": "추인",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-48",
@@ -3446,7 +5698,12 @@
         1
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_correct",
+        "compound_statements",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -3482,7 +5739,26 @@
           "sourceChecked": false
         }
       ],
-      "compoundStatements": [],
+      "compoundStatements": [
+        {
+          "key": "ㄱ",
+          "sourceText": "乙은 원칙적으로 복대리인을 선임할 수 있다.",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㄴ",
+          "sourceText": "乙은 특별한 사정이 없는 한 계약을 해제할 권한이 없다.",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㄷ",
+          "sourceText": "乙이 丙에게 甲의 위임장을 제시하고 계약을 체결하면서 계약서상 매도인을 乙로 기재한 경우, 특별한 사정이 없는 한 甲에게 그 계약의 효력이 미치지 않는다.",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        }
+      ],
       "traps": [],
       "sourceRefs": [
         {
@@ -3507,7 +5783,58 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "civil.general.agent",
+          "word": "대리권",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.contract.cancellation",
+          "word": "해제",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.contract.sale",
+          "word": "매매",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-49",
@@ -3519,7 +5846,11 @@
         1
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_incorrect",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -3580,7 +5911,51 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "civil.general.juristic-act",
+          "word": "법률행위",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.general.nullification",
+          "word": "취소",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Question seeks the incorrect statement"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-50",
@@ -3592,7 +5967,11 @@
         2
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_incorrect",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -3653,7 +6032,58 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "civil.general.juristic-act",
+          "word": "법률행위",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.general.conditions",
+          "word": "조건부",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.general.nullification",
+          "word": "무효",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Question seeks the incorrect statement"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-51",
@@ -3665,7 +6095,11 @@
         4
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_correct",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -3726,7 +6160,51 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "civil.real.rights",
+          "word": "물권",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.real.mortgage",
+          "word": "저당권",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-52",
@@ -3738,7 +6216,11 @@
         3
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "compound_statements",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -3774,7 +6256,32 @@
           "sourceChecked": false
         }
       ],
-      "compoundStatements": [],
+      "compoundStatements": [
+        {
+          "key": "ㄱ",
+          "sourceText": "매매",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㄴ",
+          "sourceText": "건물신축",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㄷ",
+          "sourceText": "점유시효취득",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㄹ",
+          "sourceText": "공유물의 현물분할판결",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        }
+      ],
       "traps": [],
       "sourceRefs": [
         {
@@ -3799,7 +6306,65 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "civil.real.rights",
+          "word": "물권",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.real.registration",
+          "word": "등기",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.real.possession",
+          "word": "점유",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.contract.sale",
+          "word": "매매",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-53",
@@ -3811,7 +6376,11 @@
         5
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_incorrect",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -3872,7 +6441,51 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "civil.real.possession",
+          "word": "점유",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.general.expression",
+          "word": "사기",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Question seeks the incorrect statement"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-54",
@@ -3884,7 +6497,11 @@
         2
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_correct",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -3945,7 +6562,58 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "civil.real.registration",
+          "word": "등기",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.real.possession",
+          "word": "점유",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.real.rights",
+          "word": "소유권",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-55",
@@ -3957,7 +6625,11 @@
         4
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_incorrect",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -4018,7 +6690,65 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "civil.general.limitation",
+          "word": "취득시효",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.real.acquisitive",
+          "word": "취득시효",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.real.possession",
+          "word": "점유",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.contract.lease",
+          "word": "차임",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Question seeks the incorrect statement"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-56",
@@ -4030,7 +6760,12 @@
         5
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_correct",
+        "compound_statements",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -4066,7 +6801,32 @@
           "sourceChecked": false
         }
       ],
-      "compoundStatements": [],
+      "compoundStatements": [
+        {
+          "key": "ㄱ",
+          "sourceText": "재판상 분할에서 분할을 원하는 공유자의 지분만큼은 현물분할하고, 분할을 원하지 않는 공유자는 계속 공유로 남게 할 수 있다.",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㄴ",
+          "sourceText": "토지의 협의분할은 등기를 마치면 그 등기가 접수된 때 물권변동의 효력이 있다.",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㄷ",
+          "sourceText": "공유자는 다른 공유자가 분할로 인하여 취득한 물건에 대하여 그 지분의 비율로 매도인과 동일한 담보책임이 있다.",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㄹ",
+          "sourceText": "공유자 사이에 이미 분할협의가 성립하였는데 일부 공유자가 분할에 따른 이전등기에 협조하지 않은 경우, 공유물분할소송을 제기할 수 없다.",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        }
+      ],
       "traps": [],
       "sourceRefs": [
         {
@@ -4091,7 +6851,58 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "civil.contract.sale",
+          "word": "매도인",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.real.rights",
+          "word": "물권",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.real.registration",
+          "word": "등기",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-57",
@@ -4103,7 +6914,11 @@
         1
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_incorrect",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -4164,7 +6979,44 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "civil.real.possession",
+          "word": "점유",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Question seeks the incorrect statement"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-58",
@@ -4176,7 +7028,12 @@
         2
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_correct",
+        "compound_statements",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -4212,7 +7069,26 @@
           "sourceChecked": false
         }
       ],
-      "compoundStatements": [],
+      "compoundStatements": [
+        {
+          "key": "ㄱ",
+          "sourceText": "분묘기지권은 봉분 등 외부에서 분묘의 존재를 인식할 수 있는 형태를 갖추고 등기하여야 성립한다.",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㄴ",
+          "sourceText": "토지소유자의 승낙을 얻어 분묘를 설치함으로써 분묘기지권을 취득한 경우, 설치할 당시 토지소유자와의 합의에 의하여 정한 지료지급의무의 존부나 범위의 효력은 그 토지의 승계인에게는 미치지 않는다.",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㄷ",
+          "sourceText": "자기 소유 토지에 분묘를 설치한 사람이 그 토지를 양도하면서 분묘를 이장하겠다는 특약을 하지 않음으로써 분묘기지권을 취득한 경우, 분묘기지권자는 특별한 사정이 없는 한 분묘기지권이 성립한 때부터 지료를 지급할 의무가 있다.",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        }
+      ],
       "traps": [],
       "sourceRefs": [
         {
@@ -4237,7 +7113,51 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "civil.real.registration",
+          "word": "등기",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.contract.formation",
+          "word": "승낙",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-59",
@@ -4249,7 +7169,10 @@
         2
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_incorrect"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -4310,7 +7233,51 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "civil.real.easement",
+          "word": "지역권",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.real.rights",
+          "word": "소유권",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Question seeks the incorrect statement"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-60",
@@ -4322,7 +7289,10 @@
         1
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_incorrect"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -4383,7 +7353,44 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "civil.real.registration",
+          "word": "등기",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Question seeks the incorrect statement"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-61",
@@ -4395,7 +7402,11 @@
         4
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_incorrect",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -4456,7 +7467,58 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "civil.real.mortgage",
+          "word": "피담보채권",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.general.limitation",
+          "word": "소멸시효",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.special.commercial",
+          "word": "권리금",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Question seeks the incorrect statement"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-62",
@@ -4468,7 +7530,12 @@
         4
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_correct",
+        "compound_statements",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -4504,7 +7571,26 @@
           "sourceChecked": false
         }
       ],
-      "compoundStatements": [],
+      "compoundStatements": [
+        {
+          "key": "ㄱ",
+          "sourceText": "토지에 관한 저당권설정 당시 해당 토지에 일시사용을 위한 가설건축물이 존재하였던 경우, 법정지상권은 성립하지 않는다.",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㄴ",
+          "sourceText": "토지에 관한 저당권설정 당시 존재하였던 건물이 무허가건물인 경우, 법정지상권은 성립하지 않는다.",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㄷ",
+          "sourceText": "지상건물이 없는 토지에 저당권을 설정받으면서 저당권자가 신축 개시 전에 건축을 동의한 경우, 법정지상권은 성립하지 않는다.",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        }
+      ],
       "traps": [],
       "sourceRefs": [
         {
@@ -4529,7 +7615,44 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "civil.real.mortgage",
+          "word": "저당권",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-63",
@@ -4541,7 +7664,10 @@
         2
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "calculation_or_numeric"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -4602,7 +7728,51 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "civil.general.limitation",
+          "word": "소멸시효",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.real.mortgage",
+          "word": "저당권",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-64",
@@ -4614,7 +7784,12 @@
         3
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_correct",
+        "compound_statements",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -4650,7 +7825,26 @@
           "sourceChecked": false
         }
       ],
-      "compoundStatements": [],
+      "compoundStatements": [
+        {
+          "key": "ㄱ",
+          "sourceText": "채무자가 아닌 제3자도 근저당권을 설정할 수 있다.",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㄴ",
+          "sourceText": "피담보채무 확정 전에는 채무자를 변경할 수 있다.",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㄷ",
+          "sourceText": "근저당권에 의해 담보될 채권최고액에 채무의 이자는 포함되지 않는다.",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        }
+      ],
       "traps": [],
       "sourceRefs": [
         {
@@ -4675,7 +7869,44 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "civil.real.mortgage",
+          "word": "저당권",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-65",
@@ -4687,7 +7918,11 @@
         5
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_correct",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -4748,7 +7983,51 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "civil.contract.lease",
+          "word": "임대차",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.contract.sale",
+          "word": "매매",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-66",
@@ -4760,7 +8039,11 @@
         5
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_incorrect",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -4821,7 +8104,51 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "civil.contract.formation",
+          "word": "계약의 성립",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.general.expression",
+          "word": "의사표시",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Question seeks the incorrect statement"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-67",
@@ -4837,7 +8164,13 @@
         5
       ],
       "specialAnswer": "allAccepted",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_correct",
+        "compound_statements",
+        "legal_temporal_review",
+        "all_accepted"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -4873,7 +8206,26 @@
           "sourceChecked": false
         }
       ],
-      "compoundStatements": [],
+      "compoundStatements": [
+        {
+          "key": "ㄱ",
+          "sourceText": "계약이 의사의 불합치로 성립하지 않는다는 사실을 알지 못하여 손해를 입은 당사자는 계약체결 당시 그 계약이 불성립될 수 있다는 것을 안 상대방에게 계약체결상의 과실책임을 물을 수 있다.",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㄴ",
+          "sourceText": "부동산 수량지정 매매에서 실제면적이 계약면적에 미달하는 경우, 그 부분의 원시적 불능을 이유로 계약체결상의 과실책임을 물을 수 없다.",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㄷ",
+          "sourceText": "계약체결 전에 이미 매매목적물이 전부 멸실된 사실을 알지 못하여 손해를 입은 계약당사자는 계약체결 당시 그 사실을 안 상대방에게 계약체결상의 과실책임을 물을 수 있다.",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        }
+      ],
       "traps": [],
       "sourceRefs": [
         {
@@ -4898,7 +8250,44 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": "채점 인정과 선지의 참거짓은 별도 검증 필요"
+      "notes": "채점 인정과 선지의 참거짓은 별도 검증 필요",
+      "candidateConcepts": [
+        {
+          "conceptId": "civil.contract.sale",
+          "word": "매매",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-68",
@@ -4910,7 +8299,11 @@
         5
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_incorrect",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -4971,7 +8364,58 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "civil.real.rights",
+          "word": "소유권",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.general.nullification",
+          "word": "무효",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.real.registration",
+          "word": "등기",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Question seeks the incorrect statement"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-69",
@@ -4983,7 +8427,12 @@
         1
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_correct",
+        "compound_statements",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -5019,7 +8468,26 @@
           "sourceChecked": false
         }
       ],
-      "compoundStatements": [],
+      "compoundStatements": [
+        {
+          "key": "ㄱ",
+          "sourceText": "甲은 乙에게 잔대금의 지급을 청구할 수 있다.",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㄴ",
+          "sourceText": "乙은 甲에게 계약금의 반환을 청구할 수 있다.",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        },
+        {
+          "key": "ㄷ",
+          "sourceText": "만약 乙의 수령지체 중에 甲과 乙의 귀책사유 없이 X건물이 멸실된 경우, 乙은 甲에게 계약금의 반환을 청구할 수 있다.",
+          "factVerdict": "unreviewed",
+          "sourceChecked": false
+        }
+      ],
       "traps": [],
       "sourceRefs": [
         {
@@ -5044,7 +8512,44 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "civil.contract.formation",
+          "word": "계약금",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-70",
@@ -5056,7 +8561,11 @@
         5
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_correct",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -5117,7 +8626,65 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "civil.general.expression",
+          "word": "의사표시",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.contract.sale",
+          "word": "매매",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.general.nullification",
+          "word": "무효",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.contract.cancellation",
+          "word": "해제",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-71",
@@ -5129,7 +8696,10 @@
         1
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -5190,7 +8760,79 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "civil.contract.sale",
+          "word": "매도인",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.contract.cancellation",
+          "word": "해제",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.special.residential",
+          "word": "주택임대차보호법",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.real.rights",
+          "word": "소유권",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.real.mortgage",
+          "word": "저당권",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.real.provisional",
+          "word": "가등기",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-72",
@@ -5202,7 +8844,11 @@
         4
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_incorrect",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -5263,7 +8909,79 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "civil.contract.formation",
+          "word": "계약금",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.contract.performance",
+          "word": "채무불이행",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.real.rights",
+          "word": "소유권",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.general.expression",
+          "word": "착오",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.general.nullification",
+          "word": "취소",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.real.registration",
+          "word": "등기",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Question seeks the incorrect statement"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-73",
@@ -5275,7 +8993,11 @@
         3
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_correct",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -5336,7 +9058,65 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "civil.contract.lease",
+          "word": "임차인",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.real.rights",
+          "word": "소유권",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.real.mortgage",
+          "word": "저당권",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.contract.cancellation",
+          "word": "해지",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-74",
@@ -5348,7 +9128,12 @@
         3
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_incorrect",
+        "calculation_or_numeric",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -5409,7 +9194,65 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "civil.real.rights",
+          "word": "소유권",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.real.possession",
+          "word": "점유",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.contract.sale",
+          "word": "매매",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.contract.lease",
+          "word": "차임",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Question seeks the incorrect statement"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-75",
@@ -5421,7 +9264,10 @@
         3
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -5482,7 +9328,58 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "civil.special.residential",
+          "word": "주택임대차보호법",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.contract.lease",
+          "word": "임대차",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.contract.cancellation",
+          "word": "해지",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-76",
@@ -5494,7 +9391,11 @@
         1
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_incorrect",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -5555,7 +9456,36 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Question seeks the incorrect statement"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-77",
@@ -5567,7 +9497,12 @@
         1
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_incorrect",
+        "calculation_or_numeric",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -5628,7 +9563,72 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "civil.real.mortgage",
+          "word": "저당권",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.real.provisional",
+          "word": "가등기",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.real.registration",
+          "word": "등기",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.real.rights",
+          "word": "소유권",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.general.nullification",
+          "word": "무효",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Question seeks the incorrect statement"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-78",
@@ -5640,7 +9640,11 @@
         1
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_correct",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -5701,7 +9705,79 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "civil.real.rights",
+          "word": "소유권",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.real.registration",
+          "word": "등기",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.contract.performance",
+          "word": "손해배상",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.general.nullification",
+          "word": "무효",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.contract.cancellation",
+          "word": "해지",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.contract.sale",
+          "word": "매매",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-79",
@@ -5713,7 +9789,11 @@
         2
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "calculation_or_numeric",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -5774,7 +9854,44 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "civil.contract.lease",
+          "word": "임대차",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     },
     {
       "questionId": "2024-80",
@@ -5786,7 +9903,12 @@
         4
       ],
       "specialAnswer": "normal",
-      "questionType": [],
+      "questionType": [
+        "multiple_choice",
+        "select_correct",
+        "calculation_or_numeric",
+        "legal_temporal_review"
+      ],
       "conceptIds": [],
       "summaryEasy": "",
       "answerReason": "",
@@ -5847,7 +9969,65 @@
         "reviewedAt": null,
         "reviewHoldReason": null
       },
-      "notes": ""
+      "notes": "",
+      "candidateConcepts": [
+        {
+          "conceptId": "civil.special.commercial",
+          "word": "상가건물임대차보호법",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.contract.lease",
+          "word": "임대차",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.real.possession",
+          "word": "점유",
+          "matchSection": "question",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        },
+        {
+          "conceptId": "civil.contract.performance",
+          "word": "채무불이행",
+          "matchSection": "options",
+          "matchType": "keyword_candidate",
+          "reviewed": false
+        }
+      ],
+      "analysisChecklist": [
+        {
+          "step": "official_source",
+          "verified": true,
+          "scope": "answer_key_only"
+        },
+        {
+          "step": "stem_polarity",
+          "verified": false,
+          "need": "Check what the stem asks"
+        },
+        {
+          "step": "option_truth_values",
+          "verified": false,
+          "need": "Assess five statements individually; scoring does not establish their literal truth"
+        },
+        {
+          "step": "temporal_legal_basis",
+          "verified": false,
+          "need": "Separate examination-year rule from current legal status"
+        },
+        {
+          "step": "study_hook",
+          "verified": false,
+          "need": "Build contrasting condition and active-recall prompt"
+        }
+      ],
+      "explanationSeedProvenance": null
     }
   ]
 }

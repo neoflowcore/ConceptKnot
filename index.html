@@ -111,6 +111,7 @@ body{font-family:Pretendard,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;bac
 <link rel="stylesheet" href="./assets/ck-pen-scope-v59.css">
 <link rel="stylesheet" href="./assets/ck-typing-precision-v62.css?v=76">
 <link rel="stylesheet" href="./assets/ck-study-p6-v76.css?v=76">
+<link rel="stylesheet" href="./assets/ck-study-p4-v78.css?v=78">
 <link rel="stylesheet" href="./assets/ck-board-compact-v63.css?v=63">
 <link rel="stylesheet" href="./assets/ck-note-context-v64.css?v=64">
 <link rel="stylesheet" href="./assets/ck-board-stability-v65.css?v=65">
@@ -1385,6 +1386,18 @@ window.CK76Voice=Object.freeze({
 
 
 /* P6 safe search navigation: uses existing exam state and render lifecycle. */
+/* P4: reuse original study notes and persist with the existing backup format. */
+window.CK78Study=Object.freeze({
+ getNote:id=>String(state.notes?.['exam-'+id]||''),
+ saveNote:(id,value)=>{
+  const q=window.RECALL_OFFICIAL?.[id];
+  if(!q?.verified)return false;
+  if(!state.notes||typeof state.notes!=='object')state.notes={};
+  state.notes['exam-'+id]=String(value||'').slice(0,6000);
+  return save();
+ }
+});
+
 window.CK76Study=Object.freeze({
  openQuestion:(year,number,subjectKey)=>{
   year=Number(year);number=Number(number);
@@ -3525,6 +3538,7 @@ render();setInterval(timerTick,500);
 <script src="./assets/ck-experience-v9.js" defer></script>
 <script src="./assets/ck-study-extensions-v10.js?v=59" defer></script>
 <script src="./assets/ck-study-p6-v76.js?v=76" defer></script>
+<script src="./assets/ck-study-p4-v78.js?v=78" defer></script>
 <script src="./assets/ck-experience-v14.js" defer></script>
 <script src="./assets/ck-pdf-workspace-v15.js?v=60" defer></script>
 <script src="./assets/ck-layout-v16.js" defer></script>

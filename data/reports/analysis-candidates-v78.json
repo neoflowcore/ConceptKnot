@@ -1,0 +1,234 @@
+{
+  "schemaVersion": "1.1.0",
+  "generatedAt": "2026-11-01",
+  "basis": "official question stems and literal answer choices",
+  "policy": "Candidate matches are NOT verified exam-topic frequencies or legal explanations.",
+  "questions": 400,
+  "withCandidateMatches": 332,
+  "parsedCompoundStatements": 339,
+  "seedOptionReasonDrafts": 20,
+  "detectedKinds": {
+    "multiple_choice": 400,
+    "select_incorrect": 155,
+    "legal_temporal_review": 216,
+    "select_correct": 137,
+    "compound_statements": 104,
+    "visual_original_check": 14,
+    "calculation_or_numeric": 67,
+    "all_accepted": 5,
+    "multiple_accepted": 2
+  },
+  "perConceptCandidates": [
+    {
+      "id": "estate.land.physical",
+      "candidates": 6,
+      "verified": 0
+    },
+    {
+      "id": "estate.land.economic",
+      "candidates": 10,
+      "verified": 0
+    },
+    {
+      "id": "estate.land.market",
+      "candidates": 19,
+      "verified": 0
+    },
+    {
+      "id": "estate.land.demand",
+      "candidates": 25,
+      "verified": 0
+    },
+    {
+      "id": "estate.land.supply",
+      "candidates": 20,
+      "verified": 0
+    },
+    {
+      "id": "estate.supply-demand.simultaneous",
+      "candidates": 10,
+      "verified": 0
+    },
+    {
+      "id": "estate.demand.horizontal-sum",
+      "candidates": 3,
+      "verified": 0
+    },
+    {
+      "id": "estate.elasticity.demand",
+      "candidates": 9,
+      "verified": 0
+    },
+    {
+      "id": "estate.price-ceiling.shortage",
+      "candidates": 1,
+      "verified": 0
+    },
+    {
+      "id": "estate.market.efficiency",
+      "candidates": 7,
+      "verified": 0
+    },
+    {
+      "id": "estate.location",
+      "candidates": 11,
+      "verified": 0
+    },
+    {
+      "id": "estate.rent",
+      "candidates": 7,
+      "verified": 0
+    },
+    {
+      "id": "estate.development",
+      "candidates": 4,
+      "verified": 0
+    },
+    {
+      "id": "estate.investment.cashflow",
+      "candidates": 16,
+      "verified": 0
+    },
+    {
+      "id": "estate.investment.npv",
+      "candidates": 13,
+      "verified": 0
+    },
+    {
+      "id": "estate.investment.cap-rate",
+      "candidates": 6,
+      "verified": 0
+    },
+    {
+      "id": "estate.finance",
+      "candidates": 32,
+      "verified": 0
+    },
+    {
+      "id": "estate.tax",
+      "candidates": 12,
+      "verified": 0
+    },
+    {
+      "id": "estate.appraisal.comparison",
+      "candidates": 13,
+      "verified": 0
+    },
+    {
+      "id": "estate.appraisal.income",
+      "candidates": 3,
+      "verified": 0
+    },
+    {
+      "id": "civil.general.juristic-act",
+      "candidates": 29,
+      "verified": 0
+    },
+    {
+      "id": "civil.general.expression",
+      "candidates": 34,
+      "verified": 0
+    },
+    {
+      "id": "civil.general.agent",
+      "candidates": 23,
+      "verified": 0
+    },
+    {
+      "id": "civil.general.nullification",
+      "candidates": 56,
+      "verified": 0
+    },
+    {
+      "id": "civil.general.conditions",
+      "candidates": 6,
+      "verified": 0
+    },
+    {
+      "id": "civil.general.limitation",
+      "candidates": 17,
+      "verified": 0
+    },
+    {
+      "id": "civil.real.rights",
+      "candidates": 73,
+      "verified": 0
+    },
+    {
+      "id": "civil.real.registration",
+      "candidates": 61,
+      "verified": 0
+    },
+    {
+      "id": "civil.real.possession",
+      "candidates": 36,
+      "verified": 0
+    },
+    {
+      "id": "civil.real.acquisitive",
+      "candidates": 14,
+      "verified": 0
+    },
+    {
+      "id": "civil.real.easement",
+      "candidates": 6,
+      "verified": 0
+    },
+    {
+      "id": "civil.real.mortgage",
+      "candidates": 37,
+      "verified": 0
+    },
+    {
+      "id": "civil.real.provisional",
+      "candidates": 7,
+      "verified": 0
+    },
+    {
+      "id": "civil.contract.formation",
+      "candidates": 23,
+      "verified": 0
+    },
+    {
+      "id": "civil.contract.performance",
+      "candidates": 30,
+      "verified": 0
+    },
+    {
+      "id": "civil.contract.cancellation",
+      "candidates": 41,
+      "verified": 0
+    },
+    {
+      "id": "civil.contract.sale",
+      "candidates": 61,
+      "verified": 0
+    },
+    {
+      "id": "civil.contract.lease",
+      "candidates": 36,
+      "verified": 0
+    },
+    {
+      "id": "civil.special.residential",
+      "candidates": 14,
+      "verified": 0
+    },
+    {
+      "id": "civil.special.commercial",
+      "candidates": 7,
+      "verified": 0
+    }
+  ],
+  "reviewStages": {
+    "unstarted": 396,
+    "draft": 4,
+    "source_checked": 0,
+    "reason_checked": 0,
+    "legal_checked": 0,
+    "published": 0
+  },
+  "requiredOptionVerdicts": 2000,
+  "verifiedOptionVerdicts": 0,
+  "answersUnmodified": true
+}
