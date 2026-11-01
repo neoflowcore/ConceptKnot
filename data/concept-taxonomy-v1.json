@@ -1,0 +1,367 @@
+{
+  "schemaVersion": "1.0.0",
+  "taxonomyStatus": "provisional",
+  "warning": "This taxonomy contains draft study categories, not verified frequency counts.",
+  "concepts": [
+    {
+      "id": "estate.land.physical",
+      "label": "토지의 자연적 특성",
+      "subject": "estate",
+      "reviewStatus": "taxonomy_candidate",
+      "aliases": [],
+      "rules": [],
+      "occurrenceVerifiedCount": 0
+    },
+    {
+      "id": "estate.land.economic",
+      "label": "토지의 인문적 특성",
+      "subject": "estate",
+      "reviewStatus": "taxonomy_candidate",
+      "aliases": [],
+      "rules": [],
+      "occurrenceVerifiedCount": 0
+    },
+    {
+      "id": "estate.land.market",
+      "label": "부동산시장",
+      "subject": "estate",
+      "reviewStatus": "taxonomy_candidate",
+      "aliases": [],
+      "rules": [],
+      "occurrenceVerifiedCount": 0
+    },
+    {
+      "id": "estate.land.demand",
+      "label": "수요 및 수요량",
+      "subject": "estate",
+      "reviewStatus": "taxonomy_candidate",
+      "aliases": [],
+      "rules": [],
+      "occurrenceVerifiedCount": 0
+    },
+    {
+      "id": "estate.land.supply",
+      "label": "공급 및 공급량",
+      "subject": "estate",
+      "reviewStatus": "taxonomy_candidate",
+      "aliases": [],
+      "rules": [],
+      "occurrenceVerifiedCount": 0
+    },
+    {
+      "id": "estate.supply-demand.simultaneous",
+      "label": "수요·공급 동시 이동",
+      "subject": "estate",
+      "reviewStatus": "taxonomy_candidate",
+      "aliases": [],
+      "rules": [],
+      "occurrenceVerifiedCount": 0
+    },
+    {
+      "id": "estate.demand.horizontal-sum",
+      "label": "시장수요의 수평 합산",
+      "subject": "estate",
+      "reviewStatus": "taxonomy_candidate",
+      "aliases": [],
+      "rules": [],
+      "occurrenceVerifiedCount": 0
+    },
+    {
+      "id": "estate.elasticity.demand",
+      "label": "수요의 가격탄력성",
+      "subject": "estate",
+      "reviewStatus": "taxonomy_candidate",
+      "aliases": [],
+      "rules": [],
+      "occurrenceVerifiedCount": 0
+    },
+    {
+      "id": "estate.price-ceiling.shortage",
+      "label": "최고가격제와 초과수요",
+      "subject": "estate",
+      "reviewStatus": "taxonomy_candidate",
+      "aliases": [],
+      "rules": [],
+      "occurrenceVerifiedCount": 0
+    },
+    {
+      "id": "estate.market.efficiency",
+      "label": "시장 효율성과 정책",
+      "subject": "estate",
+      "reviewStatus": "taxonomy_candidate",
+      "aliases": [],
+      "rules": [],
+      "occurrenceVerifiedCount": 0
+    },
+    {
+      "id": "estate.location",
+      "label": "입지론",
+      "subject": "estate",
+      "reviewStatus": "taxonomy_candidate",
+      "aliases": [],
+      "rules": [],
+      "occurrenceVerifiedCount": 0
+    },
+    {
+      "id": "estate.rent",
+      "label": "지대론",
+      "subject": "estate",
+      "reviewStatus": "taxonomy_candidate",
+      "aliases": [],
+      "rules": [],
+      "occurrenceVerifiedCount": 0
+    },
+    {
+      "id": "estate.development",
+      "label": "부동산 개발",
+      "subject": "estate",
+      "reviewStatus": "taxonomy_candidate",
+      "aliases": [],
+      "rules": [],
+      "occurrenceVerifiedCount": 0
+    },
+    {
+      "id": "estate.investment.cashflow",
+      "label": "투자 현금흐름",
+      "subject": "estate",
+      "reviewStatus": "taxonomy_candidate",
+      "aliases": [],
+      "rules": [],
+      "occurrenceVerifiedCount": 0
+    },
+    {
+      "id": "estate.investment.npv",
+      "label": "순현재가치와 내부수익률",
+      "subject": "estate",
+      "reviewStatus": "taxonomy_candidate",
+      "aliases": [],
+      "rules": [],
+      "occurrenceVerifiedCount": 0
+    },
+    {
+      "id": "estate.investment.cap-rate",
+      "label": "수익환원과 환원율",
+      "subject": "estate",
+      "reviewStatus": "taxonomy_candidate",
+      "aliases": [],
+      "rules": [],
+      "occurrenceVerifiedCount": 0
+    },
+    {
+      "id": "estate.finance",
+      "label": "부동산 금융",
+      "subject": "estate",
+      "reviewStatus": "taxonomy_candidate",
+      "aliases": [],
+      "rules": [],
+      "occurrenceVerifiedCount": 0
+    },
+    {
+      "id": "estate.tax",
+      "label": "부동산 조세",
+      "subject": "estate",
+      "reviewStatus": "taxonomy_candidate",
+      "aliases": [],
+      "rules": [],
+      "occurrenceVerifiedCount": 0
+    },
+    {
+      "id": "estate.appraisal.comparison",
+      "label": "거래사례비교법",
+      "subject": "estate",
+      "reviewStatus": "taxonomy_candidate",
+      "aliases": [],
+      "rules": [],
+      "occurrenceVerifiedCount": 0
+    },
+    {
+      "id": "estate.appraisal.income",
+      "label": "수익환원법",
+      "subject": "estate",
+      "reviewStatus": "taxonomy_candidate",
+      "aliases": [],
+      "rules": [],
+      "occurrenceVerifiedCount": 0
+    },
+    {
+      "id": "civil.general.juristic-act",
+      "label": "법률행위",
+      "subject": "civil",
+      "reviewStatus": "taxonomy_candidate",
+      "aliases": [],
+      "rules": [],
+      "occurrenceVerifiedCount": 0
+    },
+    {
+      "id": "civil.general.expression",
+      "label": "의사표시",
+      "subject": "civil",
+      "reviewStatus": "taxonomy_candidate",
+      "aliases": [],
+      "rules": [],
+      "occurrenceVerifiedCount": 0
+    },
+    {
+      "id": "civil.general.agent",
+      "label": "대리",
+      "subject": "civil",
+      "reviewStatus": "taxonomy_candidate",
+      "aliases": [],
+      "rules": [],
+      "occurrenceVerifiedCount": 0
+    },
+    {
+      "id": "civil.general.nullification",
+      "label": "무효와 취소",
+      "subject": "civil",
+      "reviewStatus": "taxonomy_candidate",
+      "aliases": [],
+      "rules": [],
+      "occurrenceVerifiedCount": 0
+    },
+    {
+      "id": "civil.general.conditions",
+      "label": "조건과 기한",
+      "subject": "civil",
+      "reviewStatus": "taxonomy_candidate",
+      "aliases": [],
+      "rules": [],
+      "occurrenceVerifiedCount": 0
+    },
+    {
+      "id": "civil.general.limitation",
+      "label": "소멸시효",
+      "subject": "civil",
+      "reviewStatus": "taxonomy_candidate",
+      "aliases": [],
+      "rules": [],
+      "occurrenceVerifiedCount": 0
+    },
+    {
+      "id": "civil.real.rights",
+      "label": "물권의 종류와 효력",
+      "subject": "civil",
+      "reviewStatus": "taxonomy_candidate",
+      "aliases": [],
+      "rules": [],
+      "occurrenceVerifiedCount": 0
+    },
+    {
+      "id": "civil.real.registration",
+      "label": "물권변동과 등기",
+      "subject": "civil",
+      "reviewStatus": "taxonomy_candidate",
+      "aliases": [],
+      "rules": [],
+      "occurrenceVerifiedCount": 0
+    },
+    {
+      "id": "civil.real.possession",
+      "label": "점유권",
+      "subject": "civil",
+      "reviewStatus": "taxonomy_candidate",
+      "aliases": [],
+      "rules": [],
+      "occurrenceVerifiedCount": 0
+    },
+    {
+      "id": "civil.real.acquisitive",
+      "label": "취득시효",
+      "subject": "civil",
+      "reviewStatus": "taxonomy_candidate",
+      "aliases": [],
+      "rules": [],
+      "occurrenceVerifiedCount": 0
+    },
+    {
+      "id": "civil.real.easement",
+      "label": "지역권",
+      "subject": "civil",
+      "reviewStatus": "taxonomy_candidate",
+      "aliases": [],
+      "rules": [],
+      "occurrenceVerifiedCount": 0
+    },
+    {
+      "id": "civil.real.mortgage",
+      "label": "저당권",
+      "subject": "civil",
+      "reviewStatus": "taxonomy_candidate",
+      "aliases": [],
+      "rules": [],
+      "occurrenceVerifiedCount": 0
+    },
+    {
+      "id": "civil.real.provisional",
+      "label": "가등기",
+      "subject": "civil",
+      "reviewStatus": "taxonomy_candidate",
+      "aliases": [],
+      "rules": [],
+      "occurrenceVerifiedCount": 0
+    },
+    {
+      "id": "civil.contract.formation",
+      "label": "계약의 성립",
+      "subject": "civil",
+      "reviewStatus": "taxonomy_candidate",
+      "aliases": [],
+      "rules": [],
+      "occurrenceVerifiedCount": 0
+    },
+    {
+      "id": "civil.contract.performance",
+      "label": "채무불이행",
+      "subject": "civil",
+      "reviewStatus": "taxonomy_candidate",
+      "aliases": [],
+      "rules": [],
+      "occurrenceVerifiedCount": 0
+    },
+    {
+      "id": "civil.contract.cancellation",
+      "label": "계약 해제와 해지",
+      "subject": "civil",
+      "reviewStatus": "taxonomy_candidate",
+      "aliases": [],
+      "rules": [],
+      "occurrenceVerifiedCount": 0
+    },
+    {
+      "id": "civil.contract.sale",
+      "label": "매매",
+      "subject": "civil",
+      "reviewStatus": "taxonomy_candidate",
+      "aliases": [],
+      "rules": [],
+      "occurrenceVerifiedCount": 0
+    },
+    {
+      "id": "civil.contract.lease",
+      "label": "임대차",
+      "subject": "civil",
+      "reviewStatus": "taxonomy_candidate",
+      "aliases": [],
+      "rules": [],
+      "occurrenceVerifiedCount": 0
+    },
+    {
+      "id": "civil.special.residential",
+      "label": "주택임대차보호법",
+      "subject": "civil",
+      "reviewStatus": "taxonomy_candidate",
+      "aliases": [],
+      "rules": [],
+      "occurrenceVerifiedCount": 0
+    },
+    {
+      "id": "civil.special.commercial",
+      "label": "상가건물임대차보호법",
+      "subject": "civil",
+      "reviewStatus": "taxonomy_candidate",
+      "aliases": [],
+      "rules": [],
+      "occurrenceVerifiedCount": 0
+    }
+  ]
+}

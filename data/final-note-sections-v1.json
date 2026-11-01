@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "1.0.0",
+  "policy": "user-editable-final-note-is-never-overwritten",
+  "pages": [
+    {
+      "page": 1,
+      "title": "시험 전 60분 · 공통 핵심과 OMR",
+      "sections": [
+        "time-strategy",
+        "common-reviewed-concepts",
+        "personal-mistake-top"
+      ]
+    },
+    {
+      "page": 2,
+      "title": "부동산학개론 · 반복 출제 개념",
+      "sections": [
+        "estate-reviewed-frequent",
+        "estate-confusable"
+      ]
+    },
+    {
+      "page": 3,
+      "title": "부동산학개론 · 계산과 차트",
+      "sections": [
+        "estate-reviewed-formulas",
+        "estate-reviewed-chart-traps"
+      ]
+    },
+    {
+      "page": 4,
+      "title": "민법 · 원칙 / 요건 / 효과 / 예외",
+      "sections": [
+        "civil-reviewed-rules",
+        "civil-legal-asof"
+      ]
+    },
+    {
+      "page": 5,
+      "title": "민법 · 특별법과 개인 오답",
+      "sections": [
+        "civil-reviewed-exceptions",
+        "local-personal-mistakes"
+      ]
+    }
+  ],
+  "emptyState": "검수된 콘텐츠가 없으면 공란 유지; 임의로 법령·적중률을 생성하지 않음",
+  "outputProfiles": [
+    1,
+    3,
+    5
+  ]
+}

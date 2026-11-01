@@ -1,0 +1,5853 @@
+{
+  "schemaVersion": "1.0.0",
+  "year": 2024,
+  "studySubject": "real-estate-agent-first-exam",
+  "originalAnswersProtected": true,
+  "reviewPolicy": "Unreviewed content must never be displayed as verified explanation.",
+  "records": [
+    {
+      "questionId": "2024-1",
+      "examYear": 2024,
+      "number": 1,
+      "subject": "estate",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        4
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-2",
+      "examYear": 2024,
+      "number": 2,
+      "subject": "estate",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        2
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-3",
+      "examYear": 2024,
+      "number": 3,
+      "subject": "estate",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        4
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-4",
+      "examYear": 2024,
+      "number": 4,
+      "subject": "estate",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        1
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-5",
+      "examYear": 2024,
+      "number": 5,
+      "subject": "estate",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        5
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-6",
+      "examYear": 2024,
+      "number": 6,
+      "subject": "estate",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        5
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-7",
+      "examYear": 2024,
+      "number": 7,
+      "subject": "estate",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        2
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-8",
+      "examYear": 2024,
+      "number": 8,
+      "subject": "estate",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        4
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-9",
+      "examYear": 2024,
+      "number": 9,
+      "subject": "estate",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        1
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-10",
+      "examYear": 2024,
+      "number": 10,
+      "subject": "estate",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        3
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-11",
+      "examYear": 2024,
+      "number": 11,
+      "subject": "estate",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        2
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-12",
+      "examYear": 2024,
+      "number": 12,
+      "subject": "estate",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        1
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-13",
+      "examYear": 2024,
+      "number": 13,
+      "subject": "estate",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        5
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-14",
+      "examYear": 2024,
+      "number": 14,
+      "subject": "estate",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        4
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-15",
+      "examYear": 2024,
+      "number": 15,
+      "subject": "estate",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        2
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-16",
+      "examYear": 2024,
+      "number": 16,
+      "subject": "estate",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        3
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-17",
+      "examYear": 2024,
+      "number": 17,
+      "subject": "estate",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        3
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-18",
+      "examYear": 2024,
+      "number": 18,
+      "subject": "estate",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        1
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-19",
+      "examYear": 2024,
+      "number": 19,
+      "subject": "estate",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        5
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-20",
+      "examYear": 2024,
+      "number": 20,
+      "subject": "estate",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        5
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-21",
+      "examYear": 2024,
+      "number": 21,
+      "subject": "estate",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        4
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-22",
+      "examYear": 2024,
+      "number": 22,
+      "subject": "estate",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        1
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-23",
+      "examYear": 2024,
+      "number": 23,
+      "subject": "estate",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        4
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-24",
+      "examYear": 2024,
+      "number": 24,
+      "subject": "estate",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        3
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-25",
+      "examYear": 2024,
+      "number": 25,
+      "subject": "estate",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        5
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-26",
+      "examYear": 2024,
+      "number": 26,
+      "subject": "estate",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        4
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-27",
+      "examYear": 2024,
+      "number": 27,
+      "subject": "estate",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        3
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-28",
+      "examYear": 2024,
+      "number": 28,
+      "subject": "estate",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        2
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-29",
+      "examYear": 2024,
+      "number": 29,
+      "subject": "estate",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        3
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-30",
+      "examYear": 2024,
+      "number": 30,
+      "subject": "estate",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        2
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-31",
+      "examYear": 2024,
+      "number": 31,
+      "subject": "estate",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        4
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-32",
+      "examYear": 2024,
+      "number": 32,
+      "subject": "estate",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        2
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-33",
+      "examYear": 2024,
+      "number": 33,
+      "subject": "estate",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        3
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-34",
+      "examYear": 2024,
+      "number": 34,
+      "subject": "estate",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        5
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-35",
+      "examYear": 2024,
+      "number": 35,
+      "subject": "estate",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        1
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-36",
+      "examYear": 2024,
+      "number": 36,
+      "subject": "estate",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        1
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-37",
+      "examYear": 2024,
+      "number": 37,
+      "subject": "estate",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        2
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-38",
+      "examYear": 2024,
+      "number": 38,
+      "subject": "estate",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        3
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-39",
+      "examYear": 2024,
+      "number": 39,
+      "subject": "estate",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        5
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-40",
+      "examYear": 2024,
+      "number": 40,
+      "subject": "estate",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        1
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-41",
+      "examYear": 2024,
+      "number": 41,
+      "subject": "civil",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        3
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-42",
+      "examYear": 2024,
+      "number": 42,
+      "subject": "civil",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        5
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-43",
+      "examYear": 2024,
+      "number": 43,
+      "subject": "civil",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        3
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-44",
+      "examYear": 2024,
+      "number": 44,
+      "subject": "civil",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        3
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-45",
+      "examYear": 2024,
+      "number": 45,
+      "subject": "civil",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        2
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-46",
+      "examYear": 2024,
+      "number": 46,
+      "subject": "civil",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        5
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-47",
+      "examYear": 2024,
+      "number": 47,
+      "subject": "civil",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        5
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-48",
+      "examYear": 2024,
+      "number": 48,
+      "subject": "civil",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        1
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-49",
+      "examYear": 2024,
+      "number": 49,
+      "subject": "civil",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        1
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-50",
+      "examYear": 2024,
+      "number": 50,
+      "subject": "civil",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        2
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-51",
+      "examYear": 2024,
+      "number": 51,
+      "subject": "civil",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        4
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-52",
+      "examYear": 2024,
+      "number": 52,
+      "subject": "civil",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        3
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-53",
+      "examYear": 2024,
+      "number": 53,
+      "subject": "civil",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        5
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-54",
+      "examYear": 2024,
+      "number": 54,
+      "subject": "civil",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        2
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-55",
+      "examYear": 2024,
+      "number": 55,
+      "subject": "civil",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        4
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-56",
+      "examYear": 2024,
+      "number": 56,
+      "subject": "civil",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        5
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-57",
+      "examYear": 2024,
+      "number": 57,
+      "subject": "civil",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        1
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-58",
+      "examYear": 2024,
+      "number": 58,
+      "subject": "civil",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        2
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-59",
+      "examYear": 2024,
+      "number": 59,
+      "subject": "civil",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        2
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-60",
+      "examYear": 2024,
+      "number": 60,
+      "subject": "civil",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        1
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-61",
+      "examYear": 2024,
+      "number": 61,
+      "subject": "civil",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        4
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-62",
+      "examYear": 2024,
+      "number": 62,
+      "subject": "civil",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        4
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-63",
+      "examYear": 2024,
+      "number": 63,
+      "subject": "civil",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        2
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-64",
+      "examYear": 2024,
+      "number": 64,
+      "subject": "civil",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        3
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-65",
+      "examYear": 2024,
+      "number": 65,
+      "subject": "civil",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        5
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-66",
+      "examYear": 2024,
+      "number": 66,
+      "subject": "civil",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        5
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-67",
+      "examYear": 2024,
+      "number": 67,
+      "subject": "civil",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "specialAnswer": "allAccepted",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": "채점 인정과 선지의 참거짓은 별도 검증 필요"
+    },
+    {
+      "questionId": "2024-68",
+      "examYear": 2024,
+      "number": 68,
+      "subject": "civil",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        5
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-69",
+      "examYear": 2024,
+      "number": 69,
+      "subject": "civil",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        1
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-70",
+      "examYear": 2024,
+      "number": 70,
+      "subject": "civil",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        5
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-71",
+      "examYear": 2024,
+      "number": 71,
+      "subject": "civil",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        1
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-72",
+      "examYear": 2024,
+      "number": 72,
+      "subject": "civil",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        4
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-73",
+      "examYear": 2024,
+      "number": 73,
+      "subject": "civil",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        3
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-74",
+      "examYear": 2024,
+      "number": 74,
+      "subject": "civil",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        3
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-75",
+      "examYear": 2024,
+      "number": 75,
+      "subject": "civil",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        3
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-76",
+      "examYear": 2024,
+      "number": 76,
+      "subject": "civil",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        1
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-77",
+      "examYear": 2024,
+      "number": 77,
+      "subject": "civil",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        1
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-78",
+      "examYear": 2024,
+      "number": 78,
+      "subject": "civil",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        1
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-79",
+      "examYear": 2024,
+      "number": 79,
+      "subject": "civil",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        2
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    },
+    {
+      "questionId": "2024-80",
+      "examYear": 2024,
+      "number": 80,
+      "subject": "civil",
+      "examAsOf": "2024",
+      "officialAnswer": [
+        4
+      ],
+      "specialAnswer": "normal",
+      "questionType": [],
+      "conceptIds": [],
+      "summaryEasy": "",
+      "answerReason": "",
+      "options": [
+        {
+          "no": 1,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 2,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 3,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 4,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        },
+        {
+          "no": 5,
+          "verdict": "unreviewed",
+          "why": "",
+          "sourceChecked": false
+        }
+      ],
+      "compoundStatements": [],
+      "traps": [],
+      "sourceRefs": [
+        {
+          "type": "officialNotice",
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "verified": true
+        },
+        {
+          "type": "paperMirror",
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+          "verified": false
+        }
+      ],
+      "quality": {
+        "status": "unstarted",
+        "answerKeyChecked": true,
+        "reasonReviewed": false,
+        "optionVerdictsReviewed": 0,
+        "sourceChecked": false,
+        "currentLawCheckedAt": null,
+        "reviewedBy": null,
+        "reviewedAt": null,
+        "reviewHoldReason": null
+      },
+      "notes": ""
+    }
+  ]
+}

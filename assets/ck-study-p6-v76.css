@@ -1,0 +1,23 @@
+/* P6: compact, theme-respecting local search; no homepage art replacement. */
+#ck76-search{margin:8px 0 12px;padding:9px 12px;border:1px solid rgba(130,148,143,.23);border-radius:12px;background:rgba(115,123,111,.08);color:inherit}
+#ck76-search .ck76-search-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+#ck76-search button,.ck76-final-tools button{border:1px solid rgba(120,144,138,.4);border-radius:8px;background:rgba(130,149,133,.09);color:inherit;padding:6px 10px}
+#ck76-search .ck76-search-panel[hidden]{display:none}
+#ck76-search .ck76-search-panel{padding-top:12px}
+#ck76-search .ck76-search-row{display:flex;flex-wrap:wrap;gap:7px;margin-top:6px}
+#ck76-search :is(input,select),.ck76-final-tools select{color:inherit;background:transparent;border:1px solid rgba(115,148,140,.45);padding:8px;border-radius:7px;min-width:0}
+#ck76-search input{flex:1 1 220px}
+#ck76-search select{flex:0 1 112px}
+#ck76-search .ck76-search-status{font-size:12px;opacity:.8;margin:8px 0}
+#ck76-search .ck76-search-results{max-height:350px;overflow-y:auto;overscroll-behavior:contain}
+#ck76-search .ck76-result{display:flex;align-items:center;gap:10px;justify-content:space-between;border-top:1px solid rgba(140,155,148,.22);padding:8px 2px}
+#ck76-search .ck76-result p{margin:2px 0;white-space:pre-wrap;max-height:4.7em;overflow:hidden}
+#ck76-search .ck76-result small{opacity:.75}
+#ck76-search .ck76-result button{flex:none}
+.ck76-final-tools{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:10px 0}
+.ck76-final-tools p{flex-basis:100%;font-size:12px;opacity:.85;margin:0}
+.ck76-chart-control{border-top:1px solid rgba(110,143,135,.25);padding:12px 0;margin-top:12px}
+.ck76-chart-control label{display:flex;justify-content:space-between;gap:8px;font-weight:600}
+.ck76-chart-control input{width:100%;accent-color:#6e9b8e;touch-action:pan-y}
+.ck76-chart-control p{font-size:11px;opacity:.75}
+@media(max-width:540px){#ck76-search{margin:4px 0 9px}#ck76-search .ck76-result{align-items:start;flex-direction:column}#ck76-search .ck76-search-row{gap:5px}}

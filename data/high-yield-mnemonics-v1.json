@@ -1,0 +1,406 @@
+{
+  "schemaVersion": "1.0.0",
+  "status": "not_reviewed",
+  "cards": [
+    {
+      "conceptId": "estate.land.physical",
+      "label": "토지의 자연적 특성",
+      "mnemonic": "",
+      "conditions": [],
+      "exceptions": [],
+      "sourceQuestionIds": [],
+      "verified": false,
+      "reviewStatus": "unstarted"
+    },
+    {
+      "conceptId": "estate.land.economic",
+      "label": "토지의 인문적 특성",
+      "mnemonic": "",
+      "conditions": [],
+      "exceptions": [],
+      "sourceQuestionIds": [],
+      "verified": false,
+      "reviewStatus": "unstarted"
+    },
+    {
+      "conceptId": "estate.land.market",
+      "label": "부동산시장",
+      "mnemonic": "",
+      "conditions": [],
+      "exceptions": [],
+      "sourceQuestionIds": [],
+      "verified": false,
+      "reviewStatus": "unstarted"
+    },
+    {
+      "conceptId": "estate.land.demand",
+      "label": "수요 및 수요량",
+      "mnemonic": "",
+      "conditions": [],
+      "exceptions": [],
+      "sourceQuestionIds": [],
+      "verified": false,
+      "reviewStatus": "unstarted"
+    },
+    {
+      "conceptId": "estate.land.supply",
+      "label": "공급 및 공급량",
+      "mnemonic": "",
+      "conditions": [],
+      "exceptions": [],
+      "sourceQuestionIds": [],
+      "verified": false,
+      "reviewStatus": "unstarted"
+    },
+    {
+      "conceptId": "estate.supply-demand.simultaneous",
+      "label": "수요·공급 동시 이동",
+      "mnemonic": "",
+      "conditions": [],
+      "exceptions": [],
+      "sourceQuestionIds": [],
+      "verified": false,
+      "reviewStatus": "unstarted"
+    },
+    {
+      "conceptId": "estate.demand.horizontal-sum",
+      "label": "시장수요의 수평 합산",
+      "mnemonic": "",
+      "conditions": [],
+      "exceptions": [],
+      "sourceQuestionIds": [],
+      "verified": false,
+      "reviewStatus": "unstarted"
+    },
+    {
+      "conceptId": "estate.elasticity.demand",
+      "label": "수요의 가격탄력성",
+      "mnemonic": "",
+      "conditions": [],
+      "exceptions": [],
+      "sourceQuestionIds": [],
+      "verified": false,
+      "reviewStatus": "unstarted"
+    },
+    {
+      "conceptId": "estate.price-ceiling.shortage",
+      "label": "최고가격제와 초과수요",
+      "mnemonic": "",
+      "conditions": [],
+      "exceptions": [],
+      "sourceQuestionIds": [],
+      "verified": false,
+      "reviewStatus": "unstarted"
+    },
+    {
+      "conceptId": "estate.market.efficiency",
+      "label": "시장 효율성과 정책",
+      "mnemonic": "",
+      "conditions": [],
+      "exceptions": [],
+      "sourceQuestionIds": [],
+      "verified": false,
+      "reviewStatus": "unstarted"
+    },
+    {
+      "conceptId": "estate.location",
+      "label": "입지론",
+      "mnemonic": "",
+      "conditions": [],
+      "exceptions": [],
+      "sourceQuestionIds": [],
+      "verified": false,
+      "reviewStatus": "unstarted"
+    },
+    {
+      "conceptId": "estate.rent",
+      "label": "지대론",
+      "mnemonic": "",
+      "conditions": [],
+      "exceptions": [],
+      "sourceQuestionIds": [],
+      "verified": false,
+      "reviewStatus": "unstarted"
+    },
+    {
+      "conceptId": "estate.development",
+      "label": "부동산 개발",
+      "mnemonic": "",
+      "conditions": [],
+      "exceptions": [],
+      "sourceQuestionIds": [],
+      "verified": false,
+      "reviewStatus": "unstarted"
+    },
+    {
+      "conceptId": "estate.investment.cashflow",
+      "label": "투자 현금흐름",
+      "mnemonic": "",
+      "conditions": [],
+      "exceptions": [],
+      "sourceQuestionIds": [],
+      "verified": false,
+      "reviewStatus": "unstarted"
+    },
+    {
+      "conceptId": "estate.investment.npv",
+      "label": "순현재가치와 내부수익률",
+      "mnemonic": "",
+      "conditions": [],
+      "exceptions": [],
+      "sourceQuestionIds": [],
+      "verified": false,
+      "reviewStatus": "unstarted"
+    },
+    {
+      "conceptId": "estate.investment.cap-rate",
+      "label": "수익환원과 환원율",
+      "mnemonic": "",
+      "conditions": [],
+      "exceptions": [],
+      "sourceQuestionIds": [],
+      "verified": false,
+      "reviewStatus": "unstarted"
+    },
+    {
+      "conceptId": "estate.finance",
+      "label": "부동산 금융",
+      "mnemonic": "",
+      "conditions": [],
+      "exceptions": [],
+      "sourceQuestionIds": [],
+      "verified": false,
+      "reviewStatus": "unstarted"
+    },
+    {
+      "conceptId": "estate.tax",
+      "label": "부동산 조세",
+      "mnemonic": "",
+      "conditions": [],
+      "exceptions": [],
+      "sourceQuestionIds": [],
+      "verified": false,
+      "reviewStatus": "unstarted"
+    },
+    {
+      "conceptId": "estate.appraisal.comparison",
+      "label": "거래사례비교법",
+      "mnemonic": "",
+      "conditions": [],
+      "exceptions": [],
+      "sourceQuestionIds": [],
+      "verified": false,
+      "reviewStatus": "unstarted"
+    },
+    {
+      "conceptId": "estate.appraisal.income",
+      "label": "수익환원법",
+      "mnemonic": "",
+      "conditions": [],
+      "exceptions": [],
+      "sourceQuestionIds": [],
+      "verified": false,
+      "reviewStatus": "unstarted"
+    },
+    {
+      "conceptId": "civil.general.juristic-act",
+      "label": "법률행위",
+      "mnemonic": "",
+      "conditions": [],
+      "exceptions": [],
+      "sourceQuestionIds": [],
+      "verified": false,
+      "reviewStatus": "unstarted"
+    },
+    {
+      "conceptId": "civil.general.expression",
+      "label": "의사표시",
+      "mnemonic": "",
+      "conditions": [],
+      "exceptions": [],
+      "sourceQuestionIds": [],
+      "verified": false,
+      "reviewStatus": "unstarted"
+    },
+    {
+      "conceptId": "civil.general.agent",
+      "label": "대리",
+      "mnemonic": "",
+      "conditions": [],
+      "exceptions": [],
+      "sourceQuestionIds": [],
+      "verified": false,
+      "reviewStatus": "unstarted"
+    },
+    {
+      "conceptId": "civil.general.nullification",
+      "label": "무효와 취소",
+      "mnemonic": "",
+      "conditions": [],
+      "exceptions": [],
+      "sourceQuestionIds": [],
+      "verified": false,
+      "reviewStatus": "unstarted"
+    },
+    {
+      "conceptId": "civil.general.conditions",
+      "label": "조건과 기한",
+      "mnemonic": "",
+      "conditions": [],
+      "exceptions": [],
+      "sourceQuestionIds": [],
+      "verified": false,
+      "reviewStatus": "unstarted"
+    },
+    {
+      "conceptId": "civil.general.limitation",
+      "label": "소멸시효",
+      "mnemonic": "",
+      "conditions": [],
+      "exceptions": [],
+      "sourceQuestionIds": [],
+      "verified": false,
+      "reviewStatus": "unstarted"
+    },
+    {
+      "conceptId": "civil.real.rights",
+      "label": "물권의 종류와 효력",
+      "mnemonic": "",
+      "conditions": [],
+      "exceptions": [],
+      "sourceQuestionIds": [],
+      "verified": false,
+      "reviewStatus": "unstarted"
+    },
+    {
+      "conceptId": "civil.real.registration",
+      "label": "물권변동과 등기",
+      "mnemonic": "",
+      "conditions": [],
+      "exceptions": [],
+      "sourceQuestionIds": [],
+      "verified": false,
+      "reviewStatus": "unstarted"
+    },
+    {
+      "conceptId": "civil.real.possession",
+      "label": "점유권",
+      "mnemonic": "",
+      "conditions": [],
+      "exceptions": [],
+      "sourceQuestionIds": [],
+      "verified": false,
+      "reviewStatus": "unstarted"
+    },
+    {
+      "conceptId": "civil.real.acquisitive",
+      "label": "취득시효",
+      "mnemonic": "",
+      "conditions": [],
+      "exceptions": [],
+      "sourceQuestionIds": [],
+      "verified": false,
+      "reviewStatus": "unstarted"
+    },
+    {
+      "conceptId": "civil.real.easement",
+      "label": "지역권",
+      "mnemonic": "",
+      "conditions": [],
+      "exceptions": [],
+      "sourceQuestionIds": [],
+      "verified": false,
+      "reviewStatus": "unstarted"
+    },
+    {
+      "conceptId": "civil.real.mortgage",
+      "label": "저당권",
+      "mnemonic": "",
+      "conditions": [],
+      "exceptions": [],
+      "sourceQuestionIds": [],
+      "verified": false,
+      "reviewStatus": "unstarted"
+    },
+    {
+      "conceptId": "civil.real.provisional",
+      "label": "가등기",
+      "mnemonic": "",
+      "conditions": [],
+      "exceptions": [],
+      "sourceQuestionIds": [],
+      "verified": false,
+      "reviewStatus": "unstarted"
+    },
+    {
+      "conceptId": "civil.contract.formation",
+      "label": "계약의 성립",
+      "mnemonic": "",
+      "conditions": [],
+      "exceptions": [],
+      "sourceQuestionIds": [],
+      "verified": false,
+      "reviewStatus": "unstarted"
+    },
+    {
+      "conceptId": "civil.contract.performance",
+      "label": "채무불이행",
+      "mnemonic": "",
+      "conditions": [],
+      "exceptions": [],
+      "sourceQuestionIds": [],
+      "verified": false,
+      "reviewStatus": "unstarted"
+    },
+    {
+      "conceptId": "civil.contract.cancellation",
+      "label": "계약 해제와 해지",
+      "mnemonic": "",
+      "conditions": [],
+      "exceptions": [],
+      "sourceQuestionIds": [],
+      "verified": false,
+      "reviewStatus": "unstarted"
+    },
+    {
+      "conceptId": "civil.contract.sale",
+      "label": "매매",
+      "mnemonic": "",
+      "conditions": [],
+      "exceptions": [],
+      "sourceQuestionIds": [],
+      "verified": false,
+      "reviewStatus": "unstarted"
+    },
+    {
+      "conceptId": "civil.contract.lease",
+      "label": "임대차",
+      "mnemonic": "",
+      "conditions": [],
+      "exceptions": [],
+      "sourceQuestionIds": [],
+      "verified": false,
+      "reviewStatus": "unstarted"
+    },
+    {
+      "conceptId": "civil.special.residential",
+      "label": "주택임대차보호법",
+      "mnemonic": "",
+      "conditions": [],
+      "exceptions": [],
+      "sourceQuestionIds": [],
+      "verified": false,
+      "reviewStatus": "unstarted"
+    },
+    {
+      "conceptId": "civil.special.commercial",
+      "label": "상가건물임대차보호법",
+      "mnemonic": "",
+      "conditions": [],
+      "exceptions": [],
+      "sourceQuestionIds": [],
+      "verified": false,
+      "reviewStatus": "unstarted"
+    }
+  ]
+}
