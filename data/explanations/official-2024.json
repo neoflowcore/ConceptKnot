@@ -1000,17 +1000,19 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "calculation_or_numeric"
+        "calculation_or_numeric",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "자체가격 상승에 따른 감소율과 대체재 가격 상승에 따른 증가율을 더합니다.",
+      "answerReason": "소형아파트 자체 가격 2% 상승의 효과는 −0.9×2%=−1.8%입니다. 대체재 오피스텔 가격 5% 상승의 효과는 +0.5×5%=+2.5%이므로 총 변화율은 +0.7%, 선택지 ①입니다.",
       "options": [
         {
           "no": 1,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 최종정답 인정 번호입니다. 선택 근거 초안: 소형아파트 자체 가격 2% 상승의 효과는 −0.9×2%=−1.8%입니다. 대체재 오피스텔 가격 5% 상승의 효과는 +0.5×5%=+2.5%이므로 총 변화율은 +0.7%, 선택지 ①입니다."
         },
         {
           "no": 2,
@@ -1038,7 +1040,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "자체가격탄력성은 음의 수요 방향을, 교차탄력성은 대체재의 양의 방향을 따로 표시하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -1052,7 +1059,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -1106,7 +1113,8 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": null,
+      "draftProvenance": "2026-11-01, manually reasoned from registered question facts, pending official question-paper & explanation review"
     },
     {
       "questionId": "2024-10",
@@ -1248,11 +1256,12 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "compound_statements"
+        "compound_statements",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "수요함수가 변하기 전후에 각각 수요=공급을 풀어 균형을 비교합니다.",
+      "answerReason": "기존 900−P=100+P/4에서 P=640, Q=260입니다. 변경 후 1500−1.5P=100+P/4에서 P=800, Q=300입니다. 가격은 160 상승하고 거래량은 40 증가하므로 선택지 ②입니다.",
       "options": [
         {
           "no": 1,
@@ -1264,7 +1273,8 @@
           "no": 2,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 최종정답 인정 번호입니다. 선택 근거 초안: 기존 900−P=100+P/4에서 P=640, Q=260입니다. 변경 후 1500−1.5P=100+P/4에서 P=800, Q=300입니다. 가격은 160 상승하고 거래량은 40 증가하므로 선택지 ②입니다."
         },
         {
           "no": 3,
@@ -1286,7 +1296,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "기울기 변경이 포함된 수요함수는 절편만 비교하면 안 됩니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -1300,7 +1315,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -1354,7 +1369,8 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": null,
+      "draftProvenance": "2026-11-01, manually reasoned from registered question facts, pending official question-paper & explanation review"
     },
     {
       "questionId": "2024-12",
@@ -1367,17 +1383,19 @@
       ],
       "specialAnswer": "normal",
       "questionType": [
-        "multiple_choice"
+        "multiple_choice",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "주택재고는 특정 시점에 보유한 주택의 총수입니다.",
+      "answerReason": "저량은 기준 시점의 양이고 유량은 일정 기간 발생량입니다. 주택재고는 저량, 소득·거래량·임대료 수입·신규주택 공급량은 기간의 유량으로 분류하므로 선택지 ①이 맞습니다.",
       "options": [
         {
           "no": 1,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 최종정답 인정 번호입니다. 선택 근거 초안: 저량은 기준 시점의 양이고 유량은 일정 기간 발생량입니다. 주택재고는 저량, 소득·거래량·임대료 수입·신규주택 공급량은 기간의 유량으로 분류하므로 선택지 ①이 맞습니다."
         },
         {
           "no": 2,
@@ -1405,7 +1423,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "연간 공급량과 특정 시점에 존재하는 전체 재고량을 구별하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -1419,7 +1442,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -1466,7 +1489,8 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": null,
+      "draftProvenance": "2026-11-01, manually reasoned from registered question facts, pending official question-paper & explanation review"
     },
     {
       "questionId": "2024-13",
@@ -1592,11 +1616,12 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "calculation_or_numeric"
+        "calculation_or_numeric",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "컨버스 분기점은 두 도시의 상대 인구와 거리로 상권 경계를 추정합니다.",
+      "answerReason": "A시로부터의 분기점 거리=도시 간 거리/(1+√(B시 인구/A시 인구))입니다. 45/(1+√(21/84))=45/(1+0.5)=30km이므로 선택지 ④입니다.",
       "options": [
         {
           "no": 1,
@@ -1620,7 +1645,8 @@
           "no": 4,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 최종정답 인정 번호입니다. 선택 근거 초안: A시로부터의 분기점 거리=도시 간 거리/(1+√(B시 인구/A시 인구))입니다. 45/(1+√(21/84))=45/(1+0.5)=30km이므로 선택지 ④입니다."
         },
         {
           "no": 5,
@@ -1630,7 +1656,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "A시 인구가 B시보다 크므로 경계는 A시에서 더 멀고 B시에 가까워집니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -1644,7 +1675,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -1691,7 +1722,8 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": null,
+      "draftProvenance": "2026-11-01, manually reasoned from registered question facts, pending official question-paper & explanation review"
     },
     {
       "questionId": "2024-15",
@@ -2255,11 +2287,12 @@
       ],
       "specialAnswer": "normal",
       "questionType": [
-        "multiple_choice"
+        "multiple_choice",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "DSR은 금융부채 원리금 상환부담을 제한하는 금융 규제입니다.",
+      "answerReason": "DSR 강화는 차입자의 소득 대비 채무상환 부담을 기준으로 대출한도를 제약하는 정책이므로 금융규제에 해당합니다. 선택지 ⑤와 부합합니다.",
       "options": [
         {
           "no": 1,
@@ -2289,11 +2322,17 @@
           "no": 5,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 최종정답 인정 번호입니다. 선택 근거 초안: DSR 강화는 차입자의 소득 대비 채무상환 부담을 기준으로 대출한도를 제약하는 정책이므로 금융규제에 해당합니다. 선택지 ⑤와 부합합니다."
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "지역 지정·거래 허가·분양가 제한과 대출 총상환 규제를 구별하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -2307,7 +2346,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -2361,7 +2400,8 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": null,
+      "draftProvenance": "2026-11-01, manually reasoned from registered question facts, pending official question-paper & explanation review"
     },
     {
       "questionId": "2024-21",
@@ -2621,11 +2661,12 @@
       "questionType": [
         "multiple_choice",
         "compound_statements",
-        "calculation_or_numeric"
+        "calculation_or_numeric",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "순소득승수와 세전현금흐름승수는 서로 다른 분자와 분모를 사용합니다.",
+      "answerReason": "유효총소득=7000−500+100=6600만원, 운영경비=200+100+100+200=600만원, NOI=6000만원입니다. 순소득승수=총투자액 60000/NOI 6000=10. 자기자본=60000×60%=36000만원, 세전현금흐름=6000−부채서비스 1500=4500만원이므로 승수=36000/4500=8. 선택지 ④입니다.",
       "options": [
         {
           "no": 1,
@@ -2649,7 +2690,8 @@
           "no": 4,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 최종정답 인정 번호입니다. 선택 근거 초안: 유효총소득=7000−500+100=6600만원, 운영경비=200+100+100+200=600만원, NOI=6000만원입니다. 순소득승수=총투자액 60000/NOI 6000=10. 자기자본=60000×60%=36000만원, 세전현금흐름=6000−부채서비스 1500=4500만원이므로 승수=36000/4500=8. 선택지 ④입니다."
         },
         {
           "no": 5,
@@ -2659,7 +2701,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "영업소득세 500만원은 세전현금흐름 계산에 빼지 않습니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -2673,7 +2720,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -2734,7 +2781,8 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": null,
+      "draftProvenance": "2026-11-01, manually reasoned from registered question facts, pending official question-paper & explanation review"
     },
     {
       "questionId": "2024-24",
@@ -2854,11 +2902,12 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "select_incorrect"
+        "select_incorrect",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "내부수익률법의 재투자율 가정과 요구수익률을 혼동하면 안 됩니다.",
+      "answerReason": "전통적 IRR 설명에서는 중간 현금흐름의 재투자율을 IRR로 가정한다고 설명합니다. 투자자의 요구수익률을 재투자율로 제시한 선택지 ⑤가 틀립니다.",
       "options": [
         {
           "no": 1,
@@ -2888,11 +2937,17 @@
           "no": 5,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 최종정답 인정 번호입니다. 선택 근거 초안: 전통적 IRR 설명에서는 중간 현금흐름의 재투자율을 IRR로 가정한다고 설명합니다. 투자자의 요구수익률을 재투자율로 제시한 선택지 ⑤가 틀립니다."
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "NPV·IRR·수익성지수는 모두 할인현금흐름을 다루지만 기준 재투자율 해석을 구별하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -2906,7 +2961,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -2960,7 +3015,8 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": null,
+      "draftProvenance": "2026-11-01, manually reasoned from registered question facts, pending official question-paper & explanation review"
     },
     {
       "questionId": "2024-26",
@@ -2973,11 +3029,12 @@
       ],
       "specialAnswer": "normal",
       "questionType": [
-        "multiple_choice"
+        "multiple_choice",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "토지단일세를 주장한 대표 경제사상가는 헨리 조지입니다.",
+      "answerReason": "헨리 조지는 토지 가치에서 발생하는 경제적 지대를 공공재원으로 활용하자는 토지세론을 제시했습니다. 토지단일세를 주장한 학자를 묻는 선택지 ④가 이에 해당합니다.",
       "options": [
         {
           "no": 1,
@@ -3001,7 +3058,8 @@
           "no": 4,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 최종정답 인정 번호입니다. 선택 근거 초안: 헨리 조지는 토지 가치에서 발생하는 경제적 지대를 공공재원으로 활용하자는 토지세론을 제시했습니다. 토지단일세를 주장한 학자를 묻는 선택지 ④가 이에 해당합니다."
         },
         {
           "no": 5,
@@ -3011,7 +3069,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "토지단일세의 학자와 도시공간·입지모형의 학자 이름을 혼동하지 마세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -3025,7 +3088,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -3072,7 +3135,8 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": null,
+      "draftProvenance": "2026-11-01, manually reasoned from registered question facts, pending official question-paper & explanation review"
     },
     {
       "questionId": "2024-27",
@@ -3087,11 +3151,12 @@
       "questionType": [
         "multiple_choice",
         "select_incorrect",
-        "calculation_or_numeric"
+        "calculation_or_numeric",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "금리와 투자위험이 높아지면 요구수익률 및 환원율도 높아질 수 있습니다.",
+      "answerReason": "자본환원율은 NOI÷부동산가격으로 구합니다. 금리 상승은 통상 요구수익률을 높여 환원율 상승 요인이 되므로 '환원율을 낮추는 요인'이라고 한 선택지 ③이 틀립니다.",
       "options": [
         {
           "no": 1,
@@ -3109,7 +3174,8 @@
           "no": 3,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 최종정답 인정 번호입니다. 선택 근거 초안: 자본환원율은 NOI÷부동산가격으로 구합니다. 금리 상승은 통상 요구수익률을 높여 환원율 상승 요인이 되므로 '환원율을 낮추는 요인'이라고 한 선택지 ③이 틀립니다."
         },
         {
           "no": 4,
@@ -3125,7 +3191,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "NOI가 같으면 환원율 상승은 자산가치 하락으로 연결됩니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -3139,7 +3210,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -3200,7 +3271,8 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": null,
+      "draftProvenance": "2026-11-01, manually reasoned from registered question facts, pending official question-paper & explanation review"
     },
     {
       "questionId": "2024-28",
@@ -3431,11 +3503,12 @@
       ],
       "specialAnswer": "normal",
       "questionType": [
-        "multiple_choice"
+        "multiple_choice",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "위탁관리는 소유와 경영을 분리하고 전문 관리회사에 맡기는 방식입니다.",
+      "answerReason": "대형 건물의 전문적·체계적 관리에 유용하지만 위탁 수수료나 용역비가 발생합니다. 제시된 조건과 일치하는 것은 선택지 ②의 위탁관리입니다.",
       "options": [
         {
           "no": 1,
@@ -3447,7 +3520,8 @@
           "no": 2,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 최종정답 인정 번호입니다. 선택 근거 초안: 대형 건물의 전문적·체계적 관리에 유용하지만 위탁 수수료나 용역비가 발생합니다. 제시된 조건과 일치하는 것은 선택지 ②의 위탁관리입니다."
         },
         {
           "no": 3,
@@ -3469,7 +3543,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "직접관리와 위탁관리의 핵심 차이는 관리주체 및 전문업체 위탁 여부입니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -3483,7 +3562,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -3522,7 +3601,8 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": null,
+      "draftProvenance": "2026-11-01, manually reasoned from registered question facts, pending official question-paper & explanation review"
     },
     {
       "questionId": "2024-31",
@@ -4153,17 +4233,19 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "calculation_or_numeric"
+        "calculation_or_numeric",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "직접환원율은 순영업소득을 부동산가치로 나누어 구합니다.",
+      "answerReason": "공실손실=5000만원×10%=500만원, 운영경비=5000만원×20%=1000만원이므로 NOI=5000−500−1000=3500만원입니다. 시산가액=5억원=50000만원이므로 환원율=3500/50000=7%, 선택지 ①입니다.",
       "options": [
         {
           "no": 1,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 최종정답 인정 번호입니다. 선택 근거 초안: 공실손실=5000만원×10%=500만원, 운영경비=5000만원×20%=1000만원이므로 NOI=5000−500−1000=3500만원입니다. 시산가액=5억원=50000만원이므로 환원율=3500/50000=7%, 선택지 ①입니다."
         },
         {
           "no": 2,
@@ -4191,7 +4273,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "운영경비가 PGI 기준 20%라는 문제 조건을 유효총소득 기준으로 바꾸지 마세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -4205,7 +4292,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -4252,7 +4339,8 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": null,
+      "draftProvenance": "2026-11-01, manually reasoned from registered question facts, pending official question-paper & explanation review"
     },
     {
       "questionId": "2024-37",

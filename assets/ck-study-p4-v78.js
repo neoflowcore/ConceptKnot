@@ -107,6 +107,7 @@ function dialogHtml(q,entry,tx,missing=false){
   '<p class="ck78-review-disclaimer">해설 작성 '+(draft?'초안':'대기')+
   ' · 선지별 진위 검수 '+(entry?.quality?.optionVerdictsReviewed||0)+'/5 · 출제 빈도 검수 전 · 현행법과 시험연도 법령 별도 확인</p>'+
   '</section>'+
+  '<section class="ck80-editor-entry"><button type="button" data-ck80-toggle aria-expanded="false">내 해설 초안 작성/수정</button><p>공식 자료와 별개로 근거를 확인하면서 작성합니다. 게시/검수 상태는 자동으로 승격되지 않습니다.</p><div data-ck80-workspace hidden></div></section>'+ 
   '<section class="ck78-notes"><label for="ck78-personal-note">내 풀이·오답 원인 메모 (기존 학습 데이터에 저장)</label>'+
   '<textarea id="ck78-personal-note" maxlength="6000" rows="3" placeholder="근거를 직접 작성하세요.">'+esc(noteText(q))+'</textarea>'+
   '<div class="ck78-note-actions"><button type="button" data-ck78-note-save>메모 저장</button>'+

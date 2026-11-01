@@ -20,12 +20,12 @@ test('official 400 explanation slots match unchanged source',()=>{
    if(r.candidateConcepts.length)candidates++;
   }
  }
- assert.equal(total,400);assert.equal(drafts,4);assert.equal(seedReasons,20);
+ assert.equal(total,400);assert.equal(drafts,32);assert.equal(seedReasons,48);
  assert.ok(compounds>0);assert.ok(candidates>300);
 });
 test('review dashboard separates candidate terms from published content',()=>{
  const r=j('data/reports/analysis-candidates-v78.json');
- assert.equal(r.reviewStages.unstarted,396);assert.equal(r.reviewStages.draft,4);
+ assert.equal(r.reviewStages.unstarted,368);assert.equal(r.reviewStages.draft,32);
  assert.equal(r.reviewStages.published,0);
  assert.equal(r.verifiedOptionVerdicts,0);
  assert.equal(r.requiredOptionVerdicts,2000);
@@ -48,7 +48,7 @@ test('P2 through P6 remain wired without automatic build',()=>{
  assert.match(html,/window\.CK78Study=Object\.freeze/);
  assert.match(html,/ck-study-p4-v78\.js\?v=78/);
  assert.match(html,/ck-study-p6-v76\.js\?v=76/);
- assert.match(read('sw.js'),/conceptknot-study-v78-p2-p6-analysis/);
+ assert.match(read('sw.js'),/conceptknot-study-v80-explain-drafts/);
  assert.equal(j('vercel.json').git.deploymentEnabled,false);
  assert.equal(fs.existsSync(path.join(dir,'.github','workflows')),false);
  for(const x of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))new vm.Script(x[1]);

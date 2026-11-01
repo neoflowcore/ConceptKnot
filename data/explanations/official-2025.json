@@ -16,17 +16,19 @@
       ],
       "specialAnswer": "normal",
       "questionType": [
-        "multiple_choice"
+        "multiple_choice",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "물리적으로 토지를 새로 만들어 공급량을 늘릴 수 없는 특성은 부증성입니다.",
+      "answerReason": "토지의 공급은 사람의 노력으로 면적 자체를 생산할 수 없다는 점에서 제한됩니다. 지대 발생·토지의 집약적 이용·최유효이용과 연결되는 설명이므로 공식 선택지 ①과 부합합니다.",
       "options": [
         {
           "no": 1,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 최종정답 인정 번호입니다. 선택 근거 초안: 토지의 공급은 사람의 노력으로 면적 자체를 생산할 수 없다는 점에서 제한됩니다. 지대 발생·토지의 집약적 이용·최유효이용과 연결되는 설명이므로 공식 선택지 ①과 부합합니다."
         },
         {
           "no": 2,
@@ -54,7 +56,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "인접성·개별성·영속성과 부증성의 의미를 구별하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -68,7 +75,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -122,7 +129,8 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": null,
+      "draftProvenance": "2026-11-01, manually reasoned from registered question facts, pending official question-paper & explanation review"
     },
     {
       "questionId": "2025-2",
@@ -484,11 +492,12 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "select_incorrect"
+        "select_incorrect",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "STP는 시장세분화·표적시장 선정·포지셔닝의 약자입니다.",
+      "answerReason": "S는 Segmentation, T는 Targeting, P는 Positioning입니다. 선택지 ④는 P를 Partnership이라고 잘못 설명해 틀린 진술에 해당합니다.",
       "options": [
         {
           "no": 1,
@@ -512,7 +521,8 @@
           "no": 4,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 최종정답 인정 번호입니다. 선택 근거 초안: S는 Segmentation, T는 Targeting, P는 Positioning입니다. 선택지 ④는 P를 Partnership이라고 잘못 설명해 틀린 진술에 해당합니다."
         },
         {
           "no": 5,
@@ -522,7 +532,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "4P(Product/Price/Place/Promotion)와 STP의 P(Positioning)를 섞지 마세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -536,7 +551,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -583,7 +598,8 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": null,
+      "draftProvenance": "2026-11-01, manually reasoned from registered question facts, pending official question-paper & explanation review"
     },
     {
       "questionId": "2025-6",
@@ -598,11 +614,12 @@
       "questionType": [
         "multiple_choice",
         "select_incorrect",
-        "visual_original_check"
+        "visual_original_check",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "대체재 가격이 오르면 원래 재화로 수요가 이동합니다.",
+      "answerReason": "대체재가 비싸지면 상대적으로 해당 부동산을 선택하려는 수요가 커지므로 그 부동산의 수요곡선은 오른쪽으로 움직입니다. 선택지 ③의 '왼쪽 이동'이 반대 방향이므로 틀립니다.",
       "options": [
         {
           "no": 1,
@@ -620,7 +637,8 @@
           "no": 3,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 최종정답 인정 번호입니다. 선택 근거 초안: 대체재가 비싸지면 상대적으로 해당 부동산을 선택하려는 수요가 커지므로 그 부동산의 수요곡선은 오른쪽으로 움직입니다. 선택지 ③의 '왼쪽 이동'이 반대 방향이므로 틀립니다."
         },
         {
           "no": 4,
@@ -636,7 +654,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "자체가격 변화는 곡선 위 이동, 대체재 가격 변화는 곡선 자체 이동입니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -650,7 +673,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -718,7 +741,8 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": null,
+      "draftProvenance": "2026-11-01, manually reasoned from registered question facts, pending official question-paper & explanation review"
     },
     {
       "questionId": "2025-7",
@@ -732,11 +756,12 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "compound_statements"
+        "compound_statements",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "저량은 시점, 유량은 기간의 측정값입니다.",
+      "answerReason": "ㄴ 연간 이자비용, ㄹ 주택거래량, ㅁ 신규주택 공급량은 기간 중 발생하는 유량입니다. ㄱ 통화량, ㄷ 자본총량, ㅂ 주택재고량은 특정 시점의 저량입니다. 이 분류가 선택지 ⑤와 일치합니다.",
       "options": [
         {
           "no": 1,
@@ -766,7 +791,8 @@
           "no": 5,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 최종정답 인정 번호입니다. 선택 근거 초안: ㄴ 연간 이자비용, ㄹ 주택거래량, ㅁ 신규주택 공급량은 기간 중 발생하는 유량입니다. ㄱ 통화량, ㄷ 자본총량, ㅂ 주택재고량은 특정 시점의 저량입니다. 이 분류가 선택지 ⑤와 일치합니다."
         }
       ],
       "compoundStatements": [
@@ -807,7 +833,12 @@
           "sourceChecked": false
         }
       ],
-      "traps": [],
+      "traps": [
+        {
+          "text": "주택 '재고량'과 '신규 공급량'은 이름이 비슷해도 시점·기간이 다릅니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -821,7 +852,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -868,7 +899,8 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": null,
+      "draftProvenance": "2026-11-01, manually reasoned from registered question facts, pending official question-paper & explanation review"
     },
     {
       "questionId": "2025-8",
@@ -882,17 +914,19 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "select_incorrect"
+        "select_incorrect",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "토지 공급은 단기간에 쉽게 늘거나 줄지 않습니다.",
+      "answerReason": "토지는 부증성·개별성, 법적 규제와 정보 비대칭 등의 이유로 수급조절이 쉽지 않습니다. '수급조절이 용이하다'는 선택지 ①이 토지시장의 특징과 반대입니다.",
       "options": [
         {
           "no": 1,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 최종정답 인정 번호입니다. 선택 근거 초안: 토지는 부증성·개별성, 법적 규제와 정보 비대칭 등의 이유로 수급조절이 쉽지 않습니다. '수급조절이 용이하다'는 선택지 ①이 토지시장의 특징과 반대입니다."
         },
         {
           "no": 2,
@@ -920,7 +954,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "일반 공산품과 달리 토지는 공급을 단기간에 맞추기 어렵습니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -934,7 +973,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -973,7 +1012,8 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": null,
+      "draftProvenance": "2026-11-01, manually reasoned from registered question facts, pending official question-paper & explanation review"
     },
     {
       "questionId": "2025-9",
@@ -1127,11 +1167,12 @@
       "questionType": [
         "multiple_choice",
         "select_correct",
-        "visual_original_check"
+        "visual_original_check",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "공급함수는 공급량과 공급량 결정요인들의 관계를 나타냅니다.",
+      "answerReason": "공급량은 가격과 건축비·기술·정책 등 조건의 함수로 설명할 수 있습니다. 선택지 ⑤는 이 정의에 맞습니다. 수요곡선은 통상 한계편익, 공급곡선은 한계비용과 연결하여 구분합니다.",
       "options": [
         {
           "no": 1,
@@ -1161,11 +1202,17 @@
           "no": 5,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 최종정답 인정 번호입니다. 선택 근거 초안: 공급량은 가격과 건축비·기술·정책 등 조건의 함수로 설명할 수 있습니다. 선택지 ⑤는 이 정의에 맞습니다. 수요곡선은 통상 한계편익, 공급곡선은 한계비용과 연결하여 구분합니다."
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "수요량 변화(가격만 변화)와 수요 자체 변화(비가격 조건 변화)를 구별하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -1179,7 +1226,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -1240,7 +1287,8 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": null,
+      "draftProvenance": "2026-11-01, manually reasoned from registered question facts, pending official question-paper & explanation review"
     },
     {
       "questionId": "2025-11",
@@ -1877,11 +1925,12 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "calculation_or_numeric"
+        "calculation_or_numeric",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "허프모형의 매력도는 매장면적을 거리의 제곱으로 나누어 비교합니다.",
+      "answerReason": "2022년 A/B/C의 면적÷거리²는 각각 500/25=20, 2000/100=20, 1000/25=40입니다. A의 방문비율 20/80=25%가 매출 4억원이므로 총 구매액은 16억원입니다. 2024년 A는 2500/25=100, 합계 100+20+40=160, A의 비율 62.5%입니다. 따라서 16억×0.625=10억원으로 선택지 ②입니다.",
       "options": [
         {
           "no": 1,
@@ -1893,7 +1942,8 @@
           "no": 2,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 최종정답 인정 번호입니다. 선택 근거 초안: 2022년 A/B/C의 면적÷거리²는 각각 500/25=20, 2000/100=20, 1000/25=40입니다. A의 방문비율 20/80=25%가 매출 4억원이므로 총 구매액은 16억원입니다. 2024년 A는 2500/25=100, 합계 100+20+40=160, A의 비율 62.5%입니다. 따라서 16억×0.625=10억원으로 선택지 ②입니다."
         },
         {
           "no": 3,
@@ -1915,7 +1965,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "시장 전체 매출이 동일하다는 조건과 거리마찰계수 2를 놓치지 마세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -1929,7 +1984,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -1968,7 +2023,8 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": null,
+      "draftProvenance": "2026-11-01, manually reasoned from registered question facts, pending official question-paper & explanation review"
     },
     {
       "questionId": "2025-17",
@@ -2201,11 +2257,12 @@
       "questionType": [
         "multiple_choice",
         "compound_statements",
-        "calculation_or_numeric"
+        "calculation_or_numeric",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "시간가치를 반영하는 DCF 기법은 NPV·IRR·수익성지수법입니다.",
+      "answerReason": "ㄱ 순현재가치법, ㄷ 내부수익률법, ㅁ 수익성지수법은 현금흐름을 할인해 비교하는 기법입니다. 단순 회수기간법과 승수법은 여기서 해당하지 않아 선택지 ②가 맞습니다.",
       "options": [
         {
           "no": 1,
@@ -2217,7 +2274,8 @@
           "no": 2,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 최종정답 인정 번호입니다. 선택 근거 초안: ㄱ 순현재가치법, ㄷ 내부수익률법, ㅁ 수익성지수법은 현금흐름을 할인해 비교하는 기법입니다. 단순 회수기간법과 승수법은 여기서 해당하지 않아 선택지 ②가 맞습니다."
         },
         {
           "no": 3,
@@ -2270,7 +2328,12 @@
           "sourceChecked": false
         }
       ],
-      "traps": [],
+      "traps": [
+        {
+          "text": "회수기간법 중 할인 회수기간법은 구분할 수 있으므로 원문의 명칭을 그대로 확인하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -2284,7 +2347,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -2338,7 +2401,8 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": null,
+      "draftProvenance": "2026-11-01, manually reasoned from registered question facts, pending official question-paper & explanation review"
     },
     {
       "questionId": "2025-20",
@@ -3032,11 +3096,12 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "select_incorrect"
+        "select_incorrect",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "정부 규제 변화로 발생하는 불확실성을 유동성 위험으로 분류하면 안 됩니다.",
+      "answerReason": "조세·토지이용 규제 등 정책이나 법적 환경의 변동은 제도·법률·규제 관련 위험입니다. 유동성 위험은 자산을 적정 가격과 시간 안에 처분하기 어려운 문제이므로 선택지 ⑤가 틀립니다.",
       "options": [
         {
           "no": 1,
@@ -3066,11 +3131,17 @@
           "no": 5,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 최종정답 인정 번호입니다. 선택 근거 초안: 조세·토지이용 규제 등 정책이나 법적 환경의 변동은 제도·법률·규제 관련 위험입니다. 유동성 위험은 자산을 적정 가격과 시간 안에 처분하기 어려운 문제이므로 선택지 ⑤가 틀립니다."
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "유동성·법률·시장·금융 위험의 발생 원인을 분리하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -3084,7 +3155,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -3131,7 +3202,8 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": null,
+      "draftProvenance": "2026-11-01, manually reasoned from registered question facts, pending official question-paper & explanation review"
     },
     {
       "questionId": "2025-26",
@@ -3145,17 +3217,19 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "select_correct"
+        "select_correct",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "분산투자는 개별위험을 줄일 수 있지만 경기 전체 위험은 없앨 수 없습니다.",
+      "answerReason": "인플레이션·경기 변동 등 체계적 위험은 여러 자산에 함께 영향을 줍니다. 자산을 나누어 보유해도 제거되지 않으므로 선택지 ①이 맞습니다.",
       "options": [
         {
           "no": 1,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 최종정답 인정 번호입니다. 선택 근거 초안: 인플레이션·경기 변동 등 체계적 위험은 여러 자산에 함께 영향을 줍니다. 자산을 나누어 보유해도 제거되지 않으므로 선택지 ①이 맞습니다."
         },
         {
           "no": 2,
@@ -3183,7 +3257,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "상관계수 0은 무상관, +1은 완전 양의 상관입니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -3197,7 +3276,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -3236,7 +3315,8 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": null,
+      "draftProvenance": "2026-11-01, manually reasoned from registered question facts, pending official question-paper & explanation review"
     },
     {
       "questionId": "2025-27",
@@ -3250,11 +3330,12 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "calculation_or_numeric"
+        "calculation_or_numeric",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "자기자본수익률은 자기가 실제 투입한 돈에 대한 순이익률입니다.",
+      "answerReason": "매입 8억원 중 대출 80%=6.4억원, 자기자본=1.6억원입니다. 매각차익=8억×5%=0.4억원, 연간 순영업소득=0.4억원, 대출이자=6.4억×5%=0.32억원입니다. 자기자본 순수익=0.4+0.4−0.32=0.48억원이므로 0.48÷1.6=30%, 선택지 ③입니다.",
       "options": [
         {
           "no": 1,
@@ -3272,7 +3353,8 @@
           "no": 3,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 최종정답 인정 번호입니다. 선택 근거 초안: 매입 8억원 중 대출 80%=6.4억원, 자기자본=1.6억원입니다. 매각차익=8억×5%=0.4억원, 연간 순영업소득=0.4억원, 대출이자=6.4억×5%=0.32억원입니다. 자기자본 순수익=0.4+0.4−0.32=0.48억원이므로 0.48÷1.6=30%, 선택지 ③입니다."
         },
         {
           "no": 4,
@@ -3288,7 +3370,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "매각 시 대출원금을 상환하되 자기자본 수익 계산에서 원금을 이익으로 혼동하지 마세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -3302,7 +3389,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -3356,7 +3443,8 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": null,
+      "draftProvenance": "2026-11-01, manually reasoned from registered question facts, pending official question-paper & explanation review"
     },
     {
       "questionId": "2025-28",
@@ -3370,11 +3458,12 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "calculation_or_numeric"
+        "calculation_or_numeric",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "수익성지수는 현금유입의 현재가치를 현금유출의 현재가치로 나눈 비율입니다.",
+      "answerReason": "유입 현재가치=800×0.90+1000×0.85+1200×0.80=2530만원입니다. 유출 현재가치=2530×70%=1771만원입니다. PI=2530/1771≈1.4286, 소수점 셋째자리에서 반올림하여 1.43이므로 선택지 ④입니다.",
       "options": [
         {
           "no": 1,
@@ -3398,7 +3487,8 @@
           "no": 4,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 최종정답 인정 번호입니다. 선택 근거 초안: 유입 현재가치=800×0.90+1000×0.85+1200×0.80=2530만원입니다. 유출 현재가치=2530×70%=1771만원입니다. PI=2530/1771≈1.4286, 소수점 셋째자리에서 반올림하여 1.43이므로 선택지 ④입니다."
         },
         {
           "no": 5,
@@ -3408,7 +3498,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "각 해 현금흐름에 해당 연도의 현가계수를 곱한 뒤 합산해야 합니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -3422,7 +3517,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -3469,7 +3564,8 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": null,
+      "draftProvenance": "2026-11-01, manually reasoned from registered question facts, pending official question-paper & explanation review"
     },
     {
       "questionId": "2025-29",
@@ -3483,11 +3579,12 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "calculation_or_numeric"
+        "calculation_or_numeric",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "순영업소득은 유효총소득에서 영업경비를 뺀 금액입니다.",
+      "answerReason": "유효임대면적=2000㎡×80%=1600㎡, 가능총소득=1600×6만원=9600만원, 공실 차감 후 유효총소득=9600×90%=8640만원입니다. 영업경비가 유효총소득의 50%이므로 NOI=8640×50%=4320만원, 선택지 ②입니다.",
       "options": [
         {
           "no": 1,
@@ -3499,7 +3596,8 @@
           "no": 2,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 최종정답 인정 번호입니다. 선택 근거 초안: 유효임대면적=2000㎡×80%=1600㎡, 가능총소득=1600×6만원=9600만원, 공실 차감 후 유효총소득=9600×90%=8640만원입니다. 영업경비가 유효총소득의 50%이므로 NOI=8640×50%=4320만원, 선택지 ②입니다."
         },
         {
           "no": 3,
@@ -3521,7 +3619,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "부채상환액 1000만원은 순영업소득(NOI) 계산의 영업경비에 넣지 않습니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -3535,7 +3638,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -3582,7 +3685,8 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": null,
+      "draftProvenance": "2026-11-01, manually reasoned from registered question facts, pending official question-paper & explanation review"
     },
     {
       "questionId": "2025-30",
@@ -3596,11 +3700,12 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "select_incorrect"
+        "select_incorrect",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "PF는 사업 자체의 현금흐름과 사업성에 근거한 대출입니다.",
+      "answerReason": "프로젝트의 부실은 금융기관의 채권 회수에도 영향을 줄 수 있습니다. 따라서 '사업이 부실화되더라도 대출기관 회수에는 영향이 없다'는 선택지 ③이 틀립니다.",
       "options": [
         {
           "no": 1,
@@ -3618,7 +3723,8 @@
           "no": 3,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 최종정답 인정 번호입니다. 선택 근거 초안: 프로젝트의 부실은 금융기관의 채권 회수에도 영향을 줄 수 있습니다. 따라서 '사업이 부실화되더라도 대출기관 회수에는 영향이 없다'는 선택지 ③이 틀립니다."
         },
         {
           "no": 4,
@@ -3634,7 +3740,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "PF의 비소구·제한적 소구와 대출금 회수 무위험을 혼동하지 마세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -3648,7 +3759,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -3695,7 +3806,8 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": null,
+      "draftProvenance": "2026-11-01, manually reasoned from registered question facts, pending official question-paper & explanation review"
     },
     {
       "questionId": "2025-31",
@@ -3709,11 +3821,12 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "calculation_or_numeric"
+        "calculation_or_numeric",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "LTV와 DTI 중 더 엄격한 대출 한도가 최종 한도가 됩니다.",
+      "answerReason": "LTV 한도=4억원×60%=2.4억원입니다. DTI의 연간 상환액 한도=7000만원×40%=2800만원, 저당상수 0.2로 나눈 대출 원금 한도는 2800÷0.2=1억4000만원입니다. 더 작은 원금 한도 1억4000만원에서 기존대출 5000만원을 빼면 추가대출 9000만원, 선택지 ②입니다.",
       "options": [
         {
           "no": 1,
@@ -3725,7 +3838,8 @@
           "no": 2,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 최종정답 인정 번호입니다. 선택 근거 초안: LTV 한도=4억원×60%=2.4억원입니다. DTI의 연간 상환액 한도=7000만원×40%=2800만원, 저당상수 0.2로 나눈 대출 원금 한도는 2800÷0.2=1억4000만원입니다. 더 작은 원금 한도 1억4000만원에서 기존대출 5000만원을 빼면 추가대출 9000만원, 선택지 ②입니다."
         },
         {
           "no": 3,
@@ -3747,7 +3861,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "LTV만 확인하거나 기존대출을 두 번 차감하지 마세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -3761,7 +3880,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -3808,7 +3927,8 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": null,
+      "draftProvenance": "2026-11-01, manually reasoned from registered question facts, pending official question-paper & explanation review"
     },
     {
       "questionId": "2025-32",
@@ -3823,11 +3943,12 @@
       "questionType": [
         "multiple_choice",
         "compound_statements",
-        "calculation_or_numeric"
+        "calculation_or_numeric",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "원금균등상환은 매기 원금이 같고 이자는 남은 잔액에 비례해 줄어듭니다.",
+      "answerReason": "매년 원금 상환액=9억원÷30년=3000만원입니다. 첫 회차 이자=5700−3000=2700만원이므로 연이율=2700만원÷9억원=3%입니다. 10회차 시작 잔액=9억원−9×3000만원=6억3000만원이고 이자=63000만원×3%=1890만원입니다. 따라서 선택지 ③입니다.",
       "options": [
         {
           "no": 1,
@@ -3845,7 +3966,8 @@
           "no": 3,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 최종정답 인정 번호입니다. 선택 근거 초안: 매년 원금 상환액=9억원÷30년=3000만원입니다. 첫 회차 이자=5700−3000=2700만원이므로 연이율=2700만원÷9억원=3%입니다. 10회차 시작 잔액=9억원−9×3000만원=6억3000만원이고 이자=63000만원×3%=1890만원입니다. 따라서 선택지 ③입니다."
         },
         {
           "no": 4,
@@ -3861,7 +3983,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "10회차 이자는 10회 원금을 갚기 전 잔액으로 계산합니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -3875,7 +4002,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -3929,7 +4056,8 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": null,
+      "draftProvenance": "2026-11-01, manually reasoned from registered question facts, pending official question-paper & explanation review"
     },
     {
       "questionId": "2025-33",
@@ -4049,17 +4177,19 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "select_incorrect"
+        "select_incorrect",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "원금균등상환은 초기에 원리금 부담이 상대적으로 큽니다.",
+      "answerReason": "원금균등 방식은 매기간 같은 원금과 잔액에 따른 이자를 지급합니다. 일반적으로 1회차 원리금은 원리금균등 방식보다 크므로, '더 적다'고 한 선택지 ①이 틀립니다.",
       "options": [
         {
           "no": 1,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 최종정답 인정 번호입니다. 선택 근거 초안: 원금균등 방식은 매기간 같은 원금과 잔액에 따른 이자를 지급합니다. 일반적으로 1회차 원리금은 원리금균등 방식보다 크므로, '더 적다'고 한 선택지 ①이 틀립니다."
         },
         {
           "no": 2,
@@ -4087,7 +4217,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "원리금균등과 원금균등에서 '고정되는 것'을 구분하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -4101,7 +4236,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -4155,7 +4290,8 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": null,
+      "draftProvenance": "2026-11-01, manually reasoned from registered question facts, pending official question-paper & explanation review"
     },
     {
       "questionId": "2025-35",

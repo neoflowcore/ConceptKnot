@@ -1,0 +1,177 @@
+/* ConceptKnot P4 editorial desk v80 — local-only source-aware draft workspace.
+ * It never alters canonical exam data or labels an unreviewed answer "published".
+ */
+(function(){
+'use strict';
+const KEY='ck80-explain-drafts-v1',MAX_RECORDS=400;
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','"':'&#39;'}[c]));
+const questionId=id=>/^20(?:2[1-5])-(?:[1-9]|[1-7]\d|80)$/.test(String(id||''));
+const MAX={short:450,reason:4000,option:1600,evidence:1200,hold:550};
+const clip=(v,n)=>String(v??'').trim().slice(0,n);
+let selected='',record=null,loaded=new Map(),open=false,editing=false,lastStatus='대기';
+const store=()=>{try{const obj=JSON.parse(localStorage.getItem(KEY)||'{}');return obj&&typeof obj==='object'&&!Array.isArray(obj)?obj:{};}catch{return {};}};
+const count=()=>Object.keys(store()).filter(questionId).length;
+function saveToStore(id,draft){
+ if(!questionId(id)||!draft||typeof draft!=='object')return false;
+ const current=store();
+ if(Object.keys(current).length>MAX_RECORDS+5)return false;
+ current[id]=draft;
+ try{localStorage.setItem(KEY,JSON.stringify(current));return true;}catch{return false;}
+}
+function patchYear(year){if(loaded.has(year))return Promise.resolve(loaded.get(year));
+ return fetch('./data/explanations/official-'+year+'.json',{cache:'force-cache'})
+  .then(res=>{if(!res.ok)throw Error('문항 데이터 불러오기 '+res.status);return res.json();})
+  .then(data=>{if(data.records?.length!==80)throw Error('해설 데이터 80건 불일치');const map=new Map(data.records.map(r=>[r.questionId,r]));loaded.set(year,map);return map;});
+}
+function q(id){const item=window.RECALL_OFFICIAL?.[id];return item?.verified===true?item:null;}
+function compareDraft(id,base){
+ const user=store()[id];
+ if(user?.status==='draft'||user?.status==='review_hold')return user;
+ return {questionId:id,status:'draft',summaryEasy:clip(base?.summaryEasy,MAX.short),
+  answerReason:clip(base?.answerReason,MAX.reason),
+  options:Array.from({length:5},(_,i)=>({
+   no:i+1,verdict:'unreviewed',why:clip(base?.options?.[i]?.draftReason,MAX.option)
+  })),
+  evidence:'',reviewHoldReason:'',examAsOf:id.slice(0,4),
+  updatedAt:null,source:'official-question-rooted study draft, not an editorial publication',
+  sourceChecked:false,reasonReviewed:false,published:false};
+}
+function root(){return document.querySelector('#ck78-analysis-dialog');}
+function panel(){return root()?.querySelector('[data-ck80-workspace]');}
+function setStatus(text){
+ lastStatus=text;const node=panel()?.querySelector('[data-ck80-status]');if(node)node.textContent=text;
+}
+function existing(id,base){return compareDraft(id,base);}
+function editorHtml(d){
+ const item=q(d.questionId),sourceCount=count();
+ const sel=(val,label,active)=>'<option value="'+val+'"'+(val===active?' selected':'')+'>'+label+'</option>';
+ return '<div class="ck80-editor-summary"><span><strong>개인 검토 초안 '+sourceCount+'개</strong> · 공식 게시 콘텐츠와 분리 저장</span>'+
+  '<p>공식 최종정답('+esc(item?.correct?.join(' 또는 ')||'-')+'번)은 수정할 수 없습니다. 선지 판단은 직접 근거를 확인한 경우에만 기록하고, 여기에서 게시 완료로 전환하지 않습니다.</p></div>'+
+  '<label>15초 쉬운 설명 <textarea rows="3" data-ck80-field="summaryEasy" maxlength="'+MAX.short+'">'+esc(d.summaryEasy)+'</textarea></label>'+
+  '<label>공식 정답에 해당하는 논리 · 출처 대조 전 <textarea rows="5" data-ck80-field="answerReason" maxlength="'+MAX.reason+'">'+esc(d.answerReason)+'</textarea></label>'+
+  '<div class="ck80-editor-options"><h4>①~⑤ 선지별 검토</h4>'+
+  Array.from({length:5},(_,i)=>{
+   const v=d.options?.[i]||{verdict:'unreviewed',why:''};
+   return '<div class="ck80-editor-option"><label>선지 '+(i+1)+' ('+
+    (item?.correct?.includes(i+1)?'공식 채점 인정':'공식 채점 미인정')+
+    ') <select data-ck80-option-verdict="'+i+'">'+
+    sel('unreviewed','근거 미검수',v.verdict)+sel('true','참 · 개인 검토',v.verdict)+
+    sel('false','거짓 · 개인 검토',v.verdict)+sel('unknown','진위 보류',v.verdict)+
+    '</select></label><textarea rows="2" maxlength="'+MAX.option+'" data-ck80-option-reason="'+i+'" '+
+    'placeholder="이 지문의 성립 요건과 근거를 적으세요">'+esc(v.why)+'</textarea></div>';
+  }).join('')+'</div>'+
+  '<label>원문·조문·판례 출처 확인 메모 <textarea rows="3" data-ck80-field="evidence" maxlength="'+MAX.evidence+'" '+
+  'placeholder="출처 문서, URL, 시험 당시 시행 시점, 대조한 PDF 페이지 등">'+esc(d.evidence)+'</textarea></label>'+
+  '<label>편집 상태 <select data-ck80-field="status">'+
+    sel('draft','초안(검수 완료 아님)',d.status)+sel('review_hold','근거 확인 필요 · 보류',d.status)+'</select></label>'+
+  '<label>검수 보류 사유 <textarea rows="2" data-ck80-field="reviewHoldReason" maxlength="'+MAX.hold+'" '+
+    'placeholder="법령 당시 기준/원문 도표/선지 진위 등 미확인 이유">'+esc(d.reviewHoldReason)+'</textarea></label>'+
+  '<div class="ck80-editor-buttons">'+
+  '<button type="button" data-ck80-save>내 검토 초안 저장</button>'+
+  '<button type="button" data-ck80-export>내 초안 전체 JSON 내보내기</button>'+
+  '<button type="button" data-ck80-import>검토 초안 JSON 불러오기</button>'+
+  '<input type="file" data-ck80-import-file hidden accept=".json,application/json" />'+
+  '<span data-ck80-status role="status">입력한 내용은 저장 버튼을 누르면 이 브라우저에만 저장됩니다.</span></div>';
+}
+function collect(){
+ const w=panel();if(!w||!questionId(selected))return null;
+ const get=k=>w.querySelector('[data-ck80-field="'+k+'"]');
+ const val=(k,n)=>clip(get(k)?.value,n);
+ return {questionId:selected,status:get('status')?.value==='review_hold'?'review_hold':'draft',
+  examAsOf:selected.slice(0,4),summaryEasy:val('summaryEasy',MAX.short),
+  answerReason:val('answerReason',MAX.reason),
+  evidence:val('evidence',MAX.evidence),reviewHoldReason:val('reviewHoldReason',MAX.hold),
+  options:Array.from({length:5},(_,i)=>{
+   const verdict=w.querySelector('[data-ck80-option-verdict="'+i+'"]')?.value;
+   return {no:i+1,verdict:['unreviewed','true','false','unknown'].includes(verdict)?verdict:'unreviewed',
+    why:clip(w.querySelector('[data-ck80-option-reason="'+i+'"]')?.value,MAX.option)};
+  }),
+  updatedAt:new Date().toISOString(),source:'personal study review; editorial publication never automatic',
+  sourceChecked:false,reasonReviewed:false,published:false};
+}
+function save(){
+ const draft=collect();if(!draft)return false;
+ if(draft.status==='review_hold'&&!draft.reviewHoldReason){setStatus('보류로 저장하려면 보류 사유를 적어 주세요.');return false;}
+ if(!saveToStore(selected,draft)){setStatus('저장 실패 · 용량 또는 저장 권한 확인 필요');return false;}
+ record=draft;editing=false;setStatus('개인 초안 저장됨 · 공식 해설 게시/검수와는 별개입니다.');return true;
+}
+function setVisible(yes){const w=panel();if(!w)return;open=yes;w.hidden=!yes;
+ const t=root()?.querySelector('[data-ck80-toggle]');
+ if(t){t.textContent=yes?'내 해설 초안 접기':'내 해설 초안 작성/수정';t.setAttribute('aria-expanded',String(yes));}
+}
+async function showEditor(){
+ const r=root(),id=r?.dataset.ck78Current;
+ if(!questionId(id)){setVisible(false);return;}
+ selected=id;const target=r.querySelector('[data-ck80-workspace]');
+ if(!target)return;
+ if(open&&target.dataset.ck80For===id){setVisible(false);return;}
+ target.hidden=false;target.textContent='기존 해설 초안을 읽는 중입니다.';
+ try{
+  const map=await patchYear(Number(id.slice(0,4)));
+  if(root()?.dataset.ck78Current!==id)return;
+  record=existing(id,map.get(id));target.innerHTML=editorHtml(record);
+  target.dataset.ck80For=id;setVisible(true);editing=false;
+ }catch(e){target.textContent='검토 초안을 열 수 없습니다: '+(e?.message||'읽기 오류');}
+}
+function filename(){return 'ConceptKnot_해설_개인검토초안_'+new Date().toISOString().slice(0,10)+'.json';}
+function exportJson(){
+ const drafts=store();
+ if(!Object.keys(drafts).length){setStatus('저장한 초안이 아직 없습니다.');return;}
+ const body={schemaVersion:'1.0.0',scope:'personal-unpublished-2021-2025',exportedAt:new Date().toISOString(),
+  officialSourceUnchanged:true,records:Object.fromEntries(Object.entries(drafts).filter(([id])=>questionId(id)))};
+ const bytes=new Blob(['\uFEFF',JSON.stringify(body,null,2)],{type:'application/json'});
+ const url=URL.createObjectURL(bytes),link=document.createElement('a');link.href=url;
+ link.download=filename();document.body.appendChild(link);link.click();link.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),3000);setStatus('개인 검토 초안 JSON을 생성했습니다. 공식 콘텐츠가 아닌 개인 작성물입니다.');
+}
+function validateImportRecord(id,v){
+ if(!questionId(id)||!q(id)||!v||typeof v!=='object'||v.published===true||
+  !['draft','review_hold'].includes(v.status)||v.questionId!==id||
+  !Array.isArray(v.options)||v.options.length!==5)return null;
+ if(v.options.some((opt,i)=>opt.no!==i+1||!['unreviewed','true','false','unknown'].includes(opt.verdict)))return null;
+ return {questionId:id,status:v.status,examAsOf:id.slice(0,4),
+  summaryEasy:clip(v.summaryEasy,MAX.short),answerReason:clip(v.answerReason,MAX.reason),
+  evidence:clip(v.evidence,MAX.evidence),reviewHoldReason:clip(v.reviewHoldReason,MAX.hold),
+  options:v.options.map((opt,i)=>({no:i+1,verdict:opt.verdict,why:clip(opt.why,MAX.option)})),
+  updatedAt:new Date().toISOString(),source:'personal import, unpublished',
+  sourceChecked:false,reasonReviewed:false,published:false};
+}
+async function importJson(file){
+ if(!file||file.size>4*1024*1024){setStatus('JSON 파일을 확인하세요(최대 4MB).');return;}
+ try{
+  const raw=await file.text(),data=JSON.parse(raw.replace(/^\uFEFF/,''));
+  if(data.schemaVersion!=='1.0.0'||data.scope!=='personal-unpublished-2021-2025'||
+    !data.records||typeof data.records!=='object'||Array.isArray(data.records))throw Error('파일 형식이 다릅니다.');
+  const items=Object.entries(data.records);
+  if(items.length>MAX_RECORDS)throw Error('400문항 초과');
+  const clean=items.map(([id,v])=>[id,validateImportRecord(id,v)]);
+  if(clean.some(([id,v])=>!v))throw Error('문항 ID, 상태 또는 선지 검토 형식이 잘못되었습니다.');
+  const prior=store(),overlap=clean.filter(([id])=>prior[id]).length;
+  if(overlap&&!window.confirm?.('기존 개인 초안 '+overlap+'건이 교체됩니다. 계속할까요?'))return;
+  const merged={...prior,...Object.fromEntries(clean)};
+  localStorage.setItem(KEY,JSON.stringify(merged));
+  setStatus('개인 초안 '+clean.length+'건을 검증 후 불러왔습니다. 공식 해설 파일은 변경되지 않았습니다.');
+  if(questionId(selected)){const w=panel();if(w){w.dataset.ck80For='';setVisible(false);showEditor();}}
+ }catch(e){setStatus('가져오기 실패 · '+(e.message||'JSON 형식 확인'));}
+}
+document.addEventListener('click',e=>{
+ const b=e.target.closest?.('[data-ck80-toggle],[data-ck80-save],[data-ck80-export],[data-ck80-import]');
+ if(!b)return;
+ if(b.hasAttribute('data-ck80-toggle')){showEditor();return;}
+ if(b.hasAttribute('data-ck80-save')){save();return;}
+ if(b.hasAttribute('data-ck80-export')){exportJson();return;}
+ if(b.hasAttribute('data-ck80-import')){panel()?.querySelector('[data-ck80-import-file]')?.click();}
+});
+document.addEventListener('change',e=>{
+ if(!e.target.matches?.('[data-ck80-import-file]'))return;
+ importJson(e.target.files?.[0]).finally(()=>{e.target.value='';});
+});
+document.addEventListener('input',e=>{if(e.target.closest?.('[data-ck80-workspace]')){editing=true;setStatus('변경 중 · 저장 버튼을 누르세요.');}});
+document.addEventListener('click',e=>{
+ if(!editing||!e.target.closest?.('[data-ck78-prev],[data-ck78-next],[data-ck78-close],[data-ck78-open-question]'))return;
+ if(!window.confirm?.('저장하지 않은 해설 수정이 있습니다. 저장하지 않고 이동할까요?')){
+  e.preventDefault();e.stopImmediatePropagation();
+ }else editing=false;
+},true);
+window.CK80Editorial=Object.freeze({count,lookup:id=>store()[id]||null,validateImportRecord,getStatus:()=>({selected,open,editing,lastStatus})});
+})();

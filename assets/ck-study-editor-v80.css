@@ -1,0 +1,20 @@
+/* P4: source-aware inline editorial desk, never a second modal. */
+.ck80-editor-entry{border-top:1px solid rgba(114,150,139,.33);margin:10px 0;padding:10px 0}
+.ck80-editor-entry>button{width:100%;min-height:32px;text-align:left;font-weight:650}
+.ck80-editor-entry>p{font-size:12px;opacity:.83}
+.ck80-editor-entry [data-ck80-workspace][hidden]{display:none}
+.ck80-editor-summary{padding:10px;border:1px solid rgba(110,155,132,.36);border-radius:8px;background:rgba(123,151,133,.08);margin:10px 0}
+.ck80-editor-summary p{font-size:12px}
+.ck80-editor-entry label{font-size:12px;font-weight:600;display:block;margin:11px 0 5px}
+.ck80-editor-entry textarea,.ck80-editor-entry select{width:100%;min-width:0;box-sizing:border-box;border:1px solid rgba(120,152,138,.45);border-radius:7px;background:transparent;color:inherit;font:inherit;padding:8px;resize:vertical}
+.ck80-editor-entry textarea{font-size:13px;line-height:1.5}
+.ck80-editor-entry option{color:#1e3630;background:#f8faf6}
+.ck80-editor-options{display:grid;gap:8px}
+.ck80-editor-options h4{margin:12px 0 4px;font-size:14px}
+.ck80-editor-option{padding:10px;border:1px solid rgba(124,149,135,.2);border-radius:9px}
+.ck80-editor-option label{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin:0 0 8px}
+.ck80-editor-option select{max-width:190px}
+.ck80-editor-buttons{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-top:12px}
+.ck80-editor-buttons button{padding:8px 11px}
+.ck80-editor-buttons [data-ck80-status]{flex-basis:100%;font-size:12px;min-height:17px}
+@media(max-width:520px){.ck80-editor-option label{display:grid}.ck80-editor-option select{max-width:100%}}

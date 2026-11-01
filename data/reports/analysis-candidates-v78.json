@@ -6,7 +6,7 @@
   "questions": 400,
   "withCandidateMatches": 332,
   "parsedCompoundStatements": 339,
-  "seedOptionReasonDrafts": 20,
+  "seedOptionReasonDrafts": 48,
   "detectedKinds": {
     "multiple_choice": 400,
     "select_incorrect": 155,
@@ -221,8 +221,8 @@
     }
   ],
   "reviewStages": {
-    "unstarted": 396,
-    "draft": 4,
+    "unstarted": 368,
+    "draft": 32,
     "source_checked": 0,
     "reason_checked": 0,
     "legal_checked": 0,
@@ -230,5 +230,7 @@
   },
   "requiredOptionVerdicts": 2000,
   "verifiedOptionVerdicts": 0,
-  "answersUnmodified": true
+  "answersUnmodified": true,
+  "updatedAt": "2026-11-01",
+  "manualReasonedDraftsAdded": 28
 }

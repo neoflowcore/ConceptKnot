@@ -45,5 +45,5 @@ test('one-shot diagram interaction and P6 linked search present',()=>{
 test('no actions workflow, no git deployment, no artifact builds',()=>{
  assert.equal(json('vercel.json').git.deploymentEnabled,false);
  assert.equal(fs.existsSync(path.join(root,'.github','workflows')),false);
- assert.match(read('sw.js'),/conceptknot-study-v79-review-final/);
+ assert.match(read('sw.js'),/conceptknot-study-v80-explain-drafts/);
 });

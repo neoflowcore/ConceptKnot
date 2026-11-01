@@ -5,9 +5,9 @@
   "totalQuestions": 400,
   "questionsPerYear": 80,
   "verifiedOriginalCount": 400,
-  "draftCount": 4,
+  "draftCount": 32,
   "publishedCount": 0,
-  "unstartedCount": 396,
+  "unstartedCount": 368,
   "reasonReviewedCount": 0,
   "optionVerdictsReviewed": 0,
   "optionVerdictsTotal": 2000,
@@ -17,5 +17,7 @@
   "registeredAllYears": 800,
   "excludedFromPublishedAnalytics": 400,
   "verifiedOccurrences": 0,
-  "warning": "Registration verified != explanation reviewed. Neither draft nor unstarted records may be counted as published."
+  "warning": "Registration verified != explanation reviewed. Neither draft nor unstarted records may be counted as published.",
+  "reasonDraftCount": 32,
+  "newDraftProvenance": "manual reasoned question facts; not source-checked, legal-reviewed or published"
 }

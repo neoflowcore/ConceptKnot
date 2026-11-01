@@ -128,6 +128,21 @@ function applyScrub(root,value){
  const explanation=root.querySelector('.ck21-chart-explanation');
  if(explanation)explanation.textContent=amount?c.answer:'곡선을 이동해 개념 변화를 확인하세요.';
 }
+// Use the existing dot-home search position as the entry point; do not redesign the owl.
+document.addEventListener('click',event=>{
+ const launcher=event.target.closest?.('.ck-dot-search-placeholder');
+ if(!launcher)return;
+ event.preventDefault();event.stopImmediatePropagation();
+ const home=document.querySelector('#side-nav [data-go="home"],.board-tabs [data-go="home"]');
+ if(home)home.click();
+ // Navigation mounts the persistent search panel; focus only after rendering.
+ requestAnimationFrame(()=>{
+  mount();
+  const toggle=document.querySelector('#ck76-search [data-ck76-search-collapse]');
+  if(toggle?.getAttribute('aria-expanded')!=='true')toggle?.click();
+  document.getElementById('ck76-search-query')?.focus();
+ });
+},true);
 document.addEventListener('click',e=>{
  const toggle=e.target.closest?.('[data-ck76-search-collapse]');
  if(toggle){

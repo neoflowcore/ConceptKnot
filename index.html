@@ -115,6 +115,7 @@ body{font-family:Pretendard,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;bac
 <link rel="stylesheet" href="./assets/ck-study-review-v79.css?v=79">
 <link rel="stylesheet" href="./assets/ck-study-final-v79.css?v=79">
 <link rel="stylesheet" href="./assets/ck-study-charts-v79.css?v=79">
+<link rel="stylesheet" href="./assets/ck-study-editor-v80.css?v=80">
 <link rel="stylesheet" href="./assets/ck-board-compact-v63.css?v=63">
 <link rel="stylesheet" href="./assets/ck-note-context-v64.css?v=64">
 <link rel="stylesheet" href="./assets/ck-board-stability-v65.css?v=65">
@@ -261,7 +262,7 @@ const CONTENT=window.RECALL_CONTENT, EXAMS=window.RECALL_EXAMS, KEYS=window.RECA
 if(!CONTENT || !EXAMS || !KEYS){document.getElementById('main').textContent='학습 데이터를 읽지 못했습니다. 파일을 다시 확인하세요.';return;}
 const STORAGE='recallgraph-first-exam-v1';
 const DAY=86400000;
-const names={landing:'CONCEPTKNOT 첫 화면',listen:'문제·정답 듣기',typing:'타이핑',visual:'그림으로 기억',calc:'계산문제 집중',home:'오늘의 학습',reverse:'기출→이론 학습',theory:'핵심이론·능동회상',quiz:'기출형 연습',exam:'10개년 기출',venn:'비교 도형과 차트',wrong:'오답·복습',plan:'4일 학습계획',final:'시험 직전 최종 노트',settings:'내 데이터'};
+const names={landing:'CONCEPTKNOT 첫 화면',listen:'문제·정답 듣기',typing:'타이핑',visual:'그림으로 기억',calc:'계산문제 집중',home:'오늘의 학습',reverse:'기출→이론 학습',theory:'핵심이론·능동회상',quiz:'기출형 연습',exam:'10개년 기출',venn:'비교 도형과 차트',wrong:'오답·복습',plan:'학습계획',final:'시험 직전 최종 노트',settings:'내 데이터'};
 const nav=[['home','▦'],['reverse','⚡'],['theory','◈'],['visual','◇'],['typing','⌨'],['listen','♫'],['quiz','✎'],['calc','÷'],['exam','▤'],['venn','◉'],['wrong','↻'],['plan','▣'],['final','▤']];
 const todayISO=()=>new Date().toLocaleDateString('sv-SE',{timeZone:'Asia/Seoul'});
 const dday=()=>{const s=String(state?.ck79ExamDate||'');if(!/^\d{4}-\d{2}-\d{2}$/.test(s))return null;const t=Date.parse(s+'T00:00:00+09:00');return Number.isFinite(t)?Math.max(0,Math.ceil((t-Date.now())/DAY)):null;};
@@ -1442,7 +1443,7 @@ window.CK76Voice=Object.freeze({
 
 
 /* P5: spaced-recall state and companion local backup for the separate final-note editor. */
-const ck79ExtraKeys=Object.freeze(['ck10-exam-final-v1','ck11-final-page-count','ck79-editor-drafts-v1']);
+const ck79ExtraKeys=Object.freeze(['ck10-exam-final-v1','ck11-final-page-count','ck80-explain-drafts-v1']);
 const ck79StorageView=()=>Object.fromEntries(ck79ExtraKeys.flatMap(k=>{
  try{const value=localStorage.getItem(k);return typeof value==='string'?[[k,value]]:[];}catch{return []}
 }));
@@ -3651,6 +3652,7 @@ render();setInterval(timerTick,500);
 <script src="./assets/ck-study-review-v79.js?v=79" defer></script>
 <script src="./assets/ck-study-final-v79.js?v=79" defer></script>
 <script src="./assets/ck-study-charts-v79.js?v=79" defer></script>
+<script src="./assets/ck-study-editor-v80.js?v=80" defer></script>
 <script src="./assets/ck-experience-v14.js" defer></script>
 <script src="./assets/ck-pdf-workspace-v15.js?v=60" defer></script>
 <script src="./assets/ck-layout-v16.js" defer></script>
