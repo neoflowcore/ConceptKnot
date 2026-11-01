@@ -1445,7 +1445,7 @@ window.CK76Voice=Object.freeze({
 
 
 /* P5: spaced-recall state and companion local backup for the separate final-note editor. */
-const ck79ExtraKeys=Object.freeze(['ck10-exam-final-v1','ck11-final-page-count','ck80-explain-drafts-v1']);
+const ck79ExtraKeys=Object.freeze(['ck10-exam-final-v1','ck11-final-page-count','ck80-explain-drafts-v1','ck81-review-workbench-v1','ck82-exam-sessions-v1']);
 const ck79StorageView=()=>Object.fromEntries(ck79ExtraKeys.flatMap(k=>{
  try{const value=localStorage.getItem(k);return typeof value==='string'?[[k,value]]:[];}catch{return []}
 }));
@@ -1464,6 +1464,14 @@ function ck79RestoreExtras(data){
    }catch{continue;}
   }
   if(key==='ck11-final-page-count'&&!/^[1-5]$/.test(value))continue;
+  if(key==='ck81-review-workbench-v1'||key==='ck82-exam-sessions-v1'){
+   try{
+    const parsed=JSON.parse(value);
+    if(key==='ck81-review-workbench-v1'){
+     if(!window.CK81Workbench?.sanitizeProgress?.(parsed))continue;
+    }else if(!window.CK82FullExam?.cleanStore?.(parsed))continue;
+   }catch{continue;}
+  }
   try{localStorage.setItem(key,value);changed=true;}catch{}
  }
  return changed;
