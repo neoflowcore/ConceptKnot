@@ -34,7 +34,7 @@ function harness(settings={}){
   save(){},typingHistoryHtml:()=>'',esc:s=>String(s),clock:s=>String(s)};
  const html=read('index.html'),asset=read('assets/ck-typing-layout-v31.js');
  const marker='/* CK32 typing extension: executes inside the study engine lexical scope. */\n';
- const deployed=html.split(marker)[1]?.split('\nrender();setInterval(timerTick,500);')[0];
+ const deployed=html.split(marker)[1]?.split('\n\n/* CK64 selection menu: executes inside the study engine lexical scope. */')[0];
  assert.ok(deployed,'deployed typing extension must be in study engine scope');
  assert.equal(deployed.trim(),asset.trim(),'source and deployed extension must match');
  vm.runInNewContext(deployed,globals);
@@ -150,7 +150,7 @@ test('UI, IME handling, offline cache and source syntax stay consistent',()=>{
  assert.match(html,/const field=e\.target,raw=field\.value,clean=letters\(raw\)\.join\(''\)/);
  assert.match(html,/const field=e\.target,clean=letters\(field\.value\)\.join\(''\)/);
  assert.match(css,/ck61-typing-mode/);assert.match(read('assets/ck-typing-precision-v62.css'),/ck62-live/);
- assert.match(sw,/conceptknot-study-v70-typing-precision/);
+ assert.match(sw,/conceptknot-study-v76-p1-typing/);
  assert.match(sw,/ck-typing-modes-v61.css/);
  assert.equal(JSON.parse(read('vercel.json')).git.deploymentEnabled,false);
  for(const m of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))new vm.Script(m[1]);
@@ -174,4 +174,39 @@ test('v62 paragraph progress, aligned typography, active line and themed glass',
  assert.match(script,/function paintLetters/);
  assert.match(script,/function locateLine/);
  assert.match(script,/ck62-progress-label/);
+});
+
+
+test('P1 official AI question uses canonical answer, distinguishes exceptions and holds doubtful facts',()=>{
+ const t=harness(),f=t.api.buildOfficialPrompt;
+ const basic={id:'2025-12',year:2025,number:12,subject:'estate',verified:true,
+  question:'정답을 구하시오.',options:['하나','둘','셋','넷','다섯'],correct:[5],
+  originalUrl:'https://www.q-net.or.kr/'};
+ const normal=f(basic);
+ assert.match(normal.text,/2025-12/);
+ assert.match(normal.text,/공식 최종정답 처리: ⑤/);
+ assert.match(normal.text,/① 하나/);
+ assert.match(normal.text,/⑤ 다섯/);
+ assert.match(normal.text,/시험 당시 기준/);
+ assert.match(normal.text,/판단 보류/);
+ const multiple=f({...basic,id:'2022-56',year:2022,number:56,correct:[3,5]});
+ assert.match(multiple.text,/복수정답입니다/);
+ assert.match(multiple.text,/③ 또는 ⑤/);
+ const all=f({...basic,id:'2023-15',year:2023,number:15,correct:[1,2,3,4,5]});
+ assert.match(all.text,/전원정답 처리/);
+ assert.match(all.text,/모든 선지가 참이라는 뜻이 아닙니다/);
+ assert.equal(f({...basic,correct:[9]}).error,'공식 최종정답을 확인할 수 없습니다.');
+ assert.ok(f({...basic,verified:false}).error);
+});
+test('P1 mirror is diff-based and AI prompt never uploads personal data',()=>{
+ const s=read('assets/ck-typing-layout-v31.js');
+ assert.match(s,/const mirrorCache=new WeakMap/);
+ assert.match(s,/if\(value!==cache\.lastText&&cache\.live\)/);
+ assert.match(s,/if\(cache&&\(rebuild\|\|cache\.layoutWidth!==width\)\)/);
+ assert.match(s,/if\(area\.__ck31Composing\)return/);
+ assert.match(s,/window\.RECALL_OFFICIAL\?\.\[key\]/);
+ assert.doesNotMatch(s,/fetch\s*\(/);
+ assert.doesNotMatch(s,/localStorage\.(?:clear|removeItem)/);
+ assert.match(s,/data-ck31-explain-prompt/);
+ assert.match(read('assets/ck-typing-precision-v62.css'),/ck31-composing textarea/);
 });

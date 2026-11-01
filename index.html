@@ -109,7 +109,7 @@ body{font-family:Pretendard,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;bac
 <link rel="stylesheet" href="./assets/ck-nav-single-row-v56.css">
 <link rel="stylesheet" href="./assets/ck-theme-parity-v58.css?v=61">
 <link rel="stylesheet" href="./assets/ck-pen-scope-v59.css">
-<link rel="stylesheet" href="./assets/ck-typing-precision-v62.css?v=62">
+<link rel="stylesheet" href="./assets/ck-typing-precision-v62.css?v=76">
 <link rel="stylesheet" href="./assets/ck-board-compact-v63.css?v=63">
 <link rel="stylesheet" href="./assets/ck-note-context-v64.css?v=64">
 <link rel="stylesheet" href="./assets/ck-board-stability-v65.css?v=65">
@@ -2654,51 +2654,106 @@ function locateLine(mirror,selector){
  mirror.style.setProperty('--ck-v3-line-height',Math.max(24,height).toFixed(1)+'px');
  return {rect,base,height,top};
 }
-function paintNormal(m,mirror,area){
- const position=Math.min(caretIndex(area,'normal'),m.typed.length);
- const live=[];
- for(let i=0;i<=m.typed.length;i++){
-  if(i===position)live.push('<span class="ck62-anchor" data-ck62-anchor="1" aria-hidden="true"></span>');
-  if(i===m.typed.length)break;
-  const ch=m.typed[i];
-  if(ch==='\n'){live.push('\n');continue;}
-  live.push('<span class="ck62-live-char '+
-   (m.mapped.get(i)?.ok?'ck62-right':'ck62-wrong')+
-   '" data-ck62-input="'+i+'">'+esc(ch)+'</span>');
- }
- // The original paragraph and the typed text share a grid cell but never affect
- // one another's line wrapping. The native textarea is aligned to this grid.
- mirror.innerHTML='<div class="ck62-guide">'+esc(m.target.join(''))+'</div>'+
-  '<div class="ck62-live">'+live.join('')+'</div>';
- locateLine(mirror,'[data-ck62-anchor]');
+const mirrorCache=new WeakMap();
+function glyphClass(ch,ok){
+ return 'ck62-live-char '+(ch==='\n'?'ck62-newline':ok?'ck62-right':'ck62-wrong');
 }
-function paintLetters(m,mirror,area){
- const position=Math.min(caretIndex(area,'letters'),m.positions.length);
- mirror.innerHTML=m.target.map((ch,i)=>{
-  if(ch==='\n')return '\n';
-  const match=m.mapped.get(i);
-  const status=match?(match.ok?'ck62-right':'ck62-wrong'):
-   printable.test(ch)?'ck62-pending':'ck62-separator';
-  return '<span class="ck62-cell '+status+'" data-ck62-reference="'+i+'">'+
-   '<span class="ck62-cell-source">'+esc(ch)+'</span>'+
-   (match?'<span class="ck62-cell-input">'+esc(match.typed)+'</span>':'')+'</span>';
- }).join('')+'<span class="ck-v3-caret" aria-hidden="true"></span>';
- const index=m.positions[position]??m.positions[m.positions.length-1];
- const atEnd=position>=m.positions.length;
- const selector='[data-ck62-reference="'+index+'"]';
- const line=locateLine(mirror,selector);
- if(!line)return;
- const {rect,base,height,top}=line;
- mirror.style.setProperty('--ck-v3-caret-x',Math.max(0,(atEnd?rect.right:rect.left)-base.left).toFixed(1)+'px');
- mirror.style.setProperty('--ck-v3-caret-y',top.toFixed(1)+'px');
- mirror.style.setProperty('--ck-v3-caret-height',Math.max(18,height).toFixed(1)+'px');
+function paintNormal(m,mirror,area,key){
+ const target=m.target.join(''),typed=m.typed,position=Math.min(caretIndex(area,'normal'),typed.length);
+ let cache=mirrorCache.get(mirror);
+ if(!cache||cache.mode!=='normal'||cache.key!==key||cache.target!==target){
+  const live=[];
+  for(let i=0;i<=typed.length;i++){
+   if(i===position)live.push('<span class="ck62-anchor" data-ck62-anchor="1" aria-hidden="true"></span>');
+   if(i<typed.length)live.push('<span class="'+glyphClass(typed[i],m.mapped.get(i)?.ok)+
+    '" data-ck62-input="'+i+'">'+esc(typed[i])+'</span>');
+  }
+  // The immutable source is rebuilt only on a new question or mode, never on a keystroke.
+  mirror.innerHTML='<div class="ck62-guide">'+esc(target)+'</div><div class="ck62-live">'+live.join('')+'</div>';
+  cache={mode:'normal',key,target,lastText:typed.join(''),lastPosition:position,
+   nodes:Array.from(mirror.querySelectorAll?.('[data-ck62-input]')||[]),
+   live:mirror.querySelector('.ck62-live'),anchor:mirror.querySelector('[data-ck62-anchor]'),
+   layoutWidth:null};
+  mirrorCache.set(mirror,cache);
+  locateLine(mirror,'[data-ck62-anchor]');
+  return;
+ }
+ const value=typed.join('');
+ if(value!==cache.lastText&&cache.live){
+  for(let i=0;i<typed.length;i++){
+   const ch=typed[i],klass=glyphClass(ch,m.mapped.get(i)?.ok);
+   let node=cache.nodes[i];
+   if(!node){
+    node=document.createElement('span');node.dataset.ck62Input=String(i);
+    node.textContent=ch;node.className=klass;
+    cache.live.appendChild(node);cache.nodes.push(node);
+   }else{
+    if(node.textContent!==ch)node.textContent=ch;
+    if(node.className!==klass)node.className=klass;
+   }
+  }
+  while(cache.nodes.length>typed.length)cache.nodes.pop().remove();
+  cache.lastText=value;
+ }
+ if(position!==cache.lastPosition||value!==cache.lastLaidOutText){
+  if(cache.live&&cache.anchor)cache.live.insertBefore(cache.anchor,cache.nodes[position]||null);
+  locateLine(mirror,'[data-ck62-anchor]');
+  cache.lastPosition=position;cache.lastLaidOutText=value;
+ }
+}
+function paintLetters(m,mirror,area,key){
+ const target=m.target.join(''),position=Math.min(caretIndex(area,'letters'),m.positions.length);
+ let cache=mirrorCache.get(mirror);
+ if(!cache||cache.mode!=='letters'||cache.key!==key||cache.target!==target){
+  mirror.innerHTML=m.target.map((ch,i)=>{
+   if(ch==='\n')return '\n';
+   const match=m.mapped.get(i),status=match?(match.ok?'ck62-right':'ck62-wrong'):
+    printable.test(ch)?'ck62-pending':'ck62-separator';
+   return '<span class="ck62-cell '+status+'" data-ck62-reference="'+i+'">'+
+    '<span class="ck62-cell-source">'+esc(ch)+'</span>'+
+    (match?'<span class="ck62-cell-input">'+esc(match.typed)+'</span>':'')+'</span>';
+  }).join('')+'<span class="ck-v3-caret" aria-hidden="true"></span>';
+  cache={mode:'letters',key,target,lastText:null,lastPosition:null,layoutWidth:null,
+   cells:new Map(Array.from(mirror.querySelectorAll?.('[data-ck62-reference]')||[])
+    .map(node=>[Number(node.dataset.ck62Reference),node]))};
+  mirrorCache.set(mirror,cache);
+ }
+ const value=m.typed.join('');
+ if(cache.lastText!==value){
+  for(const at of m.positions){
+   const cell=cache.cells.get(at);if(!cell)continue;
+   const match=m.mapped.get(at),klass='ck62-cell '+(match?(match.ok?'ck62-right':'ck62-wrong'):'ck62-pending');
+   if(cell.className!==klass)cell.className=klass;
+   let ink=cell.querySelector('.ck62-cell-input');
+   if(match&&!ink){ink=document.createElement('span');ink.className='ck62-cell-input';cell.appendChild(ink);}
+   if(ink&&ink.textContent!==(match?.typed||''))ink.textContent=match?.typed||'';
+  }
+  cache.lastText=value;
+ }
+ if(cache.lastPosition!==position){
+  const index=m.positions[position]??m.positions[m.positions.length-1];
+  const line=locateLine(mirror,'[data-ck62-reference="'+index+'"]');
+  if(line){
+   const {rect,base,height,top}=line,atEnd=position>=m.positions.length;
+   mirror.style.setProperty('--ck-v3-caret-x',Math.max(0,(atEnd?rect.right:rect.left)-base.left).toFixed(1)+'px');
+   mirror.style.setProperty('--ck-v3-caret-y',top.toFixed(1)+'px');
+   mirror.style.setProperty('--ck-v3-caret-height',Math.max(18,height).toFixed(1)+'px');
+  }
+  cache.lastPosition=position;
+ }
 }
 typingGhost=function(el){
  const c=typingConcept(),r=chalkRecord('practice',c.id);
  const mirror=el?.querySelector('.chalk-mirror'),area=el?.querySelector('textarea');
  if(!mirror||!area)return;
- if(!c.fact){mirror.innerHTML='<span class="chalk-placeholder">연습할 공식 문항이 없습니다.</span>';area.disabled=true;return;}
- const m=mapText(c.fact,r),normal=m.mode==='normal';
+ if(!c.fact){
+  if(mirror.dataset?.ck31Empty!=='true')mirror.innerHTML='<span class="chalk-placeholder">연습할 공식 문항이 없습니다.</span>';
+  if(mirror.dataset)mirror.dataset.ck31Empty='true';
+  area.disabled=true;return;
+ }
+ if(area.__ck31Composing)return;
+ area.disabled=false;
+ const m=mapText(c.fact,{text:area.value}),normal=m.mode==='normal',key=String(c.id);
  el.classList.toggle('ck61-normal-editor',normal);
  el.classList.toggle('ck61-letters-editor',!normal);
  el.classList.toggle('ck62-editor',true);
@@ -2707,14 +2762,19 @@ typingGhost=function(el){
  mirror.classList.toggle('ck61-letters',!normal);
  mirror.classList.toggle('ck62-normal',normal);
  mirror.classList.toggle('ck62-letters',!normal);
- if(normal)paintNormal(m,mirror,area);
- else paintLetters(m,mirror,area);
- // The two text layers are never aligned by guessing the length of their words.
- // Give the textarea exactly the same content rectangle as the mirror.
- const height=Math.max(165,mirror.scrollHeight||0)+32;
- el.style.setProperty('min-height',height+'px','important');
- area.style.height=Math.max(133,height-32)+'px';
-};
+ const before=mirrorCache.get(mirror);
+ const rebuild=!before||before.key!==key||before.mode!==m.mode||before.target!==m.target.join('');
+ if(normal)paintNormal(m,mirror,area,key);else paintLetters(m,mirror,area,key);
+ const cache=mirrorCache.get(mirror),width=mirror.clientWidth||0;
+ // Read size only on source/mode/viewport changes, never force a height write per key.
+ if(cache&&(rebuild||cache.layoutWidth!==width)){
+  const height=Math.max(165,mirror.scrollHeight||0)+32;
+  el.style.setProperty('min-height',height+'px','important');
+  area.style.height=Math.max(133,height-32)+'px';
+  cache.layoutWidth=width;
+ }
+ syncGeneratedPrompt(c);
+}
 function completion(){
  const finished=new Set((Array.isArray(state.typingHistory)?state.typingHistory:[])
   .filter(x=>x?.subject===state.subject).map(x=>x.id));
@@ -2775,6 +2835,143 @@ typingFeedback=function(){
   Array.from(dots.children).forEach((dot,i)=>dot.className=i<n?'ck-v3-done':'ck-v3-pending');
  }
 };
+// Use the existing CK10 AI dock: this feature never posts text to a third-party service.
+let generatedPrompt=null;
+function buildOfficialPrompt(q){
+ if(!q||q.verified!==true||!Array.isArray(q.options)||q.options.length!==5||
+    q.options.some(v=>typeof v!=='string'||!v.trim())||!q.question?.trim())
+  return {error:'이 문항의 공식 문제·5개 선지가 확인되지 않았습니다.'};
+ const correct=Array.isArray(q.correct)?q.correct.map(Number):[];
+ if(!correct.length||correct.some(n=>!Number.isInteger(n)||n<1||n>5)||new Set(correct).size!==correct.length)
+  return {error:'공식 최종정답을 확인할 수 없습니다.'};
+ const id=q.id||String(q.year)+'-'+String(q.number),all=correct.length===5,multi=correct.length>1&&!all;
+ const subject=q.subject==='civil'?'민법 및 민사특별법':'부동산학개론';
+ const answer=all?'전원정답 처리(①~⑤ 모두 채점 인정, 각 선지의 참·거짓과는 별개)':
+  correct.map(n=>'①②③④⑤'[n-1]).join(' 또는 ');
+ const warning=all?'전원정답은 모든 선지가 참이라는 뜻이 아닙니다. 선지 진위를 알 수 없으면 판단 보류하세요.':
+  multi?'복수정답입니다. 인정된 각각의 선택지를 독립적으로 설명하세요.':
+  '공식 최종정답 번호와 각 선지의 참·거짓 판단을 구분하세요.';
+ const lines=[
+  '[ConceptKnot 현재 문항 · AI 해설 요청]',
+  '문항 ID: '+id,
+  '과목: '+subject,
+  '시험 연도: '+String(q.year)+'년 (시험 당시 기준)',
+  '문제 원문:\n'+q.question.trim(),
+  '5개 선지:\n'+q.options.map((v,i)=>'①②③④⑤'[i]+' '+v.trim()).join('\n'),
+  '공식 최종정답 처리: '+answer,
+  '특수정답 주의: '+warning,
+  q.checks?.visualReview?'표·도형·수식은 공식 문제지 PDF 원본과 반드시 대조하세요.':'',
+  '공식 출처: '+(q.originalUrl||'한국산업인력공단 Q-Net 원문 출처 확인 필요'),
+  '요청:',
+  '1. 정답 근거를 초보자도 이해하도록 쉬운 문장 2~3개로 설명하세요.',
+  '2. ①~⑤를 각각 옳음/틀림/판단 보류로 분류하고 판단 근거를 쓰세요. 조합형 진술도 나누어 검토하세요.',
+  '3. 일상적인 예시 1개, 자주 빠지는 함정, 시험 직전 암기 한 줄을 제시하세요.',
+  '4. 계산문제라면 조건→공식→대입→결과→단위→검산 순서로 제시하세요.',
+  '5. 법령·판례는 시험 당시 기준과 현행법을 구분하고 공식 원문 또는 검증 가능한 출처를 명시하세요.',
+  '공식 정답 인정과 선지의 실질적 진위는 같지 않을 수 있습니다.',
+  '근거를 확인할 수 없으면 추측하거나 판례 번호를 지어내지 말고 판단 보류로 표시하세요.',
+  '이 질문에는 사용자 메모·개인 답안이 포함되지 않습니다.'
+ ];
+ return {sourceId:'official-'+id,text:lines.filter(Boolean).join('\n\n')};
+}
+function buildPromptForItem(c){
+ const id=String(c?.id||''),match=/^official-(\d{4})-(\d{1,2})$/.exec(id);
+ if(match){
+  const key=match[1]+'-'+Number(match[2]),official=window.RECALL_OFFICIAL?.[key];
+  if(!official)return {error:'공식 기출 데이터가 아직 준비되지 않았습니다. 다시 불러온 뒤 시도하세요.'};
+  return buildOfficialPrompt(official);
+ }
+ if(id.startsWith('type-')){
+  const q=typeof quizzes==='function'?quizzes().find(x=>x.id===id.slice(5)):null;
+  if(!q||!Array.isArray(q.a)||q.a.length!==5)return {error:'연습문제 자료를 확인할 수 없습니다.'};
+  const correct=Array.isArray(q.correct)?q.correct:[q.ok];
+  return {sourceId:id,text:[
+   '[ConceptKnot 창작 연습문제 · AI 설명 요청]','공식 기출이 아닌 학습용 문제입니다.',
+   '과목: '+(state.subject==='civil'?'민법 및 민사특별법':'부동산학개론'),
+   '문제: '+q.q,'선지:\n'+q.a.map((v,i)=>'①②③④⑤'[i]+' '+v).join('\n'),
+   '연습문제 설정 정답: '+correct.map(n=>'①②③④⑤'[Number(n)-1]||'?').join(' 또는 '),
+   '쉬운 근거 2~3문장, 선지별 검토, 예시 1개, 함정과 암기 한 줄을 제시하세요.',
+   '검증되지 않은 법령·판례·공식은 추측하지 말고 확인 필요로 표시하세요.'
+  ].join('\n\n')};
+ }
+ if(c?.fact)return {sourceId:id,text:[
+  '[ConceptKnot 핵심 이론 · AI 설명 요청]','공식 시험 문항이 아닌 학습 노트입니다.',
+  '과목: '+(state.subject==='civil'?'민법 및 민사특별법':'부동산학개론'),
+  '학습 내용:\n'+c.fact,'쉽게 풀어 설명하고 예시 1개·혼동하는 개념·20초 암기 질문을 만들어 주세요.',
+  '법령·판례·계산 근거는 출처를 확인하고 불확실하면 보류하세요.'
+ ].join('\n\n')};
+ return {error:'현재 선택한 학습 문항이 없습니다.'};
+}
+function promptStatus(message){
+ const status=document.querySelector('[data-ck31-prompt-status]');
+ if(status)status.textContent=message;
+}
+function syncGeneratedPrompt(c){
+ if(!generatedPrompt||generatedPrompt.sourceId===c.id)return;
+ const area=document.getElementById('ck10-ai-question');
+ if(!area||area.value!==generatedPrompt.text){generatedPrompt=null;return;}
+ const next=buildPromptForItem(c);
+ if(next.error){area.value='';generatedPrompt=null;promptStatus(next.error);return;}
+ area.value=next.text;generatedPrompt=next;promptStatus('현재 문항의 질문으로 갱신했습니다.');
+}
+if(typeof renderTyping==='function'){
+ const originalTypingRender=renderTyping;
+ renderTyping=function(){
+  const html=originalTypingRender();
+  return html.replace('<div class="ck-v7-actions-right">',
+   '<div class="ck-v7-actions-right"><button type="button" data-ck31-explain-prompt class="ck31-prompt-btn" title="현재 문항의 공식 문제·선지·정답을 AI 질문으로 복사합니다">AI 해설 질문 복사</button><span data-ck31-prompt-status class="ck31-prompt-status" role="status" aria-live="polite"></span>');
+ };
+}
+document.addEventListener('click',e=>{
+ const button=e.target.closest?.('[data-ck31-explain-prompt]');
+ if(!button||state.view!=='typing')return;
+ e.preventDefault();e.stopImmediatePropagation();
+ const prompt=buildPromptForItem(typingConcept());
+ if(prompt.error){promptStatus(prompt.error);return;}
+ if(typeof window.CK10?.openDock==='function')window.CK10.openDock('chatgpt');
+ const area=document.getElementById('ck10-ai-question');
+ if(area)area.value=prompt.text;
+ generatedPrompt=prompt;
+ button.textContent='AI 해설 질문 복사';
+ const success=()=>{
+  if(generatedPrompt?.sourceId!==prompt.sourceId)return;
+  button.textContent='복사됨 ✓';
+  promptStatus('복사 완료 · AI 창에 붙여 넣어 질문하세요.');
+ };
+ const failed=()=>{
+  if(area){area.focus();area.select();}
+  promptStatus('자동 복사 실패 · 열린 질문창에서 직접 선택해 복사하세요.');
+ };
+ if(typeof navigator!=='undefined'&&typeof navigator.clipboard?.writeText==='function'){
+  try{Promise.resolve(navigator.clipboard.writeText(prompt.text)).then(success,failed);}
+  catch(err){failed();}
+ }else{
+  let copied=false;
+  try{if(area){area.focus();area.select();copied=!!document.execCommand?.('copy');}}catch(err){}
+  if(copied)success();else failed();
+ }
+},true);
+document.addEventListener('compositionstart',e=>{
+ const field=e.target;if(state.view!=='typing'||field?.tagName!=='TEXTAREA'||
+    !field.closest?.('.ck-v7-input .chalk-editor'))return;
+ field.__ck31Composing=true;
+ field.closest('.chalk-editor')?.classList.add('ck31-composing');
+},true);
+document.addEventListener('compositionend',e=>{
+ const field=e.target;if(state.view!=='typing'||field?.tagName!=='TEXTAREA'||
+    !field.closest?.('.ck-v7-input .chalk-editor'))return;
+ field.__ck31Composing=false;
+ field.closest('.chalk-editor')?.classList.remove('ck31-composing');
+ const editor=field.closest('.chalk-editor');if(editor)typingGhost(editor);
+});
+document.addEventListener('selectionchange',()=>{
+ if(state.view!=='typing')return;
+ const field=document.querySelector('.ck-v7-input .chalk-editor textarea');
+ if(field&&document.activeElement===field&&!field.__ck31Composing){
+  const editor=field.closest('.chalk-editor');if(editor)typingGhost(editor);
+ }
+});
+document.addEventListener('select',refreshCaret,true);
 function updateModeButtons(){
  for(const button of document.querySelectorAll('[data-ck-typing-mode]'))
   button.setAttribute('aria-pressed',String(button.dataset.ckTypingMode===currentMode()));
@@ -2861,7 +3058,7 @@ document.addEventListener('keyup',e=>{
 });
 document.addEventListener('mouseup',refreshCaret);
 document.addEventListener('compositionend',refreshCaret);
-window.CK31Typing=Object.freeze({mapText,mode:currentMode,letters,clean:normalized,
+window.CK31Typing=Object.freeze({mapText,mode:currentMode,letters,clean:normalized,buildPromptForItem,buildOfficialPrompt,
  options:()=>({mode:currentMode(),enter:currentMode()==='normal',space:currentMode()==='normal'})});
 })();
 
