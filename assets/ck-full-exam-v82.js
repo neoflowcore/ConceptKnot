@@ -1,0 +1,397 @@
+/* ConceptKnot v82: full 80-question / 100-minute official-paper practice.
+ * Browser-local attempt, never an official scored exam or verified explanation.
+ * No background animation, external service, CI, package or build dependency.
+ */
+(function(){
+'use strict';
+const KEY='ck82-exam-sessions-v1',VERSION=1,DURATION=100*60*1000,HISTORY_LIMIT=20;
+const YEARS=Array.from({length:10},(_,i)=>2025-i);
+const MS_MINUTE=60000;
+const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+const bank=()=>window.RECALL_OFFICIAL||{};
+const isYear=y=>YEARS.includes(Number(y));
+const idsFor=year=>Array.from({length:80},(_,i)=>Number(year)+'-'+(i+1));
+const isMark=v=>Number.isInteger(v)&&v>=1&&v<=5;
+const cleanAnswers=v=>{
+ const a=Array.isArray(v)?v:[];
+ return Array.from({length:80},(_,i)=>a[i]===null||a[i]===undefined?null:isMark(a[i])?a[i]:null);
+};
+const checkBank=year=>{
+ if(!isYear(year))return {ok:false,missing:[]};
+ const missing=idsFor(year).filter(id=>{
+  const q=bank()[id];
+  return !q||q.verified!==true||q.options?.length!==5||!q.question||
+   !Array.isArray(q.correct)||!q.correct.length||
+   q.correct.some(n=>!isMark(Number(n)))||
+   q.subject!==(Number(id.slice(id.indexOf('-')+1))<=40?'estate':'civil');
+ });
+ return {ok:missing.length===0,missing};
+};
+function sanitizeAttempt(row){
+ if(!row||typeof row!=='object'||!isYear(row.year)||!['running','paused','submitted'].includes(row.status)||
+  !Array.isArray(row.answers)||row.answers.length!==80||row.answers.some(x=>x!==null&&!isMark(x))||
+  !Array.isArray(row.flags)||row.flags.length!==80||row.flags.some(x=>typeof x!=='boolean'))return null;
+ const startedAt=Number(row.startedAt),deadlineAt=Number(row.deadlineAt),remainingMs=Number(row.remainingMs);
+ if(!Number.isFinite(startedAt)||startedAt<=0||!Number.isFinite(deadlineAt)||
+  !Number.isFinite(remainingMs)||remainingMs<0||remainingMs>DURATION)return null;
+ const submittedAt=row.status==='submitted'?Number(row.submittedAt):0;
+ if(row.status==='submitted'&&(!Number.isFinite(submittedAt)||submittedAt<startedAt))return null;
+ const position=Number(row.position)||0;
+ return {year:Number(row.year),status:row.status,startedAt,deadlineAt,
+  remainingMs,submittedAt,position:Math.max(0,Math.min(79,Math.floor(position))),
+  answers:cleanAnswers(row.answers),flags:row.flags.slice(),
+  pauseCount:Math.max(0,Math.min(999,Number(row.pauseCount)||0)),
+  reason:row.status==='submitted'&&['manual','time'].includes(row.reason)?row.reason:'',
+  score:row.status==='submitted'&&row.score&&typeof row.score==='object'?{
+    estate:Math.max(0,Math.min(100,Number(row.score.estate)||0)),
+    civil:Math.max(0,Math.min(100,Number(row.score.civil)||0)),
+    total:Math.max(0,Math.min(80,Number(row.score.total)||0)),
+    average:Math.max(0,Math.min(100,Number(row.score.average)||0)),
+    passed:row.score.passed===true
+  }:null};
+}
+function cleanStore(data){
+ if(!data||data.schemaVersion!==VERSION||!Array.isArray(data.history)||
+  data.history.length>HISTORY_LIMIT||data.history.some(x=>!sanitizeAttempt(x)||x.status!=='submitted'))return null;
+ const active=data.active===null?null:sanitizeAttempt(data.active);
+ if(data.active!==null&&!active)return null;
+ return {schemaVersion:VERSION,active,history:data.history.map(sanitizeAttempt)};
+}
+function empty(){return {schemaVersion:VERSION,active:null,history:[]};}
+function readStore(){
+ try{return cleanStore(JSON.parse(localStorage.getItem(KEY)||'null'))||empty();}
+ catch{return empty();}
+}
+let state=readStore(),root=null,expanded=false,selectedYear=2025,error='',showHistory=false,scheduled=false;
+function persist(next){
+ const clean=cleanStore(next);if(!clean)return false;
+ try{localStorage.setItem(KEY,JSON.stringify(clean));state=clean;return true;}
+ catch{error='저장 실패 · 브라우저 저장 공간 또는 권한을 확인하세요. 안전한 백업을 권장합니다.';return false;}
+}
+function active(){return state.active;}
+function remaining(session,now=Date.now()){
+ if(!session)return 0;
+ if(session.status==='running')return Math.max(0,session.deadlineAt-now);
+ if(session.status==='paused')return Math.max(0,session.remainingMs);
+ return 0;
+}
+function fmtClock(ms){
+ const seconds=Math.max(0,Math.ceil(ms/1000));
+ return String(Math.floor(seconds/60)).padStart(2,'0')+':'+String(seconds%60).padStart(2,'0');
+}
+function gradeAttempt(session,official=bank()){
+ let estateCorrect=0,civilCorrect=0,estateAnswered=0,civilAnswered=0;
+ const wrong=[],unanswered=[],correctIds=[],allAccepted=[];
+ for(let i=0;i<80;i++){
+  const id=session.year+'-'+(i+1),q=official[id],value=session.answers[i];
+  const subject=i<40?'estate':'civil';
+  if(value!==null){if(subject==='estate')estateAnswered++;else civilAnswered++;}
+  if(q?.correct?.length===5)allAccepted.push(id);
+  if(value===null){unanswered.push(id);continue;}
+  const correct=Array.isArray(q?.correct)?q.correct.map(Number).includes(value):false;
+  if(correct){correctIds.push(id);if(subject==='estate')estateCorrect++;else civilCorrect++;}
+  else wrong.push(id);
+ }
+ const estate=estateCorrect*2.5,civil=civilCorrect*2.5,average=(estate+civil)/2;
+ return {estate,civil,estateCorrect,civilCorrect,estateAnswered,civilAnswered,
+  answered:estateAnswered+civilAnswered,unanswered,wrong,correctIds,allAccepted,
+  total:estateCorrect+civilCorrect,average,passed:estate>=40&&civil>=40&&average>=60};
+}
+function newAttempt(year,now=Date.now()){
+ const y=Number(year);
+ if(!checkBank(y).ok)return null;
+ return {year:y,status:'running',startedAt:now,deadlineAt:now+DURATION,remainingMs:DURATION,
+  submittedAt:0,position:0,answers:Array(80).fill(null),flags:Array(80).fill(false),
+  pauseCount:0,reason:'',score:null};
+}
+function start(year=selectedYear){
+ const issue=checkBank(year);
+ if(!issue.ok){message('해당 연도 공식 80문항 등록 상태가 불완전합니다. 누락 '+issue.missing.length+'건.');return false;}
+ if(active()?.status!=='submitted'&&active()&&
+  !window.confirm?.('진행 중인 시험을 교체하면 현재 미제출 답안은 사라집니다. 새 시험을 시작할까요?'))return false;
+ const next=newAttempt(year);
+ if(!next||!persist({...state,active:next}))return false;
+ expanded=true;showHistory=false;error='';paint();focusRegion();
+ return true;
+}
+function saveActive(next){
+ if(!next)return false;
+ const ok=persist({...state,active:next});
+ if(ok){error='';paint();}
+ else message(error);
+ return ok;
+}
+function setAnswer(value){
+ const s=active();if(!s||s.status!=='running')return false;
+ const n=Number(value);if(!isMark(n)&&value!==null)return false;
+ if(remaining(s)===0){finish('time');return false;}
+ const a=s.answers.slice();a[s.position]=n;
+ return saveActive({...s,answers:a});
+}
+function navigate(position){
+ const s=active();if(!s)return false;
+ const i=Number(position);if(!Number.isInteger(i)||i<0||i>=80)return false;
+ return saveActive({...s,position:i});
+}
+function setFlag(){
+ const s=active();if(!s||s.status==='submitted')return false;
+ const flags=s.flags.slice();flags[s.position]=!flags[s.position];
+ return saveActive({...s,flags});
+}
+function pause(){
+ const s=active();if(s?.status!=='running')return false;
+ if(remaining(s)===0)return finish('time');
+ const left=remaining(s);
+ return saveActive({...s,status:'paused',remainingMs:left,pauseCount:s.pauseCount+1});
+}
+function resume(){
+ const s=active();if(s?.status!=='paused')return false;
+ return saveActive({...s,status:'running',deadlineAt:Date.now()+s.remainingMs});
+}
+function finish(reason='manual',now=Date.now()){
+ const s=active();if(!s||s.status==='submitted')return false;
+ const assessed=gradeAttempt(s),score={
+  estate:assessed.estate,civil:assessed.civil,total:assessed.total,
+  average:assessed.average,passed:assessed.passed
+ };
+ const submitted={...s,status:'submitted',submittedAt:now,remainingMs:0,
+  reason:reason==='time'?'time':'manual',score};
+ const next={...state,active:submitted,history:[submitted,...state.history].slice(0,HISTORY_LIMIT)};
+ if(!persist(next))return false;
+ expanded=true;showHistory=false;error='';paint();
+ return true;
+}
+function checkExpiry(){
+ const s=active();
+ if(s?.status==='running'&&remaining(s)===0)finish('time');
+}
+function status(text){const t=root?.querySelector('[data-ck82-notice]');if(t)t.textContent=text;}
+function message(text){error=text;status(text);}
+function focusRegion(){try{root?.querySelector('[data-ck82-workspace]')?.focus({preventScroll:true});}catch{}}
+function timeText(){
+ const s=active(),ms=remaining(s);
+ return '<span class="ck82-clock" data-ck82-clock role="timer" aria-label="시험 남은 시간">'+fmtClock(ms)+'</span>'+
+ (s?.status==='running'?'<span class="ck82-clock-hint">실시간 진행</span>':
+  s?.status==='paused'?'<span class="ck82-clock-hint">일시 중단 · 시간 정지</span>':'');
+}
+function progress(){
+ const s=active(),answered=s?.answers.filter(x=>x!==null).length||0;
+ const flagged=s?.flags.filter(Boolean).length||0;
+ return '<div class="ck82-progress"><span>응답 '+answered+'/80</span><span>미응답 '+(80-answered)+
+  '</span><span>보류 '+flagged+'</span><span>과목별 각 40문항 · 2.5점/문항</span></div>';
+}
+function choicesHtml(q,s){
+ return '<div class="ck82-choices" role="group" aria-label="정답 선택">'+
+  q.options.map((opt,i)=>{
+   const answer=s.answers[s.position],picked=answer===i+1;
+   return '<button type="button" class="ck82-option" data-ck82-answer="'+(i+1)+
+    '" aria-pressed="'+picked+'"><b>'+'①②③④⑤'[i]+'</b><span>'+esc(opt)+'</span></button>';
+  }).join('')+'</div>';
+}
+function renderOmr(s){
+ return '<aside class="ck82-omr" aria-label="80문항 답안지">'+
+  ['estate','civil'].map((subject,section)=>{
+   const start=section*40;
+   return '<section><h4>'+(subject==='estate'?'부동산학개론':'민법 및 민사특별법')+' · '+
+    s.answers.slice(start,start+40).filter(x=>x!==null).length+'/40</h4>'+
+    '<div class="ck82-omr-grid">'+Array.from({length:40},(_,i)=>{
+     const pos=start+i,choice=s.answers[pos],flag=s.flags[pos];
+     return '<button type="button" data-ck82-goto="'+pos+'" class="ck82-omr-cell'+
+      (choice!==null?' answered':'')+(flag?' flagged':'')+
+      (pos===s.position?' current':'')+'" aria-current="'+(pos===s.position?'true':'false')+
+      '" title="'+(pos+1)+'번 '+(choice===null?'미응답':choice+'번 선택')+(flag?' · 보류':'')+
+      '"><span>'+(pos+1)+'</span>'+(flag?'<small>!</small>':'')+'</button>';
+    }).join('')+'</div></section>';
+  }).join('')+'</aside>';
+}
+function renderSession(s){
+ const i=s.position,q=bank()[s.year+'-'+(i+1)],canAnswer=s.status==='running';
+ if(!q)return '<p>등록된 문항을 불러오지 못했습니다. 공식 데이터 연결 상태를 확인하세요.</p>';
+ return '<div class="ck82-session-head"><div><strong>제'+(s.year-1989)+'회 '+s.year+'년 공식 A형 · 통합 실전</strong>'+
+  '<p>시험 기준 연도 법령을 따릅니다. 그림·표·수식은 공식 PDF 원문과 대조하세요.</p></div>'+timeText()+'</div>'+
+  progress()+'<div class="ck82-exam-layout"><section class="ck82-question" aria-label="현재 문항">'+
+  '<div class="ck82-question-head"><strong>'+(i+1)+' / 80 · '+(i<40?'부동산학개론':'민법 및 민사특별법')+
+  '</strong><span>'+esc(s.flags[i]?'검토 보류 표시':'A형 공식 기출')+'</span></div>'+
+  '<p class="ck82-stem">'+esc(q.question)+'</p>'+choicesHtml(q,s)+
+  '<div class="ck82-question-actions">'+
+  '<button type="button" data-ck82-clear'+(!canAnswer?' disabled':'')+'>이 문항 미응답으로</button>'+
+  '<button type="button" data-ck82-flag'+(s.status==='submitted'?' disabled':'')+'>'+
+    (s.flags[i]?'보류 표시 해제':'검토 보류 표시')+'</button>'+
+  '<button type="button" data-ck82-prev'+(i===0?' disabled':'')+'>이전</button>'+
+  '<button type="button" data-ck82-next'+(i===79?' disabled':'')+'>다음</button></div>'+
+  '<div class="ck82-tips">작업 영역에 초점을 맞춘 뒤 숫자 1~5로 선택, 좌·우 방향키로 문항 이동. 선지 선택 시 정답은 공개하지 않습니다.</div>'+
+  '<a class="ck82-original" href="'+esc(/^https:\/\//.test(q.originalUrl||'')?q.originalUrl:'https://www.q-net.or.kr/')+
+  '" target="_blank" rel="noopener noreferrer">원문 출처 열기</a>'+
+  '</section>'+renderOmr(s)+'</div>'+
+  '<div class="ck82-actions">'+
+  (s.status==='running'?'<button type="button" data-ck82-pause>중단·시간 정지</button>':
+   s.status==='paused'?'<button type="button" data-ck82-resume>시험 재개</button>':'')+
+  '<button type="button" data-ck82-submit'+(s.status==='submitted'?' disabled':'')+
+  '>80문항 최종 제출</button>'+
+  '<button type="button" data-ck82-hide>실전 화면 접기</button></div>'+
+  (s.pauseCount>0?'<p class="ck82-warning">중단·재개 '+s.pauseCount+'회: 실제 시험과 동일한 연속 100분 기록은 아닙니다.</p>':'')+
+  (s.status==='paused'?'<p class="ck82-warning">시간이 멈춰 있습니다. 다시 시작하기 전에는 답을 변경할 수 없습니다.</p>':'');
+}
+function renderResult(s){
+ const grade=gradeAttempt(s),readable=grade.passed?'연습 기준 합격점 충족':'연습 기준 미달';
+ const rows=[['학개론',grade.estate,grade.estateCorrect,grade.estateAnswered],
+  ['민법',grade.civil,grade.civilCorrect,grade.civilAnswered]];
+ return '<section class="ck82-result"><h3>시험 채점 결과 · '+esc(readable)+'</h3>'+
+ '<p>과목별 40점 이상, 평균 60점 이상을 동시에 충족해야 합니다. 이 결과는 공식 시험 성적이나 법적 합격 통지가 아닙니다.</p>'+
+ '<dl class="ck82-scores">'+rows.map(([name,score,correct,answered])=>'<div><dt>'+name+'</dt><dd>'+
+  score.toFixed(1)+'점</dd><small>'+correct+'/40 정답 · '+answered+'/40 응답</small></div>').join('')+
+  '<div><dt>총 평균</dt><dd>'+grade.average.toFixed(1)+'점</dd><small>'+grade.total+'/80 정답</small></div></dl>'+
+ '<p>응답 '+grade.answered+'/80 · 오답 '+grade.wrong.length+' · 미응답 '+grade.unanswered.length+
+ ' · 전원정답 인정 '+grade.allAccepted.length+'건 · '+(s.reason==='time'?'시간 만료 자동 제출':'직접 제출')+
+ (s.pauseCount>0?' · 중단 '+s.pauseCount+'회':'')+'</p>'+
+ '<p class="ck82-disclaimer">전원정답 문항은 ①~⑤ 모두 채점 인정이지만, 미응답은 정답 처리하지 않습니다. 채점 인정은 각 선지가 모두 참이라는 뜻이 아닙니다.</p>'+
+ '<div class="ck82-review-actions"><button type="button" data-ck82-filter="wrong">오답 문항 보기</button>'+
+ '<button type="button" data-ck82-filter="blank">미응답 보기</button>'+
+ '<button type="button" data-ck82-filter="all">80문항 전체 보기</button></div>'+
+ '<div data-ck82-result-list></div></section>';
+}
+let resultFilter='wrong';
+function resultItems(s){
+ const details=gradeAttempt(s);
+ const indices=resultFilter==='wrong'?details.wrong.map(id=>Number(id.split('-')[1])-1):
+  resultFilter==='blank'?details.unanswered.map(id=>Number(id.split('-')[1])-1):
+  Array.from({length:80},(_,i)=>i);
+ return '<div class="ck82-review-list">'+indices.map(i=>{
+  const q=bank()[s.year+'-'+(i+1)],n=s.answers[i],correct=q?.correct||[];
+  if(!q)return '';
+  return '<div class="ck82-review-row"><strong>'+(i+1)+'번 · '+(i<40?'학개론':'민법')+'</strong>'+
+   '<span>내 응답: '+(n===null?'미응답':n+'번')+' · 채점 인정: '+
+   (correct.length===5?'①~⑤ 전원정답':correct.join(' 또는 ')+'번')+'</span>'+
+   '<button type="button" data-ck82-detail="'+esc(q.id)+'">원문·해설 보기</button></div>';
+ }).join('')+'</div>';
+}
+function renderHistory(){
+ const items=state.history;
+ if(!items.length)return '<p>아직 제출한 실전 시험이 없습니다.</p>';
+ return '<div class="ck82-history">'+items.map((s,i)=>{
+  const score=gradeAttempt(s);
+  const date=new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(s.submittedAt));
+  return '<div><strong>'+date+' · '+s.year+'년</strong><span>학개론 '+score.estate+'점 · 민법 '+
+   score.civil+'점 · 평균 '+score.average+'점</span><span>'+(score.passed?'연습 기준 충족':'미충족')+
+   ' · '+(s.reason==='time'?'시간 만료':'직접 제출')+'</span></div>';
+ }).join('')+'</div>';
+}
+function renderLauncher(){
+ const s=active();
+ const years='<label>연습 기출 연도 <select data-ck82-year aria-label="실전 시험 연도">'+YEARS.map(y=>
+  '<option value="'+y+'"'+(selectedYear===y?' selected':'')+'>'+y+'년 공식 A형</option>').join('')+'</select></label>';
+ return '<div class="ck82-launch"><div><strong>80문항 · 100분 통합 실전</strong>'+
+  '<p>학개론 40문항 + 민법 40문항, A형 최종정답 채점 · 미응답과 보류 표시 · 자동 저장·복원</p></div>'+
+  '<div class="ck82-launch-actions">'+years+
+  '<button type="button" data-ck82-start>새 시험 시작</button>'+
+  (s?'<button type="button" data-ck82-expand>'+(expanded?'시험 화면 접기':s.status==='submitted'?'최근 결과 보기':'진행 중인 시험 열기')+'</button>':'')+
+  (state.history.length?'<button type="button" data-ck82-history>성적 기록 '+state.history.length+'건</button>':'')+
+  '</div></div>';
+}
+function paint(){
+ if(!root?.isConnected)return;
+ const s=active();
+ document.body.classList.toggle('ck82-exam-focused',expanded&&Boolean(s));
+ root.innerHTML=renderLauncher()+
+  '<div class="ck82-workspace" data-ck82-workspace tabindex="0"'+(!expanded?' hidden':'')+'>'+
+  (expanded&&s?(s.status==='submitted'?renderResult(s):renderSession(s)):
+   (expanded?'<p>시험을 시작하면 이곳에 80문항이 표시됩니다.</p>':''))+
+  (expanded&&s?.status==='submitted'?'<div class="ck82-actions"><button type="button" data-ck82-new>다른 연도로 새 시험 시작</button></div>':'')+
+  '</div>'+
+  (showHistory?'<section class="ck82-history-panel"><h3>최근 20회 실전 성적</h3>'+renderHistory()+'</section>':'')+
+  '<p class="ck82-note" data-ck82-notice role="status">'+esc(error)+'</p>';
+ if(expanded&&s?.status==='submitted'){
+  const list=root.querySelector('[data-ck82-result-list]');if(list)list.innerHTML=resultItems(s);
+ }
+}
+function mount(){
+ const old=document.getElementById('ck82-full-exam');
+ if(old){root=old;return;}
+ const target=document.querySelector('#main .ck20-quiz-sets');
+ if(!target){root=null;document.body.classList.remove('ck82-exam-focused');return;}
+ root=document.createElement('section');root.id='ck82-full-exam';root.className='ck82-full-exam';
+ target.before(root);
+ paint();
+}
+function tick(){
+ checkExpiry();
+ const text=root?.querySelector('[data-ck82-clock]');
+ if(text){const s=active();if(s&&s.status!=='submitted')text.textContent=fmtClock(remaining(s));}
+}
+document.addEventListener('click',event=>{
+ const t=event.target.closest?.('[data-ck82-start],[data-ck82-expand],[data-ck82-history],'+
+ '[data-ck82-answer],[data-ck82-goto],[data-ck82-prev],[data-ck82-next],'+
+ '[data-ck82-clear],[data-ck82-flag],[data-ck82-pause],[data-ck82-resume],'+
+ '[data-ck82-submit],[data-ck82-filter],[data-ck82-detail],[data-ck82-hide],[data-ck82-new]');
+ if(!t||!root?.contains(t))return;
+ event.preventDefault();event.stopPropagation();
+ if(t.hasAttribute('data-ck82-start')){
+  start(selectedYear);return;
+ }
+ if(t.hasAttribute('data-ck82-expand')){
+  expanded=!expanded;paint();if(expanded)focusRegion();return;
+ }
+ if(t.hasAttribute('data-ck82-history')){
+  showHistory=!showHistory;paint();return;
+ }
+ if(t.hasAttribute('data-ck82-answer')){setAnswer(Number(t.dataset.ck82Answer));focusRegion();return;}
+ if(t.hasAttribute('data-ck82-goto')){navigate(Number(t.dataset.ck82Goto));focusRegion();return;}
+ if(t.hasAttribute('data-ck82-prev')){navigate((active()?.position||0)-1);focusRegion();return;}
+ if(t.hasAttribute('data-ck82-next')){navigate((active()?.position||0)+1);focusRegion();return;}
+ if(t.hasAttribute('data-ck82-clear')){setAnswer(null);focusRegion();return;}
+ if(t.hasAttribute('data-ck82-flag')){setFlag();focusRegion();return;}
+ if(t.hasAttribute('data-ck82-pause')){pause();focusRegion();return;}
+ if(t.hasAttribute('data-ck82-resume')){resume();focusRegion();return;}
+ if(t.hasAttribute('data-ck82-submit')){
+  const s=active(),emptyCount=s?.answers.filter(x=>x===null).length||0,unreviewed=s?.flags.filter(Boolean).length||0;
+  if(s?.status==='submitted')return;
+  if(window.confirm?.('실전 시험을 제출할까요? 미응답 '+emptyCount+'건 · 보류 표시 '+
+   unreviewed+'건. 제출하면 답안 수정이 불가능합니다.'))finish('manual');
+  return;
+ }
+ if(t.hasAttribute('data-ck82-filter')){resultFilter=t.dataset.ck82Filter;paint();return;}
+ if(t.hasAttribute('data-ck82-detail')){
+  const id=t.dataset.ck82Detail,[year,number]=id.split('-').map(Number);
+  if(typeof window.CK78Analysis?.open==='function'&&year>=2021)window.CK78Analysis.open(year,number,t);
+  else window.CK76Study?.openQuestion?.(year,number);
+  return;
+ }
+ if(t.hasAttribute('data-ck82-hide')){expanded=false;paint();return;}
+ if(t.hasAttribute('data-ck82-new')){expanded=false;paint();return;}
+});
+document.addEventListener('change',event=>{
+ if(event.target.matches?.('[data-ck82-year]')&&root?.contains(event.target))selectedYear=Number(event.target.value);
+});
+document.addEventListener('keydown',event=>{
+ if(!expanded||!root?.contains(event.target)||event.altKey||event.ctrlKey||event.metaKey||
+  /INPUT|TEXTAREA|SELECT/.test(event.target?.tagName||''))return;
+ const s=active();if(s?.status!=='running')return;
+ if(/^[1-5]$/.test(event.key)){event.preventDefault();event.stopImmediatePropagation();setAnswer(Number(event.key));focusRegion();}
+ else if(event.key==='ArrowRight'||event.key==='ArrowLeft'){
+  event.preventDefault();event.stopImmediatePropagation();
+  navigate(s.position+(event.key==='ArrowRight'?1:-1));focusRegion();
+ }
+},true);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){checkExpiry();if(root?.isConnected)paint();}});
+window.addEventListener('pageshow',()=>{checkExpiry();if(root?.isConnected)paint();});
+window.addEventListener('storage',event=>{
+ if(event.key===KEY){state=readStore();if(root?.isConnected)paint();error='다른 탭에서 시험 기록이 변경되었습니다. 최신 저장 값을 표시합니다.';status(error);}
+});
+function schedule(){
+ if(scheduled)return;scheduled=true;
+ requestAnimationFrame(()=>{scheduled=false;mount();});
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',schedule,{once:true});else schedule();
+const main=document.getElementById('main');
+if(main&&window.MutationObserver)new MutationObserver(records=>{
+ if(!document.getElementById('ck82-full-exam')&&records.some(x=>x.addedNodes.length))schedule();
+}).observe(main,{childList:true,subtree:true});
+checkExpiry();
+setInterval(tick,1000);
+window.CK82FullExam=Object.freeze({
+ checkBank,cleanStore,sanitizeAttempt,newAttempt,gradeAttempt,remaining,fmtClock,
+ getState:()=>({active:active()?.status||'none',year:active()?.year||null,history:state.history.length,
+  remainingMs:remaining(active()),expanded,error}),
+ open:()=>{mount();if(root&&!expanded){expanded=true;paint();focusRegion();}}
+});
+})();
