@@ -1,0 +1,23 @@
+/* P5 personal review: proportional panels, no decorative animation */
+#ck79-review{margin:7px 0 13px;padding:9px 12px;border:1px solid rgba(118,142,128,.25);border-radius:12px;background:rgba(125,137,112,.07);color:inherit}
+#ck79-review .ck79-review-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+#ck79-review button,#ck79-review select,#ck79-review input{font:inherit;border:1px solid rgba(118,145,132,.4);border-radius:8px;color:inherit;background:transparent;padding:6px 10px;min-width:0}
+#ck79-review [data-ck79-body][hidden]{display:none}
+#ck79-review .ck79-filter{display:flex;flex-wrap:wrap;justify-content:space-between;gap:9px;align-items:center;margin:11px 0}
+#ck79-review [aria-pressed=true]{outline:1px solid currentColor;background:rgba(137,171,151,.13)}
+#ck79-review .ck79-recap{display:flex;flex-wrap:wrap;gap:9px;font-size:12px;opacity:.85}
+#ck79-review .ck79-card{padding:10px 3px;border-top:1px solid rgba(130,151,140,.22)}
+#ck79-review .ck79-card p{margin:4px 0 8px;white-space:pre-wrap}
+#ck79-review .ck79-actions{display:flex;flex-wrap:wrap;gap:6px}
+#ck79-review .ck79-actions button{padding:4px 8px}
+#ck79-review .ck79-key{border-left:3px solid currentColor;opacity:.85;padding:5px}
+#ck79-review .ck79-review-list{max-height:440px;overflow-y:auto;margin-top:10px}
+#ck79-review .ck79-disclaimer{font-size:12px;opacity:.85}
+#ck79-review .ck79-concepts{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:5px;max-height:300px;overflow:auto}
+#ck79-review .ck79-concept button{width:100%;text-align:left;display:flex;flex-direction:column;gap:2px}
+#ck79-review .ck79-concept small{font-size:11px;opacity:.72}
+#ck79-review .ck79-linked{display:flex;flex-wrap:wrap;gap:5px}
+#ck79-review .ck79-search-label{display:flex;gap:10px;align-items:center;margin:9px 0}
+#ck79-review .ck79-search-label input{flex:1}
+#ck79-review .ck79-status{font-size:12px;opacity:.8}
+@media(max-width:520px){#ck79-review .ck79-filter>div{display:flex;gap:5px}#ck79-review .ck79-filter>div button{font-size:12px;padding:4px}#ck79-review .ck79-concepts{grid-template-columns:1fr 1fr}}

@@ -1,0 +1,13 @@
+/* Independent personal 1/3/5-page print preview. */
+.ck79-final-tool{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:12px 0;padding:10px;border:1px solid rgba(120,151,132,.3);border-radius:9px}
+.ck79-final-tool>strong{margin-right:auto}
+.ck79-final-tool select,.ck79-final-tool button,.ck79-final-preview button{border:1px solid rgba(120,151,132,.45);background:transparent;color:inherit;border-radius:7px;padding:7px}
+.ck79-final-tool p{margin:0;flex-basis:100%;font-size:12px;opacity:.8}
+.ck79-final-preview{display:grid;gap:12px;margin:18px 0}
+.ck79-final-preview>header{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.ck79-final-preview>header strong{margin-right:auto}
+.ck79-summary-sheet{border:1px solid rgba(120,151,132,.28);border-radius:10px;background:rgba(135,155,145,.05);padding:18px}
+.ck79-summary-sheet small{font-size:11px;opacity:.7}
+.ck79-summary-sheet h3{font-size:17px;margin:9px 0}
+.ck79-summary-sheet pre{font:13px/1.6 inherit;white-space:pre-wrap;overflow-wrap:anywhere;margin:0}
+@media(max-width:530px){.ck79-summary-sheet{padding:11px}}

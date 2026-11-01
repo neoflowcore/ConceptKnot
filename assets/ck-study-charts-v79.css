@@ -1,0 +1,11 @@
+/* No continuous animation; transforms only on explicit chart interaction */
+#main .ck79-chart-draggable{touch-action:none;cursor:grab;outline-offset:4px}
+#main .ck79-chart-dragging .ck79-chart-draggable{cursor:grabbing}
+#main .ck79-chart-dragging .ck21-transform-target,#main .ck79-chart-dragging .ck21-point{transition:none!important}
+#main .ck79-chart-modes{display:grid;gap:6px;margin-top:9px}
+#main .ck79-chart-condition{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+#main .ck79-chart-condition button{padding:4px 8px;border:1px solid rgba(112,151,131,.45);border-radius:7px;background:transparent;color:inherit}
+#main .ck79-chart-condition button[aria-pressed=true]{border-width:2px;background:rgba(122,156,133,.12)}
+#main .ck79-chart-modes p{margin:2px 0;font-size:12px;opacity:.85}
+#main .ck79-chart-note{font-size:13px;line-height:1.55}
+@media(prefers-reduced-motion:reduce){#main .ck79-chart-draggable,#main .ck21-transform-target{transition:none!important}}
