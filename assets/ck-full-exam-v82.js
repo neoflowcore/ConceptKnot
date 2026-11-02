@@ -390,6 +390,7 @@ checkExpiry();
 setInterval(tick,1000);
 window.CK82FullExam=Object.freeze({
  checkBank,cleanStore,sanitizeAttempt,newAttempt,gradeAttempt,remaining,fmtClock,
+ getAttempts:()=>state.history.map(x=>JSON.parse(JSON.stringify(x))),
  getState:()=>({active:active()?.status||'none',year:active()?.year||null,history:state.history.length,
   remainingMs:remaining(active()),expanded,error}),
  open:()=>{mount();if(root&&!expanded){expanded=true;paint();focusRegion();}}
