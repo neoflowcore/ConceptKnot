@@ -35,7 +35,7 @@ function schedule({id,outcome,previous,history=[],now=Date.now()}={}){
   intervalMinutes:minutes,algorithm:'ck83-adaptive-local-v1',reason};
 }
 function pushEvent(events,event){
- if(!event||!validId(event.id)||!normalizedOutcome(event.outcome)||!Number.isFinite(Number(event.at)))return toEvents(events);
+ if(!event||!validId(event.id)||!normalizedOutcome(event.outcome)||!Number.isFinite(Number(event.at))||Number(event.at)<=0)return toEvents(events);
  return toEvents(events).concat({
   id:event.id,at:Number(event.at),outcome:event.outcome,
   intervalMinutes:Math.max(0,Number(event.intervalMinutes)||0)

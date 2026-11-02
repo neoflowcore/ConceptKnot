@@ -35,7 +35,7 @@ function dueRows(){
   rows.set(id,{id,reason:'복습 예약',at:Number(r.nextAt)||0});
  }
  return [...rows.values()].filter(r=>subject==='all'||index()[r.id]?.subject===subject)
-  .sort((a,b)=>a.at-b.at||a.id.localeCompare(b.id)).slice(0,80);
+  .sort((a,b)=>a.at-b.at||a.id.localeCompare(b.id));
 }
 function mount(){
  const search=document.getElementById('ck76-search'),host=search?.parentNode||document.querySelector('#main');
@@ -60,9 +60,10 @@ function row(q,id,reason,review){
   '</article>';
 }
 function renderReview(){
- const rows=window.CK83Recall?.rankDue?.(dueRows(),localReview().review,localReview().mistakes)||dueRows(),data=localReview();
+ const allRows=dueRows(),data=localReview();
+ const rows=(window.CK83Recall?.rankDue?.(allRows,data.review,data.mistakes)||allRows).slice(0,80);
  const future=Object.entries(data.review).filter(([id,r])=>valid(id)&&Number(r.nextAt)>now()).length;
- return '<div class="ck79-recap"><span>지금 복습 '+rows.length+'건</span><span>이후 예약 '+future+'건</span>'+
+ return '<div class="ck79-recap"><span>지금 복습 '+allRows.length+'건'+(allRows.length>80?' · 우선 80건 표시':'')+'</span><span>이후 예약 '+future+'건</span>'+
   '<span>기억 확인은 선택형 문제의 정답 변경과 무관합니다.</span></div>'+
   '<div class="ck79-review-list">'+(rows.length?rows.map(r=>row(index()[r.id],r.id,r.reason,data.review[r.id])).join(''):
    '<p>현재 복습 대기 문항이 없습니다. 10개년 기출을 풀고 오답을 남기면 자동으로 이곳에 연결됩니다.</p>')+'</div>';

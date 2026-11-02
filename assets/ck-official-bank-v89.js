@@ -47,14 +47,19 @@ async function loadAll(){
   if(!response.ok)throw Error('공식 기출 데이터 요청 실패 (HTTP '+response.status+')');
   const json=await response.json();
   const clean=validate(json);
-  const existing=window.RECALL_OFFICIAL||{};
+  const existing=window.RECALL_OFFICIAL;
+  if(!existing||typeof existing!=='object'||!Object.isExtensible(existing))
+   throw Error('공식 기출 레지스트리가 준비되지 않았습니다. 기존 기록을 변경하지 않았습니다.');
   // If a prior loader has already successfully registered everything, accept it only after full ID verification.
   const count=Object.keys(clean).filter(id=>Object.prototype.hasOwnProperty.call(existing,id)).length;
   if(count===400){
    for(const [id,q] of Object.entries(clean)){
     const record=existing[id];
-    if(record?.year!==q.year||record?.number!==q.number||
-      JSON.stringify(record.correct.map(Number))!==JSON.stringify(q.correct.map(Number)))
+    if(!record||record.year!==q.year||record.number!==q.number||
+      record.subject!==q.subject||record.verified!==true||
+      record.question!==q.question||record.originalUrl!==q.originalUrl||
+      JSON.stringify(record.options)!==JSON.stringify(q.options)||
+      JSON.stringify(record.correct?.map(Number))!==JSON.stringify(q.correct.map(Number)))
        throw Error('동일 ID의 공식 기출 내용이 다릅니다. 데이터 갱신을 중단했습니다.');
    }
    ready=true;lastError='';loadedAt=Date.now();
@@ -75,7 +80,15 @@ async function loadAll(){
 function loadYear(year){
  const y=Number(year);
  if(!Number.isInteger(y)||y<2016||y>2025)return Promise.reject(Error('지원하지 않는 기출 연도입니다.'));
- if(y>=2021)return Promise.resolve({ready:true,added:0,total:Object.keys(window.RECALL_OFFICIAL||{}).length});
+ if(y>=2021){
+  const records=window.RECALL_OFFICIAL||{};
+  for(let n=1;n<=80;n++){
+   const q=records[y+'-'+n];
+   if(!q||q.verified!==true||q.options?.length!==5||!Array.isArray(q.correct)||!q.correct.length)
+    return Promise.reject(Error(y+'년 공식 80문항을 모두 불러오지 못했습니다.'));
+  }
+  return Promise.resolve({ready:true,added:0,total:Object.keys(records).length});
+ }
  return loadAll();
 }
 function getStatus(){

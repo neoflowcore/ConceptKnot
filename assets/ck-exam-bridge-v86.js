@@ -14,6 +14,7 @@ function pending(at=Date.now(),attempts=window.CK82FullExam?.getAttempts?.()||[]
   if(exam?.status!=='submitted'||!Number.isInteger(Number(exam.year))||
    !Array.isArray(exam.answers)||exam.answers.length!==80)continue;
   const submittedAt=safeAt(exam.submittedAt);
+  if(!submittedAt)continue;
   for(let i=0;i<80;i++){
    const id=keyOf(exam.year,i+1),q=bank[id];
    if(!q?.verified||!Array.isArray(q.correct)||!q.correct.length)continue;
@@ -31,7 +32,7 @@ function pending(at=Date.now(),attempts=window.CK82FullExam?.getAttempts?.()||[]
   const scheduled=reviews&&typeof reviews==='object'?reviews[item.id]:null;
   // A later deliberate recall assessment controls the next due time.
   const next=Number(scheduled?.nextAt);
-  if(Number.isFinite(next)&&next>at)continue;
+  if(safeAt(scheduled?.updatedAt)>=item.at&&Number.isFinite(next)&&next>at)continue;
   rows.push({id:item.id,reason:item.blank?'실전 미응답':'실전 오답',at:item.at,
    source:'v82-official-mock',latestAttempt:true});
  }
