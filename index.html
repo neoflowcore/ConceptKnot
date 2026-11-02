@@ -1489,6 +1489,7 @@ function ck79RestoreExtras(data){
 }
 window.CK79Study=Object.freeze({
  snapshot:()=>({
+  examDate:typeof state.ck79ExamDate==='string'?state.ck79ExamDate:'',
   mistakes:Object.values(state.mistakes||{}).map(m=>({...m})),
   review:{...(state.ck79Recall||{})},
   scores:{...(state.graded||{})},

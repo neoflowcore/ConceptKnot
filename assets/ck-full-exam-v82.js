@@ -229,7 +229,7 @@ function choicesHtml(q,s){
  return '<div class="ck82-choices" role="group" aria-label="정답 선택">'+
   q.options.map((opt,i)=>{
    const answer=s.answers[s.position],picked=answer===i+1;
-   return '<button type="button" class="ck82-option" data-ck82-answer="'+(i+1)+
+   return '<button type="button" class="ck82-option"'+(s.status==='paused'?' disabled':'')+' data-ck82-answer="'+(i+1)+
     '" aria-pressed="'+picked+'"><b>'+'①②③④⑤'[i]+'</b><span>'+esc(opt)+'</span></button>';
   }).join('')+'</div>';
 }
@@ -251,7 +251,8 @@ function renderOmr(s){
 }
 function renderSession(s){
  const i=s.position,q=bank()[s.year+'-'+(i+1)],canAnswer=s.status==='running';
- if(!q)return '<p>등록된 문항을 불러오지 못했습니다. 공식 데이터 연결 상태를 확인하세요.</p>';
+ if(!q)return '<div role="status"><p>연도별 공식 기출을 불러오는 중입니다. 기존 답안과 남은 시간은 유지됩니다.</p>'+
+  '<button type="button" data-ck82-retry-bank="'+s.year+'">자료 다시 불러오기</button></div>';
  return '<div class="ck82-session-head"><div><strong>제'+(s.year-1989)+'회 '+s.year+'년 공식 A형 · 통합 실전</strong>'+
   '<p>시험 기준 연도 법령을 따릅니다. 그림·표·수식은 공식 PDF 원문과 대조하세요.</p></div>'+timeText()+'</div>'+
   progress()+'<div class="ck82-exam-layout"><section class="ck82-question" aria-label="현재 문항">'+
@@ -278,6 +279,11 @@ function renderSession(s){
   (s.status==='paused'?'<p class="ck82-warning">시간이 멈춰 있습니다. 다시 시작하기 전에는 답을 변경할 수 없습니다.</p>':'');
 }
 function renderResult(s){
+ const issue=checkBank(s.year);
+ if(!issue.ok)return '<section class="ck82-result" role="status"><h3>'+s.year+
+  '년 공식 문항 확인 중</h3><p>80문항 중 '+issue.missing.length+
+  '건을 불러오지 못했습니다. 임시 0점으로 채점하지 않고 기존 시험 응답을 보존합니다.</p>'+
+  '<button type="button" data-ck82-retry-bank="'+s.year+'">공식 데이터 다시 불러오기</button></section>';
  const grade=gradeAttempt(s),readable=grade.passed?'연습 기준 합격점 충족':'연습 기준 미달';
  const rows=[['학개론',grade.estate,grade.estateCorrect,grade.estateAnswered],
   ['민법',grade.civil,grade.civilCorrect,grade.civilAnswered]];
@@ -297,6 +303,7 @@ function renderResult(s){
 }
 let resultFilter='wrong';
 function resultItems(s){
+ if(!checkBank(s.year).ok)return '<p>공식 80문항 로딩이 완료되면 결과를 표시합니다.</p>';
  const details=gradeAttempt(s);
  const indices=resultFilter==='wrong'?details.wrong.map(id=>Number(id.split('-')[1])-1):
   resultFilter==='blank'?details.unanswered.map(id=>Number(id.split('-')[1])-1):
@@ -323,11 +330,16 @@ function renderHistory(){
  }).join('')+'</div>';
 }
 function renderLauncher(){
- const s=active();
+ const s=active(),bankState=window.CK89OfficialBank?.getStatus?.();
+ const registered=bankState?.registered||Object.keys(bank()).length;
  const years='<label>연습 기출 연도 <select data-ck82-year aria-label="실전 시험 연도">'+YEARS.map(y=>
   '<option value="'+y+'"'+(selectedYear===y?' selected':'')+'>'+y+'년 공식 A형</option>').join('')+'</select></label>';
  return '<div class="ck82-launch"><div><strong>80문항 · 100분 통합 실전</strong>'+
-  '<p>학개론 40문항 + 민법 40문항, A형 최종정답 채점 · 미응답과 보류 표시 · 자동 저장·복원</p></div>'+
+  '<p>학개론 40문항 + 민법 40문항, A형 최종정답 채점 · 미응답과 보류 표시 · 자동 저장·복원</p>'+
+ '<p class="ck82-bank-state" role="status">공식 데이터 '+registered+'/800 문항'+
+ (bankState?.loading?' · 이전 연도 확인 중':'')+
+ (bankState?.lastError?' · 로딩 오류: '+esc(bankState.lastError):'')+
+ '</p></div>'+
   '<div class="ck82-launch-actions">'+years+
   '<button type="button" data-ck82-start>새 시험 시작</button>'+
   (s?'<button type="button" data-ck82-expand>'+(expanded?'시험 화면 접기':s.status==='submitted'?'최근 결과 보기':'진행 중인 시험 열기')+'</button>':'')+
@@ -369,7 +381,7 @@ document.addEventListener('click',event=>{
  const t=event.target.closest?.('[data-ck82-start],[data-ck82-expand],[data-ck82-history],'+
  '[data-ck82-answer],[data-ck82-goto],[data-ck82-prev],[data-ck82-next],'+
  '[data-ck82-clear],[data-ck82-flag],[data-ck82-pause],[data-ck82-resume],'+
- '[data-ck82-submit],[data-ck82-filter],[data-ck82-detail],[data-ck82-hide],[data-ck82-new],[data-ck82-raw]');
+ '[data-ck82-submit],[data-ck82-filter],[data-ck82-detail],[data-ck82-hide],[data-ck82-new],[data-ck82-raw],[data-ck82-retry-bank]');
  if(!t||!root?.contains(t))return;
  event.preventDefault();event.stopPropagation();
  if(t.hasAttribute('data-ck82-raw')){
@@ -379,6 +391,13 @@ document.addEventListener('click',event=>{
    const a=document.createElement('a');a.href=url;a.download='ConceptKnot_시험기록_손상원본.json';
    document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000);
   }catch{message('원본 내려받기에 실패했습니다. 원본은 수정하지 않았습니다.');}return;
+ }
+ if(t.hasAttribute('data-ck82-retry-bank')){
+  const year=Number(t.dataset.ck82RetryBank);
+  if(year<=2020)window.CK89OfficialBank?.loadYear?.(year).then(()=>{error='';paint();})
+   .catch(e=>message('공식 기출 파일 재시도 실패: '+e.message));
+  else message('최근 5개년 기본 등록 문항이 누락됐습니다. 사이트 파일을 확인하세요.');
+  return;
  }
  if(t.hasAttribute('data-ck82-start')){
   start(selectedYear);return;
@@ -399,6 +418,9 @@ document.addEventListener('click',event=>{
  if(t.hasAttribute('data-ck82-resume')){resume();focusRegion();return;}
  if(t.hasAttribute('data-ck82-submit')){
   const s=active(),emptyCount=s?.answers.filter(x=>x===null).length||0,unreviewed=s?.flags.filter(Boolean).length||0;
+  if(!s||s.status==='submitted')return;
+  if(s.status==='running'&&remaining(s)===0){finish('time');return;}
+  if(!checkBank(s.year).ok){message('공식 문항 로딩이 완료되면 제출할 수 있습니다.');return;}
   if(s?.status==='submitted')return;
   if(window.confirm?.('실전 시험을 제출할까요? 미응답 '+emptyCount+'건 · 보류 표시 '+
    unreviewed+'건. 제출하면 답안 수정이 불가능합니다.'))finish('manual');
@@ -423,7 +445,7 @@ document.addEventListener('change',event=>{
 document.addEventListener('keydown',event=>{
  if(!expanded||!root?.contains(event.target)||event.altKey||event.ctrlKey||event.metaKey||
   /INPUT|TEXTAREA|SELECT/.test(event.target?.tagName||''))return;
- const s=active();if(s?.status!=='running')return;
+ const s=active();if(s?.status!=='running'||event.isComposing||event.repeat||event.keyCode===229)return;
  if(/^[1-5]$/.test(event.key)){event.preventDefault();event.stopImmediatePropagation();setAnswer(Number(event.key));focusRegion();}
  else if(event.key==='ArrowRight'||event.key==='ArrowLeft'){
   event.preventDefault();event.stopImmediatePropagation();
@@ -434,6 +456,10 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden){checkExpi
 window.addEventListener('pageshow',()=>{checkExpiry();if(root?.isConnected)paint();});
 window.addEventListener('ck:official-bank-ready',()=>{
  checkExpiry();
+ if(root?.isConnected)paint();
+});
+window.addEventListener('ck:official-bank-error',event=>{
+ error='공식 자료를 불러오지 못했습니다: '+(event.detail?.message||'알 수 없는 오류');
  if(root?.isConnected)paint();
 });
 window.addEventListener('storage',event=>{

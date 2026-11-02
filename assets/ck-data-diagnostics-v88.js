@@ -1,16 +1,30 @@
 /* v88 personal data diagnostics — read-only until explicit download. */
 (function(){
 'use strict';
-const items=[['recallgraph-first-exam-v1','학습기록'],['ck80-explain-drafts-v1','개인 해설'],['ck81-review-workbench-v1','해설 작업대'],['ck82-exam-sessions-v1','실전 기록'],['ck83-personal-concept-links-v1','개념 연결'],['ck84-study-plan-v1','학습계획'],['ck84-personal-materials-v1','개인 교재']];
+const items=[['recallgraph-first-exam-v1','학습기록'],['ck10-exam-final-v1','최종 정리본'],['ck11-final-page-count','정리본 페이지'],['ck80-explain-drafts-v1','개인 해설'],['ck81-review-workbench-v1','해설 작업대'],['ck82-exam-sessions-v1','실전 기록'],['ck83-personal-concept-links-v1','개념 연결'],['ck84-study-plan-v1','학습계획'],['ck84-personal-materials-v1','개인 교재']];
 const safe=s=>String(s??'').replace(/[&<>"']/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[x]));
 function inspect(storage=localStorage){
  return items.map(([key,name])=>{
   try{
    const raw=storage.getItem(key);
    if(raw===null)return {key,name,status:'empty',bytes:0};
+   if(key==='ck11-final-page-count')
+    return {key,name,status:/^[1-5]$/.test(raw)?'ok':'invalid',bytes:raw.length};
    const data=JSON.parse(raw);
+   const validArray=key==='ck10-exam-final-v1';
+   if(validArray){
+    const valid=Array.isArray(data)&&data.length===5&&data.every(p=>Array.isArray(p)&&p.length===2);
+    return {key,name,status:valid?'ok':'invalid',bytes:raw.length};
+   }
    if(!data||typeof data!=='object'||Array.isArray(data))return {key,name,status:'invalid',bytes:raw.length};
    const methods={
+    'recallgraph-first-exam-v1':()=>['estate','civil'].includes(data.subject)&&
+      data.answers&&typeof data.answers==='object'&&!Array.isArray(data.answers)&&
+      data.quizAnswers&&typeof data.quizAnswers==='object'&&!Array.isArray(data.quizAnswers)&&
+      data.flashVisits&&typeof data.flashVisits==='object'&&!Array.isArray(data.flashVisits),
+    'ck80-explain-drafts-v1':()=>Object.entries(data).length<=400&&
+      Object.entries(data).every(([id,v])=>/^202[1-5]-(?:[1-9]|[1-7]\\d|80)$/.test(id)&&
+        v&&typeof v==='object'&&!Array.isArray(v)),
     'ck81-review-workbench-v1':()=>window.CK81Workbench?.sanitizeProgress?.(data),
     'ck82-exam-sessions-v1':()=>window.CK82FullExam?.cleanStore?.(data),
     'ck83-personal-concept-links-v1':()=>window.CK83Links?.sanitize?.(data),
@@ -45,7 +59,7 @@ function mount(){
  const host=document.getElementById('main');if(!host)return;
  root=document.createElement('section');root.id='ck88-data-diagnostics';root.className='ck88-diagnostics';
  root.innerHTML='<div class="ck88-head"><strong>내 학습 데이터 안전 점검</strong><button type="button" data-v88-refresh>진단 새로고침</button>'+
- '<button type="button" data-v88-raw>7종 원본 백업 내려받기</button></div><div data-v88-body></div>';
+ '<button type="button" data-v88-raw>9종 원본 백업 내려받기</button></div><div data-v88-body></div>';
  host.append(root);render();
 }
 document.addEventListener('click',event=>{

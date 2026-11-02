@@ -65,6 +65,7 @@ function studyData(){
  const now=Date.now(),due=Object.entries(reviews).filter(([id,v])=>BANK()[id]?.verified&&Number(v?.nextAt)>0&&Number(v.nextAt)<=now);
  const missed=new Set(mistakes.map(x=>x.year+'-'+x.number));
  const unique=new Set([...due.map(([id])=>id),...missed]);
+ for(const row of window.CK86ExamBridge?.pending?.(now)||[])if(BANK()[row.id]?.verified)unique.add(row.id);
  const sessions=window.CK82FullExam?.getAttempts?.()||[];
  const scores=sessions.filter(x=>x?.status==='submitted'&&Number.isFinite(x.score?.estate)&&Number.isFinite(x.score?.civil));
  const sums=scores.reduce((v,x)=>({estate:v.estate+x.score.estate,civil:v.civil+x.score.civil}),{estate:0,civil:0});
@@ -92,7 +93,7 @@ function compute({config=settings,stats=studyData(),now=Date.now(),days=showDays
  const horizon=daysLeft===null?daysCount:Math.max(0,Math.min(daysCount,daysLeft));
  const holidaySet=new Set(cfg.holidays),restSet=new Set(cfg.restWeekdays),rows=[];
  const primaryYears=Array.from({length:10},(_,i)=>2025-i);
- let plannedTotal=0,planId=0;
+ let plannedTotal=0,plannedRecalls=0,planId=0;
  for(let i=0;i<horizon;i++){
   const iso=asDate(base+i*DAY),weekday=kstWeekday(iso),rest=restSet.has(weekday)||holidaySet.has(iso);
   if(rest){rows.push({date:iso,weekday,rest:true,minutes:0,reason:holidaySet.has(iso)?'지정한 휴일':'정기 휴식일'});continue;}
@@ -100,7 +101,7 @@ function compute({config=settings,stats=studyData(),now=Date.now(),days=showDays
   const stage=remainingDays===null?'rolling':remainingDays<=14?'final':remainingDays<=60?'practice':'foundation';
   const fatigue=planId>0&&planId%6===0?0.7:1;
   const minutes=Math.max(20,Math.round(cfg.dailyMinutes*fatigue));
-  const dueRemain=Math.max(0,stats.due-Math.round(plannedTotal/7));
+  const dueRemain=Math.max(0,stats.due-plannedRecalls);
   const reviewMinutes=Math.min(Math.floor(minutes*0.4),Math.max(dueRemain?20:10,Math.floor(minutes*(stage==='final'?.35:.25))));
   const questionMinutes=stage==='foundation'?6:stage==='final'?3:4;
   const practiceMinutes=Math.max(0,Math.round(minutes*(stage==='final'?.55:.5)));
@@ -119,7 +120,7 @@ function compute({config=settings,stats=studyData(),now=Date.now(),days=showDays
     {label:preferredYear+'년 기출 문제',minutes:practiceMinutes,count:questionCount},
     {label:'이론·근거·최종노트',minutes:readingMinutes,count:0}
    ]});
-  planId++;plannedTotal+=questionCount;
+  planId++;plannedTotal+=questionCount;plannedRecalls+=recallCount;
  }
  return {today,examDate:examDate||null,daysLeft,activeDays:rows.filter(x=>!x.rest).length,
   totalMinutes:rows.reduce((sum,x)=>sum+x.minutes,0),plannedQuestions:plannedTotal,days:rows,
@@ -219,6 +220,16 @@ document.addEventListener('click',event=>{
   const year=Number(t.dataset.ck84Year),sub=t.dataset.ck84Subject;
   const q=Array.from({length:40},(_,i)=>year+'-'+(sub==='estate'?i+1:i+41)).find(id=>BANK()[id]?.verified);
   if(q){const [y,n]=q.split('-').map(Number);window.CK76Study?.openQuestion?.(y,n,sub);}
+  else if(year<=2020&&window.CK89OfficialBank?.loadYear){
+   status='해당 연도 공식 기출을 확인하는 중입니다.';
+   window.CK89OfficialBank.loadYear(year).then(()=>{
+    const target=Array.from({length:40},(_,i)=>year+'-'+(sub==='estate'?i+1:i+41))
+     .find(id=>BANK()[id]?.verified);
+    if(!target){status='해당 연도 문항을 찾지 못했습니다.';render();return;}
+    const [y,n]=target.split('-').map(Number);
+    window.CK76Study?.openQuestion?.(y,n,sub);
+   }).catch(e=>{status='공식 문제 로딩 실패: '+e.message;render();});
+  }else{status='공식 문항을 불러올 수 없습니다.';render();}
  }
 });
 document.addEventListener('storage',event=>{if(event.key===KEY){settings=fromStorage();if(open)render();}});
@@ -231,6 +242,7 @@ if(main&&window.MutationObserver)new MutationObserver(changes=>{
  if(changes.some(x=>[...x.addedNodes].some(n=>n.nodeType===1&&
   (n.matches?.('.ck79-plan-controls')||n.querySelector?.('.ck79-plan-controls')))))scheduleMount();
 }).observe(main,{subtree:true,childList:true});
+window.addEventListener('ck:official-bank-ready',()=>{if(open)render();});
 window.CK84Plan=Object.freeze({defaults,sanitize,compute,isoValid,todayKst,kstWeekday,
  getState:()=>({open,settings:{...settings},days:showDays,storageIssue}),
  open:()=>{mount();if(root&&!open)toggle();}});

@@ -60,7 +60,7 @@ function row(q,id,reason,review){
   '</article>';
 }
 function renderReview(){
- const rows=dueRows(),data=localReview();
+ const rows=window.CK83Recall?.rankDue?.(dueRows(),localReview().review,localReview().mistakes)||dueRows(),data=localReview();
  const future=Object.entries(data.review).filter(([id,r])=>valid(id)&&Number(r.nextAt)>now()).length;
  return '<div class="ck79-recap"><span>지금 복습 '+rows.length+'건</span><span>이후 예약 '+future+'건</span>'+
   '<span>기억 확인은 선택형 문제의 정답 변경과 무관합니다.</span></div>'+
@@ -188,6 +188,7 @@ function schedule(){
  requestAnimationFrame(()=>{scheduled=false;mount();if(open)paint();});
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount,{once:true});else mount();
+window.addEventListener('ck:official-bank-ready',()=>{if(open)paint();});
 const main=document.getElementById('main');
 if(main&&window.MutationObserver){observer=new MutationObserver(records=>{
  if(records.some(x=>Array.from(x.addedNodes).some(n=>n.nodeType===1&&(n.matches?.('.ck-v7-stage,#ck76-search')||n.querySelector?.('#ck76-search')))))schedule();

@@ -28,7 +28,7 @@ function validateMain(data,defaults){
   if(!has(data,k))continue;
   const value=data[k],template=defaults[k];
   if(Array.isArray(template)&&!Array.isArray(value))throw Error('배열 기록 형식 오류: '+k);
-  if(isObject(template)&&!isObject(value)&&value!==null)throw Error('객체 기록 형식 오류: '+k);
+  if(isObject(template)&&!isObject(value))throw Error('객체 기록 형식 오류: '+k);
   if(typeof template==='string'&&typeof value!=='string')throw Error('문자열 기록 형식 오류: '+k);
   if(typeof template==='number'&&(!Number.isFinite(value)))throw Error('숫자 기록 형식 오류: '+k);
   if(typeof template==='boolean'&&typeof value!=='boolean')throw Error('선택 설정 형식 오류: '+k);
