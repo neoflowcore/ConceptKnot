@@ -80,7 +80,8 @@ function stage(data,defaults,keys=Object.keys(KEY_LIMITS)){
  const local=data.__ck79Extras?.local||{},entries=[];
  const allowed=new Set(keys);
  for(const k of Object.keys(local)){
-  if(!allowed.has(k)||!has(KEY_LIMITS,k))continue;
+  if(!has(KEY_LIMITS,k))throw Error('현재 버전에서 지원하지 않는 백업 키가 있습니다: '+k+' · 자동 삭제하지 않았습니다.');
+  if(!allowed.has(k))throw Error('이 백업은 선택한 복원 범위 밖의 기록을 포함합니다: '+k);
   if(!validateExtra(k,local[k]))throw Error('추가 학습기록의 검증 실패: '+k);
   entries.push([k,local[k]]);
  }
@@ -95,7 +96,10 @@ function transaction(entries,storage=localStorage){
  const before=new Map(),changed=[];
  try{
   for(const key of unique)before.set(key,storage.getItem(key));
-  for(const [key,value] of entries){storage.setItem(key,value);changed.push(key);}
+  for(const [key,value] of entries){
+   changed.push(key); // Include the failing key in rollback if custom storage throws after a write.
+   storage.setItem(key,value);
+  }
   return {ok:true,changed:changed.slice(),rolledBack:[],rollbackFailures:[]};
  }catch(err){
   const rollbackFailures=[],rolledBack=[];
@@ -112,6 +116,8 @@ function transaction(entries,storage=localStorage){
 }
 function apply(prepared,storage=localStorage){
  if(!prepared||!isObject(prepared.state)||!Array.isArray(prepared.entries)||!prepared.mainKey)throw Error('검증되지 않은 백업입니다.');
+ if(prepared.mainKey!=='recallgraph-first-exam-v1'||prepared.entries.some(([key])=>!has(KEY_LIMITS,key)))
+  throw Error('복원 범위와 학습기록 키가 일치하지 않습니다.');
  const entries=prepared.entries.concat([[prepared.mainKey,JSON.stringify(prepared.state)]]);
  return transaction(entries,storage);
 }

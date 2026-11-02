@@ -7,7 +7,7 @@ const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const index=()=>window.RECALL_OFFICIAL||{};
 const valid=id=>index()[id]?.verified===true;
 const shortQuestion=q=>String(q?.question||'').replace(/\s+/g,' ').slice(0,145);
-let open=false,candidates=null,occurrences=null,loading=null,selectedConcept='',subject='all',query='',revealed=new Set(),tab='review',scheduled=false,page=0;
+let open=false,candidates=null,occurrences=null,loading=null,selectedConcept='',subject='all',query='',revealed=new Set(),tab='review',scheduled=false,page=0,focusSize=10,focusMode=false,focusIds=[],focusIndex=0,focusRevealed=false,focusStats={again:0,remember:0,skip:0};
 const PAGE_SIZE=24;
 const labels={estate:'학개론',civil:'민법'};
 const now=()=>Date.now();
@@ -24,6 +24,96 @@ function dueReport(){
   {rows:[],futureRows:[],cleared:[],due:0,future:0,latestCount:0};
 }
 function dueRows(){return dueReport().rows;}
+
+function focusStatus(){
+ return {active:focusMode,index:focusIndex,total:focusIds.length,revealed:focusRevealed,
+  remaining:Math.max(0,focusIds.length-focusIndex),stats:{...focusStats},current:focusIds[focusIndex]||null};
+}
+function beginFocus(size=focusSize){
+ const n=[10,20,40].includes(Number(size))?Number(size):10;
+ const data=localReview(),rows=dueRows();
+ const ranked=window.CK83Recall?.rankDue?.(rows,data.review,data.mistakes)||rows;
+ focusIds=ranked.filter(r=>valid(r.id)).slice(0,n).map(r=>r.id);
+ if(!focusIds.length){focusMode=false;return 0;}
+ focusSize=n;focusIndex=0;focusRevealed=false;focusStats={again:0,remember:0,skip:0};
+ focusMode=true;return focusIds.length;
+}
+function revealFocus(){
+ if(!focusMode||focusIndex>=focusIds.length)return false;
+ focusRevealed=true;return true;
+}
+function answerFocus(outcome){
+ if(!focusMode||focusIndex>=focusIds.length||!focusRevealed||
+  !['again','remember'].includes(outcome))return false;
+ const id=focusIds[focusIndex];
+ if(!valid(id)||!window.CK79Study?.markRecall?.(id,outcome))return false;
+ focusStats[outcome]++;
+ focusIndex++;focusRevealed=false;
+ revealed.delete(id);
+ return true;
+}
+function skipFocus(){
+ if(!focusMode||focusIndex>=focusIds.length)return false;
+ focusStats.skip++;focusIndex++;focusRevealed=false;return true;
+}
+function finishFocus(){
+ focusMode=false;focusIds=[];focusIndex=0;focusRevealed=false;
+ return true;
+}
+function renderFocus(){
+ const total=focusIds.length,current=focusIds[focusIndex];
+ if(!total)return '<p>현재 복습 대기 문항이 없습니다.</p>';
+ const controls='<div class="ck98-focus-actions"><button type="button" data-ck79-focus-exit>일반 복습으로</button></div>';
+ if(focusIndex>=total)return '<section class="ck98-focus" role="region" aria-label="집중 복습 결과">'+
+  '<h4>집중 인출 복습 완료</h4><p>총 '+total+'문항 · 기억 '+focusStats.remember+'건 · 재복습 '+focusStats.again+
+  '건 · 건너뜀 '+focusStats.skip+'건</p>'+
+  '<p>기억 평가 결과만 개인 복습기록에 저장되었습니다. 미평가 문항의 정답은 바뀌지 않았습니다.</p>'+
+  controls+'<button type="button" data-ck79-focus-restart>새 집중 복습</button></section>';
+ const q=index()[current];
+ if(!q?.verified)return '<section class="ck98-focus"><p>공식 등록 문항을 읽을 수 없습니다: '+esc(current)+'</p>'+
+  '<button type="button" data-ck79-focus-skip>건너뛰기</button>'+controls+'</section>';
+ const marks=['①','②','③','④','⑤'];
+ return '<section class="ck98-focus" role="region" aria-label="집중 인출 복습" tabindex="-1">'+
+  '<div class="ck98-focus-head"><strong>집중 인출 · '+(focusIndex+1)+'/'+total+'</strong><span>'+esc(current)+
+  ' · '+(q.subject==='estate'?'학개론':'민법')+'</span></div>'+
+  '<div class="ck98-focus-bar" role="progressbar" aria-label="집중 복습 진행률" aria-valuemin="0" aria-valuemax="'+total+
+  '" aria-valuenow="'+focusIndex+'"><span style="width:'+Math.round(focusIndex/total*100)+'%"></span></div>'+
+  '<p class="ck98-focus-question">'+esc(q.question)+'</p>'+
+  '<ol class="ck98-focus-options">'+q.options.map((o,i)=>'<li><b>'+marks[i]+'</b> '+esc(o)+'</li>').join('')+'</ol>'+
+  (focusRevealed?'<p class="ck98-focus-reveal">공식 채점 인정: '+esc(q.correct.join(' 또는 '))+
+   '번'+(q.correct.length===5?' (전원정답 인정이며 각 선지가 모두 옳다는 뜻이 아님)':
+    q.correct.length>1?' (복수정답 인정)':'')+'</p>':
+   '<p class="ck98-focus-hidden">정답을 가린 상태입니다. 먼저 생각한 뒤 정답을 확인하세요.</p>')+
+  '<div class="ck98-focus-actions">'+
+  (focusRevealed?
+   '<button type="button" data-ck79-focus-grade="again">1 · 짧게 재복습</button>'+
+   '<button type="button" data-ck79-focus-grade="remember">2 · 기억했음</button>':
+   '<button type="button" data-ck79-focus-reveal>Space · 정답 확인</button>')+
+  '<button type="button" data-ck79-focus-skip>건너뛰기</button>'+
+  '<button type="button" data-ck79-open="'+esc(current)+'">원문 보기</button>'+
+  '<button type="button" data-ck79-edit="'+esc(current)+'">선지 근거 기록</button></div>'+
+  '<p class="ck98-focus-hint">선택지 채점이 아닌 기억 평가입니다. Space 정답 표시 · 이후 1 재복습 / 2 기억했음. 건너뛰기는 복습기록을 변경하지 않습니다.</p>'+
+  controls+'</section>';
+}
+function exportDue(){
+ const report=dueReport(),rows=report.rows,records=index();
+ const lines=['ConceptKnot 개인 복습 대기표 · 공식 성적표/해설 아님',
+  '출력: '+new Date().toISOString(),'대기 '+report.due+'건 · 이후 예약 '+report.future+'건',''];
+ for(const row of rows){
+  const q=records[row.id];if(!q?.verified)continue;
+  lines.push(row.id+' · '+(q.subject==='estate'?'학개론':'민법')+' · '+row.reason+
+   ' · '+new Date(row.at).toLocaleString('ko-KR',{timeZone:'Asia/Seoul'})+
+   '\n'+String(q.question||'').replace(/\s+/g,' ').slice(0,250)+'\n');
+ }
+ if(!rows.length)lines.push('현재 복습 대기 문항이 없습니다.');
+ try{
+  const blob=new Blob(['\uFEFF',lines.join('\n')],{type:'text/plain;charset=utf-8'});
+  const url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download='ConceptKnot_복습대기_'+new Date().toISOString().slice(0,10)+'.txt';
+  document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2500);
+  return true;
+ }catch{return false;}
+}
 function mount(){
  const search=document.getElementById('ck76-search'),host=search?.parentNode||document.querySelector('#main');
  if(!host||document.getElementById('ck79-review'))return;
@@ -59,6 +149,10 @@ function renderReview(){
   '<span>실전 오답·미응답 '+(categories['v82-official-mock']||0)+'건 · 기존 오답 '+(categories['personal-mistake']||0)+'건</span>'+
   '<span>최근 정답·해소 반영 '+report.cleared.length+'건</span></div>'+
   '<p class="ck79-review-note">마지막 시험·회상·오답 결정의 시각을 비교합니다. 최근 정답이 오래된 오답을 해소할 수 있으며, 이후 회상 예약이 있으면 그 예약이 우선합니다.</p>'+
+  '<div class="ck98-review-tools"><label>집중 복습 문항 수 <select data-ck79-focus-size>'+[10,20,40].map(n=>
+    '<option value="'+n+'"'+(focusSize===n?' selected':'')+'>'+n+'문항</option>').join('')+'</select></label>'+
+  '<button type="button" data-ck79-focus-start'+(!ordered.length?' disabled':'')+'>집중 복습 시작</button>'+
+  '<button type="button" data-ck79-export>복습 대기 TXT</button></div>'+
   '<div class="ck79-review-list">'+(shown.length?shown.map(r=>row(index()[r.id],r.id,r.reason,data.review[r.id])).join(''):
    '<p>현재 복습 대기 문항이 없습니다. 기출 시험 오답이나 인출 실패가 발생하면 여기에 연결됩니다.</p>')+'</div>'+
   (ordered.length?'<nav class="ck79-review-pages" aria-label="복습 문항 페이지"><span>'+Math.min(start+1,ordered.length)+'–'+
@@ -133,7 +227,7 @@ async function paint(){
   '<button data-ck79-tab="concepts" aria-pressed="'+(tab==='concepts')+'">개념 후보 탐색</button></div>'+
   '<select data-ck79-subject aria-label="과목 필터"><option value="all">전체 과목</option>'+
   '<option value="estate">학개론</option><option value="civil">민법</option></select></div>'+
-  '<div class="ck79-panel" data-ck79-panel>'+ (tab==='review'?renderReview():
+  '<div class="ck79-panel" data-ck79-panel>'+ (tab==='review'?(focusMode?renderFocus():renderReview()):
     candidates&&occurrences?renderConcepts():'<p role="status">개념 연결 후보를 불러오는 중입니다.</p>')+
   '</div><p data-ck79-status role="status" class="ck79-status"></p>';
  const select=body.querySelector('[data-ck79-subject]');if(select)select.value=subject;
@@ -146,14 +240,29 @@ function openQuestion(id){
  else window.CK76Study?.openQuestion?.(q.year,q.number,q.subject);
 }
 document.addEventListener('click',event=>{
- const t=event.target.closest?.('[data-ck79-toggle],[data-ck79-tab],[data-ck79-show],[data-ck79-mark],[data-ck79-open],[data-ck79-edit],[data-ck79-concept],[data-ck79-prevpage],[data-ck79-nextpage]');
+ const t=event.target.closest?.('[data-ck79-toggle],[data-ck79-tab],[data-ck79-show],[data-ck79-mark],[data-ck79-open],[data-ck79-edit],[data-ck79-concept],[data-ck79-prevpage],[data-ck79-nextpage],'+
+ '[data-ck79-focus-start],[data-ck79-focus-reveal],[data-ck79-focus-grade],[data-ck79-focus-skip],'+
+ '[data-ck79-focus-exit],[data-ck79-focus-restart],[data-ck79-export]');
  if(!t)return;
  if(t.hasAttribute('data-ck79-toggle')){
   open=!open;t.setAttribute('aria-expanded',String(open));t.textContent=open?'복습 접기':'복습 열기';
   const body=document.querySelector('#ck79-review [data-ck79-body]');if(body)body.hidden=!open;
   if(open)paint();return;
  }
- if(t.hasAttribute('data-ck79-tab')){tab=t.dataset.ck79Tab;page=0;paint();return;}
+ if(t.hasAttribute('data-ck79-tab')){tab=t.dataset.ck79Tab;page=0;finishFocus();paint();return;}
+ if(t.hasAttribute('data-ck79-focus-start')||t.hasAttribute('data-ck79-focus-restart')){
+  if(!beginFocus()){status('복습 시점이 도래한 문항이 없습니다.');return;}
+  paint();document.querySelector('#ck79-review .ck98-focus')?.focus?.();return;
+ }
+ if(t.hasAttribute('data-ck79-focus-exit')){finishFocus();paint();return;}
+ if(t.hasAttribute('data-ck79-focus-reveal')){if(revealFocus())paint();return;}
+ if(t.hasAttribute('data-ck79-focus-grade')){
+  if(answerFocus(t.dataset.ck79FocusGrade))paint();
+  else status('복습 평가 저장 실패 · 현재 문항은 유지됩니다. 브라우저 용량·상태를 확인하세요.');
+  return;
+ }
+ if(t.hasAttribute('data-ck79-focus-skip')){if(skipFocus())paint();return;}
+ if(t.hasAttribute('data-ck79-export')){if(!exportDue())status('복습 TXT 저장 실패 · 브라우저 다운로드 권한을 확인하세요.');return;}
  if(t.hasAttribute('data-ck79-prevpage')){page=Math.max(0,page-1);paint();return;}
  if(t.hasAttribute('data-ck79-nextpage')){page++;paint();return;}
  if(t.hasAttribute('data-ck79-show')){
@@ -172,7 +281,8 @@ document.addEventListener('click',event=>{
  if(t.hasAttribute('data-ck79-concept')){selectedConcept=t.dataset.ck79Concept;paint();}
 });
 document.addEventListener('change',e=>{
- if(e.target?.matches?.('[data-ck79-subject]')){subject=e.target.value;page=0;paint();}
+ if(e.target?.matches?.('[data-ck79-subject]')){subject=e.target.value;page=0;finishFocus();paint();}
+ if(e.target?.matches?.('[data-ck79-focus-size]'))focusSize=[10,20,40].includes(Number(e.target.value))?Number(e.target.value):10;
 });
 document.addEventListener('input',e=>{
  if(!e.target?.matches?.('[data-ck79-concept-search]'))return;
@@ -186,6 +296,14 @@ document.addEventListener('input',e=>{
  const next=container.querySelector('[data-ck79-concept-search]');
  if(next){next.focus();try{next.setSelectionRange(start,end)}catch{}}
 });
+document.addEventListener('keydown',event=>{
+ if(!focusMode||tab!=='review'||!open||event.isComposing||event.repeat||event.altKey||
+  event.ctrlKey||event.metaKey||/INPUT|TEXTAREA|SELECT/.test(event.target?.tagName||'')||
+  !event.target?.closest?.('#ck79-review'))return;
+ if(event.key===' '&&revealFocus()){event.preventDefault();paint();}
+ else if(event.key==='1'&&focusRevealed){event.preventDefault();if(answerFocus('again'))paint();}
+ else if(event.key==='2'&&focusRevealed){event.preventDefault();if(answerFocus('remember'))paint();}
+});
 let observer;
 function schedule(){
  if(scheduled)return;scheduled=true;
@@ -197,5 +315,5 @@ const main=document.getElementById('main');
 if(main&&window.MutationObserver){observer=new MutationObserver(records=>{
  if(records.some(x=>Array.from(x.addedNodes).some(n=>n.nodeType===1&&(n.matches?.('.ck-v7-stage,#ck76-search')||n.querySelector?.('#ck76-search')))))schedule();
 });observer.observe(main,{childList:true,subtree:true});}
-window.CK79Review=Object.freeze({dueRows,dueReport,openQuestion,ranked:()=>candidates?.perConceptCandidates||[],getStatus:()=>({open,tab,loaded:Boolean(candidates)})});
+window.CK79Review=Object.freeze({dueRows,dueReport,openQuestion,focusStatus,beginFocus,revealFocus,answerFocus,skipFocus,finishFocus,exportDue,ranked:()=>candidates?.perConceptCandidates||[],getStatus:()=>({open,tab,loaded:Boolean(candidates),focus:focusStatus()})});
 })();
