@@ -60,35 +60,70 @@ function bankQuality(records=window.RECALL_OFFICIAL||{}){
  }
  return result;
 }
-function visualQueue({year=2025,limit=12,records=window.RECALL_OFFICIAL||{}}={}){
+function visualQueue({year=2025,limit=12,records=window.RECALL_OFFICIAL||{},mode='all'}={}){
  const y=Number(year),count=Math.max(1,Math.min(80,Number(limit)||12));
  if(!Number.isInteger(y)||y<2016||y>2025)return [];
- return Object.values(records).filter(q=>q?.verified===true&&q.year===y&&
-  Number.isInteger(q.number)&&q.number>=1&&q.number<=80&&q.checks?.visualReview!==true)
- .sort((a,b)=>{
-  const score=q=>(Array.isArray(q.diagrams)&&q.diagrams.length?4:0)+
-   (q.checks?.visualReview===undefined?2:0)+
-   (q.correct?.length>1?1:0);
-  return score(b)-score(a)||a.number-b.number;
- }).slice(0,count).map(q=>({
-  id:q.id,year:q.year,number:q.number,subject:q.subject,
-  hasDiagrams:Array.isArray(q.diagrams)&&q.diagrams.length>0,
-  missingReviewFlag:q.checks?.visualReview===undefined,
-  multipleAccepted:Array.isArray(q.correct)&&q.correct.length>1,
-  question:String(q.question||'').replace(/\s+/g,' ').slice(0,110),
-  paperUrl:typeof q.paperUrl==='string'&&/^https:\/\/[A-Za-z0-9.-]+\//.test(q.paperUrl)?q.paperUrl:''
- }));
+ const similarity=q=>{
+  const values=[q.checks?.primaryText?.score,q.checks?.primaryText?.ocrScore].filter(Number.isFinite);
+  return values.length?Math.min(...values):null;
+ };
+ const eligible=q=>{
+  if(q?.verified!==true||q.year!==y||!Number.isInteger(q.number)||q.number<1||q.number>80)return false;
+  const low=(similarity(q)!==null&&similarity(q)<0.9);
+  if(mode==='low-text')return low;
+  if(mode==='unreviewed')return q.checks?.visualReview!==true;
+  return q.checks?.visualReview!==true||low;
+ };
+ const priority=q=>{
+  const value=similarity(q);
+  return (value!==null&&value<0.9?10:0)+
+   (q.checks?.visualReview===undefined?5:0)+
+   (q.checks?.visualReview===false?3:0)+
+   (q.correct?.length>1?8:0)+
+   (Array.isArray(q.diagrams)&&q.diagrams.length?4:0);
+ };
+ return Object.values(records).filter(eligible)
+  .sort((a,b)=>priority(b)-priority(a)||a.number-b.number)
+  .slice(0,count).map(q=>{
+   const textScore=similarity(q);
+   return {id:q.id,year:q.year,number:q.number,subject:q.subject,
+    hasDiagrams:Array.isArray(q.diagrams)&&q.diagrams.length>0,
+    missingReviewFlag:q.checks?.visualReview===undefined,
+    visualReviewed:q.checks?.visualReview===true,
+    lowTextSimilarity:textScore!==null&&textScore<0.9,textScore,
+    multipleAccepted:Array.isArray(q.correct)&&q.correct.length>1,
+    question:String(q.question||'').replace(/\s+/g,' ').slice(0,110),
+    paperUrl:typeof q.paperUrl==='string'&&/^https:\/\/[A-Za-z0-9.-]+\//.test(q.paperUrl)?q.paperUrl:''
+   };
+  });
 }
-let queueYear=2025;
+let queueYear=2025,queueMode='all',queueLoadingYear=null,queueLoadPromise=null,queueLoadError='';
+function loadOlderYear(year){
+ const y=Number(year);
+ if(!Number.isInteger(y)||y<2016||y>2020||
+  window.RECALL_OFFICIAL?.[y+'-1']?.verified===true)return Promise.resolve(true);
+ if(!window.CK89OfficialBank?.loadYear)return Promise.resolve(false);
+ if(queueLoadingYear!==null)return queueLoadingYear===y?(queueLoadPromise||Promise.resolve(false)):
+  (queueLoadPromise||Promise.resolve(false)).then(()=>loadOlderYear(y));
+ queueLoadingYear=y;queueLoadError='';render();
+ queueLoadPromise=Promise.resolve().then(()=>window.CK89OfficialBank.loadYear(y))
+ .then(()=>{queueLoadError='';return true;})
+ .catch(err=>{queueLoadError='과거 공식 기출 자료를 불러오지 못했습니다: '+(err?.message||err);return false;})
+ .finally(()=>{queueLoadingYear=null;queueLoadPromise=null;render();});
+ return queueLoadPromise;
+}
+
+
 function exportVisualQueue(year=queueYear){
- const list=visualQueue({year,limit:80});
+ const list=visualQueue({year,limit:80,mode:queueMode});
  const lines=['ConceptKnot '+year+'년 공식 기출 원문 시각 검토 후보',
   '자동 추출 목록 · 공식 원문/법령 검토 완료 증빙이 아닙니다.',
   '검토 대기 문항 '+list.length+'건',''];
  for(const row of list)lines.push(row.id+' · '+(row.subject==='estate'?'학개론':'민법')+
   (row.hasDiagrams?' · 그림·도표 확인 필요':'')+
   (row.multipleAccepted?' · 복수/전원정답 인정':'')+
-  (row.missingReviewFlag?' · 검토 표시 없음':' · 미검토 표시')+
+  (row.visualReviewed?' · 시각 검토 표시 있음':row.missingReviewFlag?' · 검토 표시 없음':' · 미검토 표시')+
+  (row.lowTextSimilarity?' · 유사도 '+row.textScore.toFixed(3)+' (원본 재대조 후보)':'')+
   '\n'+row.question+'\n'+(row.paperUrl||'공식 PDF 링크 없음')+'\n');
  try{const file=new Blob(['\uFEFF',lines.join('\n')],{type:'text/plain;charset=utf-8'});
   const url=URL.createObjectURL(file),a=document.createElement('a');
@@ -108,7 +143,7 @@ let root=null;
 function render(){
  if(!root)return;
  const wasOpen=root.querySelector('.ck88-review-queue')?.open===true;
- const values=inspect(),problem=values.filter(x=>x.status==='invalid'),quality=bankQuality(),queue=visualQueue({year:queueYear});
+ const values=inspect(),problem=values.filter(x=>x.status==='invalid'),quality=bankQuality(),queue=visualQueue({year:queueYear,mode:queueMode});
  root.querySelector('[data-v88-body]').innerHTML='<p>읽기 전용 검사 · 데이터를 초기화하거나 수정하지 않습니다. 손상 기록은 복원 전 원본을 보존하세요.</p>'+
  '<p><strong>공식 기출 등록 구조: '+quality.structured+'/'+quality.total+'문항</strong> · 10개년 목표 800문항 · 시각 검토 명시 '+quality.visualReviewed+'건 / 미검토 표시 '+quality.visualUnreviewed+'건 / 표시 없음 '+quality.visualUnknown+'건</p>'+
  '<p>복수 인정 '+quality.multikey+'건(전원정답 '+quality.allAccepted+'건 포함) · OCR/텍스트 유사도 0.90 미만 '+quality.lowTextSimilarity+'건 · 점수 미기재 '+quality.missingTextSimilarity+'건. 낮은 유사도는 자동 오류 판정이 아닌 원문 대조 우선순위입니다.</p>'+
@@ -116,16 +151,21 @@ function render(){
  '<details class="ck88-review-queue"><summary>원문 시각 검토 후보 · 연도별 우선 12문항 (읽기 전용)</summary>'+
  '<label>시험연도 <select data-v88-year>'+Array.from({length:10},(_,i)=>2025-i).map(year=>
  '<option value="'+year+'"'+(queueYear===year?' selected':'')+'>'+year+'년</option>').join('')+'</select></label>'+
- '<p>공식 PDF의 표·수식·그림 및 당시 법령을 직접 대조하세요. 이 화면에서는 검수 완료 상태를 변경하지 않습니다.</p>'+
+ '<label>우선순위 <select data-v88-queue-mode>'+
+ ['all','unreviewed','low-text'].map((x,i)=>'<option value="'+x+'"'+(queueMode===x?' selected':'')+'>'+
+ ['시각 미검토 + 낮은 유사도','시각 미검토','텍스트 유사도 0.90 미만'][i]+'</option>').join('')+
+ '</select></label>'+
+ '<p>공식 PDF의 표·수식·그림 및 당시 법령을 대조하세요. 검수 완료 표시가 있더라도 유사도가 낮으면 재검토 후보가 될 수 있습니다. 유사도는 오류 확정이 아닙니다.</p>'+
  '<button type="button" data-v88-review-export>해당 연도 검토 후보 TXT</button>'+
  '<div class="ck88-review-list">'+(queue.length?queue.map(q=>
  '<div><strong>'+safe(q.id)+' · '+(q.subject==='estate'?'학개론':'민법')+'</strong>'+
  '<span>'+safe(q.question)+'</span>'+
- '<small>'+(q.hasDiagrams?'그림 포함 · ':'')+(q.missingReviewFlag?'시각 검수 표시 없음':'시각 미검토 표시')+
+ '<small>'+(q.hasDiagrams?'그림 포함 · ':'')+(q.visualReviewed?'시각 검토 표시 있음':q.missingReviewFlag?'시각 검수 표시 없음':'시각 미검토 표시')+
+ (q.lowTextSimilarity?' · 텍스트 유사도 '+q.textScore.toFixed(3):'')+
  (q.multipleAccepted?' · 복수/전원정답':'')+'</small>'+
  '<button type="button" data-v88-open="'+safe(q.id)+'">해당 공식 문항 열기</button>'+
  (q.paperUrl?'<a href="'+safe(q.paperUrl)+'" target="_blank" rel="noopener noreferrer">시험 원문 PDF</a>':'')+
- '</div>').join(''):'<p>해당 연도의 시각 검토 대기 문항을 찾지 못했거나 데이터 로딩 전입니다.</p>')+'</div></details>'+
+ '</div>').join(''):'<p role="status">'+safe(queueLoadError|| (queueLoadingYear===queueYear?'과거 기출을 불러오는 중입니다.':'선택한 조건에 해당하는 문항이 없거나 공식 은행 로딩 전입니다.'))+'</p>')+'</div></details>'+
  '<div class="ck88-rows">'+values.map(x=>'<div><strong>'+safe(x.name)+'</strong><span>'+
  (x.status==='ok'?'정상 형식':x.status==='empty'?'저장 기록 없음':'손상 의심 · 덮어쓰기 금지')+
  ' · '+x.bytes+'자</span></div>').join('')+'</div>'+
@@ -153,12 +193,13 @@ document.addEventListener('click',event=>{
   }
  }else render();
 });
-document.addEventListener('change',e=>{if(e.target?.matches?.('[data-v88-year]')){queueYear=Number(e.target.value);render();}});
+document.addEventListener('change',e=>{if(e.target?.matches?.('[data-v88-year]')){queueYear=Number(e.target.value);render();loadOlderYear(queueYear);}
+ if(e.target?.matches?.('[data-v88-queue-mode]')){queueMode=['all','unreviewed','low-text'].includes(e.target.value)?e.target.value:'all';render();}});
 const target=document.getElementById('main');
 if(target&&window.MutationObserver)new MutationObserver(()=>{
  if(!document.getElementById('ck88-data-diagnostics')&&
   document.querySelector('#main [data-action="backup"]'))mount();
 }).observe(target,{childList:true});
 window.addEventListener('ck:official-bank-ready',()=>{if(root)render();});
-window.CK88Diagnostics=Object.freeze({inspect,bankQuality,visualQueue,exportVisualQueue,mount});
+window.CK88Diagnostics=Object.freeze({inspect,bankQuality,visualQueue,exportVisualQueue,loadOlderYear,mount});
 })();
