@@ -63,8 +63,9 @@ function note(t){message=t;const el=root?.querySelector('[data-ck84-mat-status]'
 function parseQuestions(value){
  const lines=String(value||'').split(/\r?\n/),out=[],warnings=[];
  let q=null,opt=-1,page=1;
- const qRx=/^\s*(?:제\s*)?([1-9]\d?|100)\s*[\.\)]\s*(\S.*)$/;
- const oRx=/^\s*(?:([①②③④⑤])|[\(\[]([1-5])[\)\]]|([1-5])\s*[\.\)])\s*(\S.*)$/;
+ const heading=/^\s*(?:제\s*)?([1-9]\d?|100)\s*[\.\)]\s*(\S.*)$/;
+ const explicit=/^\s*제\s*([1-9]\d?|100)\s*문\s*[\ .:\)]?\s*(\S.*)$/;
+ const option=/^\s*(?:([①②③④⑤])|[\(\[]([1-5])[\)\]]|([1-5])\s*[\.\)])\s*(\S.*)$/;
  const marks=['①','②','③','④','⑤'];
  function flush(){
   if(!q)return;
@@ -73,26 +74,42 @@ function parseQuestions(value){
   if(!q.complete)warnings.push('문항 '+q.number+': 본문 또는 5개 선지 원문 확인 필요');
   out.push(q);q=null;opt=-1;
  }
+ function openQuestion(number,text){
+  flush();
+  if(out.length>=120){warnings.push('미리보기 120문항 제한');return false;}
+  q={number,page,question:text,options:['','','','',''],complete:false};opt=-1;return true;
+ }
+ function addOption(number,text){
+  if(!q)return;
+  if(q.options[number])warnings.push('문항 '+q.number+': '+(number+1)+'번 선지 번호 중복 · 원문 대조 필요');
+  q.options[number]+=(q.options[number]?' ':'')+text;opt=number;
+ }
  for(const input of lines){
-  const s=input.trim();if(!s)continue;
-  const pageTag=/^\[(?:PDF|OCR)\s+(\d{1,4})페이지\]$/.exec(s);
+  const raw=input.trim();if(!raw)continue;
+  const pageTag=/^\[(?:PDF|OCR)\s+(\d{1,4})페이지\]$/.exec(raw);
   if(pageTag){page=Number(pageTag[1]);continue;}
-  const qm=qRx.exec(s);
-  if(qm&&(!q||q.options.some(Boolean)||Number(qm[1])===1)){
-   flush();if(out.length>=120){warnings.push('미리보기 120문항 제한');break;}
-   q={number:Number(qm[1]),page,question:qm[2],options:['','','','',''],complete:false};continue;
+  const parts=/^[①②③④⑤]/.test(raw)?raw.split(/(?=[①②③④⑤])/).filter(Boolean):[raw];
+  for(const s of parts){
+   const ex=explicit.exec(s),qm=ex||heading.exec(s);
+   const number=qm?Number(qm[1]):0;
+   const foundOption=option.exec(s);
+   const optionNumber=foundOption?(foundOption[1]?marks.indexOf(foundOption[1]):Number(foundOption[2]||foundOption[3])-1):-1;
+   // Numeric 1.-5. can be a choice. Prioritize choices until the five options are complete.
+   const newHeading=Boolean(qm&&(ex||!q||number>5&&number===q.number+1||
+    q.options.every(Boolean)&&(number===q.number||number===q.number+1)));
+   if(newHeading){if(!openQuestion(number,qm[2]))return {questions:out,warnings,complete:out.filter(x=>x.complete).length};continue;}
+   if(!q)continue;
+   if(foundOption&&optionNumber>=0&&optionNumber<5){addOption(optionNumber,foundOption[4]);continue;}
+   if(opt>=0)q.options[opt]+=' '+s;else q.question+=' '+s;
   }
-  if(!q)continue;
-  const om=oRx.exec(s);
-  if(om){
-   const no=om[1]?marks.indexOf(om[1]):Number(om[2]||om[3])-1;
-   if(no>=0&&no<=4){opt=no;q.options[no]+=(q.options[no]?' ':'')+om[4];continue;}
-  }
-  if(opt>=0)q.options[opt]+=' '+s;else q.question+=' '+s;
  }
  flush();
- const seen=new Set();
- for(const item of out){if(seen.has(item.number))warnings.push('문항 '+item.number+' 번호 중복 감지');seen.add(item.number);}
+ const seen=new Set();let previous=0;
+ for(const item of out){
+  if(seen.has(item.number))warnings.push('문항 '+item.number+' 번호 중복 감지');
+  if(previous&&item.number!==previous+1)warnings.push('문항 '+previous+' 다음 번호 '+item.number+' · 누락/순서 검토');
+  seen.add(item.number);previous=item.number;
+ }
  return {questions:out,warnings,complete:out.filter(x=>x.complete).length};
 }
 function orderedText(items,width){
@@ -177,6 +194,7 @@ async function extract(file,mode){
   else if(/\.(txt|md)$/i.test(name)||file.type?.startsWith('text/'))
    r={text:(await file.text()).slice(0,MAX_TEXT),kind:'txt',pages:0,totalPages:0};
   else throw Error('지원하지 않는 확장자입니다. PDF, 이미지, TXT, MD만 지원합니다.');
+  if(cancel)throw Error('중단 요청으로 입력 내용 변경을 취소했습니다.');
   sourceText=r.text;sourceType=r.kind;sourcePages=r.pages;
   sourceTitle=name.replace(/\.[^.]+$/,'').slice(0,120);currentId='';unsavedNote='';unsavedRef='';
   const title=root?.querySelector('[data-ck84-mat-title]'),area=root?.querySelector('[data-ck84-mat-text]');
@@ -274,6 +292,7 @@ async function restore(file){
   if(overlap&&!window.confirm?.('같은 ID 자료 '+overlap+'건을 교체할까요?'))return;
   const restoredIds=new Set(fresh.documents.map(d=>d.id));
   const merged=[...fresh.documents,...store.documents.filter(d=>!restoredIds.has(d.id))];
+  if(!sanitize({...store,documents:merged}))throw Error('병합 후 자료 수 또는 저장 용량 제한 초과 · 기존 자료는 그대로 유지됩니다.');
   if(!write({...store,documents:merged}))throw Error('저장 용량 또는 다중 탭 충돌');
   list();note('개인 교재 자료 '+fresh.documents.length+'건을 복원했습니다.');
  }catch(e){note('복원 실패 · '+e.message);}

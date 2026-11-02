@@ -23,7 +23,7 @@ function inspect(storage=localStorage){
       data.quizAnswers&&typeof data.quizAnswers==='object'&&!Array.isArray(data.quizAnswers)&&
       data.flashVisits&&typeof data.flashVisits==='object'&&!Array.isArray(data.flashVisits),
     'ck80-explain-drafts-v1':()=>Object.entries(data).length<=400&&
-      Object.entries(data).every(([id,v])=>/^202[1-5]-(?:[1-9]|[1-7]\\d|80)$/.test(id)&&
+      Object.entries(data).every(([id,v])=>/^202[1-5]-(?:[1-9]|[1-7]\d|80)$/.test(id)&&
         v&&typeof v==='object'&&!Array.isArray(v)),
     'ck81-review-workbench-v1':()=>window.CK81Workbench?.sanitizeProgress?.(data),
     'ck82-exam-sessions-v1':()=>window.CK82FullExam?.cleanStore?.(data),

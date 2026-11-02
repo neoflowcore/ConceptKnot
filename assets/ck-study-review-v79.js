@@ -20,12 +20,23 @@ function localReview(){
 function dueRows(){
  const data=localReview();
  const rows=new Map();
+ const latest=new Map();
+ for(const attempt of window.CK82FullExam?.getAttempts?.()||[]){
+  if(attempt?.status!=='submitted'||!Array.isArray(attempt.answers)||attempt.answers.length!==80)continue;
+  const at=Number(attempt.submittedAt);if(!Number.isFinite(at)||at<=0)continue;
+  for(let i=0;i<80;i++){
+   const id=attempt.year+'-'+(i+1),q=index()[id],answer=attempt.answers[i];
+   if(!q?.verified||!Array.isArray(q.correct))continue;
+   if(!latest.has(id)||latest.get(id).at<at)latest.set(id,{at,correct:Number.isInteger(answer)&&q.correct.map(Number).includes(answer)});
+  }
+ }
  for(const mistake of data.mistakes){
   const scheduled=data.review?.[mistake?.year+'-'+mistake?.number];
   if(Number(scheduled?.nextAt)>now())continue;
   if(mistake?.type!=='exam'||mistake.resolved||!Number.isInteger(Number(mistake.year))||!Number.isInteger(Number(mistake.number)))continue;
   const id=mistake.year+'-'+mistake.number;
-  if(valid(id))rows.set(id,{id,reason:'내 오답',at:Number(mistake.updated)||0});
+  const last=latest.get(id);
+  if(valid(id)&&!(last?.correct&&last.at>=Number(mistake.updated||0)))rows.set(id,{id,reason:'내 오답',at:Number(mistake.updated)||0});
  }
  for(const item of window.CK86ExamBridge?.pending?.()||[]){
   if(valid(item.id)&&!rows.has(item.id))rows.set(item.id,item);
