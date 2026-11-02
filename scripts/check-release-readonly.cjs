@@ -18,7 +18,7 @@ function run(){
  const html=read('index.html'),service=read('sw.js'),vc=JSON.parse(read('vercel.json'));
  check(vc.git?.deploymentEnabled===false,'Vercel Git 자동배포가 비활성이 아닙니다.');
  check(!fs.existsSync(path.join(ROOT,'.github/workflows')),'GitHub Actions workflow 디렉터리가 존재합니다.');
- check(service.includes('conceptknot-study-v100-evidence-workbench'),'서비스 워커 캐시 버전 불일치');
+ check(service.includes('conceptknot-study-v101-evidence-resilience'),'서비스 워커 캐시 버전 불일치');
  const {scripts,css}=pathsFromHtml(html);
  for(const src of [...scripts,...css]){
   if(!isLocal(src))continue;
@@ -47,9 +47,9 @@ function run(){
     errors.push('SW 캐시 원본 누락: '+file);
   }
  }
- for(const name of ['ck-study-workbench-v81.js','ck-study-workbench-v81.css']){
-  check(html.includes('./assets/'+name+'?v=100'),'HTML v100 캐시 갱신 누락: '+name);
-  check(service.includes('./assets/'+name+'?v=100'),'SW v100 캐시 갱신 누락: '+name);
+ for(const name of ['ck-study-workbench-v81.js']){
+  check(html.includes('./assets/'+name+'?v=101'),'HTML v100 캐시 갱신 누락: '+name);
+  check(service.includes('./assets/'+name+'?v=101'),'SW v100 캐시 갱신 누락: '+name);
  }
  const {auditOfficialBank}=require('./audit-official-bank.cjs');
  const {auditExplanations}=require('./audit-explanation-readiness.cjs');

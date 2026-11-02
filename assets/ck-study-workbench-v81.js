@@ -1,4 +1,4 @@
-/* ConceptKnot v81 - offline P4 evidence workbench.
+/* ConceptKnot v101 - resilient offline P4 evidence workbench.
  * Canonical official answers and explanations are read-only.
  * Personal work readiness NEVER represents an official source/legal review.
  */
@@ -113,21 +113,46 @@ function catalog(){
  return Object.values(official()).filter(q=>q&&q.verified===true&&isId(q.id)&&
   Array.isArray(q.options)&&q.options.length===5).sort((a,b)=>b.year-a.year||a.number-b.number);
 }
-async function load(){
- if(rows)return rows;
+async const bundleCache=new Map();
+function validExplanationBundle(year,data){
+ if(Number(data?.year)!==year||!Array.isArray(data.records)||data.records.length!==80)return false;
+ const seen=new Set();
+ return data.records.every(entry=>{
+  const id=entry?.questionId,q=official()[id];
+  if(!isId(id)||!id.startsWith(year+'-')||seen.has(id)||!q||q.verified!==true||
+   entry.examYear!==year||entry.number!==q.number||entry.subject!==q.subject||
+   !Array.isArray(entry.officialAnswer)||!Array.isArray(q.correct)||
+   !Array.isArray(entry.options)||entry.options.length!==5||
+   entry.options.some((o,i)=>o?.no!==i+1))return false;
+  const listed=entry.officialAnswer.map(Number).sort((a,b)=>a-b).join(',');
+  const officialKey=q.correct.map(Number).sort((a,b)=>a-b).join(',');
+  if(listed!==officialKey)return false;
+  seen.add(id);return true;
+ });
+}
+function load(force=false){
+ if(rows&&!force)return Promise.resolve(rows);
  if(loading)return loading;
  loading=(async()=>{
   const found=catalog();
-  const bundles=await Promise.allSettled(YEARS.map(year=>
-   fetch('./data/explanations/official-'+year+'.json',{cache:'force-cache'})
-    .then(response=>{if(!response.ok)throw Error('HTTP '+response.status);return response.json();})
-    .then(data=>{if(Number(data.year)!==year||data.records?.length!==80)throw Error('80건 구조 불일치');return data.records;})
-  ));
-  const byId=new Map();loadErrors=0;
-  bundles.forEach(result=>{
-   if(result.status!=='fulfilled'){loadErrors++;return;}
-   result.value.forEach(item=>{if(isId(item.questionId))byId.set(item.questionId,item);});
+  const bundles=await Promise.allSettled(YEARS.map(async year=>{
+   if(!force&&bundleCache.has(year))return bundleCache.get(year);
+   const response=await fetch('./data/explanations/official-'+year+'.json',
+    {cache:force?'reload':'force-cache'});
+   if(!response.ok)throw Error('HTTP '+response.status);
+   const data=await response.json();
+   if(!validExplanationBundle(year,data))throw Error(year+'년 문항·선지·정답 연결 불일치');
+   return data.records;
+  }));
+  loadErrors=0;
+  bundles.forEach((result,i)=>{
+   const year=YEARS[i];
+   if(result.status==='fulfilled')bundleCache.set(year,result.value);
+   else loadErrors++;
   });
+  const byId=new Map();
+  for(const records of bundleCache.values())for(const entry of records)
+   if(isId(entry.questionId))byId.set(entry.questionId,entry);
   rows=found.map(q=>({q,entry:byId.get(q.id)||null}));
   return rows;
  })().finally(()=>{loading=null;});
@@ -283,7 +308,6 @@ function renderRows(items){
    (!x.visualReviewed?'<span>시각 검토 미확인</span>':'')+
    (x.textScore!==null&&x.textScore<0.9?'<span>원문 유사도 0.90 미만</span>':'')+
    (x.reasonReviewed?'<span>해설 근거 검수 표시</span>':'')+
-   (!x.visualReviewed?'<span>시각 검토 미확인</span>':'')+
    (x.textScore!==null&&x.textScore<0.9?'<span>OCR/원문 대조 우선</span>':'')+
    (x.p.status==='ready'?'<span>개인 대조 준비 · 미검수</span>':'')+
    (x.p.status==='hold'?'<span>검토 보류</span>':'')+
@@ -317,7 +341,7 @@ function render(){
  const batch=found.slice(view.page*view.pageSize,(view.page+1)*view.pageSize);
  panel().innerHTML=
  '<p class="ck81-disclaimer"><strong>개인 검토 작업대 · 공식 검수 결과가 아닙니다.</strong> 입력 충실도는 내용의 정확성, 법령·판례 검증, 출제 빈도 검증을 뜻하지 않습니다. 공식 정답 800건은 변경하지 않습니다.</p>'+
- (loadErrors?'<p class="ck81-warning">해설 파일 '+loadErrors+'개 연도를 불러오지 못했습니다. 해당 문항은 상태를 추정하지 않습니다.</p>':'')+
+ (loadErrors?'<p class="ck81-warning">해설 파일 '+loadErrors+'개 연도를 새로 불러오지 못했습니다. 직전 정상 자료가 있으면 유지하며, 미확인 자료는 검증 완료로 표시하지 않습니다. <button type="button" data-ck81-retry>자료 다시 불러오기</button></p>':'')+
  '<dl class="ck81-totals">'+[
   ['최근 5개년 기출',totals.total],['기본 해설 초안',totals.canonicalDraft],
   ['내 초안',totals.personal],['내 초안 입력 8/8',totals.complete],
@@ -428,10 +452,16 @@ async function importJson(file){
   const invalid=Object.keys(clean.records).some(id=>official()[id]?.verified!==true);
   if(invalid)throw Error('등록되지 않은 공식 문항 ID가 있습니다.');
   const overlap=Object.keys(clean.records).filter(id=>local.records[id]).length;
-  if(overlap&&!window.confirm?.('기존 개인 진행 '+overlap+'건이 교체됩니다. 계속할까요?'))return;
-  const next={...local,records:{...local.records,...clean.records}};
+  const safeEntries=Object.entries(clean.records).filter(([id,row])=>
+   !local.records[id]||row.updatedAt>=local.records[id].updatedAt);
+  const retained=Object.keys(clean.records).length-safeEntries.length;
+  if(overlap&&!window.confirm?.('기존 개인 진행 '+overlap+'건과 겹칩니다. 백업이 더 오래된 '+retained+
+   '건은 현재 기록을 유지합니다. 다른 기록을 복원할까요?'))return;
+  if(!safeEntries.length){message('현재 기록보다 새로운 복원 항목이 없습니다. 저장하지 않았습니다.');return;}
+  const next={...local,records:{...local.records,...Object.fromEntries(safeEntries)}};
   if(!persist(next))throw Error('브라우저 저장공간 또는 쓰기 권한 부족');
-  message('개인 진행 '+Object.keys(clean.records).length+'건 복원 완료 · 공식 해설은 변경되지 않았습니다.');
+  message('개인 진행 '+safeEntries.length+'건 복원 · 오래된 '+retained+
+   '건은 현재 기록 유지 · 공식 해설 변경 없음.');
   render();
  }catch(err){message('복원 실패 · '+(err?.message||'JSON 오류'));}
 }
@@ -469,9 +499,14 @@ function copyPrompt(id){
 document.addEventListener('click',event=>{
  const target=event.target.closest?.('[data-ck81-toggle],[data-ck81-matrix],[data-ck81-page],'+
   '[data-ck81-pin],[data-ck81-open],[data-ck81-edit],[data-ck81-choice-note],[data-ck81-prompt],'+
-  '[data-ck81-export],[data-ck81-import],[data-ck81-clear-filters],[data-ck81-batch-prompt],[data-ck81-batch-queue]');
+  '[data-ck81-export],[data-ck81-import],[data-ck81-clear-filters],[data-ck81-batch-prompt],[data-ck81-batch-queue],[data-ck81-retry]');
  if(!target||!document.getElementById('ck81-workbench')?.contains(target))return;
  if(target.hasAttribute('data-ck81-toggle')){toggle();return;}
+ if(target.hasAttribute('data-ck81-retry')){
+  message('해설 자료를 다시 확인하는 중입니다.');
+  load(true).then(()=>render()).catch(e=>message('자료 재확인 실패: '+(e?.message||e)));
+  return;
+ }
  if(target.hasAttribute('data-ck81-matrix')){
   const [year,subject]=target.dataset.ck81Matrix.split('|');
   if(view.year===Number(year)&&view.subject===subject){view.year=0;view.subject='all';}
