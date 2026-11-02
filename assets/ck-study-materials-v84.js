@@ -45,10 +45,12 @@ function read(){
   return empty();
  }
 }
+let storageConflict=false;
 let store=read(),root=null,visible=false,working=false,cancel=false,sourceText='',sourceType='manual',
  sourcePages=0,currentId='',sourceTitle='',message='',query='',lastFile=null,queued=false,unsavedNote='',unsavedRef='';
 const newId=()=>('m'+Date.now().toString(36)+Math.floor(Math.random()*1679616).toString(36).padStart(4,'0'));
 function write(next){
+ if(storageConflict){note('다른 탭의 변경과 저장하지 않은 입력이 충돌했습니다. 복사 후 새로고침하세요.');return false;}
  if(storageIssue){note(storageIssue);return false;}
  const checked=sanitize(next);if(!checked)return false;
  try{
@@ -283,18 +285,36 @@ function download(){
  a.href=url;a.download='ConceptKnot_개인교재자료_'+new Date().toISOString().slice(0,10)+'.json';
  document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);
 }
+function hasUnsavedDocument(){
+ const get=name=>root?.querySelector('[data-ck84-mat-'+name+']')?.value??'';
+ const current=store.documents.find(d=>d.id===currentId);
+ if(working)return true;
+ if(current)return get('title')!==current.title||get('text')!==current.text||
+  get('note')!==current.note||get('ref')!==(current.officialRef||'');
+ return Boolean(get('title').trim()||get('text').trim()||get('note').trim()||get('ref').trim());
+}
 async function restore(file){
  if(!file||file.size>1024*1024){note('JSON 백업 최대 1MB입니다.');return;}
+ if(hasUnsavedDocument()){
+  note('교재 메모에 저장하지 않은 입력 또는 진행 중인 OCR이 있습니다. 먼저 메모를 저장하거나 입력을 복사해 주세요.');
+  return;
+ }
  try{
   const fresh=sanitize(JSON.parse((await file.text()).replace(/^\uFEFF/,'')));
   if(!fresh)throw Error('개인 자료 백업 형식이 아닙니다.');
-  const overlap=fresh.documents.filter(x=>store.documents.some(y=>y.id===x.id)).length;
-  if(overlap&&!window.confirm?.('같은 ID 자료 '+overlap+'건을 교체할까요?'))return;
-  const restoredIds=new Set(fresh.documents.map(d=>d.id));
-  const merged=[...fresh.documents,...store.documents.filter(d=>!restoredIds.has(d.id))];
-  if(!sanitize({...store,documents:merged}))throw Error('병합 후 자료 수 또는 저장 용량 제한 초과 · 기존 자료는 그대로 유지됩니다.');
-  if(!write({...store,documents:merged}))throw Error('저장 용량 또는 다중 탭 충돌');
-  list();note('개인 교재 자료 '+fresh.documents.length+'건을 복원했습니다.');
+  if(!window.CK102Restore?.documents)throw Error('안전 복원 모듈을 불러오지 못했습니다.');
+  if(hasUnsavedDocument())throw Error('백업을 읽는 동안 교재 입력이 바뀌었습니다. 복원을 취소했습니다.');
+  const result=window.CK102Restore.documents(store.documents,fresh.documents,MAX_DOCS);
+  if(!result.changed){
+   note('현재보다 최신 자료가 없습니다. 기존 '+result.preserved+'건을 보존했습니다.');return;
+  }
+  if(result.overlap&&!window.confirm?.('교재 자료 중 '+result.overlap+
+    '건이 겹칩니다. 더 새로운 '+result.updated+'건만 갱신하고 오래된 '+result.preserved+
+    '건은 보호합니다. 새 '+result.added+'건을 추가할까요?'))return;
+  if(!sanitize({...store,documents:result.merged}))throw Error('병합 후 자료 수 또는 저장 용량 초과');
+  if(!write({...store,documents:result.merged}))throw Error('저장 용량 또는 다른 탭의 변경 감지');
+  list();note('교재 자료 복원: 새 '+result.added+'건 · 갱신 '+result.updated+
+   '건 · 오래된/동일 '+result.preserved+'건 유지');
  }catch(e){note('복원 실패 · '+e.message);}
 }
 function mount(){
@@ -393,8 +413,14 @@ document.addEventListener('input',event=>{
  if(t.matches?.('[data-ck84-mat-note]'))unsavedNote=t.value;
  if(t.matches?.('[data-ck84-mat-ref]'))unsavedRef=t.value;
 });
-document.addEventListener('storage',event=>{
- if(event.key===KEY){store=read();if(visible){list();note('다른 탭의 자료 변경을 확인했습니다. 기존 입력을 저장하기 전 검토하세요.');}}
+window.addEventListener('storage',event=>{
+ if(event.key!==KEY)return;
+ if(hasUnsavedDocument()){
+  storageConflict=true;note('다른 탭의 교재 자료 변경이 감지됐습니다. 저장하지 않은 입력을 보호하기 위해 저장을 차단합니다. 먼저 내용을 복사하고 새로고침하세요.');
+  return;
+ }
+ store=read();
+ if(visible){list();note(storageIssue||'다른 탭의 최신 자료로 화면을 갱신했습니다.');}
 });
 function schedule(){if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;mount();});}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',schedule,{once:true});else schedule();
@@ -404,6 +430,6 @@ if(main&&window.MutationObserver)new MutationObserver(changes=>{
 }).observe(main,{subtree:true,childList:true});
 window.CK84Materials=Object.freeze({sanitize,parseQuestions,orderedText,findDocuments,findOfficial,
  getDocuments:()=>store.documents.map(x=>({...x})),
- getState:()=>({open:visible,working,documents:store.documents.length,revision:store.revision,storageIssue}),
+ getState:()=>({open:visible,working,documents:store.documents.length,revision:store.revision,storageIssue,storageConflict}),
  open:()=>{mount();if(root&&!visible)toggle();}});
 })();

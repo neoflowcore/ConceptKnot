@@ -227,14 +227,30 @@ function download(){
 }
 async function restore(file){
  if(!file||file.size>5*1024*1024){status='JSON 용량은 최대 5MB입니다.';paint();return;}
+ if(dirty||unsavedChoices.size||storageConflict){
+  status='저장하지 않은 선지 판단 또는 다른 탭 충돌이 있습니다. 먼저 저장하거나 내용을 복사해 주세요.';
+  paint();return;
+ }
  try{
   await load();
   const data=sanitize(JSON.parse((await file.text()).replace(/^\uFEFF/,'')));
-  if(!data||Object.values(data.records).some(row=>row.conceptIds.some(id=>!taxonomy.has(id))))throw Error('문항·개념 데이터 형식 오류');
-  const overlap=Object.keys(data.records).filter(id=>state.records[id]).length;
-  if(overlap&&!window.confirm?.('기존 '+overlap+'개 문항의 연결을 교체할까요?'))return;
-  if(!persist({...state,records:{...state.records,...data.records}}))throw Error('저장공간 부족 또는 다중 탭 변경 감지');
-  dirty=false;status='개념·선지 개인 기록 '+Object.keys(data.records).length+'문항 복원 완료';paint();
+  if(!data||Object.values(data.records).some(row=>row.conceptIds.some(id=>!taxonomy.has(id))))
+   throw Error('문항·개념 데이터 형식 오류');
+  if(!window.CK102Restore?.records)throw Error('안전 복원 모듈을 불러오지 못했습니다. 기존 기록은 그대로 유지합니다.');
+  if(dirty||unsavedChoices.size||storageConflict)throw Error('복원 도중 편집/다른 탭 변경이 발생했습니다.');
+  const change=window.CK102Restore.records(state.records,data.records);
+  if(!change.changed){
+   status='현재보다 최신 개인 연결이 없습니다. '+change.preserved+'건은 그대로 유지했습니다.';
+   paint();return;
+  }
+  if(change.overlap&&!window.confirm?.('겹치는 개인 연결 '+change.overlap+
+    '건: 더 새로운 '+change.updated+'건만 교체, '+change.preserved+
+    '건은 현재 기록을 보호합니다. 새 문항 '+change.added+'건을 추가할까요?'))return;
+  if(!persist({...state,records:change.merged}))throw Error('저장공간 부족 또는 다중 탭 변경 감지');
+  dirty=false;unsavedChoices.clear();
+  status='개념 연결 복원: 새 '+change.added+'건 · 갱신 '+change.updated+
+   '건 · 오래된/동일 '+change.preserved+'건 유지';
+  paint();
  }catch(e){status='복원 실패: '+e.message;paint();}
 }
 document.addEventListener('click',event=>{

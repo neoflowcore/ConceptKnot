@@ -113,7 +113,7 @@ function catalog(){
  return Object.values(official()).filter(q=>q&&q.verified===true&&isId(q.id)&&
   Array.isArray(q.options)&&q.options.length===5).sort((a,b)=>b.year-a.year||a.number-b.number);
 }
-async const bundleCache=new Map();
+const bundleCache=new Map();
 function validExplanationBundle(year,data){
  if(Number(data?.year)!==year||!Array.isArray(data.records)||data.records.length!==80)return false;
  const seen=new Set();
@@ -451,17 +451,17 @@ async function importJson(file){
   if(!clean)throw Error('지원하지 않는 개인 진행 백업 형식');
   const invalid=Object.keys(clean.records).some(id=>official()[id]?.verified!==true);
   if(invalid)throw Error('등록되지 않은 공식 문항 ID가 있습니다.');
-  const overlap=Object.keys(clean.records).filter(id=>local.records[id]).length;
-  const safeEntries=Object.entries(clean.records).filter(([id,row])=>
-   !local.records[id]||row.updatedAt>=local.records[id].updatedAt);
-  const retained=Object.keys(clean.records).length-safeEntries.length;
-  if(overlap&&!window.confirm?.('기존 개인 진행 '+overlap+'건과 겹칩니다. 백업이 더 오래된 '+retained+
-   '건은 현재 기록을 유지합니다. 다른 기록을 복원할까요?'))return;
-  if(!safeEntries.length){message('현재 기록보다 새로운 복원 항목이 없습니다. 저장하지 않았습니다.');return;}
-  const next={...local,records:{...local.records,...Object.fromEntries(safeEntries)}};
-  if(!persist(next))throw Error('브라우저 저장공간 또는 쓰기 권한 부족');
-  message('개인 진행 '+safeEntries.length+'건 복원 · 오래된 '+retained+
-   '건은 현재 기록 유지 · 공식 해설 변경 없음.');
+  if(!window.CK102Restore?.records)throw Error('안전 복원 모듈을 사용할 수 없습니다.');
+  const merged=window.CK102Restore.records(local.records,clean.records);
+  if(!merged.changed){
+   message('현재보다 새로운 개인 진행 기록이 없습니다. 기존 '+merged.preserved+'건을 유지했습니다.');return;
+  }
+  if(merged.overlap&&!window.confirm?.('기존 개인 진행 '+merged.overlap+'건과 겹칩니다. '+
+   '백업이 더 새로운 '+merged.updated+'건만 갱신하고 '+merged.preserved+
+   '건은 현재 기록을 보호합니다. 새 '+merged.added+'건을 추가할까요?'))return;
+  if(!persist({...local,records:merged.merged}))throw Error('브라우저 저장공간 또는 다중 탭 변경');
+  message('개인 진행: 새 '+merged.added+'건 · 갱신 '+merged.updated+
+   '건 · 오래된/동일 '+merged.preserved+'건 유지 · 공식 해설 변경 없음.');
   render();
  }catch(err){message('복원 실패 · '+(err?.message||'JSON 오류'));}
 }

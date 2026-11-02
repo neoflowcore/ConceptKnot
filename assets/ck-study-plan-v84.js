@@ -42,13 +42,15 @@ function fromStorage(){
  }catch{storageIssue='학습계획 데이터를 읽지 못했습니다. 저장을 차단합니다.';return defaults();}
 }
 let settings=fromStorage(),open=false,root=null,status='',showDays=14,queued=false;
+let dirtyPlan=false,storageConflict=false;
 function saveSettings(next){
+ if(storageConflict){status='다른 탭과 충돌한 미저장 계획을 보호합니다. 내용을 복사하고 새로고침하세요.';return false;}
  if(storageIssue){status=storageIssue;return false;}
  const data=sanitize(next);if(!data)return false;
  try{
   if(localStorage.getItem(KEY)!==lastRaw){status='다른 탭에서 학습계획이 수정되었습니다. 새로고침 후 저장하세요.';return false;}
   const raw=JSON.stringify(data);localStorage.setItem(KEY,raw);lastRaw=raw;
-  settings=data;status='개인 학습 설정 저장됨';return true;
+  settings=data;dirtyPlan=false;status='개인 학습 설정 저장됨';return true;
  }catch{status='저장 실패: 저장공간 또는 브라우저 권한을 확인하세요.';return false;}
 }
 function examDateFromMain(){
@@ -149,6 +151,7 @@ function renderPlan(plan){
 }
 function render(){
  if(!root||!open)return;
+ if(dirtyPlan){const x=root.querySelector('[data-ck84-status]');if(x)x.textContent=status||'저장 전 입력이 있습니다.';return;}
  const body=root.querySelector('[data-ck84-body]');if(!body)return;
  const config=effectiveConfig(),plan=compute({config,days:showDays});
  body.innerHTML='<p class="ck84-notice">시험 예정일·공부시간·휴일·과목 비율을 직접 설정하고 내 복습 대기와 최근 실전 점수의 단순 가중치를 반영합니다. 자동 합격 예측은 제공하지 않습니다.</p>'+
@@ -181,6 +184,10 @@ function mount(){
  previous.after(root);
 }
 function toggle(){
+ if(open&&dirtyPlan){
+  if(!window.confirm?.('저장하지 않은 학습계획 설정을 닫으면 입력이 사라집니다. 닫을까요?'))return;
+  dirtyPlan=false;
+ }
  open=!open;const body=root?.querySelector('[data-ck84-body]'),btn=root?.querySelector('[data-ck84-toggle]');
  if(body)body.hidden=!open;
  if(btn){btn.textContent=open?'계획 설정 접기':'학습계획 설정';btn.setAttribute('aria-expanded',String(open));}
@@ -215,7 +222,8 @@ document.addEventListener('click',event=>{
  if(t.hasAttribute('data-ck84-save')){
   const config=collect();
   if(!config){status='설정을 확인하세요. 날짜·공부시간·휴일은 올바른 형식이어야 합니다.';render();return;}
-  saveSettings(config);render();return;
+  if(!saveSettings(config)){dirtyPlan=true;render();return;}
+  render();return;
  }
  if(t.hasAttribute('data-ck84-export')){exportTxt();return;}
  if(t.hasAttribute('data-ck84-next')){showDays=showDays===14?7:showDays===7?30:14;render();return;}
@@ -235,7 +243,25 @@ document.addEventListener('click',event=>{
   }else{status='공식 문항을 불러올 수 없습니다.';render();}
  }
 });
-document.addEventListener('storage',event=>{if(event.key===KEY){settings=fromStorage();if(open)render();}});
+const planFields='[data-ck84-date],[data-ck84-minutes],[data-ck84-estate],[data-ck84-session],'+
+ '[data-ck84-year],[data-ck84-holidays],[data-ck84-rest]';
+function markDirty(event){
+ if(root?.contains(event.target)&&event.target.matches?.(planFields)){
+  dirtyPlan=true;status='설정 변경 중 · 저장 버튼을 눌러 적용하세요.';
+  const label=root.querySelector('[data-ck84-status]');if(label)label.textContent=status;
+ }
+}
+document.addEventListener('input',markDirty);
+document.addEventListener('change',markDirty);
+window.addEventListener('storage',event=>{
+ if(event.key!==KEY)return;
+ if(dirtyPlan){
+  storageConflict=true;status='다른 탭의 계획 변경과 현재 미저장 입력이 충돌했습니다. 내용을 복사하고 새로고침하세요.';
+  const label=root?.querySelector('[data-ck84-status]');if(label)label.textContent=status;
+  return;
+ }
+ settings=fromStorage();if(open)render();
+});
 function scheduleMount(){
  if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;mount();});
 }
@@ -247,6 +273,6 @@ if(main&&window.MutationObserver)new MutationObserver(changes=>{
 }).observe(main,{subtree:true,childList:true});
 window.addEventListener('ck:official-bank-ready',()=>{if(open)render();});
 window.CK84Plan=Object.freeze({defaults,sanitize,compute,isoValid,todayKst,kstWeekday,studyData,
- getState:()=>({open,settings:{...settings},days:showDays,storageIssue}),
+ getState:()=>({open,settings:{...settings},days:showDays,storageIssue,dirtyPlan,storageConflict}),
  open:()=>{mount();if(root&&!open)toggle();}});
 })();

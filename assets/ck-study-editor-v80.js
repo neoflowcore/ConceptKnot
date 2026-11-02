@@ -1,3 +1,58 @@
+/* ConceptKnot v102: timestamp-aware, non-destructive personal JSON merge.
+ * Pure local helper; never writes storage, official keys, network or caches.
+ * A missing/untrusted timestamp may add a new item but cannot replace an existing one.
+ */
+(function(){
+'use strict';
+const DAY=86400000;
+const own=(obj,key)=>Object.prototype.hasOwnProperty.call(obj,key);
+const plain=value=>value!==null&&typeof value==='object'&&!Array.isArray(value);
+function timestamp(value){
+ let number=0;
+ if(typeof value==='number')number=value;
+ else if(typeof value==='string'&&value.trim()){
+  number=/^\d+$/.test(value.trim())?Number(value):Date.parse(value);
+ }
+ return Number.isFinite(number)&&number>0&&number<=Date.now()+DAY?number:0;
+}
+function records(current,incoming){
+ if(!plain(current)||!plain(incoming))throw Error('개인 기록 병합 형식 오류');
+ const merged=Object.assign(Object.create(null),current);
+ let added=0,updated=0,preserved=0;
+ for(const [id,row] of Object.entries(incoming)){
+  if(!own(current,id)){merged[id]=row;added++;continue;}
+  if(timestamp(row?.updatedAt)>timestamp(current[id]?.updatedAt)){
+   merged[id]=row;updated++;
+  }else preserved++;
+ }
+ return {merged,added,updated,preserved,changed:added+updated,
+  overlap:updated+preserved};
+}
+function documents(current,incoming,max=35){
+ if(!Array.isArray(current)||!Array.isArray(incoming))throw Error('교재 기록 병합 형식 오류');
+ const source=Object.create(null),seen=new Set();
+ for(const row of current){
+  if(!plain(row)||typeof row.id!=='string'||seen.has(row.id))throw Error('기존 자료 ID가 중복되거나 손상되었습니다.');
+  seen.add(row.id);source[row.id]=row;
+ }
+ const proposal=Object.create(null),newDocs=[];
+ let added=0,updated=0,preserved=0;
+ const incomingSeen=new Set();
+ for(const row of incoming){
+  if(!plain(row)||typeof row.id!=='string'||incomingSeen.has(row.id))throw Error('백업 자료 ID가 중복되거나 손상되었습니다.');
+  incomingSeen.add(row.id);
+  if(!own(source,row.id)){newDocs.push(row);added++;continue;}
+  if(timestamp(row.updatedAt)>timestamp(source[row.id]?.updatedAt)){
+   proposal[row.id]=row;updated++;
+  }else preserved++;
+ }
+ const merged=[...newDocs,...current.map(row=>own(proposal,row.id)?proposal[row.id]:row)];
+ if(merged.length>max)throw Error('자료 병합 후 최대 '+max+'건을 초과합니다.');
+ return {merged,added,updated,preserved,changed:added+updated,
+  overlap:updated+preserved};
+}
+window.CK102Restore=Object.freeze({timestamp,records,documents});
+})();
 /* ConceptKnot P4 editorial desk v80 — local-only source-aware draft workspace.
  * It never alters canonical exam data or labels an unreviewed answer "published".
  */
@@ -45,7 +100,25 @@ function saveToStore(id,draft){
 function patchYear(year){if(loaded.has(year))return Promise.resolve(loaded.get(year));
  return fetch('./data/explanations/official-'+year+'.json',{cache:'force-cache'})
   .then(res=>{if(!res.ok)throw Error('문항 데이터 불러오기 '+res.status);return res.json();})
-  .then(data=>{if(data.records?.length!==80)throw Error('해설 데이터 80건 불일치');const map=new Map(data.records.map(r=>[r.questionId,r]));loaded.set(year,map);return map;});
+  .then(data=>{
+   if(data.year!==year||!Array.isArray(data.records)||data.records.length!==80)
+    throw Error('해설 데이터 연도/80건 구조 불일치');
+   const ids=new Set();
+   for(const entry of data.records){
+    const base=q(entry.questionId);
+    if(!base||base.year!==year||entry.examYear!==year||entry.number!==base.number||
+      entry.subject!==base.subject||ids.has(entry.questionId)||
+      !Array.isArray(entry.options)||entry.options.length!==5||
+      entry.options.some((o,i)=>o?.no!==i+1)||
+      !Array.isArray(entry.officialAnswer)||
+      base.correct.slice().map(Number).sort((a,b)=>a-b).join(',')!==
+        entry.officialAnswer.slice().map(Number).sort((a,b)=>a-b).join(','))
+     throw Error('해설 원문/선지/채점 인정 연결 오류: '+String(entry.questionId));
+    ids.add(entry.questionId);
+   }
+   if(ids.size!==80)throw Error('해설 문항 중복 또는 누락');
+   const map=new Map(data.records.map(r=>[r.questionId,r]));loaded.set(year,map);return map;
+  });
 }
 function q(id){const item=window.RECALL_OFFICIAL?.[id];return item?.verified===true?item:null;}
 function compareDraft(id,base){
@@ -152,33 +225,45 @@ function validateImportRecord(id,v){
  if(!questionId(id)||!q(id)||!v||typeof v!=='object'||v.published===true||
   !['draft','review_hold'].includes(v.status)||v.questionId!==id||
   !Array.isArray(v.options)||v.options.length!==5)return null;
- if(v.options.some((opt,i)=>opt.no!==i+1||!['unreviewed','true','false','unknown'].includes(opt.verdict)))return null;
+ if(v.options.some((opt,i)=>opt?.no!==i+1||
+  !['unreviewed','true','false','unknown'].includes(opt.verdict)))return null;
+ const hold=clip(v.reviewHoldReason,MAX.hold);
+ if(v.status==='review_hold'&&!hold)return null;
+ const stamp=window.CK102Restore?.timestamp?.(v.updatedAt)||0;
  return {questionId:id,status:v.status,examAsOf:id.slice(0,4),
   summaryEasy:clip(v.summaryEasy,MAX.short),answerReason:clip(v.answerReason,MAX.reason),
-  evidence:clip(v.evidence,MAX.evidence),reviewHoldReason:clip(v.reviewHoldReason,MAX.hold),
+  evidence:clip(v.evidence,MAX.evidence),reviewHoldReason:hold,
   options:v.options.map((opt,i)=>({no:i+1,verdict:opt.verdict,why:clip(opt.why,MAX.option)})),
-  updatedAt:new Date().toISOString(),source:'personal import, unpublished',
+  updatedAt:stamp?new Date(stamp).toISOString():null,source:'personal import, unpublished',
   sourceChecked:false,reasonReviewed:false,published:false};
 }
 async function importJson(file){
  if(!file||file.size>4*1024*1024){setStatus('JSON 파일을 확인하세요(최대 4MB).');return;}
+ if(editing){setStatus('저장하지 않은 해설 편집이 있습니다. 먼저 저장하거나 복사한 뒤 복원하세요.');return;}
  try{
+  if(!window.CK102Restore?.records)throw Error('안전 복원 모듈을 불러오지 못했습니다.');
   const raw=await file.text(),data=JSON.parse(raw.replace(/^\uFEFF/,''));
   if(data.schemaVersion!=='1.0.0'||data.scope!=='personal-unpublished-2021-2025'||
     !data.records||typeof data.records!=='object'||Array.isArray(data.records))throw Error('파일 형식이 다릅니다.');
   const items=Object.entries(data.records);
   if(items.length>MAX_RECORDS)throw Error('400문항 초과');
   const clean=items.map(([id,v])=>[id,validateImportRecord(id,v)]);
-  if(clean.some(([id,v])=>!v))throw Error('문항 ID, 상태 또는 선지 검토 형식이 잘못되었습니다.');
+  if(clean.some(([id,v])=>!v))throw Error('문항 ID, 상태, 보류 사유 또는 선지 형식이 잘못되었습니다.');
+  if(editing)throw Error('백업을 읽는 도중 해설 편집이 시작됐습니다. 복원을 중단했습니다.');
   const prior=store();
   if(storageIssue)throw Error(storageIssue);
   if(localStorage.getItem(KEY)!==lastRaw)throw Error('다른 탭의 변경이 감지되었습니다. 새로고침 후 복원하세요.');
-  const overlap=clean.filter(([id])=>prior[id]).length;
-  if(overlap&&!window.confirm?.('기존 개인 초안 '+overlap+'건이 교체됩니다. 계속할까요?'))return;
-  const merged={...prior,...Object.fromEntries(clean)};
-  const next=JSON.stringify(merged);
+  const change=window.CK102Restore.records(prior,Object.fromEntries(clean));
+  if(!change.changed){setStatus('가져올 최신 초안이 없습니다. 현재 '+change.preserved+'건을 보존했습니다.');return;}
+  if(change.overlap&&!window.confirm?.('개인 해설 초안 '+change.overlap+'건이 겹칩니다. 새 백업이 더 최신인 '+
+    change.updated+'건만 갱신하고 기존 '+change.preserved+'건은 보호합니다. 새 '+change.added+'건을 추가할까요?'))return;
+  if(localStorage.getItem(KEY)!==lastRaw||editing)
+   throw Error('가져오기 확인 중 다른 탭/편집 상태가 변경됐습니다. 다시 시도하세요.');
+  const next=JSON.stringify(change.merged);
+  if(next.length>1000000)throw Error('해설 개인 초안 저장용량 1MB 초과. 기존 자료 유지');
   localStorage.setItem(KEY,next);lastRaw=next;storageIssue='';
-  setStatus('개인 초안 '+clean.length+'건을 검증 후 불러왔습니다. 공식 해설 파일은 변경되지 않았습니다.');
+  setStatus('초안 복원: 새 '+change.added+'건 · 갱신 '+change.updated+
+    '건 · 오래된/동일 '+change.preserved+'건 보호. 공식 해설 변경 없음.');
   if(questionId(selected)){const w=panel();if(w){w.dataset.ck80For='';setVisible(false);showEditor();}}
  }catch(e){setStatus('가져오기 실패 · '+(e.message||'JSON 형식 확인'));}
 }
