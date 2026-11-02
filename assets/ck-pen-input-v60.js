@@ -24,6 +24,10 @@
  }
  for(const type of ['pointerdown','pointermove','pointerrawupdate','pointerup','pointercancel','lostpointercapture','contextmenu'])
   document.addEventListener(type,observe,true);
- window.addEventListener('blur',()=>{buttons.clear();hoverHeld.clear()});
- window.CKPen60=Object.freeze({observe,eraser,contact,reset:()=>{buttons.clear();hoverHeld.clear()}});
+ function reset(){buttons.clear();hoverHeld.clear();}
+ window.addEventListener('blur',reset);
+ document.addEventListener('visibilitychange',()=>{if(document.hidden)reset();});
+ window.addEventListener('ck:pen-deactivate',reset);
+ document.addEventListener('pointerdown',e=>{if(e.pointerType!=='pen'&&e.target?.closest?.('[data-ck-v8-tab],nav,[role=tablist]'))reset();},true);
+ window.CKPen60=Object.freeze({observe,eraser,contact,reset});
 })();

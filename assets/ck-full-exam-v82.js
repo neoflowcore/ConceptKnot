@@ -307,6 +307,8 @@ function renderResult(s,source='active'){
  '<div class="ck82-review-actions"><button type="button" data-ck82-export="'+esc(source)+'">채점 TXT 내려받기</button>'+
  '<button type="button" data-ck82-filter="wrong" aria-pressed="'+(resultFilter==='wrong')+'">오답 문항 보기</button>'+
  '<button type="button" data-ck82-filter="blank" aria-pressed="'+(resultFilter==='blank')+'">미응답 보기</button>'+
+ '<button type="button" data-ck82-filter="flagged" aria-pressed="'+(resultFilter==='flagged')+'">보류 표시만 보기</button>'+
+ '<button type="button" data-ck82-filter="correct" aria-pressed="'+(resultFilter==='correct')+'">정답 문항 보기</button>'+
  '<button type="button" data-ck82-filter="all" aria-pressed="'+(resultFilter==='all')+'">80문항 전체 보기</button></div>'+
  '<div data-ck82-result-list></div></section>';
 }
@@ -319,6 +321,8 @@ function resultItems(s){
  const details=gradeAttempt(s);
  const indices=resultFilter==='wrong'?details.wrong.map(id=>Number(id.split('-')[1])-1):
   resultFilter==='blank'?details.unanswered.map(id=>Number(id.split('-')[1])-1):
+  resultFilter==='flagged'?Array.from({length:80},(_,i)=>i).filter(i=>s.flags[i]):
+  resultFilter==='correct'?details.correctIds.map(id=>Number(id.split('-')[1])-1):
   Array.from({length:80},(_,i)=>i);
  return '<div class="ck82-review-list">'+(!indices.length?'<p>이 분류에 해당하는 문항이 없습니다.</p>':'')+indices.map(i=>{
   const q=bank()[s.year+'-'+(i+1)],n=s.answers[i],correct=q?.correct||[];
@@ -326,7 +330,8 @@ function resultItems(s){
   return '<div class="ck82-review-row"><strong>'+(i+1)+'번 · '+(i<40?'학개론':'민법')+'</strong>'+
    '<span>내 응답: '+(n===null?'미응답':n+'번')+' · 채점 인정: '+
    (correct.length===5?'①~⑤ 전원정답':correct.join(' 또는 ')+'번')+'</span>'+
-   '<button type="button" data-ck82-detail="'+esc(q.id)+'">원문·해설 보기</button></div>';
+   '<div class="ck82-result-row-actions"><button type="button" data-ck82-detail="'+esc(q.id)+'">원문·해설 보기</button>'+
+ '<button type="button" data-ck82-option-edit="'+esc(q.id)+'">선지별 내 근거</button></div></div>';
  }).join('')+'</div>';
 }
 function makeResultText(session,official=bank()){
@@ -435,7 +440,7 @@ document.addEventListener('click',event=>{
  const t=event.target.closest?.('[data-ck82-start],[data-ck82-expand],[data-ck82-history],[data-ck82-history-select],'+
  '[data-ck82-answer],[data-ck82-goto],[data-ck82-prev],[data-ck82-next],'+
  '[data-ck82-clear],[data-ck82-flag],[data-ck82-pause],[data-ck82-resume],'+
- '[data-ck82-submit],[data-ck82-filter],[data-ck82-export],[data-ck82-detail],[data-ck82-hide],[data-ck82-new],[data-ck82-raw],[data-ck82-retry-bank]');
+ '[data-ck82-submit],[data-ck82-filter],[data-ck82-export],[data-ck82-detail],[data-ck82-option-edit],[data-ck82-hide],[data-ck82-new],[data-ck82-raw],[data-ck82-retry-bank]');
  if(!t||!root?.contains(t))return;
  event.preventDefault();event.stopPropagation();
  if(t.hasAttribute('data-ck82-raw')){
@@ -485,6 +490,13 @@ document.addEventListener('click',event=>{
   return;
  }
  if(t.hasAttribute('data-ck82-filter')){resultFilter=t.dataset.ck82Filter;paint();return;}
+ if(t.hasAttribute('data-ck82-option-edit')){
+  const id=t.dataset.ck82OptionEdit;
+  const result=window.CK83Links?.openQuestion?.(id);
+  if(result===false)message('개인 근거 편집기를 열지 못했습니다. 공식 문항 로딩 상태를 확인하세요.');
+  else if(result&&typeof result.catch==='function')result.catch(e=>message('개인 근거 편집 오류: '+e.message));
+  return;
+ }
  if(t.hasAttribute('data-ck82-detail')){
   const id=t.dataset.ck82Detail,[year,number]=id.split('-').map(Number);
   if(typeof window.CK78Analysis?.open==='function'&&year>=2021)window.CK78Analysis.open(year,number,t);

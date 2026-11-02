@@ -19,3 +19,6 @@
 @media(max-width:720px){.ck82-exam-layout{grid-template-columns:minmax(0,1fr)}.ck82-omr-grid{grid-template-columns:repeat(10,minmax(0,1fr))}.ck82-scores{grid-template-columns:repeat(2,minmax(0,1fr))}.ck82-launch-actions{width:100%}.ck82-launch-actions label{flex:1}.ck82-launch-actions select{width:100%}}
 @media(max-width:380px){.ck82-omr-grid{grid-template-columns:repeat(8,minmax(0,1fr))}.ck82-full-exam{padding:8px}.ck82-question,.ck82-omr{padding:8px}}
 @media(prefers-reduced-motion:reduce){.ck82-full-exam *{transition:none!important;animation:none!important}}
+
+/* v97: responsive result history and direct note navigation */
+.ck82-result-row-actions{display:flex;flex-wrap:wrap;gap:6px}.ck82-history-detail{margin-top:12px;padding:10px;border:1px solid rgba(140,133,115,.25);border-radius:10px}.ck82-review-actions [aria-pressed=true]{outline:2px solid currentColor;outline-offset:1px}.ck82-history-panel button{white-space:normal}@media(max-width:520px){.ck82-review-row{align-items:stretch;flex-direction:column}.ck82-result-row-actions>*{flex:1}.ck82-history>div{align-items:flex-start;flex-direction:column}.ck82-history-detail{padding:7px}.ck82-review-actions button{flex:1 1 40%}}

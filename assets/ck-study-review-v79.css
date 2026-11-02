@@ -21,3 +21,6 @@
 #ck79-review .ck79-search-label input{flex:1}
 #ck79-review .ck79-status{font-size:12px;opacity:.8}
 @media(max-width:520px){#ck79-review .ck79-filter>div{display:flex;gap:5px}#ck79-review .ck79-filter>div button{font-size:12px;padding:4px}#ck79-review .ck79-concepts{grid-template-columns:1fr 1fr}}
+
+/* v97: queue pagination and smaller screen layout */
+#ck79-review .ck79-review-pages{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px;font-size:12px}#ck79-review .ck79-review-pages button:disabled{opacity:.45;cursor:default}#ck79-review .ck79-future{margin:10px 0;font-size:12px}#ck79-review .ck79-future summary{cursor:pointer}#ck79-review .ck79-future li{padding:3px 0}#ck79-review .ck79-review-note{font-size:12px;opacity:.83;line-height:1.55}@media(max-width:520px){#ck79-review .ck79-review-pages button{flex:1 1 36%}#ck79-review .ck79-actions button{flex:1 1 41%}}
