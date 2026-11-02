@@ -1455,6 +1455,9 @@ function ck79Backup(){
  return {...state,__ck79Extras:{format:1,local:ck79StorageView()}};
 }
 function ck79RestoreExtras(data){
+ if(window.CK86Integrity?.restoreExtras){
+  try{return window.CK86Integrity.restoreExtras(data,ck79ExtraKeys).ok;}catch{return false;}
+ }
  const store=data?.__ck79Extras?.local;if(!store||typeof store!=='object'||Array.isArray(store))return false;
  let changed=false;
  for(const key of ck79ExtraKeys){
@@ -1707,7 +1710,32 @@ window.CKPomo=Object.freeze({
 });
 function importKeys(text){let toks=text.replace(/[,;|]+(?=\s)/g,' ').trim().split(/\s+/).filter(Boolean);if(toks.length===1&&/^[1-5]{80}$/.test(toks[0]))toks=toks[0].split('');if(toks.length!==80)throw new Error('정답은 80개여야 합니다. 현재 '+toks.length+'개입니다.');const vals=toks.map(x=>{if(!/^[1-5]([/,][1-5])*$/.test(x))throw new Error('정답 형식은 1~5 또는 2/4입니다. 잘못된 입력: '+x);return x.split(/[/,]/).map(Number);});state.importedKeys[state.year]=vals;state.graded[`${state.year}-${state.subject}`]=false;save();render();toast('80개 정답을 로컬에 저장했습니다. A형인지 확인하세요.');}
 function download(name,mime,body){const b=new Blob([body],{type:mime});const url=URL.createObjectURL(b);const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),6000);}
-function importBackup(file){if(!file)return;if(file.size>8*1024*1024){toast('백업 파일이 너무 큽니다.');return;}const reader=new FileReader();reader.onload=()=>{try{const data=JSON.parse(reader.result);if(!data||typeof data!=='object'||!['estate','civil'].includes(data.subject)||!data.answers||!data.quizAnswers||!data.flashVisits)throw new Error('백업 형식이 올바르지 않습니다.');if(!confirm('현재 브라우저의 학습기록을 백업 파일 내용으로 교체하시겠습니까?'))return;const sanitized={...defaults};for(const k in defaults)if(Object.prototype.hasOwnProperty.call(data,k))sanitized[k]=data[k];state=sanitized;const stored=save();const restored=stored?window.CK79Study.restoreExtras(data):false;render();toast(stored?'학습기록을 불러왔습니다.':'저장 실패 · 공간을 확인해 주세요.');if(stored&&restored&&window.location?.reload)window.location.reload();}catch(e){toast('가져오기 실패: '+e.message);}};reader.readAsText(file);}
+function importBackup(file){
+ if(!file)return;
+ try{window.CK86Integrity.validateRestoreFile(file);}
+ catch(e){toast('백업 검증 실패: '+e.message);return;}
+ const reader=new FileReader();
+ reader.onload=()=>{
+  try{
+   const data=JSON.parse(reader.result);
+   const staged=window.CK86Integrity.stage(data,defaults,ck79ExtraKeys);
+   const info='학습기록과 개인 추가 데이터 '+staged.entries.length+'개를 검사했습니다. 기존 기록을 교체할까요?';
+   if(!confirm(info))return;
+   const result=window.CK86Integrity.apply(staged);
+   if(!result.ok){
+    toast('복원 실패 · 이전 기록 복구 '+(result.rollbackFailures.length?'일부 실패':'완료'));
+    console.warn('학습기록 복원 오류',result.reason,'rollbackFailures:',result.rollbackFailures);
+    return;
+   }
+   state=staged.state;
+   toast('백업 복원 성공 · 저장된 기록을 다시 불러옵니다.');
+   if(window.location?.reload)window.location.reload();else render();
+  }catch(e){toast('백업 검증 실패: '+e.message);}
+ };
+ reader.onerror=()=>toast('백업 파일을 읽지 못했습니다.');
+ reader.readAsText(file);
+}
+
 function doClick(t){if(handleReverseDataClick(t))return;const go=t.closest('[data-go]');if(go){changeView(go.dataset.go);return;}const subj=t.closest('[data-subject]');if(subj){setSubject(subj.dataset.subject);return;}const yr=t.closest('[data-year]');if(yr){const y=Number(yr.dataset.year);state.year=y;state.examQuestion=state.subject==='estate'?1:41;if(localPdfUrl){URL.revokeObjectURL(localPdfUrl);localPdfUrl=null;}state.showPdf=true;save();render();return;}
 const comp=t.closest('[data-compare]');if(comp){state.compare=comp.dataset.compare;save();render();return;}
 const concept=t.closest('[data-concept]');if(concept){state.theoryIndex=Number(concept.dataset.concept);state.flashShown=false;save();render();return;}
@@ -1763,7 +1791,7 @@ if(what==='review-concept'){const id=action.dataset.conceptId;state.view='theory
 if(what==='timer-toggle'){window.CKPomo.toggle();render();return;}
 if(what==='timer-reset'){window.CKPomo.reset();render();return;}
 if(what==='backup'){download('ConceptKnot_학습기록_'+todayISO()+'.json','application/json;charset=utf-8',JSON.stringify(window.CK79Study.exportBackup(),null,2));toast('학습기록 및 편집형 최종 노트를 함께 백업했습니다.');return;}
-if(what==='all-reset'){if(confirm('정말 전체 학습기록을 삭제하시겠습니까? 답안과 메모를 되돌릴 수 없습니다.')){state={...defaults,answers:{},graded:{},importedKeys:{},quizAnswers:{},flashVisits:{},reviews:{},mistakes:{},notes:{},dailyTotals:{},studySubject:{}};save();render();toast('이 브라우저의 학습기록이 초기화되었습니다.');}return;}
+if(what==='all-reset'){if(confirm('정말 기존 학습기록을 초기화하시겠습니까? 먼저 내 학습 데이터 다운로드를 권장합니다. (별도 모듈 기록은 유지됩니다.)')){state={...defaults,answers:{},graded:{},importedKeys:{},quizAnswers:{},flashVisits:{},reviews:{},mistakes:{},notes:{},dailyTotals:{},studySubject:{}};save();render();toast('이 브라우저의 학습기록이 초기화되었습니다.');}return;}
 }
 document.addEventListener('click',e=>doClick(e.target));
 document.addEventListener('change',e=>{const t=e.target;if(t.id==='topic-select'){state.topicFilter=t.value;state.theoryIndex=0;state.flashShown=false;save();render();}else if(t.id==='pdf-upload'&&t.files?.[0]){const file=t.files[0];if(file.type!=='application/pdf'&&!/\.pdf$/i.test(file.name)){toast('PDF 파일을 선택하세요.');return;}if(localPdfUrl)URL.revokeObjectURL(localPdfUrl);localPdfUrl=URL.createObjectURL(file);lastPdfYear=state.year;state.showPdf=true;render();toast('선택한 PDF를 이 브라우저에서 열었습니다.');}else if(t.id==='backup-file'&&t.files?.[0])importBackup(t.files[0]);});
@@ -3682,6 +3710,8 @@ render();setInterval(timerTick,500);
 <script src="./assets/ck-study-analytics-v83.js?v=83" defer></script>
 <script src="./assets/ck-study-plan-v84.js?v=84" defer></script>
 <script src="./assets/ck-study-materials-v84.js?v=84" defer></script>
+<script src="./assets/ck-data-integrity-v86.js?v=86" defer></script>
+<script src="./assets/ck-exam-bridge-v86.js?v=86" defer></script>
 <script src="./assets/ck-experience-v14.js" defer></script>
 <script src="./assets/ck-pdf-workspace-v15.js?v=60" defer></script>
 <script src="./assets/ck-layout-v16.js" defer></script>

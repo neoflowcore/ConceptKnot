@@ -1,0 +1,137 @@
+/* ConceptKnot v86 — guarded local backups and restore.
+ * One browser turn, synchronous writes, best-effort rollback on partial failure.
+ * This is not a cross-tab transactional database. No network or remote sync.
+ */
+(function(){
+'use strict';
+const MAX_FILE=8*1024*1024;
+const KEY_LIMITS=Object.freeze({
+ 'ck10-exam-final-v1':250000,
+ 'ck11-final-page-count':8,
+ 'ck80-explain-drafts-v1':1000000,
+ 'ck81-review-workbench-v1':1000000,
+ 'ck82-exam-sessions-v1':2300000,
+ 'ck83-personal-concept-links-v1':1300000,
+ 'ck84-study-plan-v1':20000,
+ 'ck84-personal-materials-v1':2400000
+});
+const BAD='학습기록 백업에 유효하지 않은 자료가 있습니다.';
+const isObject=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
+const has=(obj,k)=>Object.prototype.hasOwnProperty.call(obj,k);
+const toUnique=arr=>[...new Set(arr)];
+function validateMain(data,defaults){
+ if(!isObject(data)||!isObject(defaults)||!['estate','civil'].includes(data.subject))throw Error('학습기록 본문/과목 구조 오류');
+ const required=['answers','quizAnswers','flashVisits'];
+ if(required.some(k=>!isObject(data[k])))throw Error('기존 학습기록 필수 항목이 누락되었습니다.');
+ const obj={...defaults};
+ for(const k of Object.keys(defaults)){
+  if(!has(data,k))continue;
+  const value=data[k],template=defaults[k];
+  if(Array.isArray(template)&&!Array.isArray(value))throw Error('배열 기록 형식 오류: '+k);
+  if(isObject(template)&&!isObject(value)&&value!==null)throw Error('객체 기록 형식 오류: '+k);
+  if(typeof template==='string'&&typeof value!=='string')throw Error('문자열 기록 형식 오류: '+k);
+  if(typeof template==='number'&&(!Number.isFinite(value)))throw Error('숫자 기록 형식 오류: '+k);
+  if(typeof template==='boolean'&&typeof value!=='boolean')throw Error('선택 설정 형식 오류: '+k);
+  obj[k]=value;
+ }
+ return obj;
+}
+function validateFinal(value){
+ const a=JSON.parse(value);
+ if(!Array.isArray(a)||a.length!==5||a.some(row=>!Array.isArray(row)||row.length!==2))return false;
+ return value.length<=KEY_LIMITS['ck10-exam-final-v1'];
+}
+function validateDraft(value){
+ const x=JSON.parse(value);
+ if(!isObject(x)||Object.keys(x).length>400)return false;
+ for(const [id,v] of Object.entries(x)){
+  if(!/^202[1-5]-(?:[1-9]|[1-7]\d|80)$/.test(id)||!isObject(v))return false;
+  if(typeof v.summaryEasy!=='undefined'&&typeof v.summaryEasy!=='string')return false;
+  if(typeof v.answerReason!=='undefined'&&typeof v.answerReason!=='string')return false;
+ }
+ return true;
+}
+function validationMethod(key){
+ const map={
+  'ck81-review-workbench-v1':()=>window.CK81Workbench?.sanitizeProgress,
+  'ck82-exam-sessions-v1':()=>window.CK82FullExam?.cleanStore,
+  'ck83-personal-concept-links-v1':()=>window.CK83Links?.sanitize,
+  'ck84-study-plan-v1':()=>window.CK84Plan?.sanitize,
+  'ck84-personal-materials-v1':()=>window.CK84Materials?.sanitize
+ };
+ return map[key]?.();
+}
+function validateExtra(key,value){
+ if(!has(KEY_LIMITS,key))throw Error('지원하지 않는 개인 기록 키: '+key);
+ if(typeof value!=='string'||value.length>KEY_LIMITS[key])throw Error('개인 기록 용량/형식 오류: '+key);
+ if(key==='ck11-final-page-count')return /^[1-5]$/.test(value);
+ try{
+  if(key==='ck10-exam-final-v1')return validateFinal(value);
+  if(key==='ck80-explain-drafts-v1')return validateDraft(value);
+  const check=validationMethod(key);
+  if(typeof check!=='function')throw Error('복원 검사기를 불러오지 못했습니다: '+key);
+  return Boolean(check(JSON.parse(value)));
+ }catch(e){if(String(e.message).includes('검사기'))throw e;return false;}
+}
+function stage(data,defaults,keys=Object.keys(KEY_LIMITS)){
+ const state=validateMain(data,defaults);
+ if(data.__ck79Extras!==undefined&&(!isObject(data.__ck79Extras)||
+  data.__ck79Extras.format!==1||!isObject(data.__ck79Extras.local)))throw Error('추가 학습기록 백업 구조가 유효하지 않습니다.');
+ const local=data.__ck79Extras?.local||{},entries=[];
+ const allowed=new Set(keys);
+ for(const k of Object.keys(local)){
+  if(!allowed.has(k)||!has(KEY_LIMITS,k))continue;
+  if(!validateExtra(k,local[k]))throw Error('추가 학습기록의 검증 실패: '+k);
+  entries.push([k,local[k]]);
+ }
+ return {state,entries,mainKey:'recallgraph-first-exam-v1',
+  summary:{main:'학습 답안·노트',extras:entries.map(([k])=>k),bytes:JSON.stringify(data).length}};
+}
+function transaction(entries,storage=localStorage){
+ if(!Array.isArray(entries)||entries.some(x=>!Array.isArray(x)||x.length!==2||
+  typeof x[0]!=='string'||typeof x[1]!=='string'))throw Error('복원 저장자료 형식 오류');
+ const unique=toUnique(entries.map(x=>x[0]));
+ if(unique.length!==entries.length)throw Error('중복 백업 키가 있습니다.');
+ const before=new Map(),changed=[];
+ try{
+  for(const key of unique)before.set(key,storage.getItem(key));
+  for(const [key,value] of entries){storage.setItem(key,value);changed.push(key);}
+  return {ok:true,changed:changed.slice(),rolledBack:[],rollbackFailures:[]};
+ }catch(err){
+  const rollbackFailures=[],rolledBack=[];
+  for(const key of changed.reverse()){
+   try{
+    const prior=before.get(key);
+    if(prior===null)storage.removeItem(key);
+    else storage.setItem(key,prior);
+    rolledBack.push(key);
+   }catch(_){rollbackFailures.push(key);}
+  }
+  return {ok:false,reason:String(err?.message||err),rolledBack,rollbackFailures};
+ }
+}
+function apply(prepared,storage=localStorage){
+ if(!prepared||!isObject(prepared.state)||!Array.isArray(prepared.entries)||!prepared.mainKey)throw Error('검증되지 않은 백업입니다.');
+ const entries=prepared.entries.concat([[prepared.mainKey,JSON.stringify(prepared.state)]]);
+ return transaction(entries,storage);
+}
+function restoreExtras(data,keys,storage=localStorage){
+ if(data?.__ck79Extras==null)return {ok:true,changed:[],rollbackFailures:[]};
+ const extra=data.__ck79Extras;
+ if(!isObject(extra)||extra.format!==1||!isObject(extra.local))throw Error('추가 기록 백업 구조 오류');
+ const entries=[];
+ for(const key of keys||Object.keys(KEY_LIMITS)){
+  if(has(extra.local,key)){
+   if(!validateExtra(key,extra.local[key]))throw Error('추가 개인 기록 검증 실패: '+key);
+   entries.push([key,extra.local[key]]);
+  }
+ }
+ return transaction(entries,storage);
+}
+function validateRestoreFile(file){
+ if(!file||typeof file.size!=='number'||file.size<1||file.size>MAX_FILE)throw Error('백업 파일은 8MB 이하 JSON이어야 합니다.');
+ return true;
+}
+window.CK86Integrity=Object.freeze({validateMain,validateExtra,stage,apply,transaction,restoreExtras,
+ validateRestoreFile,MAX_FILE,keyLimits:KEY_LIMITS,getStatus:()=>({scope:'browser-only',rollback:'best-effort'})});
+})();

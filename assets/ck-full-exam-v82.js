@@ -176,8 +176,11 @@ function finish(reason='manual',now=Date.now()){
  const next={...state,active:submitted,history:[submitted,...state.history].slice(0,HISTORY_LIMIT)};
  if(!persist(next))return false;
  expanded=true;showHistory=false;error='';paint();
+ // The bridge owns an idempotent import and never changes canonical official answers.
+ window.CK86ExamBridge?.reconcile?.();
  return true;
 }
+
 function checkExpiry(){
  const s=active();
  if(s?.status==='running'&&remaining(s)===0)finish('time');

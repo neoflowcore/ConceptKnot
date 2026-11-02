@@ -27,6 +27,9 @@ function dueRows(){
   const id=mistake.year+'-'+mistake.number;
   if(valid(id))rows.set(id,{id,reason:'내 오답',at:Number(mistake.updated)||0});
  }
+ for(const item of window.CK86ExamBridge?.pending?.()||[]){
+  if(valid(item.id)&&!rows.has(item.id))rows.set(item.id,item);
+ }
  for(const [id,r] of Object.entries(data.review)){
   if(!valid(id)||!r||Number(r.nextAt)>now())continue;
   rows.set(id,{id,reason:'복습 예약',at:Number(r.nextAt)||0});
@@ -50,7 +53,7 @@ function row(q,id,reason,review){
   '<div><small>'+q.year+'년 '+q.number+'번 · '+labels[q.subject]+' · '+esc(reason)+
   (review?.nextAt?' · '+fmt(review.nextAt):'')+'</small><p>'+esc(shortQuestion(q))+'</p></div>'+
   '<div class="ck79-actions"><button type="button" data-ck79-show="'+esc(id)+'">'+(revealed.has(id)?'정답 가리기':'정답 확인')+'</button>'+
-  '<button type="button" data-ck79-mark="again" data-ck79-id="'+esc(id)+'">내일 다시</button>'+
+  '<button type="button" data-ck79-mark="again" data-ck79-id="'+esc(id)+'">짧게 재복습</button>'+
   '<button type="button" data-ck79-mark="remember" data-ck79-id="'+esc(id)+'">기억했음</button>'+
   '<button type="button" data-ck79-open="'+esc(id)+'">원문 보기</button></div>'+
   (revealed.has(id)?'<p class="ck79-key">공식 채점 처리: '+esc(q.correct.join(' 또는 '))+'번 · '+esc(recognized)+'</p>':'')+
