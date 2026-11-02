@@ -119,12 +119,28 @@ function newAttempt(year,now=Date.now()){
   submittedAt:0,position:0,answers:Array(80).fill(null),flags:Array(80).fill(false),
   pauseCount:0,reason:'',score:null};
 }
+let loadingYear=null;
 function start(year=selectedYear){
- const issue=checkBank(year);
- if(!issue.ok){message('해당 연도 공식 80문항 등록 상태가 불완전합니다. 누락 '+issue.missing.length+'건.');return false;}
+ const y=Number(year),issue=checkBank(y);
+ if(!issue.ok){
+  if(y>=2016&&y<=2020&&window.CK89OfficialBank?.loadYear){
+   if(loadingYear!==null){message('공식 과거 기출 데이터를 불러오는 중입니다.');return false;}
+   loadingYear=y;message(y+'년 공식 문제 80문항을 확인하는 중입니다.');
+   window.CK89OfficialBank.loadYear(y).then(()=>{
+    loadingYear=null;
+    if(selectedYear!==y&&year===selectedYear)return;
+    start(y);
+   }).catch(err=>{
+    loadingYear=null;message('과거 기출 자료 로딩 실패: '+(err?.message||err)+' · 자료를 확인한 뒤 재시도하세요.');
+   });
+   return false;
+  }
+  message('해당 연도 공식 80문항 등록 상태가 불완전합니다. 누락 '+issue.missing.length+'건.');
+  return false;
+ }
  if(active()?.status!=='submitted'&&active()&&
   !window.confirm?.('진행 중인 시험을 교체하면 현재 미제출 답안은 사라집니다. 새 시험을 시작할까요?'))return false;
- const next=newAttempt(year);
+ const next=newAttempt(y);
  if(!next||!persist({...state,active:next}))return false;
  expanded=true;showHistory=false;error='';paint();focusRegion();
  return true;
@@ -167,6 +183,11 @@ function resume(){
 }
 function finish(reason='manual',now=Date.now()){
  const s=active();if(!s||s.status==='submitted')return false;
+ if(!checkBank(s.year).ok){
+  message('공식 80문항 등록이 완료될 때까지 채점하지 않습니다.');
+  if(s.year<=2020)window.CK89OfficialBank?.loadYear?.(s.year).then(()=>checkExpiry()).catch(e=>message('기출 로딩 오류: '+e.message));
+  return false;
+ }
  const assessed=gradeAttempt(s),score={
   estate:assessed.estate,civil:assessed.civil,total:assessed.total,
   average:assessed.average,passed:assessed.passed
@@ -183,7 +204,11 @@ function finish(reason='manual',now=Date.now()){
 
 function checkExpiry(){
  const s=active();
- if(s?.status==='running'&&remaining(s)===0)finish('time');
+ if(s?.status!=='running'||remaining(s)>0)return;
+ if(checkBank(s.year).ok){finish('time');return;}
+ if(s.year<=2020&&window.CK89OfficialBank?.loadYear)
+  window.CK89OfficialBank.loadYear(s.year).then(()=>{if(active()?.status==='running')checkExpiry();})
+   .catch(e=>message('만료된 시험의 공식 정답 로딩 오류: '+e.message));
 }
 function status(text){const t=root?.querySelector('[data-ck82-notice]');if(t)t.textContent=text;}
 function message(text){error=text;status(text);}
@@ -289,10 +314,11 @@ function renderHistory(){
  const items=state.history;
  if(!items.length)return '<p>아직 제출한 실전 시험이 없습니다.</p>';
  return '<div class="ck82-history">'+items.map((s,i)=>{
-  const score=gradeAttempt(s);
+  const complete=checkBank(s.year).ok,score=complete?gradeAttempt(s):null;
   const date=new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(s.submittedAt));
-  return '<div><strong>'+date+' · '+s.year+'년</strong><span>학개론 '+score.estate+'점 · 민법 '+
-   score.civil+'점 · 평균 '+score.average+'점</span><span>'+(score.passed?'연습 기준 충족':'미충족')+
+  return '<div><strong>'+date+' · '+s.year+'년</strong><span>'+
+   (score?'학개론 '+score.estate+'점 · 민법 '+score.civil+'점 · 평균 '+score.average+'점':'공식 문제 로딩 대기')+
+   '</span><span>'+(score?(score.passed?'연습 기준 충족':'미충족'):'기록 유지')+
    ' · '+(s.reason==='time'?'시간 만료':'직접 제출')+'</span></div>';
  }).join('')+'</div>';
 }
@@ -389,7 +415,10 @@ document.addEventListener('click',event=>{
  if(t.hasAttribute('data-ck82-new')){expanded=false;paint();return;}
 });
 document.addEventListener('change',event=>{
- if(event.target.matches?.('[data-ck82-year]')&&root?.contains(event.target))selectedYear=Number(event.target.value);
+ if(event.target.matches?.('[data-ck82-year]')&&root?.contains(event.target)){
+  selectedYear=Number(event.target.value);
+  if(selectedYear<=2020)window.CK89OfficialBank?.loadYear?.(selectedYear).catch(e=>message('공식 문제 로딩 실패: '+e.message));
+ }
 });
 document.addEventListener('keydown',event=>{
  if(!expanded||!root?.contains(event.target)||event.altKey||event.ctrlKey||event.metaKey||
@@ -403,6 +432,10 @@ document.addEventListener('keydown',event=>{
 },true);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){checkExpiry();if(root?.isConnected)paint();}});
 window.addEventListener('pageshow',()=>{checkExpiry();if(root?.isConnected)paint();});
+window.addEventListener('ck:official-bank-ready',()=>{
+ checkExpiry();
+ if(root?.isConnected)paint();
+});
 window.addEventListener('storage',event=>{
  if(event.key===KEY){state=readStore();error=storageIssue||'다른 탭에서 최신 시험 기록을 불러왔습니다.';if(root?.isConnected)paint();status(error);}
 });
@@ -421,7 +454,7 @@ window.CK82FullExam=Object.freeze({
  checkBank,cleanStore,sanitizeAttempt,newAttempt,gradeAttempt,remaining,fmtClock,
  getAttempts:()=>state.history.map(x=>JSON.parse(JSON.stringify(x))),
  getState:()=>({active:active()?.status||'none',year:active()?.year||null,history:state.history.length,
-  remainingMs:remaining(active()),revision:state.revision,storageIssue,expanded,error}),
+  remainingMs:remaining(active()),revision:state.revision,storageIssue,loadingYear,expanded,error}),
  start,setAnswer,navigate,pause,resume,finish,
  open:()=>{mount();if(root&&!expanded){expanded=true;paint();focusRegion();}}
 });

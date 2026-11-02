@@ -188,6 +188,7 @@ document.addEventListener('change',event=>{
  if(event.target?.matches?.('[data-ck83-stats-subject]')){filterSubject=event.target.value;paint();}
 });
 document.addEventListener('ck:personal-links-updated',()=>{if(shown)paint();});
+window.addEventListener('ck:official-bank-ready',()=>{if(shown)paint();});
 window.addEventListener('storage',event=>{
  if(['recallgraph-first-exam-v1','ck82-exam-sessions-v1','ck83-personal-concept-links-v1'].includes(event.key)&&shown)paint();
 });

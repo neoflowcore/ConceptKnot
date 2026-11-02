@@ -971,7 +971,7 @@ document.addEventListener('click',e=>{
  save();changeView(start.dataset.ck79PlanGo);
 });
 function renderSettings(){const byteSize=new Blob([JSON.stringify(state)]).size;return `${titleBlock('내 학습기록 관리','로그인과 서버 없이 이 브라우저에 저장됩니다. 시험 전 백업을 권장합니다.','DATA / PRIVACY')}
-<div class="settings-grid"><section class="panel"><h3>학습기록 백업</h3><p class="muted small">이론 기억상태, 연습 답안, 기출 OMR, 오답메모와 타이머 설정이 JSON 한 파일로 저장됩니다.</p><div class="callout">현재 브라우저 기록 약 ${(byteSize/1024).toFixed(1)}KB · 오프라인 학습 가능 (기출 원문 외부 PDF는 인터넷 필요).</div><div class="stack" style="margin-top:14px"><button class="btn" data-action="backup">내 학습 데이터 다운로드</button><label class="field-label" for="backup-file">백업 불러오기 (같은 형식 JSON)</label><input class="field" id="backup-file" type="file" accept="application/json,.json"></div></section><section class="panel"><h3>기출 출처와 이용 주의</h3><p class="small">공식 기출은 Q-Net 자료 링크와 제3자 공개 PDF로 열며, 문제 원문을 자체 데이터로 복제하지 않았습니다. 연습문제 30개는 학습용 창작 문제입니다.</p><p class="small">2020~2025년 A형 정답 480개 채점 지원 · 2016~2019년은 원문 열람/마킹 및 정답 직접 입력 기능.</p><p class="small">변경될 수 있는 법령·판례는 최신 출제기준과 공식 법령에서 재확인해야 합니다. 데이터가 서버로 업로드되지 않습니다.</p><div class="callout warn">브라우저 사이트 데이터를 지우면 저장한 답안도 사라집니다. 시험 전 백업 파일을 내려받으세요.</div></section></div><div class="panel" style="margin-top:17px"><h3>기록 초기화</h3><p class="muted small">모든 학습 답안과 진도·오답 메모가 이 브라우저에서 삭제됩니다. 이 작업은 되돌릴 수 없습니다.</p><button class="btn danger" data-action="all-reset">모든 로컬 학습기록 삭제</button></div>${navSource()}`;}
+<div class="settings-grid"><section class="panel"><h3>학습기록 백업</h3><p class="muted small">이론 기억상태, 연습 답안, 기출 OMR, 오답메모와 타이머 설정이 JSON 한 파일로 저장됩니다.</p><div class="callout">현재 브라우저 기록 약 ${(byteSize/1024).toFixed(1)}KB · 오프라인 학습 가능 (기출 원문 외부 PDF는 인터넷 필요).</div><div class="stack" style="margin-top:14px"><button class="btn" data-action="backup">내 학습 데이터 다운로드</button><label class="field-label" for="backup-file">백업 불러오기 (같은 형식 JSON)</label><input class="field" id="backup-file" type="file" accept="application/json,.json"></div></section><section class="panel"><h3>기출 출처와 이용 주의</h3><p class="small">공식 기출은 Q-Net 자료 링크와 제3자 공개 PDF로 열며, 문제 원문을 자체 데이터로 복제하지 않았습니다. 연습문제 30개는 학습용 창작 문제입니다.</p><p class="small">2016~2025년 A형 공식 문제 800문항은 연도별 데이터 확인 후 연습과 채점에 사용됩니다. 최근 5개년은 기본 등록되며 이전 5개년은 별도 JSON을 로딩합니다. OCR·그림·법령은 원본을 대조하세요.</p><p class="small">변경될 수 있는 법령·판례는 최신 출제기준과 공식 법령에서 재확인해야 합니다. 데이터가 서버로 업로드되지 않습니다.</p><div class="callout warn">브라우저 사이트 데이터를 지우면 저장한 답안도 사라집니다. 시험 전 백업 파일을 내려받으세요.</div></section></div><div class="panel" style="margin-top:17px"><h3>기록 초기화</h3><p class="muted small">모든 학습 답안과 진도·오답 메모가 이 브라우저에서 삭제됩니다. 이 작업은 되돌릴 수 없습니다.</p><button class="btn danger" data-action="all-reset">모든 로컬 학습기록 삭제</button></div>${navSource()}`;}
 
 // Step 1: original calculation practice; no claim of official past-paper transcription.
 const CALC_BANK=[
@@ -3704,6 +3704,7 @@ render();setInterval(timerTick,500);
 <script src="./assets/ck-study-charts-v79.js?v=79" defer></script>
 <script src="./assets/ck-study-editor-v80.js?v=80" defer></script>
 <script src="./assets/ck-study-workbench-v81.js?v=81" defer></script>
+<script src="./assets/ck-official-bank-v89.js?v=89" defer></script>
 <script src="./assets/ck-full-exam-v82.js?v=82" defer></script>
 <script src="./assets/ck-study-recall-v83.js?v=83" defer></script>
 <script src="./assets/ck-study-links-v83.js?v=83" defer></script>

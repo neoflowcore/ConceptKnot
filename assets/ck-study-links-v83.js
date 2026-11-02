@@ -13,10 +13,12 @@ function sanitize(raw){
  const rows=Object.entries(raw.records);if(rows.length>MAX)return null;
  const clean=empty();
  for(const [id,row] of rows){
-  const q=official()[id];
-  if(!validId(id)||q?.verified!==true||!row||!Array.isArray(row.conceptIds)||
+  const q=official()[id],subject=String(id).split('-')[1]&&Number(id.split('-')[1])<=40?'estate':'civil';
+  // 2016-2020 official questions hydrate after the document loads: keep a valid
+  // personal backup until the static bank is available, without claiming verification.
+  if(!validId(id)||(q&&q.verified!==true)||!row||!Array.isArray(row.conceptIds)||
    row.conceptIds.length>10||new Set(row.conceptIds).size!==row.conceptIds.length||
-   row.conceptIds.some(c=>!validConcept(c)||!c.startsWith(q.subject+'.'))||
+   row.conceptIds.some(c=>!validConcept(c)||!c.startsWith(subject+'.')||(q&&q.subject!==subject))||
    typeof row.evidence!=='string'||row.evidence.length>1200)return null;
   clean.records[id]={conceptIds:[...row.conceptIds],evidence:row.evidence,
    updatedAt:Math.max(0,Math.min(Date.now()+86400000,Number(row.updatedAt)||0))};
@@ -107,9 +109,9 @@ function paint(){
  const matched=linked(selectedConcept);
  body.innerHTML='<p class="ck83-link-note">한 문항 최대 10개 개념 · 본인 확인·근거 메모 · 공식 출제 빈도와 분리</p>'+
  '<div class="ck83-link-selectors"><label>연도 <select data-ck83-year>'+
- Array.from({length:10},(_,i)=>2025-i).map(y=>'<option value="'+y+'"'+(q?.year===y?' selected':'')+'>'+y+'</option>').join('')+
+ Array.from({length:10},(_,i)=>2025-i).map(y=>'<option value="'+y+'"'+(Number(selectedId.split('-')[0])===y?' selected':'')+'>'+y+'</option>').join('')+
  '</select></label><label>문항 <select data-ck83-number>'+
- Array.from({length:80},(_,i)=>i+1).map(n=>'<option value="'+n+'"'+(q?.number===n?' selected':'')+'>'+n+'</option>').join('')+
+ Array.from({length:80},(_,i)=>i+1).map(n=>'<option value="'+n+'"'+(Number(selectedId.split('-')[1])===n?' selected':'')+'>'+n+'</option>').join('')+
  '</select></label></div>'+
  '<div data-ck83-editor-slot>'+(taxonomy?editor(selectedId):'<p>개념 분류를 불러오는 중입니다.</p>')+'</div>'+
  '<div class="ck83-link-inverse"><h4>내 개념 연결 역검색 · '+Object.keys(state.records).length+'문항</h4>'+
@@ -213,6 +215,9 @@ document.addEventListener('change',event=>{
  }
  if(t.matches?.('[data-ck83-year],[data-ck83-number]')){
   selectedId=Number(root?.querySelector('[data-ck83-year]')?.value)+'-'+Number(root?.querySelector('[data-ck83-number]')?.value);
+  if(Number(selectedId.split('-')[0])<2021)
+   window.CK89OfficialBank?.loadYear?.(Number(selectedId.split('-')[0])).then(paint)
+    .catch(err=>{status='구형 기출 로딩 실패: '+err.message;paint();});
   paint();return;
  }
  if(t.matches?.('[data-ck83-inverse]')){selectedConcept=t.value;paint();}
@@ -224,6 +229,7 @@ document.addEventListener('input',event=>{
  if(box)box.innerHTML=choices(e.dataset.ck83Editor,t.value);
 });
 document.addEventListener('storage',e=>{if(e.key===KEY){state=read();unsavedChoices.clear();if(expanded)paint();modal();}});
+window.addEventListener('ck:official-bank-ready',()=>{if(expanded)paint();modal();});
 function schedule(){if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;mount();modal();});}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',schedule,{once:true});else schedule();
 const main=document.getElementById('main');
