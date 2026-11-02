@@ -387,16 +387,48 @@ function render(){
  '<span data-ck81-status role="status">'+esc(statusMessage)+'</span></div>'+
  '<p class="ck81-safety">내 해설 내용은 기존 개인 편집기에 저장됩니다. 이 작업대는 진행 순서와 중요 표지만 별도로 저장하며, 공식 문제·정답·법령 및 공개 해설을 수정하지 않습니다.</p>';
 }
+
+/* v103: preserve personal-tool DOM in a compact dock instead of prepending to the header. */
+const TOOL_DOCK_IDS=['ck81-workbench','ck83-link-tools','ck83-analytics','ck84-materials'];
+function ensureToolsDock(){
+ const main=document.getElementById('main'),body=document.body;
+ if(!main||!body||typeof body.append!=='function')return null;
+ let dock=document.getElementById('ck103-tools-dock');
+ if(!dock){
+  dock=document.createElement('details');
+  dock.id='ck103-tools-dock';dock.className='ck103-tools-dock';
+  dock.innerHTML='<summary aria-label="학습 자료 및 분석 도구">자료·분석</summary>'+
+   '<div class="ck103-tools-content" role="region" aria-label="학습 자료 및 분석 도구"></div>';
+  body.append(dock);
+  document.addEventListener('pointerdown',event=>{
+   if(dock.open&&!dock.contains(event.target))dock.open=false;
+  },true);
+  if(window.MutationObserver)new MutationObserver(changes=>{
+   if(changes.some(change=>change.target?.getAttribute?.('aria-expanded')==='true'))dock.open=true;
+  }).observe(dock,{subtree:true,attributes:true,attributeFilter:['aria-expanded']});
+ }
+ return dock.querySelector('.ck103-tools-content');
+}
+function alignToolsDock(){
+ const content=ensureToolsDock();
+ if(!content)return;
+ for(const id of TOOL_DOCK_IDS){
+  const node=document.getElementById(id);
+  if(node&&node.parentElement!==content)content.append(node);
+ }
+}
+
 function mount(){
  const host=document.getElementById('main');if(!host)return;
  const existing=document.getElementById('ck81-workbench');
- if(existing){root=existing;return;}
+ if(existing){root=existing;alignToolsDock();return;}
  root=document.createElement('section');root.id='ck81-workbench';root.className='ck81-workbench';
  root.innerHTML='<div class="ck81-heading"><div><strong>해설 검토 작업대</strong><small>2021~2025 · 400문항 · 오프라인 개인 관리</small></div>'+
   '<button type="button" data-ck81-toggle aria-expanded="false">작업대 열기</button></div>'+
   '<div data-ck81-panel hidden></div>';
  const previous=document.getElementById('ck79-review')||document.getElementById('ck76-search');
  if(previous?.parentNode)previous.after(root);else host.prepend(root);
+ alignToolsDock();
 }
 function toggle(){
  shown=!shown;
@@ -613,10 +645,12 @@ function scheduleMount(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount,{once:true});else mount();
 const main=document.getElementById('main');
 if(main&&window.MutationObserver)new MutationObserver(changes=>{
- if(!document.getElementById('ck81-workbench')&&changes.some(x=>x.addedNodes.length))scheduleMount();
+ if(!changes.some(x=>x.addedNodes.length))return;
+ if(!document.getElementById('ck81-workbench'))scheduleMount();
+ alignToolsDock();
 }).observe(main,{subtree:true,childList:true});
 window.CK81Workbench=Object.freeze({sanitizeProgress,assessDraft,specialAnswer,matchingRows,summary,
  riskScore,researchPacket,dueIds,markResearchBatch,
  getState:()=>({shown,loaded:rows?.length||0,loadErrors,filters:{...view},progress:Object.keys(local.records).length,storageIssue}),
- open:()=>{mount();if(!shown)toggle();}});
+ open:()=>{mount();const dock=document.getElementById('ck103-tools-dock');if(dock)dock.open=true;if(!shown)toggle();}});
 })();

@@ -156,7 +156,9 @@ function mount(){
  root.innerHTML='<div class="ck83-link-head"><strong>기출 ↔ 개념 다중 연결</strong>'+
  '<button type="button" data-ck83-toggle aria-expanded="false">개인 연결 열기</button></div>'+
  '<div data-ck83-body hidden></div>';
- if(host.id==='main')host.prepend(root);else host.after(root);
+ const dock=document.querySelector('#ck103-tools-dock .ck103-tools-content');
+ const destination=document.getElementById('main')||host;
+ if(dock)dock.append(root);else destination.append(root);
 }
 function paint(){
  const body=root?.querySelector('[data-ck83-body]');if(!body||!expanded)return;
@@ -334,6 +336,7 @@ function openQuestion(id){
  const year=Number(id.split('-')[0]);
  const show=()=>{if(!confirmDiscard())return false;selectedId=id;mount();if(!root)return false;
   if(!expanded)toggle();else paint();
+  const dock=root.closest?.('#ck103-tools-dock');if(dock)dock.open=true;
   root.scrollIntoView?.({behavior:'smooth',block:'nearest'});return true;};
  if(official()[id]?.verified)return show();
  if(year<=2020&&window.CK89OfficialBank?.loadYear){
@@ -344,5 +347,5 @@ function openQuestion(id){
 }
 window.CK83Links=Object.freeze({sanitize,getRecords:records,getLink,linkedQuestions:linked,reviewSummary,openQuestion,
  getStatus:()=>({linked:Object.keys(state.records).length,concepts:taxonomy?.size||0,unsavedEdits:unsavedChoices.size+(dirty?1:0),storageIssue,storageConflict,expanded}),
- open:()=>{mount();if(root&&!expanded)toggle();}});
+ open:()=>{mount();const dock=root?.closest?.('#ck103-tools-dock');if(dock)dock.open=true;if(root&&!expanded)toggle();}});
 })();

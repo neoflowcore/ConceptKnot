@@ -323,7 +323,9 @@ function mount(){
  root=document.createElement('section');root.id='ck84-materials';root.className='ck84-materials';
  root.innerHTML='<div class="ck84-mat-header"><strong>교재·PDF·OCR 개인 자료실</strong>'+
  '<button type="button" data-ck84-mat-toggle aria-expanded="false">자료실 열기</button></div><div data-ck84-mat-body hidden></div>';
- if(host.id==='main')host.prepend(root);else host.after(root);
+ const dock=document.querySelector('#ck103-tools-dock .ck103-tools-content');
+ const destination=document.getElementById('main')||host;
+ if(dock)dock.append(root);else destination.append(root);
 }
 function paint(){
  if(!root||!visible)return;
@@ -431,5 +433,5 @@ if(main&&window.MutationObserver)new MutationObserver(changes=>{
 window.CK84Materials=Object.freeze({sanitize,parseQuestions,orderedText,findDocuments,findOfficial,
  getDocuments:()=>store.documents.map(x=>({...x})),
  getState:()=>({open:visible,working,documents:store.documents.length,revision:store.revision,storageIssue,storageConflict}),
- open:()=>{mount();if(root&&!visible)toggle();}});
+ open:()=>{mount();const dock=root?.closest?.('#ck103-tools-dock');if(dock)dock.open=true;if(root&&!visible)toggle();}});
 })();

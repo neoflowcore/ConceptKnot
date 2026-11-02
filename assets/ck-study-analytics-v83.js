@@ -170,7 +170,9 @@ function mount(){
  root.innerHTML='<div class="ck83-analytics-head"><strong>학습 데이터 분석 · 7/30일</strong>'+
  '<button type="button" data-ck83-stats-toggle aria-expanded="false">통계 열기</button></div>'+
  '<div data-ck83-stats-body hidden></div>';
- if(host.id==='main')host.prepend(root);else host.after(root);
+ const dock=document.querySelector('#ck103-tools-dock .ck103-tools-content');
+ const destination=document.getElementById('main')||host;
+ if(dock)dock.append(root);else destination.append(root);
 }
 function paint(){
  if(!root||!shown)return;
@@ -272,5 +274,5 @@ if(main&&window.MutationObserver)new MutationObserver(changes=>{
 }).observe(main,{childList:true,subtree:true});
 window.CK83Analytics=Object.freeze({compute,recallFor,dayKey,formatReportTxt,exportReport,getLastReport:()=>lastReport,
  getState:()=>({shown,period,subject:filterSubject}),
- open:()=>{mount();if(root&&!shown)toggle();}});
+ open:()=>{mount();const dock=root?.closest?.('#ck103-tools-dock');if(dock)dock.open=true;if(root&&!shown)toggle();}});
 })();
