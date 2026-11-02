@@ -25,6 +25,8 @@ function sanitize(raw){
 }
 function read(){try{return sanitize(JSON.parse(localStorage.getItem(KEY)||'null'))||empty();}catch{return empty();}}
 let state=read(),taxonomy=null,candidates=null,loading=null,root=null,expanded=false,selectedId='2025-1',selectedConcept='',status='',queued=false;
+const unsavedChoices=new Map();
+const chosenFor=id=>new Set(unsavedChoices.get(id)||state.records[id]?.conceptIds||[]);
 function persist(next){
  const clean=sanitize(next);if(!clean)return false;
  try{localStorage.setItem(KEY,JSON.stringify(clean));state=clean;document.dispatchEvent(new Event('ck:personal-links-updated'));return true;}catch{return false;}
@@ -52,7 +54,7 @@ async function load(){
 const title=id=>{const q=official()[id];return q?.verified?q.year+'년 '+q.number+'번 · '+(q.subject==='estate'?'학개론':'민법'):String(id);};
 function choices(id,query=''){
  const q=official()[id];if(!q||!taxonomy)return '';
- const selected=new Set(state.records[id]?.conceptIds||[]);
+ const selected=chosenFor(id);
  const needle=String(query).normalize('NFKC').toLowerCase().trim();
  return [...taxonomy.values()].filter(c=>c.subject===q.subject&&(!needle||String(c.label+' '+(c.aliases||[]).join(' ')).normalize('NFKC').toLowerCase().includes(needle))).map(c=>
   '<label class="ck83-link-chip"><input type="checkbox" data-ck83-concept="'+esc(c.id)+'"'+(selected.has(c.id)?' checked':'')+
@@ -126,18 +128,18 @@ function modal(){
 function actionMessage(e,text){const span=e?.querySelector('[data-ck83-message]')||root?.querySelector('[data-ck83-status]');if(span)span.textContent=text;status=text;}
 function save(e){
  const id=e?.dataset.ck83Editor,q=official()[id];if(!q?.verified||!taxonomy)return;
- const concepts=[...e.querySelectorAll('[data-ck83-concept]:checked')].map(x=>x.dataset.ck83Concept);
+ const concepts=[...chosenFor(id)];
  if(concepts.length>10||concepts.some(x=>taxonomy.get(x)?.subject!==q.subject)){
   actionMessage(e,'개념은 같은 과목에서 최대 10개만 선택하세요.');return;
  }
  const record={conceptIds:concepts,evidence:String(e.querySelector('[data-ck83-evidence]')?.value||'').trim().slice(0,1200),updatedAt:Date.now()};
  if(!persist({...state,records:{...state.records,[id]:record}})){actionMessage(e,'저장 실패 · 브라우저 용량을 확인하세요.');return;}
- actionMessage(e,'개인 개념 연결을 저장했습니다. 공식 검수와 구별됩니다.');
+ unsavedChoices.delete(id);actionMessage(e,'개인 개념 연결을 저장했습니다. 공식 검수와 구별됩니다.');
 }
 function remove(e){
  const id=e?.dataset.ck83Editor;
  if(!state.records[id]||!window.confirm?.(title(id)+'의 개인 개념 연결을 삭제할까요?'))return;
- const r={...state.records};delete r[id];if(persist({...state,records:r})){actionMessage(e,'개인 연결 삭제됨');e.querySelectorAll('[data-ck83-concept]').forEach(x=>x.checked=false);}
+ const r={...state.records};delete r[id];if(persist({...state,records:r})){unsavedChoices.delete(id);actionMessage(e,'개인 연결 삭제됨');e.querySelectorAll('[data-ck83-concept]').forEach(x=>x.checked=false);}
 }
 function download(){
  const blob=new Blob(['\uFEFF',JSON.stringify(state,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');
@@ -165,8 +167,13 @@ document.addEventListener('click',event=>{
  if(t.hasAttribute('data-ck83-save')){save(e);return;}
  if(t.hasAttribute('data-ck83-delete')){remove(e);return;}
  if(t.hasAttribute('data-ck83-add')){
-  const box=e?.querySelector('[data-ck83-concept="'+t.dataset.ck83Add+'"]');
-  if(box){box.checked=true;actionMessage(e,'후보가 선택되었습니다. 원문 대조 후 저장하세요.');}return;
+  const id=e?.dataset.ck83Editor,concept=t.dataset.ck83Add,selected=chosenFor(id);
+  if(!taxonomy?.has(concept)||taxonomy.get(concept)?.subject!==official()[id]?.subject)return;
+  if(selected.size>=10&&!selected.has(concept)){actionMessage(e,'최대 10개 개념까지 선택할 수 있습니다.');return;}
+  selected.add(concept);unsavedChoices.set(id,selected);
+  const box=e?.querySelector('[data-ck83-concept="'+concept+'"]');
+  if(box)box.checked=true;
+  actionMessage(e,'임시 선택됨 · 원문 검토 후 저장하세요.');return;
  }
  if(t.hasAttribute('data-ck83-open')){
   const q=official()[t.dataset.ck83Open];if(!q?.verified)return;
@@ -180,6 +187,16 @@ document.addEventListener('click',event=>{
 });
 document.addEventListener('change',event=>{
  const t=event.target;
+ if(t.matches?.('[data-ck83-concept]')){
+  const e=t.closest('[data-ck83-editor]'),id=e?.dataset.ck83Editor;
+  if(!official()[id]?.verified)return;
+  const selected=chosenFor(id),concept=t.dataset.ck83Concept;
+  if(t.checked){
+   if(selected.size>=10&&!selected.has(concept)){t.checked=false;actionMessage(e,'최대 10개 개념입니다.');return;}
+   selected.add(concept);
+  }else selected.delete(concept);
+  unsavedChoices.set(id,selected);return;
+ }
  if(t.matches?.('[data-ck83-year],[data-ck83-number]')){
   selectedId=Number(root?.querySelector('[data-ck83-year]')?.value)+'-'+Number(root?.querySelector('[data-ck83-number]')?.value);
   paint();return;
@@ -192,7 +209,7 @@ document.addEventListener('input',event=>{
  const e=t.closest('[data-ck83-editor]'),box=e?.querySelector('[data-ck83-choices]');
  if(box)box.innerHTML=choices(e.dataset.ck83Editor,t.value);
 });
-document.addEventListener('storage',e=>{if(e.key===KEY){state=read();if(expanded)paint();modal();}});
+document.addEventListener('storage',e=>{if(e.key===KEY){state=read();unsavedChoices.clear();if(expanded)paint();modal();}});
 function schedule(){if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;mount();modal();});}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',schedule,{once:true});else schedule();
 const main=document.getElementById('main');
@@ -206,6 +223,6 @@ if(window.MutationObserver)new MutationObserver(changes=>{
   changes.some(c=>[...c.addedNodes].some(n=>n.nodeType===1&&(n.matches?.('.ck78-modal-scroll')||n.querySelector?.('.ck78-modal-scroll')))))schedule();
 }).observe(document.body,{childList:true,subtree:true});
 window.CK83Links=Object.freeze({sanitize,getRecords:records,getLink,linkedQuestions:linked,
- getStatus:()=>({linked:Object.keys(state.records).length,concepts:taxonomy?.size||0,expanded}),
+ getStatus:()=>({linked:Object.keys(state.records).length,concepts:taxonomy?.size||0,unsavedEdits:unsavedChoices.size,expanded}),
  open:()=>{mount();if(root&&!expanded)toggle();}});
 })();

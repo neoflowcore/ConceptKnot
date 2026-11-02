@@ -55,18 +55,33 @@ function cleanStore(data){
   data.history.length>HISTORY_LIMIT||data.history.some(x=>!sanitizeAttempt(x)||x.status!=='submitted'))return null;
  const active=data.active===null?null:sanitizeAttempt(data.active);
  if(data.active!==null&&!active)return null;
- return {schemaVersion:VERSION,active,history:data.history.map(sanitizeAttempt)};
+ return {schemaVersion:VERSION,revision:Number.isInteger(data.revision)&&data.revision>=0?data.revision:0,active,history:data.history.map(sanitizeAttempt)};
 }
-function empty(){return {schemaVersion:VERSION,active:null,history:[]};}
+function empty(){return {schemaVersion:VERSION,revision:0,active:null,history:[]};}
+let storageIssue='';
 function readStore(){
- try{return cleanStore(JSON.parse(localStorage.getItem(KEY)||'null'))||empty();}
- catch{return empty();}
+ try{
+  const raw=localStorage.getItem(KEY);
+  if(raw===null){storageIssue='';return empty();}
+  const value=cleanStore(JSON.parse(raw));
+  if(!value){storageIssue='기존 시험 기록이 손상되었습니다. 원본을 보호하기 위해 저장을 차단합니다.';return empty();}
+  storageIssue='';return value;
+ }catch{storageIssue='시험 기록을 읽지 못했습니다. 원본을 보호하기 위해 저장을 차단합니다.';return empty();}
 }
 let state=readStore(),root=null,expanded=false,selectedYear=2025,error='',showHistory=false,scheduled=false;
 function persist(next){
- const clean=cleanStore(next);if(!clean)return false;
- try{localStorage.setItem(KEY,JSON.stringify(clean));state=clean;return true;}
- catch{error='저장 실패 · 브라우저 저장 공간 또는 권한을 확인하세요. 안전한 백업을 권장합니다.';return false;}
+ if(storageIssue){error=storageIssue;return false;}
+ const value=cleanStore(next);
+ if(!value){error='유효하지 않은 답안 상태입니다. 기존 기록을 유지합니다.';return false;}
+ try{
+  const latest=readStore();if(storageIssue){error=storageIssue;return false;}
+  if(latest.revision!==state.revision){
+   state=latest;error='다른 탭의 최신 기록과 충돌했습니다. 덮어쓰지 않고 최신 답안을 불러왔습니다.';
+   if(root?.isConnected)paint();return false;
+  }
+  value.revision=latest.revision+1;
+  localStorage.setItem(KEY,JSON.stringify(value));state=value;return true;
+ }catch{error='저장 실패: 브라우저 공간·권한을 확인하세요. 기존 기록은 유지됩니다.';return false;}
 }
 function active(){return state.active;}
 function remaining(session,now=Date.now()){
@@ -123,18 +138,20 @@ function saveActive(next){
 }
 function setAnswer(value){
  const s=active();if(!s||s.status!=='running')return false;
- const n=Number(value);if(!isMark(n)&&value!==null)return false;
+ const n=value===null?null:Number(value);if(n!==null&&!isMark(n))return false;
  if(remaining(s)===0){finish('time');return false;}
  const a=s.answers.slice();a[s.position]=n;
  return saveActive({...s,answers:a});
 }
 function navigate(position){
  const s=active();if(!s)return false;
+ if(s.status==='running'&&remaining(s)===0){finish('time');return false;}
  const i=Number(position);if(!Number.isInteger(i)||i<0||i>=80)return false;
  return saveActive({...s,position:i});
 }
 function setFlag(){
  const s=active();if(!s||s.status==='submitted')return false;
+ if(s.status==='running'&&remaining(s)===0){finish('time');return false;}
  const flags=s.flags.slice();flags[s.position]=!flags[s.position];
  return saveActive({...s,flags});
 }
@@ -155,7 +172,7 @@ function finish(reason='manual',now=Date.now()){
   average:assessed.average,passed:assessed.passed
  };
  const submitted={...s,status:'submitted',submittedAt:now,remainingMs:0,
-  reason:reason==='time'?'time':'manual',score};
+  reason:reason==='time'||s.status==='running'&&remaining(s,now)===0?'time':'manual',score};
  const next={...state,active:submitted,history:[submitted,...state.history].slice(0,HISTORY_LIMIT)};
  if(!persist(next))return false;
  expanded=true;showHistory=false;error='';paint();
@@ -292,7 +309,7 @@ function paint(){
  if(!root?.isConnected)return;
  const s=active();
  document.body.classList.toggle('ck82-exam-focused',expanded&&Boolean(s));
- root.innerHTML=renderLauncher()+
+ root.innerHTML=(storageIssue?'<div class="ck82-warning" role="alert">'+esc(storageIssue)+'<button type="button" data-ck82-raw>손상 기록 원본 내려받기</button></div>':'')+renderLauncher()+
   '<div class="ck82-workspace" data-ck82-workspace tabindex="0"'+(!expanded?' hidden':'')+'>'+
   (expanded&&s?(s.status==='submitted'?renderResult(s):renderSession(s)):
    (expanded?'<p>시험을 시작하면 이곳에 80문항이 표시됩니다.</p>':''))+
@@ -314,6 +331,7 @@ function mount(){
  paint();
 }
 function tick(){
+ if(document.hidden)return;
  checkExpiry();
  const text=root?.querySelector('[data-ck82-clock]');
  if(text){const s=active();if(s&&s.status!=='submitted')text.textContent=fmtClock(remaining(s));}
@@ -322,9 +340,17 @@ document.addEventListener('click',event=>{
  const t=event.target.closest?.('[data-ck82-start],[data-ck82-expand],[data-ck82-history],'+
  '[data-ck82-answer],[data-ck82-goto],[data-ck82-prev],[data-ck82-next],'+
  '[data-ck82-clear],[data-ck82-flag],[data-ck82-pause],[data-ck82-resume],'+
- '[data-ck82-submit],[data-ck82-filter],[data-ck82-detail],[data-ck82-hide],[data-ck82-new]');
+ '[data-ck82-submit],[data-ck82-filter],[data-ck82-detail],[data-ck82-hide],[data-ck82-new],[data-ck82-raw]');
  if(!t||!root?.contains(t))return;
  event.preventDefault();event.stopPropagation();
+ if(t.hasAttribute('data-ck82-raw')){
+  try{
+   const raw=localStorage.getItem(KEY);if(raw===null)return;
+   const blob=new Blob([raw],{type:'application/json;charset=utf-8'}),url=URL.createObjectURL(blob);
+   const a=document.createElement('a');a.href=url;a.download='ConceptKnot_시험기록_손상원본.json';
+   document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000);
+  }catch{message('원본 내려받기에 실패했습니다. 원본은 수정하지 않았습니다.');}return;
+ }
  if(t.hasAttribute('data-ck82-start')){
   start(selectedYear);return;
  }
@@ -375,7 +401,7 @@ document.addEventListener('keydown',event=>{
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){checkExpiry();if(root?.isConnected)paint();}});
 window.addEventListener('pageshow',()=>{checkExpiry();if(root?.isConnected)paint();});
 window.addEventListener('storage',event=>{
- if(event.key===KEY){state=readStore();if(root?.isConnected)paint();error='다른 탭에서 시험 기록이 변경되었습니다. 최신 저장 값을 표시합니다.';status(error);}
+ if(event.key===KEY){state=readStore();error=storageIssue||'다른 탭에서 최신 시험 기록을 불러왔습니다.';if(root?.isConnected)paint();status(error);}
 });
 function schedule(){
  if(scheduled)return;scheduled=true;
@@ -392,7 +418,8 @@ window.CK82FullExam=Object.freeze({
  checkBank,cleanStore,sanitizeAttempt,newAttempt,gradeAttempt,remaining,fmtClock,
  getAttempts:()=>state.history.map(x=>JSON.parse(JSON.stringify(x))),
  getState:()=>({active:active()?.status||'none',year:active()?.year||null,history:state.history.length,
-  remainingMs:remaining(active()),expanded,error}),
+  remainingMs:remaining(active()),revision:state.revision,storageIssue,expanded,error}),
+ start,setAnswer,navigate,pause,resume,finish,
  open:()=>{mount();if(root&&!expanded){expanded=true;paint();focusRegion();}}
 });
 })();

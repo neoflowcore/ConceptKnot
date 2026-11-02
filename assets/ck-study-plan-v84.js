@@ -85,8 +85,9 @@ function compute({config=settings,stats=studyData(),now=Date.now(),days=showDays
  for(let i=0;i<horizon;i++){
   const iso=asDate(base+i*DAY),weekday=kstWeekday(iso),rest=restSet.has(weekday)||holidaySet.has(iso);
   if(rest){rows.push({date:iso,weekday,rest:true,minutes:0,reason:holidaySet.has(iso)?'지정한 휴일':'정기 휴식일'});continue;}
-  const stage=daysLeft===null?'rolling':daysLeft<=14?'final':daysLeft<=60?'practice':'foundation';
-  const fatigue=i>0&&i%6===0?0.7:1;
+  const remainingDays=daysLeft===null?null:daysLeft-i;
+  const stage=remainingDays===null?'rolling':remainingDays<=14?'final':remainingDays<=60?'practice':'foundation';
+  const fatigue=planId>0&&planId%6===0?0.7:1;
   const minutes=Math.max(20,Math.round(cfg.dailyMinutes*fatigue));
   const dueRemain=Math.max(0,stats.due-Math.round(plannedTotal/7));
   const reviewMinutes=Math.min(Math.floor(minutes*0.4),Math.max(dueRemain?20:10,Math.floor(minutes*(stage==='final'?.35:.25))));
@@ -95,12 +96,13 @@ function compute({config=settings,stats=studyData(),now=Date.now(),days=showDays
   const questionCount=Math.max(1,Math.floor(practiceMinutes/questionMinutes));
   const recallCount=Math.min(Math.max(0,dueRemain),Math.floor(reviewMinutes/3));
   const readingMinutes=Math.max(0,minutes-practiceMinutes-reviewMinutes);
-  const choice=weightedSubject(cfg,stats,(planId*37)%100);
+  const sessionCount=Math.max(1,Math.ceil(minutes/cfg.sessionMinutes));
+  const choice=weightedSubject(cfg,stats,(planId*61)%100);
   const preferredYear=primaryYears[(planId+Math.max(0,2025-cfg.preferredYear))%primaryYears.length];
   const subjects=choice.selected==='estate'?
    ['부동산학개론','민법·민사특별법']:['민법·민사특별법','부동산학개론'];
   rows.push({date:iso,weekday,rest:false,minutes,stage,subject:choice.selected,subjectLabel:subjects[0],
-   year:preferredYear,questionCount,recallCount,readingMinutes,reviewMinutes,practiceMinutes,
+   year:preferredYear,questionCount,recallCount,readingMinutes,reviewMinutes,practiceMinutes,sessionCount,
    dueRemain,activities:[
     {label:'인출·오답 재확인',minutes:reviewMinutes,count:recallCount},
     {label:preferredYear+'년 기출 문제',minutes:practiceMinutes,count:questionCount},
@@ -125,7 +127,7 @@ function renderPlan(plan){
   '<small>이 숫자는 개인 학습 계획치이며 수행 기록 또는 검증된 진도율이 아닙니다. 실제 일정은 매번 최신 기록으로 재계산됩니다.</small></div>'+
   '<div class="ck84-plan-list">'+(plan.days.length?plan.days.map(d=>'<div class="ck84-plan-row">'+
    '<div><strong>'+niceDay(d.date)+'</strong><small>'+esc(d.rest?d.reason:d.subjectLabel)+'</small></div>'+
-   (d.rest?'<span>휴식</span>':'<div class="ck84-plan-row-work"><span>'+d.minutes+'분 · '+d.questionCount+'문항 · 회상 최대 '+d.recallCount+'개</span>'+
+   (d.rest?'<span>휴식</span>':'<div class="ck84-plan-row-work"><span>'+d.minutes+'분 · 집중 '+d.sessionCount+'세트 · '+d.questionCount+'문항 · 회상 최대 '+d.recallCount+'개</span>'+
    '<small>'+d.activities.map(x=>x.label+' '+x.minutes+'분').join(' / ')+'</small>'+
    '<button type="button" data-ck84-start="'+esc(d.date)+'" data-ck84-year="'+d.year+'" data-ck84-subject="'+d.subject+'">기출 시작</button></div>')+
    '</div>').join(''):'<p>배정할 학습일이 없습니다. 시험 날짜 또는 휴식일 설정을 확인하세요.</p>')+'</div>';

@@ -34,7 +34,7 @@ function sanitize(data){
 }
 function read(){try{return sanitize(JSON.parse(localStorage.getItem(KEY)||'null'))||empty();}catch{return empty();}}
 let store=read(),root=null,visible=false,working=false,cancel=false,sourceText='',sourceType='manual',
- sourcePages=0,currentId='',sourceTitle='',message='',query='',lastFile=null,queued=false;
+ sourcePages=0,currentId='',sourceTitle='',message='',query='',lastFile=null,queued=false,unsavedNote='',unsavedRef='';
 const newId=()=>('m'+Date.now().toString(36)+Math.floor(Math.random()*1679616).toString(36).padStart(4,'0'));
 function write(next){
  const checked=sanitize(next);if(!checked)return false;
@@ -164,9 +164,10 @@ async function extract(file,mode){
    r={text:(await file.text()).slice(0,MAX_TEXT),kind:'txt',pages:0,totalPages:0};
   else throw Error('지원하지 않는 확장자입니다. PDF, 이미지, TXT, MD만 지원합니다.');
   sourceText=r.text;sourceType=r.kind;sourcePages=r.pages;
-  sourceTitle=name.replace(/\.[^.]+$/,'').slice(0,120);currentId='';
+  sourceTitle=name.replace(/\.[^.]+$/,'').slice(0,120);currentId='';unsavedNote='';unsavedRef='';
   const title=root?.querySelector('[data-ck84-mat-title]'),area=root?.querySelector('[data-ck84-mat-text]');
   if(title)title.value=sourceTitle;if(area)area.value=sourceText;
+  const nt=root?.querySelector('[data-ck84-mat-note]'),rf=root?.querySelector('[data-ck84-mat-ref]');if(nt)nt.value='';if(rf)rf.value='';
   const preview=parseQuestions(sourceText);
   note('추출 '+sourceText.length+'자 · 문항 후보 '+preview.questions.length+
    '건 · 형식 완성 후보 '+preview.complete+'건 · 처리 '+r.pages+'/'+r.totalPages+'페이지. 원본 대조 필수.');
@@ -210,14 +211,14 @@ function list(){
  '<small>검색어를 입력하면 저장된 교재 자료와 기출 문구 후보를 같이 찾습니다.</small>';
 }
 function startNew(){
- currentId='';sourceText='';sourceTitle='';sourceType='manual';sourcePages=0;
+ currentId='';sourceText='';sourceTitle='';sourceType='manual';sourcePages=0;unsavedNote='';unsavedRef='';
  for(const key of ['title','text','note','ref']){const el=root?.querySelector('[data-ck84-mat-'+key+']');if(el)el.value='';}
  const file=root?.querySelector('[data-ck84-mat-file]');if(file)file.value='';
  showPreview();note('새 개인 자료를 작성할 수 있습니다.');
 }
 function openDoc(id){
  const d=store.documents.find(d=>d.id===id);if(!d)return;
- currentId=d.id;sourceText=d.text;sourceTitle=d.title;sourceType=d.kind;sourcePages=d.pages;
+ currentId=d.id;sourceText=d.text;sourceTitle=d.title;sourceType=d.kind;sourcePages=d.pages;unsavedNote=d.note;unsavedRef=d.officialRef;
  for(const [name,value] of Object.entries({title:d.title,text:d.text,note:d.note,ref:d.officialRef})){
   const input=root?.querySelector('[data-ck84-mat-'+name+']');if(input)input.value=value;
  }
@@ -235,7 +236,7 @@ function save(){
  const docs=prior?store.documents.map(d=>d.id===prior.id?row:d):[row,...store.documents];
  if(docs.length>MAX_DOCS){note('교재 자료는 최대 35건까지만 저장합니다.');return;}
  if(!write({...store,documents:docs})){note('저장 실패: 용량 또는 다른 탭의 변경 사항을 확인하세요.');return;}
- currentId=row.id;note('개인 메모 저장 완료 · PDF 원본 파일은 저장되지 않았습니다.');list();
+ currentId=row.id;unsavedNote=noteText;unsavedRef=ref;note('개인 메모 저장 완료 · PDF 원본 파일은 저장되지 않았습니다.');list();
 }
 function remove(id){
  const d=store.documents.find(x=>x.id===id);
@@ -299,6 +300,8 @@ function paint(){
  else{
   root.querySelector('[data-ck84-mat-title]').value=sourceTitle;
   root.querySelector('[data-ck84-mat-text]').value=sourceText;
+  root.querySelector('[data-ck84-mat-note]').value=unsavedNote;
+  root.querySelector('[data-ck84-mat-ref]').value=unsavedRef;
  }
  root.querySelector('[data-ck84-mat-search]').value=query;list();showPreview();
 }
@@ -338,7 +341,12 @@ document.addEventListener('change',event=>{
 });
 document.addEventListener('input',event=>{
  const t=event.target;
- if(t.matches?.('[data-ck84-mat-search]')&&root?.contains(t)){query=t.value;list();}
+ if(!root?.contains(t))return;
+ if(t.matches?.('[data-ck84-mat-search]')){query=t.value;list();return;}
+ if(t.matches?.('[data-ck84-mat-title]'))sourceTitle=t.value;
+ if(t.matches?.('[data-ck84-mat-text]'))sourceText=t.value;
+ if(t.matches?.('[data-ck84-mat-note]'))unsavedNote=t.value;
+ if(t.matches?.('[data-ck84-mat-ref]'))unsavedRef=t.value;
 });
 document.addEventListener('storage',event=>{
  if(event.key===KEY){store=read();if(visible){list();note('다른 탭의 자료 변경을 확인했습니다. 기존 입력을 저장하기 전 검토하세요.');}}
