@@ -68,7 +68,7 @@ function readStore(){
   storageIssue='';return value;
  }catch{storageIssue='시험 기록을 읽지 못했습니다. 원본을 보호하기 위해 저장을 차단합니다.';return empty();}
 }
-let state=readStore(),root=null,expanded=false,selectedYear=2025,error='',showHistory=false,scheduled=false;
+let state=readStore(),root=null,expanded=false,selectedYear=2025,error='',showHistory=false,historySelection=-1,scheduled=false;
 function persist(next){
  if(storageIssue){error=storageIssue;return false;}
  const value=cleanStore(next);
@@ -119,16 +119,17 @@ function newAttempt(year,now=Date.now()){
   submittedAt:0,position:0,answers:Array(80).fill(null),flags:Array(80).fill(false),
   pauseCount:0,reason:'',score:null};
 }
-let loadingYear=null;
+let loadingYear=null,expiryLoadingYear=null,expiryRetryAt=0;
 function start(year=selectedYear){
  const y=Number(year),issue=checkBank(y);
  if(!issue.ok){
   if(y>=2016&&y<=2020&&window.CK89OfficialBank?.loadYear){
    if(loadingYear!==null){message('공식 과거 기출 데이터를 불러오는 중입니다.');return false;}
+   const selectedAtRequest=selectedYear;
    loadingYear=y;message(y+'년 공식 문제 80문항을 확인하는 중입니다.');
    window.CK89OfficialBank.loadYear(y).then(()=>{
     loadingYear=null;
-    if(selectedYear!==y&&year===selectedYear)return;
+    if(selectedYear!==selectedAtRequest){message('선택 연도가 변경되어 이전 시험 자동 시작을 취소했습니다.');return;}
     start(y);
    }).catch(err=>{
     loadingYear=null;message('과거 기출 자료 로딩 실패: '+(err?.message||err)+' · 자료를 확인한 뒤 재시도하세요.');
@@ -142,7 +143,7 @@ function start(year=selectedYear){
   !window.confirm?.('진행 중인 시험을 교체하면 현재 미제출 답안은 사라집니다. 새 시험을 시작할까요?'))return false;
  const next=newAttempt(y);
  if(!next||!persist({...state,active:next}))return false;
- expanded=true;showHistory=false;error='';paint();focusRegion();
+ expanded=true;showHistory=false;historySelection=-1;error='';paint();focusRegion();
  return true;
 }
 function saveActive(next){
@@ -196,7 +197,7 @@ function finish(reason='manual',now=Date.now()){
   reason:reason==='time'||s.status==='running'&&remaining(s,now)===0?'time':'manual',score};
  const next={...state,active:submitted,history:[submitted,...state.history].slice(0,HISTORY_LIMIT)};
  if(!persist(next))return false;
- expanded=true;showHistory=false;error='';paint();
+ expanded=true;showHistory=false;historySelection=-1;error='';paint();
  // The bridge owns an idempotent import and never changes canonical official answers.
  window.CK86ExamBridge?.reconcile?.();
  return true;
@@ -206,9 +207,16 @@ function checkExpiry(){
  const s=active();
  if(s?.status!=='running'||remaining(s)>0)return;
  if(checkBank(s.year).ok){finish('time');return;}
- if(s.year<=2020&&window.CK89OfficialBank?.loadYear)
-  window.CK89OfficialBank.loadYear(s.year).then(()=>{if(active()?.status==='running')checkExpiry();})
-   .catch(e=>message('만료된 시험의 공식 정답 로딩 오류: '+e.message));
+ if(s.year<=2020&&window.CK89OfficialBank?.loadYear&&expiryLoadingYear!==s.year&&Date.now()>=expiryRetryAt){
+  expiryLoadingYear=s.year;
+  window.CK89OfficialBank.loadYear(s.year).then(()=>{
+   expiryLoadingYear=null;expiryRetryAt=0;
+   if(active()?.status==='running')checkExpiry();
+  }).catch(e=>{
+   expiryLoadingYear=null;expiryRetryAt=Date.now()+30000;
+   message('만료 시험 정답 로딩 오류: '+e.message+' · 30초 뒤 다시 확인합니다.');
+  });
+ }
 }
 function status(text){const t=root?.querySelector('[data-ck82-notice]');if(t)t.textContent=text;}
 function message(text){error=text;status(text);}
@@ -229,7 +237,7 @@ function choicesHtml(q,s){
  return '<div class="ck82-choices" role="group" aria-label="정답 선택">'+
   q.options.map((opt,i)=>{
    const answer=s.answers[s.position],picked=answer===i+1;
-   return '<button type="button" class="ck82-option"'+(s.status==='paused'?' disabled':'')+' data-ck82-answer="'+(i+1)+
+   return '<button type="button" class="ck82-option"'+(s.status!=='running'?' disabled':'')+' data-ck82-answer="'+(i+1)+
     '" aria-pressed="'+picked+'"><b>'+'①②③④⑤'[i]+'</b><span>'+esc(opt)+'</span></button>';
   }).join('')+'</div>';
 }
@@ -278,7 +286,7 @@ function renderSession(s){
   (s.pauseCount>0?'<p class="ck82-warning">중단·재개 '+s.pauseCount+'회: 실제 시험과 동일한 연속 100분 기록은 아닙니다.</p>':'')+
   (s.status==='paused'?'<p class="ck82-warning">시간이 멈춰 있습니다. 다시 시작하기 전에는 답을 변경할 수 없습니다.</p>':'');
 }
-function renderResult(s){
+function renderResult(s,source='active'){
  const issue=checkBank(s.year);
  if(!issue.ok)return '<section class="ck82-result" role="status"><h3>'+s.year+
   '년 공식 문항 확인 중</h3><p>80문항 중 '+issue.missing.length+
@@ -287,7 +295,7 @@ function renderResult(s){
  const grade=gradeAttempt(s),readable=grade.passed?'연습 기준 합격점 충족':'연습 기준 미달';
  const rows=[['학개론',grade.estate,grade.estateCorrect,grade.estateAnswered],
   ['민법',grade.civil,grade.civilCorrect,grade.civilAnswered]];
- return '<section class="ck82-result"><h3>시험 채점 결과 · '+esc(readable)+'</h3>'+
+ return '<section class="ck82-result" data-ck82-result-source="'+esc(source)+'"><h3>시험 채점 결과 · '+esc(readable)+'</h3>'+
  '<p>과목별 40점 이상, 평균 60점 이상을 동시에 충족해야 합니다. 이 결과는 공식 시험 성적이나 법적 합격 통지가 아닙니다.</p>'+
  '<dl class="ck82-scores">'+rows.map(([name,score,correct,answered])=>'<div><dt>'+name+'</dt><dd>'+
   score.toFixed(1)+'점</dd><small>'+correct+'/40 정답 · '+answered+'/40 응답</small></div>').join('')+
@@ -296,19 +304,23 @@ function renderResult(s){
  ' · 전원정답 인정 '+grade.allAccepted.length+'건 · '+(s.reason==='time'?'시간 만료 자동 제출':'직접 제출')+
  (s.pauseCount>0?' · 중단 '+s.pauseCount+'회':'')+'</p>'+
  '<p class="ck82-disclaimer">전원정답 문항은 ①~⑤ 모두 채점 인정이지만, 미응답은 정답 처리하지 않습니다. 채점 인정은 각 선지가 모두 참이라는 뜻이 아닙니다.</p>'+
- '<div class="ck82-review-actions"><button type="button" data-ck82-filter="wrong">오답 문항 보기</button>'+
- '<button type="button" data-ck82-filter="blank">미응답 보기</button>'+
- '<button type="button" data-ck82-filter="all">80문항 전체 보기</button></div>'+
+ '<div class="ck82-review-actions"><button type="button" data-ck82-export="'+esc(source)+'">채점 TXT 내려받기</button>'+
+ '<button type="button" data-ck82-filter="wrong" aria-pressed="'+(resultFilter==='wrong')+'">오답 문항 보기</button>'+
+ '<button type="button" data-ck82-filter="blank" aria-pressed="'+(resultFilter==='blank')+'">미응답 보기</button>'+
+ '<button type="button" data-ck82-filter="all" aria-pressed="'+(resultFilter==='all')+'">80문항 전체 보기</button></div>'+
  '<div data-ck82-result-list></div></section>';
 }
 let resultFilter='wrong';
+function historyAt(index){return Number.isInteger(index)&&index>=0&&index<state.history.length?state.history[index]:null;}
+function resultSource(source){if(source==='active')return active()?.status==='submitted'?active():null;
+ const match=/^history:(\d{1,2})$/.exec(String(source||''));return match?historyAt(Number(match[1])):null;}
 function resultItems(s){
  if(!checkBank(s.year).ok)return '<p>공식 80문항 로딩이 완료되면 결과를 표시합니다.</p>';
  const details=gradeAttempt(s);
  const indices=resultFilter==='wrong'?details.wrong.map(id=>Number(id.split('-')[1])-1):
   resultFilter==='blank'?details.unanswered.map(id=>Number(id.split('-')[1])-1):
   Array.from({length:80},(_,i)=>i);
- return '<div class="ck82-review-list">'+indices.map(i=>{
+ return '<div class="ck82-review-list">'+(!indices.length?'<p>이 분류에 해당하는 문항이 없습니다.</p>':'')+indices.map(i=>{
   const q=bank()[s.year+'-'+(i+1)],n=s.answers[i],correct=q?.correct||[];
   if(!q)return '';
   return '<div class="ck82-review-row"><strong>'+(i+1)+'번 · '+(i<40?'학개론':'민법')+'</strong>'+
@@ -316,6 +328,44 @@ function resultItems(s){
    (correct.length===5?'①~⑤ 전원정답':correct.join(' 또는 ')+'번')+'</span>'+
    '<button type="button" data-ck82-detail="'+esc(q.id)+'">원문·해설 보기</button></div>';
  }).join('')+'</div>';
+}
+function makeResultText(session,official=bank()){
+ if(!session||session.status!=='submitted'||!isYear(session.year)||!Array.isArray(session.answers)||
+  session.answers.length!==80||!Array.isArray(session.flags)||session.flags.length!==80)return null;
+ for(let i=0;i<80;i++){
+  const q=official[session.year+'-'+(i+1)];
+  if(!q?.verified||!Array.isArray(q.correct)||!q.correct.length||q.options?.length!==5||
+   q.correct.some(v=>!isMark(Number(v))))return null;
+ }
+ const score=gradeAttempt(session,official),at=new Date(session.submittedAt);
+ if(!Number.isFinite(at.valueOf()))return null;
+ const lines=['ConceptKnot · 공식 기출 80문항 개인 실전연습 (공식 성적표 아님)',
+  '시험연도: '+session.year+'년 A형 · 제출: '+at.toISOString(),
+  '부동산학개론: '+score.estate.toFixed(1)+'점 ('+score.estateCorrect+'/40)',
+  '민법 및 민사특별법: '+score.civil.toFixed(1)+'점 ('+score.civilCorrect+'/40)',
+  '평균: '+score.average.toFixed(1)+'점 · 연습 기준 '+(score.passed?'충족':'미충족'),
+  '응답 '+score.answered+'/80 · 오답 '+score.wrong.length+' · 미응답 '+score.unanswered.length,
+  '제출 방식: '+(session.reason==='time'?'시간 만료':'직접 제출')+' · 중단 '+session.pauseCount+'회',
+  '※ 정답 인정 번호는 선지별 참·거짓 판정과 다릅니다. 법령·수식·그림은 시험연도 공식 PDF와 대조하세요.',''];
+ for(let i=0;i<80;i++){
+  const q=official[session.year+'-'+(i+1)],answer=session.answers[i],accepted=q.correct.map(Number);
+  const verdict=answer===null?'미응답':accepted.includes(answer)?'정답':'오답';
+  lines.push(String(i+1).padStart(2,'0')+'번 ['+(i<40?'학개론':'민법')+'] 내 답 '+
+   (answer===null?'—':answer)+' · 정답 인정 '+accepted.join('/')+' · '+verdict+
+   (session.flags[i]?' · 보류 표시':''));
+ }
+ return lines.join('\n')+'\n';
+}
+function exportResult(source='active'){
+ const session=resultSource(source),body=makeResultText(session);
+ if(body===null){message('공식 기출을 모두 불러온 제출 기록에서만 TXT를 내려받을 수 있습니다.');return false;}
+ try{
+  const file=new Blob(['\uFEFF',body],{type:'text/plain;charset=utf-8'}),url=URL.createObjectURL(file);
+  const link=document.createElement('a');link.href=url;
+  link.download='ConceptKnot_80문항_개인채점_'+session.year+'_'+session.submittedAt+'.txt';
+  document.body.appendChild(link);link.click();link.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),2000);message('개인 채점 결과 TXT를 저장했습니다.');return true;
+ }catch(e){message('TXT 내려받기 실패: '+(e?.message||e));return false;}
 }
 function renderHistory(){
  const items=state.history;
@@ -326,7 +376,8 @@ function renderHistory(){
   return '<div><strong>'+date+' · '+s.year+'년</strong><span>'+
    (score?'학개론 '+score.estate+'점 · 민법 '+score.civil+'점 · 평균 '+score.average+'점':'공식 문제 로딩 대기')+
    '</span><span>'+(score?(score.passed?'연습 기준 충족':'미충족'):'기록 유지')+
-   ' · '+(s.reason==='time'?'시간 만료':'직접 제출')+'</span></div>';
+   ' · '+(s.reason==='time'?'시간 만료':'직접 제출')+'</span>'+
+   '<button type="button" data-ck82-history-select="'+i+'" aria-pressed="'+(historySelection===i)+'">상세 결과</button></div>';
  }).join('')+'</div>';
 }
 function renderLauncher(){
@@ -356,11 +407,14 @@ function paint(){
    (expanded?'<p>시험을 시작하면 이곳에 80문항이 표시됩니다.</p>':''))+
   (expanded&&s?.status==='submitted'?'<div class="ck82-actions"><button type="button" data-ck82-new>다른 연도로 새 시험 시작</button></div>':'')+
   '</div>'+
-  (showHistory?'<section class="ck82-history-panel"><h3>최근 20회 실전 성적</h3>'+renderHistory()+'</section>':'')+
+  (showHistory?'<section class="ck82-history-panel"><h3>최근 20회 실전 성적</h3>'+renderHistory()+
+  (historyAt(historySelection)?'<div class="ck82-history-detail"><h3>과거 제출 상세 · '+historyAt(historySelection).year+'년</h3>'+renderResult(historyAt(historySelection),'history:'+historySelection)+'</div>':'')+
+  '</section>':'')+
   '<p class="ck82-note" data-ck82-notice role="status">'+esc(error)+'</p>';
- if(expanded&&s?.status==='submitted'){
-  const list=root.querySelector('[data-ck82-result-list]');if(list)list.innerHTML=resultItems(s);
- }
+ root.querySelectorAll('[data-ck82-result-list]').forEach(list=>{
+  const source=list.closest('[data-ck82-result-source]')?.dataset.ck82ResultSource||'active';
+  const session=resultSource(source);if(session)list.innerHTML=resultItems(session);
+ });
 }
 function mount(){
  const old=document.getElementById('ck82-full-exam');
@@ -378,10 +432,10 @@ function tick(){
  if(text){const s=active();if(s&&s.status!=='submitted')text.textContent=fmtClock(remaining(s));}
 }
 document.addEventListener('click',event=>{
- const t=event.target.closest?.('[data-ck82-start],[data-ck82-expand],[data-ck82-history],'+
+ const t=event.target.closest?.('[data-ck82-start],[data-ck82-expand],[data-ck82-history],[data-ck82-history-select],'+
  '[data-ck82-answer],[data-ck82-goto],[data-ck82-prev],[data-ck82-next],'+
  '[data-ck82-clear],[data-ck82-flag],[data-ck82-pause],[data-ck82-resume],'+
- '[data-ck82-submit],[data-ck82-filter],[data-ck82-detail],[data-ck82-hide],[data-ck82-new],[data-ck82-raw],[data-ck82-retry-bank]');
+ '[data-ck82-submit],[data-ck82-filter],[data-ck82-export],[data-ck82-detail],[data-ck82-hide],[data-ck82-new],[data-ck82-raw],[data-ck82-retry-bank]');
  if(!t||!root?.contains(t))return;
  event.preventDefault();event.stopPropagation();
  if(t.hasAttribute('data-ck82-raw')){
@@ -406,8 +460,12 @@ document.addEventListener('click',event=>{
   expanded=!expanded;paint();if(expanded)focusRegion();return;
  }
  if(t.hasAttribute('data-ck82-history')){
-  showHistory=!showHistory;paint();return;
+  showHistory=!showHistory;if(!showHistory)historySelection=-1;paint();return;
  }
+ if(t.hasAttribute('data-ck82-history-select')){
+  const i=Number(t.dataset.ck82HistorySelect);historySelection=historyAt(i)?(historySelection===i?-1:i):-1;showHistory=true;paint();return;
+ }
+ if(t.hasAttribute('data-ck82-export')){exportResult(t.dataset.ck82Export);return;}
  if(t.hasAttribute('data-ck82-answer')){setAnswer(Number(t.dataset.ck82Answer));focusRegion();return;}
  if(t.hasAttribute('data-ck82-goto')){navigate(Number(t.dataset.ck82Goto));focusRegion();return;}
  if(t.hasAttribute('data-ck82-prev')){navigate((active()?.position||0)-1);focusRegion();return;}
@@ -463,7 +521,7 @@ window.addEventListener('ck:official-bank-error',event=>{
  if(root?.isConnected)paint();
 });
 window.addEventListener('storage',event=>{
- if(event.key===KEY){state=readStore();error=storageIssue||'다른 탭에서 최신 시험 기록을 불러왔습니다.';if(root?.isConnected)paint();status(error);}
+ if(event.key===KEY){state=readStore();historySelection=-1;error=storageIssue||'다른 탭에서 최신 시험 기록을 불러왔습니다.';if(root?.isConnected)paint();status(error);}
 });
 function schedule(){
  if(scheduled)return;scheduled=true;
@@ -480,8 +538,8 @@ window.CK82FullExam=Object.freeze({
  checkBank,cleanStore,sanitizeAttempt,newAttempt,gradeAttempt,remaining,fmtClock,
  getAttempts:()=>state.history.map(x=>JSON.parse(JSON.stringify(x))),
  getState:()=>({active:active()?.status||'none',year:active()?.year||null,history:state.history.length,
-  remainingMs:remaining(active()),revision:state.revision,storageIssue,loadingYear,expanded,error}),
- start,setAnswer,navigate,pause,resume,finish,
+  remainingMs:remaining(active()),revision:state.revision,storageIssue,loadingYear,expiryLoadingYear,expanded,historySelection,error}),
+ start,setAnswer,navigate,pause,resume,finish,historyAt,resultSource,makeResultText,exportResult,
  open:()=>{mount();if(root&&!expanded){expanded=true;paint();focusRegion();}}
 });
 })();
