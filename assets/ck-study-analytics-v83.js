@@ -183,7 +183,8 @@ function paint(){
  '<option value="estate"'+(filterSubject==='estate'?' selected':'')+'>부동산학개론</option>'+
  '<option value="civil"'+(filterSubject==='civil'?' selected':'')+'>민법</option></select></label>'+
  '<button type="button" data-ck83-stats-refresh>새로 계산</button>'+
- '<button type="button" data-ck83-stats-copy>통계 요약 복사</button></div>'+
+ '<button type="button" data-ck83-stats-copy>통계 요약 복사</button>'+
+  '<button type="button" data-ck83-stats-export>전체 통계 TXT</button></div>'+
  renderReport(report);
 }
 function toggle(){
@@ -192,6 +193,43 @@ function toggle(){
  if(button){button.setAttribute('aria-expanded',String(shown));button.textContent=shown?'통계 접기':'통계 열기';}
  if(body)body.hidden=!shown;
  if(shown)paint();
+}
+function formatReportTxt(r){
+ if(!r)return '';
+ const lines=['ConceptKnot 개인 학습 통계 · 공식 시험성적/합격예측 아님',
+  '기간: '+r.from+' ~ '+r.to+' ('+r.days+'일) · 과목: '+
+   ({all:'전체',estate:'부동산학개론',civil:'민법'}[r.subject]||r.subject),
+  '모의고사 제출: '+r.sessions+'회 · 회상: '+r.recallCount+'회 · 타이핑 완주: '+r.typingCount+'회',
+  '공식 기출 응답 정답률: '+statusCount(r.accuracy,'%')+' · 정답 '+r.correct+' / 응답 '+r.answered,
+  '학개론 평균 점수: '+statusCount(r.averageEstate,'점')+
+  ' · 민법 평균 점수: '+statusCount(r.averageCivil,'점'),
+  '복습 시점 도래: '+r.due+'건 · 향후 예약: '+r.future+'건',
+  '반복 풀이 개선: '+r.improved+' / '+r.repeatQuestions+'문항','',
+  '연도별 공식 기출 정답률'];
+ for(const x of r.years||[]){
+  lines.push(x.year+'년 · 제출 '+x.attempts+'회 · '+x.correct+'/'+x.answered+
+   '문항 정답 · '+(x.answered?Math.round(x.correct*100/x.answered)+'%':'응답 없음'));
+ }
+ if(!(r.years||[]).length)lines.push('기록 없음');
+ lines.push('','모의고사 점수 추이');
+ for(const x of r.trends||[])lines.push(dayKey(x.at)+' · '+x.year+'년 · 학개론 '+statusCount(x.estate,'점')+
+  ' · 민법 '+statusCount(x.civil,'점')+' · 평균 '+statusCount(x.average,'점'));
+ if(!(r.trends||[]).length)lines.push('확인된 결과 없음');
+ lines.push('','일별 학습 활동');
+ for(const x of r.daily||[])lines.push(x.day+' · 회상 '+x.recalls+' · 타이핑 '+x.typed+' · 모의고사 '+x.exams);
+ lines.push('','선지별 개인 판단: '+(r.optionCoverage?.assessed||0)+'/4000',
+  '판단 근거 입력: '+(r.optionCoverage?.reasoned||0)+'건 · 출처 기록: '+(r.optionCoverage?.sourceLinked||0)+'건',
+  '주의: 원문/법령에 대한 공식 감수 결과를 나타내지 않습니다.');
+ return lines.join('\n')+'\n';
+}
+function exportReport(){
+ const text=formatReportTxt(lastReport);if(!text)return false;
+ try{const file=new Blob(['\uFEFF',text],{type:'text/plain;charset=utf-8'}),url=URL.createObjectURL(file);
+  const link=document.createElement('a');link.href=url;
+  link.download='ConceptKnot_학습통계_'+lastReport.days+'일_'+lastReport.to+'.txt';
+  document.body.append(link);link.click();link.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),2500);return true;
+ }catch{return false;}
 }
 function copySummary(){
  if(!lastReport)return;
@@ -210,12 +248,13 @@ function copySummary(){
 }
 document.addEventListener('click',event=>{
  const t=event.target.closest?.('[data-ck83-stats-toggle],[data-ck83-stats-days],'+
-  '[data-ck83-stats-refresh],[data-ck83-stats-copy]');
+  '[data-ck83-stats-refresh],[data-ck83-stats-copy],[data-ck83-stats-export]');
  if(!t||!root?.contains(t))return;
  if(t.hasAttribute('data-ck83-stats-toggle'))toggle();
  if(t.hasAttribute('data-ck83-stats-days')){period=Number(t.dataset.ck83StatsDays);paint();}
  if(t.hasAttribute('data-ck83-stats-refresh'))paint();
  if(t.hasAttribute('data-ck83-stats-copy'))copySummary();
+ if(t.hasAttribute('data-ck83-stats-export'))exportReport();
 });
 document.addEventListener('change',event=>{
  if(event.target?.matches?.('[data-ck83-stats-subject]')){filterSubject=event.target.value;paint();}
@@ -231,7 +270,7 @@ const main=document.getElementById('main');
 if(main&&window.MutationObserver)new MutationObserver(changes=>{
  if(!document.getElementById('ck83-analytics')&&changes.some(x=>x.addedNodes.length))schedule();
 }).observe(main,{childList:true,subtree:true});
-window.CK83Analytics=Object.freeze({compute,recallFor,dayKey,getLastReport:()=>lastReport,
+window.CK83Analytics=Object.freeze({compute,recallFor,dayKey,formatReportTxt,exportReport,getLastReport:()=>lastReport,
  getState:()=>({shown,period,subject:filterSubject}),
  open:()=>{mount();if(root&&!shown)toggle();}});
 })();

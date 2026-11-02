@@ -5,10 +5,13 @@
 'use strict';
 const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const index=()=>window.RECALL_OFFICIAL||{};
-const valid=id=>index()[id]?.verified===true;
+const valid=id=>{const q=index()[id];return validFocusId(id)&&q?.verified===true&&Array.isArray(q.options)&&q.options.length===5&&Array.isArray(q.correct)&&q.correct.length>=1;};
 const shortQuestion=q=>String(q?.question||'').replace(/\s+/g,' ').slice(0,145);
 let open=false,candidates=null,occurrences=null,loading=null,selectedConcept='',subject='all',query='',revealed=new Set(),tab='review',scheduled=false,page=0,focusSize=10,focusMode=false,focusIds=[],focusIndex=0,focusRevealed=false,focusStats={again:0,remember:0,skip:0};
 const PAGE_SIZE=24;
+const FOCUS_KEY='ck99-focus-session-v1';
+let focusPaused=false,focusPending=null,focusStorageIssue='',focusSubject='all';
+const validFocusId=id=>/^20(?:1[6-9]|2[0-5])-(?:[1-9]|[1-7]\d|80)$/.test(String(id||''));
 const labels={estate:'학개론',civil:'민법'};
 const now=()=>Date.now();
 const fmt=date=>new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}).format(new Date(date));
@@ -25,52 +28,123 @@ function dueReport(){
 }
 function dueRows(){return dueReport().rows;}
 
+function sanitizeFocus(v){
+ if(!v||v.version!==1||!['all','estate','civil'].includes(v.subject)||
+ !Array.isArray(v.ids)||!v.ids.length||v.ids.length>40||
+ v.ids.some(id=>!validFocusId(id))||new Set(v.ids).size!==v.ids.length||
+ ![10,20,40].includes(v.size)||!Number.isInteger(v.index)||v.index<0||v.index>v.ids.length||
+ typeof v.revealed!=='boolean'||typeof v.paused!=='boolean'||!v.stats||
+ typeof v.stats!=='object')return null;
+ const stats={again:v.stats.again,remember:v.stats.remember,skip:v.stats.skip};
+ if(Object.values(stats).some(n=>!Number.isInteger(n)||n<0||n>40)||
+ stats.again+stats.remember+stats.skip!==v.index)return null;
+ const p=v.pending;
+ if(p!=null&&(!p||p.id!==v.ids[v.index]||!['again','remember'].includes(p.outcome)||
+ !Number.isSafeInteger(p.at)||p.at<=0||p.at>Date.now()+86400000))return null;
+ if(!Number.isFinite(Number(v.savedAt))||Number(v.savedAt)<0||
+ Number(v.savedAt)>Date.now()+86400000)return null;
+ return {version:1,subject:v.subject,ids:v.ids.slice(),size:v.size,index:v.index,
+ revealed:v.revealed,paused:v.paused,stats,pending:p?{id:p.id,outcome:p.outcome,at:p.at}:null,savedAt:Number(v.savedAt)};
+}
+function focusSnapshot(){return {version:1,subject:focusSubject,ids:focusIds.slice(),
+ index:focusIndex,size:focusSize,revealed:focusRevealed,paused:focusPaused,
+ stats:{...focusStats},pending:focusPending?{...focusPending}:null,savedAt:Date.now()};}
+function persistFocus(){
+ if(!focusIds.length)return false;
+ try{if(!window.sessionStorage)throw Error('unavailable');
+ window.sessionStorage.setItem(FOCUS_KEY,JSON.stringify(focusSnapshot()));
+ focusStorageIssue='';return true;
+ }catch{focusStorageIssue='같은 탭의 임시 복습 진행을 저장하지 못했습니다. 기억 평가 기록은 별도 저장됩니다.';return false;}
+}
+function restoreFocus(){
+ let raw;try{raw=window.sessionStorage?.getItem(FOCUS_KEY);}catch{return false;}
+ if(!raw)return false;
+ let v;try{v=sanitizeFocus(JSON.parse(raw));}catch{}
+ if(!v){focusStorageIssue='임시 집중 복습 진행기록이 손상되었습니다. 새 복습을 시작해 갱신할 수 있습니다.';return false;}
+ focusSubject=v.subject;subject=v.subject;focusIds=v.ids;focusIndex=v.index;
+ focusSize=v.size;focusRevealed=v.revealed;focusStats=v.stats;
+ focusPaused=v.paused;focusMode=!v.paused;focusPending=v.pending;
+ if(focusPending){
+  const latest=localReview().review?.[focusPending.id];
+  if(Number(latest?.updatedAt)>=focusPending.at&&latest?.result===focusPending.outcome){
+   focusStats[focusPending.outcome]++;focusIndex++;focusRevealed=false;
+  }
+  focusPending=null;
+ }
+ persistFocus();return true;
+}
+function pauseFocus(){if(!focusIds.length||!focusMode)return false;
+ focusMode=false;focusPaused=true;persistFocus();return true;}
+function resumeFocus(){if(!focusIds.length||focusMode)return false;
+ subject=focusSubject;tab='review';focusMode=true;focusPaused=false;persistFocus();return true;}
+function exportFocusSummary(){
+ if(!focusIds.length)return false;
+ const lines=['ConceptKnot 집중 복습 진행 기록 (공식 성적표 아님)',
+ '총 '+focusIds.length+'문항 · 진행 '+focusIndex+'건',
+ '기억 '+focusStats.remember+' · 재복습 '+focusStats.again+' · 건너뜀 '+focusStats.skip,
+ '건너뛴 문항의 평가 기록은 변경하지 않았습니다.','',...focusIds];
+ try{const blob=new Blob(['\uFEFF',lines.join('\n')],{type:'text/plain;charset=utf-8'});
+ const url=URL.createObjectURL(blob),a=document.createElement('a');
+ a.href=url;a.download='ConceptKnot_집중복습_'+new Date().toISOString().slice(0,10)+'.txt';
+ document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2500);return true;
+ }catch{return false;}
+}
 function focusStatus(){
- return {active:focusMode,index:focusIndex,total:focusIds.length,revealed:focusRevealed,
-  remaining:Math.max(0,focusIds.length-focusIndex),stats:{...focusStats},current:focusIds[focusIndex]||null};
+ return {active:focusMode,paused:focusPaused,index:focusIndex,total:focusIds.length,revealed:focusRevealed,
+  remaining:Math.max(0,focusIds.length-focusIndex),stats:{...focusStats},current:focusIds[focusIndex]||null,storageIssue:focusStorageIssue};
 }
 function beginFocus(size=focusSize){
  const n=[10,20,40].includes(Number(size))?Number(size):10;
  const data=localReview(),rows=dueRows();
  const ranked=window.CK83Recall?.rankDue?.(rows,data.review,data.mistakes)||rows;
- focusIds=ranked.filter(r=>valid(r.id)).slice(0,n).map(r=>r.id);
- if(!focusIds.length){focusMode=false;return 0;}
- focusSize=n;focusIndex=0;focusRevealed=false;focusStats={again:0,remember:0,skip:0};
- focusMode=true;return focusIds.length;
+ const chosen=[...new Set(ranked.filter(r=>validFocusId(r.id)&&valid(r.id)).map(r=>r.id))].slice(0,n);
+ if(!chosen.length)return 0;
+ focusIds=chosen;focusSize=n;focusIndex=0;focusRevealed=false;focusStats={again:0,remember:0,skip:0};
+ focusMode=true;focusPaused=false;focusPending=null;focusSubject=subject;persistFocus();return focusIds.length;
 }
 function revealFocus(){
  if(!focusMode||focusIndex>=focusIds.length)return false;
- focusRevealed=true;return true;
+ focusRevealed=true;persistFocus();return true;
 }
 function answerFocus(outcome){
  if(!focusMode||focusIndex>=focusIds.length||!focusRevealed||
   !['again','remember'].includes(outcome))return false;
  const id=focusIds[focusIndex];
- if(!valid(id)||!window.CK79Study?.markRecall?.(id,outcome))return false;
+ if(!valid(id))return false;
+ focusPending={id,outcome,at:Date.now()};persistFocus();
+ let saved=false;
+ try{saved=window.CK79Study?.markRecall?.(id,outcome)===true;}catch{}
+ if(!saved){focusPending=null;persistFocus();return false;}
+ focusPending=null;
  focusStats[outcome]++;
  focusIndex++;focusRevealed=false;
- revealed.delete(id);
+ revealed.delete(id);persistFocus();
  return true;
 }
 function skipFocus(){
  if(!focusMode||focusIndex>=focusIds.length)return false;
- focusStats.skip++;focusIndex++;focusRevealed=false;return true;
+ focusStats.skip++;focusIndex++;focusRevealed=false;persistFocus();return true;
 }
 function finishFocus(){
- focusMode=false;focusIds=[];focusIndex=0;focusRevealed=false;
+ focusMode=false;focusPaused=false;focusPending=null;focusIds=[];focusIndex=0;focusRevealed=false;
+ try{window.sessionStorage?.removeItem(FOCUS_KEY);focusStorageIssue='';}catch{}
  return true;
 }
+function paintFocus(){paint();document.querySelector('#ck79-review .ck98-focus')?.focus?.();}
 function renderFocus(){
  const total=focusIds.length,current=focusIds[focusIndex];
  if(!total)return '<p>현재 복습 대기 문항이 없습니다.</p>';
- const controls='<div class="ck98-focus-actions"><button type="button" data-ck79-focus-exit>일반 복습으로</button></div>';
- if(focusIndex>=total)return '<section class="ck98-focus" role="region" aria-label="집중 복습 결과">'+
+ const controls='<div class="ck98-focus-actions"><button type="button" data-ck79-focus-pause>잠시 중단</button>'+
+ '<button type="button" data-ck79-focus-export>진행 요약 TXT</button>'+
+ '<button type="button" data-ck79-focus-exit>종료·임시 진행기록 삭제</button></div>';
+ if(focusIndex>=total)return '<section class="ck98-focus" role="region" aria-label="집중 복습 결과" tabindex="-1">'+
   '<h4>집중 인출 복습 완료</h4><p>총 '+total+'문항 · 기억 '+focusStats.remember+'건 · 재복습 '+focusStats.again+
   '건 · 건너뜀 '+focusStats.skip+'건</p>'+
   '<p>기억 평가 결과만 개인 복습기록에 저장되었습니다. 미평가 문항의 정답은 바뀌지 않았습니다.</p>'+
   controls+'<button type="button" data-ck79-focus-restart>새 집중 복습</button></section>';
  const q=index()[current];
- if(!q?.verified)return '<section class="ck98-focus"><p>공식 등록 문항을 읽을 수 없습니다: '+esc(current)+'</p>'+
+ if(!valid(current))return '<section class="ck98-focus" tabindex="-1"><p>공식 기출 문항을 읽는 중입니다: '+esc(current)+'</p>'+
+ '<button type="button" data-ck79-focus-reload="'+esc(current)+'">공식 문항 다시 불러오기</button>'+
   '<button type="button" data-ck79-focus-skip>건너뛰기</button>'+controls+'</section>';
  const marks=['①','②','③','④','⑤'];
  return '<section class="ck98-focus" role="region" aria-label="집중 인출 복습" tabindex="-1">'+
@@ -152,7 +226,9 @@ function renderReview(){
   '<div class="ck98-review-tools"><label>집중 복습 문항 수 <select data-ck79-focus-size>'+[10,20,40].map(n=>
     '<option value="'+n+'"'+(focusSize===n?' selected':'')+'>'+n+'문항</option>').join('')+'</select></label>'+
   '<button type="button" data-ck79-focus-start'+(!ordered.length?' disabled':'')+'>집중 복습 시작</button>'+
-  '<button type="button" data-ck79-export>복습 대기 TXT</button></div>'+
+  '<button type="button" data-ck79-export>복습 대기 TXT</button>'+
+ (focusPaused&&focusIds.length?'<button type="button" data-ck79-focus-resume>이전 집중 복습 이어하기 ('+focusIndex+'/'+focusIds.length+')</button>':'')+
+ (focusStorageIssue?'<small role="status">'+esc(focusStorageIssue)+'</small>':'')+'</div>'+
   '<div class="ck79-review-list">'+(shown.length?shown.map(r=>row(index()[r.id],r.id,r.reason,data.review[r.id])).join(''):
    '<p>현재 복습 대기 문항이 없습니다. 기출 시험 오답이나 인출 실패가 발생하면 여기에 연결됩니다.</p>')+'</div>'+
   (ordered.length?'<nav class="ck79-review-pages" aria-label="복습 문항 페이지"><span>'+Math.min(start+1,ordered.length)+'–'+
@@ -242,26 +318,36 @@ function openQuestion(id){
 document.addEventListener('click',event=>{
  const t=event.target.closest?.('[data-ck79-toggle],[data-ck79-tab],[data-ck79-show],[data-ck79-mark],[data-ck79-open],[data-ck79-edit],[data-ck79-concept],[data-ck79-prevpage],[data-ck79-nextpage],'+
  '[data-ck79-focus-start],[data-ck79-focus-reveal],[data-ck79-focus-grade],[data-ck79-focus-skip],'+
- '[data-ck79-focus-exit],[data-ck79-focus-restart],[data-ck79-export]');
+ '[data-ck79-focus-exit],[data-ck79-focus-restart],[data-ck79-focus-pause],[data-ck79-focus-resume],[data-ck79-focus-export],[data-ck79-focus-reload],[data-ck79-export]');
  if(!t)return;
  if(t.hasAttribute('data-ck79-toggle')){
   open=!open;t.setAttribute('aria-expanded',String(open));t.textContent=open?'복습 접기':'복습 열기';
   const body=document.querySelector('#ck79-review [data-ck79-body]');if(body)body.hidden=!open;
   if(open)paint();return;
  }
- if(t.hasAttribute('data-ck79-tab')){tab=t.dataset.ck79Tab;page=0;finishFocus();paint();return;}
+ if(t.hasAttribute('data-ck79-tab')){tab=t.dataset.ck79Tab;page=0;pauseFocus();paint();return;}
  if(t.hasAttribute('data-ck79-focus-start')||t.hasAttribute('data-ck79-focus-restart')){
+  if(focusPaused&&focusIds.length&&focusIndex<focusIds.length&&
+   window.confirm&&!window.confirm('이전 집중 복습 진행이 남아 있습니다. 새 세션으로 바꾸시겠습니까?'))return;
   if(!beginFocus()){status('복습 시점이 도래한 문항이 없습니다.');return;}
-  paint();document.querySelector('#ck79-review .ck98-focus')?.focus?.();return;
+  paintFocus();return;
+ }
+ if(t.hasAttribute('data-ck79-focus-pause')){pauseFocus();paint();return;}
+ if(t.hasAttribute('data-ck79-focus-resume')){if(resumeFocus())paintFocus();return;}
+ if(t.hasAttribute('data-ck79-focus-export')){if(!exportFocusSummary())status('진행 요약 TXT 저장 실패');return;}
+ if(t.hasAttribute('data-ck79-focus-reload')){
+  const id=t.dataset.ck79FocusReload,y=Number(id.split('-')[0]);
+  if(y<2021&&window.CK89OfficialBank?.loadYear){window.CK89OfficialBank.loadYear(y).then(()=>paint()).catch(err=>status('공식 문항 로딩 실패: '+err.message));}
+  else status('공식 문항이 없거나 아직 검증되지 않았습니다.');return;
  }
  if(t.hasAttribute('data-ck79-focus-exit')){finishFocus();paint();return;}
- if(t.hasAttribute('data-ck79-focus-reveal')){if(revealFocus())paint();return;}
+ if(t.hasAttribute('data-ck79-focus-reveal')){if(revealFocus())paintFocus();return;}
  if(t.hasAttribute('data-ck79-focus-grade')){
-  if(answerFocus(t.dataset.ck79FocusGrade))paint();
+  if(answerFocus(t.dataset.ck79FocusGrade))paintFocus();
   else status('복습 평가 저장 실패 · 현재 문항은 유지됩니다. 브라우저 용량·상태를 확인하세요.');
   return;
  }
- if(t.hasAttribute('data-ck79-focus-skip')){if(skipFocus())paint();return;}
+ if(t.hasAttribute('data-ck79-focus-skip')){if(skipFocus())paintFocus();return;}
  if(t.hasAttribute('data-ck79-export')){if(!exportDue())status('복습 TXT 저장 실패 · 브라우저 다운로드 권한을 확인하세요.');return;}
  if(t.hasAttribute('data-ck79-prevpage')){page=Math.max(0,page-1);paint();return;}
  if(t.hasAttribute('data-ck79-nextpage')){page++;paint();return;}
@@ -281,7 +367,7 @@ document.addEventListener('click',event=>{
  if(t.hasAttribute('data-ck79-concept')){selectedConcept=t.dataset.ck79Concept;paint();}
 });
 document.addEventListener('change',e=>{
- if(e.target?.matches?.('[data-ck79-subject]')){subject=e.target.value;page=0;finishFocus();paint();}
+ if(e.target?.matches?.('[data-ck79-subject]')){pauseFocus();subject=e.target.value;page=0;paint();}
  if(e.target?.matches?.('[data-ck79-focus-size]'))focusSize=[10,20,40].includes(Number(e.target.value))?Number(e.target.value):10;
 });
 document.addEventListener('input',e=>{
@@ -300,20 +386,22 @@ document.addEventListener('keydown',event=>{
  if(!focusMode||tab!=='review'||!open||event.isComposing||event.repeat||event.altKey||
   event.ctrlKey||event.metaKey||/INPUT|TEXTAREA|SELECT/.test(event.target?.tagName||'')||
   !event.target?.closest?.('#ck79-review'))return;
- if(event.key===' '&&revealFocus()){event.preventDefault();paint();}
- else if(event.key==='1'&&focusRevealed){event.preventDefault();if(answerFocus('again'))paint();}
- else if(event.key==='2'&&focusRevealed){event.preventDefault();if(answerFocus('remember'))paint();}
+ if(event.key===' '&&revealFocus()){event.preventDefault();paintFocus();}
+ else if(event.key==='1'&&focusRevealed){event.preventDefault();if(answerFocus('again'))paintFocus();}
+ else if(event.key==='2'&&focusRevealed){event.preventDefault();if(answerFocus('remember'))paintFocus();}
 });
 let observer;
 function schedule(){
  if(scheduled)return;scheduled=true;
  requestAnimationFrame(()=>{scheduled=false;mount();if(open)paint();});
 }
+restoreFocus();
+window.addEventListener('pagehide',()=>{if(focusIds.length)persistFocus();});
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount,{once:true});else mount();
 window.addEventListener('ck:official-bank-ready',()=>{if(open)paint();});
 const main=document.getElementById('main');
 if(main&&window.MutationObserver){observer=new MutationObserver(records=>{
  if(records.some(x=>Array.from(x.addedNodes).some(n=>n.nodeType===1&&(n.matches?.('.ck-v7-stage,#ck76-search')||n.querySelector?.('#ck76-search')))))schedule();
 });observer.observe(main,{childList:true,subtree:true});}
-window.CK79Review=Object.freeze({dueRows,dueReport,openQuestion,focusStatus,beginFocus,revealFocus,answerFocus,skipFocus,finishFocus,exportDue,ranked:()=>candidates?.perConceptCandidates||[],getStatus:()=>({open,tab,loaded:Boolean(candidates),focus:focusStatus()})});
+window.CK79Review=Object.freeze({dueRows,dueReport,openQuestion,focusStatus,sanitizeFocus,restoreFocus,beginFocus,revealFocus,answerFocus,skipFocus,pauseFocus,resumeFocus,finishFocus,exportDue,exportFocusSummary,ranked:()=>candidates?.perConceptCandidates||[],getStatus:()=>({open,tab,loaded:Boolean(candidates),focus:focusStatus()})});
 })();

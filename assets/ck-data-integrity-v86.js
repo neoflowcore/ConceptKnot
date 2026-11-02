@@ -4,7 +4,7 @@
  */
 (function(){
 'use strict';
-const MAX_FILE=8*1024*1024;
+const MAX_FILE=16*1024*1024;
 const KEY_LIMITS=Object.freeze({
  'ck10-exam-final-v1':250000,
  'ck11-final-page-count':8,
@@ -125,17 +125,17 @@ function restoreExtras(data,keys,storage=localStorage){
  if(data?.__ck79Extras==null)return {ok:true,changed:[],rollbackFailures:[]};
  const extra=data.__ck79Extras;
  if(!isObject(extra)||extra.format!==1||!isObject(extra.local))throw Error('추가 기록 백업 구조 오류');
- const entries=[];
- for(const key of keys||Object.keys(KEY_LIMITS)){
-  if(has(extra.local,key)){
-   if(!validateExtra(key,extra.local[key]))throw Error('추가 개인 기록 검증 실패: '+key);
-   entries.push([key,extra.local[key]]);
-  }
+ const entries=[],selected=new Set(keys||Object.keys(KEY_LIMITS));
+ for(const [key,raw] of Object.entries(extra.local)){
+  if(!has(KEY_LIMITS,key))throw Error('지원하지 않는 추가 기록이 있습니다: '+key);
+  if(!selected.has(key))throw Error('선택한 복원 범위 밖의 기록이 있습니다: '+key);
+  if(!validateExtra(key,raw))throw Error('추가 개인 기록 검증 실패: '+key);
+  entries.push([key,raw]);
  }
  return transaction(entries,storage);
 }
 function validateRestoreFile(file){
- if(!file||typeof file.size!=='number'||file.size<1||file.size>MAX_FILE)throw Error('백업 파일은 8MB 이하 JSON이어야 합니다.');
+ if(!file||typeof file.size!=='number'||file.size<1||file.size>MAX_FILE)throw Error('백업 파일은 16MB 이하 JSON이어야 합니다.');
  return true;
 }
 window.CK86Integrity=Object.freeze({validateMain,validateExtra,stage,apply,transaction,restoreExtras,
