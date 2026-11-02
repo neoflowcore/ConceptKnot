@@ -31,14 +31,25 @@ function sanitize(raw){
   restWeekdays:[...raw.restWeekdays].sort((a,b)=>a-b),holidays:[...raw.holidays].sort(),
   updatedAt:Number.isFinite(Number(raw.updatedAt))?Math.max(0,Number(raw.updatedAt)):0};
 }
+let storageIssue='',lastRaw=undefined;
 function fromStorage(){
- try{return sanitize(JSON.parse(localStorage.getItem(KEY)||'null'))||defaults();}catch{return defaults();}
+ try{
+  const raw=localStorage.getItem(KEY);
+  if(raw===null){storageIssue='';lastRaw=null;return defaults();}
+  const value=sanitize(JSON.parse(raw));
+  if(!value){storageIssue='학습계획 데이터가 손상됐습니다. 원본을 보호하기 위해 저장을 차단합니다.';return defaults();}
+  storageIssue='';lastRaw=raw;return value;
+ }catch{storageIssue='학습계획 데이터를 읽지 못했습니다. 저장을 차단합니다.';return defaults();}
 }
 let settings=fromStorage(),open=false,root=null,status='',showDays=14,queued=false;
 function saveSettings(next){
+ if(storageIssue){status=storageIssue;return false;}
  const data=sanitize(next);if(!data)return false;
- try{localStorage.setItem(KEY,JSON.stringify(data));settings=data;status='개인 학습 설정 저장됨';return true;}
- catch{status='저장 실패: 저장공간 또는 브라우저 권한을 확인하세요.';return false;}
+ try{
+  if(localStorage.getItem(KEY)!==lastRaw){status='다른 탭에서 학습계획이 수정되었습니다. 새로고침 후 저장하세요.';return false;}
+  const raw=JSON.stringify(data);localStorage.setItem(KEY,raw);lastRaw=raw;
+  settings=data;status='개인 학습 설정 저장됨';return true;
+ }catch{status='저장 실패: 저장공간 또는 브라우저 권한을 확인하세요.';return false;}
 }
 function examDateFromMain(){
  const s=window.CK79Study?.snapshot?.();
@@ -221,6 +232,6 @@ if(main&&window.MutationObserver)new MutationObserver(changes=>{
   (n.matches?.('.ck79-plan-controls')||n.querySelector?.('.ck79-plan-controls')))))scheduleMount();
 }).observe(main,{subtree:true,childList:true});
 window.CK84Plan=Object.freeze({defaults,sanitize,compute,isoValid,todayKst,kstWeekday,
- getState:()=>({open,settings:{...settings},days:showDays}),
+ getState:()=>({open,settings:{...settings},days:showDays,storageIssue}),
  open:()=>{mount();if(root&&!open)toggle();}});
 })();

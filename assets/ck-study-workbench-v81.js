@@ -29,14 +29,23 @@ function sanitizeProgress(raw){
  }
  return result;
 }
+let storageIssue='',lastRaw=undefined;
 function readLocal(){
- try{return sanitizeProgress(JSON.parse(localStorage.getItem(KEY)||'null'))||empty();}
- catch{return empty();}
+ try{
+  const raw=localStorage.getItem(KEY);
+  if(raw===null){storageIssue='';lastRaw=null;return empty();}
+  const clean=sanitizeProgress(JSON.parse(raw));
+  if(!clean){storageIssue='검토 작업대 저장 데이터가 손상됐습니다. 원본 백업 전 저장을 차단합니다.';return empty();}
+  storageIssue='';lastRaw=raw;return clean;
+ }catch{storageIssue='검토 작업대 데이터를 읽지 못했습니다. 원본을 보호합니다.';return empty();}
 }
 function persist(next){
+ if(storageIssue)return false;
  const clean=sanitizeProgress(next);if(!clean)return false;
- try{localStorage.setItem(KEY,JSON.stringify(clean));local=clean;return true;}
- catch{return false;}
+ try{
+  if(localStorage.getItem(KEY)!==lastRaw){storageIssue='다른 탭의 기록 변경이 감지됐습니다. 새로고침 후 저장하세요.';return false;}
+  const raw=JSON.stringify(clean);localStorage.setItem(KEY,raw);lastRaw=raw;local=clean;return true;
+ }catch{return false;}
 }
 function changeProgress(id,part){
  if(!isId(id)||official()[id]?.verified!==true)return false;
@@ -45,7 +54,7 @@ function changeProgress(id,part){
   bookmark:typeof part.bookmark==='boolean'?part.bookmark:previous.bookmark,updatedAt:Date.now()};
  const next={...local,records:{...local.records,[id]:updated}};
  const saved=persist(next);
- message(saved?'개인 작업 상태 저장됨 · 공식 해설 검수 상태는 바뀌지 않았습니다.':'저장 실패 · 브라우저 저장공간 또는 권한을 확인하세요.');
+ message(saved?'개인 작업 상태 저장됨 · 공식 해설 검수 상태는 바뀌지 않았습니다.':storageIssue||'저장 실패 · 브라우저 저장공간 또는 권한을 확인하세요.');
  return saved;
 }
 function personalDrafts(){
@@ -423,6 +432,6 @@ if(main&&window.MutationObserver)new MutationObserver(changes=>{
  if(!document.getElementById('ck81-workbench')&&changes.some(x=>x.addedNodes.length))scheduleMount();
 }).observe(main,{subtree:true,childList:true});
 window.CK81Workbench=Object.freeze({sanitizeProgress,assessDraft,specialAnswer,matchingRows,summary,
- getState:()=>({shown,loaded:rows?.length||0,loadErrors,filters:{...view},progress:Object.keys(local.records).length}),
+ getState:()=>({shown,loaded:rows?.length||0,loadErrors,filters:{...view},progress:Object.keys(local.records).length,storageIssue}),
  open:()=>{mount();if(!shown)toggle();}});
 })();

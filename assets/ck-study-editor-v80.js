@@ -9,14 +9,38 @@ const questionId=id=>/^20(?:2[1-5])-(?:[1-9]|[1-7]\d|80)$/.test(String(id||''));
 const MAX={short:450,reason:4000,option:1600,evidence:1200,hold:550};
 const clip=(v,n)=>String(v??'').trim().slice(0,n);
 let selected='',record=null,loaded=new Map(),open=false,editing=false,lastStatus='대기';
-const store=()=>{try{const obj=JSON.parse(localStorage.getItem(KEY)||'{}');return obj&&typeof obj==='object'&&!Array.isArray(obj)?obj:{};}catch{return {};}};
+let storageIssue='',lastRaw=undefined;
+const store=()=>{
+ try{
+  const raw=localStorage.getItem(KEY);
+  if(raw===null){if(lastRaw===undefined)lastRaw=null;storageIssue='';return {};}
+  const data=JSON.parse(raw);
+  if(!data||typeof data!=='object'||Array.isArray(data)){
+   storageIssue='개인 해설 초안 저장 형식이 손상되었습니다. 내 데이터에서 원본을 내려받으세요.';
+   return {};
+  }
+  if(lastRaw===undefined)lastRaw=raw;
+  storageIssue='';return data;
+ }catch{
+  storageIssue='개인 해설 초안 저장 내용을 읽지 못했습니다. 기존 데이터를 보호하기 위해 저장을 차단합니다.';
+  return {};
+ }
+};
 const count=()=>Object.keys(store()).filter(questionId).length;
 function saveToStore(id,draft){
  if(!questionId(id)||!draft||typeof draft!=='object')return false;
  const current=store();
- if(Object.keys(current).length>MAX_RECORDS+5)return false;
- current[id]=draft;
- try{localStorage.setItem(KEY,JSON.stringify(current));return true;}catch{return false;}
+ if(storageIssue||Object.keys(current).length>MAX_RECORDS+5)return false;
+ try{
+  const raw=localStorage.getItem(KEY);
+  if(lastRaw!==raw){
+   storageIssue='다른 탭에서 해설 초안이 수정되었습니다. 기존 편집본을 백업하고 새로고침해 주세요.';
+   return false;
+  }
+  current[id]=draft;
+  const next=JSON.stringify(current);
+  localStorage.setItem(KEY,next);lastRaw=next;storageIssue='';return true;
+ }catch{return false;}
 }
 function patchYear(year){if(loaded.has(year))return Promise.resolve(loaded.get(year));
  return fetch('./data/explanations/official-'+year+'.json',{cache:'force-cache'})
@@ -92,7 +116,7 @@ function collect(){
 function save(){
  const draft=collect();if(!draft)return false;
  if(draft.status==='review_hold'&&!draft.reviewHoldReason){setStatus('보류로 저장하려면 보류 사유를 적어 주세요.');return false;}
- if(!saveToStore(selected,draft)){setStatus('저장 실패 · 용량 또는 저장 권한 확인 필요');return false;}
+ if(!saveToStore(selected,draft)){setStatus(storageIssue||'저장 실패 · 용량 또는 저장 권한 확인 필요');return false;}
  record=draft;editing=false;setStatus('개인 초안 저장됨 · 공식 해설 게시/검수와는 별개입니다.');return true;
 }
 function setVisible(yes){const w=panel();if(!w)return;open=yes;w.hidden=!yes;
@@ -146,10 +170,14 @@ async function importJson(file){
   if(items.length>MAX_RECORDS)throw Error('400문항 초과');
   const clean=items.map(([id,v])=>[id,validateImportRecord(id,v)]);
   if(clean.some(([id,v])=>!v))throw Error('문항 ID, 상태 또는 선지 검토 형식이 잘못되었습니다.');
-  const prior=store(),overlap=clean.filter(([id])=>prior[id]).length;
+  const prior=store();
+  if(storageIssue)throw Error(storageIssue);
+  if(localStorage.getItem(KEY)!==lastRaw)throw Error('다른 탭의 변경이 감지되었습니다. 새로고침 후 복원하세요.');
+  const overlap=clean.filter(([id])=>prior[id]).length;
   if(overlap&&!window.confirm?.('기존 개인 초안 '+overlap+'건이 교체됩니다. 계속할까요?'))return;
   const merged={...prior,...Object.fromEntries(clean)};
-  localStorage.setItem(KEY,JSON.stringify(merged));
+  const next=JSON.stringify(merged);
+  localStorage.setItem(KEY,next);lastRaw=next;storageIssue='';
   setStatus('개인 초안 '+clean.length+'건을 검증 후 불러왔습니다. 공식 해설 파일은 변경되지 않았습니다.');
   if(questionId(selected)){const w=panel();if(w){w.dataset.ck80For='';setVisible(false);showEditor();}}
  }catch(e){setStatus('가져오기 실패 · '+(e.message||'JSON 형식 확인'));}
@@ -173,5 +201,5 @@ document.addEventListener('click',e=>{
   e.preventDefault();e.stopImmediatePropagation();
  }else editing=false;
 },true);
-window.CK80Editorial=Object.freeze({count,lookup:id=>store()[id]||null,validateImportRecord,getStatus:()=>({selected,open,editing,lastStatus})});
+window.CK80Editorial=Object.freeze({count,lookup:id=>store()[id]||null,validateImportRecord,getStatus:()=>({selected,open,editing,lastStatus,storageIssue})});
 })();

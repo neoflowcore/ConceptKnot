@@ -23,13 +23,27 @@ function sanitize(raw){
  }
  return clean;
 }
-function read(){try{return sanitize(JSON.parse(localStorage.getItem(KEY)||'null'))||empty();}catch{return empty();}}
+let storageIssue='',lastRaw=undefined;
+function read(){
+ try{
+  const raw=localStorage.getItem(KEY);
+  if(raw===null){storageIssue='';lastRaw=null;return empty();}
+  const result=sanitize(JSON.parse(raw));
+  if(!result){storageIssue='개념 연결 기록이 손상됐습니다. 원본을 보호하기 위해 저장을 차단합니다.';return empty();}
+  storageIssue='';lastRaw=raw;return result;
+ }catch{storageIssue='개념 연결 기록을 읽지 못했습니다. 저장을 차단합니다.';return empty();}
+}
 let state=read(),taxonomy=null,candidates=null,loading=null,root=null,expanded=false,selectedId='2025-1',selectedConcept='',status='',queued=false;
 const unsavedChoices=new Map();
 const chosenFor=id=>new Set(unsavedChoices.get(id)||state.records[id]?.conceptIds||[]);
 function persist(next){
+ if(storageIssue)return false;
  const clean=sanitize(next);if(!clean)return false;
- try{localStorage.setItem(KEY,JSON.stringify(clean));state=clean;document.dispatchEvent(new Event('ck:personal-links-updated'));return true;}catch{return false;}
+ try{
+  if(localStorage.getItem(KEY)!==lastRaw){storageIssue='다른 탭에서 개념 연결을 수정했습니다. 새로고침 후 저장하세요.';return false;}
+  const raw=JSON.stringify(clean);localStorage.setItem(KEY,raw);lastRaw=raw;
+  state=clean;document.dispatchEvent(new Event('ck:personal-links-updated'));return true;
+ }catch{return false;}
 }
 function records(){return JSON.parse(JSON.stringify(state.records));}
 function getLink(id){return state.records[id]?JSON.parse(JSON.stringify(state.records[id])):null;}
@@ -223,6 +237,6 @@ if(window.MutationObserver)new MutationObserver(changes=>{
   changes.some(c=>[...c.addedNodes].some(n=>n.nodeType===1&&(n.matches?.('.ck78-modal-scroll')||n.querySelector?.('.ck78-modal-scroll')))))schedule();
 }).observe(document.body,{childList:true,subtree:true});
 window.CK83Links=Object.freeze({sanitize,getRecords:records,getLink,linkedQuestions:linked,
- getStatus:()=>({linked:Object.keys(state.records).length,concepts:taxonomy?.size||0,unsavedEdits:unsavedChoices.size,expanded}),
+ getStatus:()=>({linked:Object.keys(state.records).length,concepts:taxonomy?.size||0,unsavedEdits:unsavedChoices.size,storageIssue,expanded}),
  open:()=>{mount();if(root&&!expanded)toggle();}});
 })();
