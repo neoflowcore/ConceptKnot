@@ -36,28 +36,41 @@ function compute({study={},sessions=[],links={},official=bank(),now=Date.now(),d
  histories.forEach(x=>{const d=dayKey(x.submittedAt);if(dayMap[d])dayMap[d].exams++;});
  const outcomes={correct:0,answered:0,wrong:0,blank:0};
  const statsBySubject={estate:{correct:0,answered:0,score:[]},civil:{correct:0,answered:0,score:[]}};
- const concept=new Map(),perQuestion=new Map();
+ const concept=new Map(),perQuestion=new Map(),yearly=new Map(),trends=[];
  for(const exam of histories){
   const year=Number(exam.year);
+  if(!Number.isInteger(year)||year<2016||year>2025)continue;
+  const sample={estate:{seen:0,correct:0},civil:{seen:0,correct:0}};
+  const group=yearly.get(year)||{year,attempts:0,seen:0,answered:0,correct:0,blank:0};
+  group.attempts++;
   for(let i=0;i<80;i++){
    const q=official[year+'-'+(i+1)],answer=exam.answers[i],sub=i<40?'estate':'civil';
    if(!q?.verified||(subject!=='all'&&sub!==subject))continue;
-   if(answer===null||answer===undefined){outcomes.blank++;continue;}
+   sample[sub].seen++;group.seen++;
+   if(answer===null||answer===undefined){outcomes.blank++;group.blank++;continue;}
    if(!Number.isInteger(answer)||answer<1||answer>5)continue;
    const correct=Array.isArray(q.correct)&&q.correct.map(Number).includes(answer);
-   outcomes.answered++;statsBySubject[sub].answered++;
-   if(correct){outcomes.correct++;statsBySubject[sub].correct++;}
+   outcomes.answered++;statsBySubject[sub].answered++;group.answered++;
+   if(correct){outcomes.correct++;statsBySubject[sub].correct++;sample[sub].correct++;group.correct++;}
    else{outcomes.wrong++;}
    const id=q.id,history=perQuestion.get(id)||[];
    history.push({at:exam.submittedAt,correct});perQuestion.set(id,history);
-   for(const c of links[id]?.conceptIds||[]){
+   for(const c of (Array.isArray(links[id]?.conceptIds)?links[id].conceptIds:[])){
+    if(typeof c!=='string')continue;
     const entry=concept.get(c)||{id:c,correct:0,answered:0,questions:new Set()};
     entry.answered++;if(correct)entry.correct++;
     entry.questions.add(id);concept.set(c,entry);
    }
   }
-  if(subject==='all'||subject==='estate')statsBySubject.estate.score.push(Number(exam.score?.estate)||0);
-  if(subject==='all'||subject==='civil')statsBySubject.civil.score.push(Number(exam.score?.civil)||0);
+  yearly.set(year,group);
+  const estate=sample.estate.seen===40?sample.estate.correct*2.5:null;
+  const civil=sample.civil.seen===40?sample.civil.correct*2.5:null;
+  if(estate!==null)statsBySubject.estate.score.push(estate);
+  if(civil!==null)statsBySubject.civil.score.push(civil);
+  if(estate!==null||civil!==null)trends.push({year,at:exam.submittedAt,estate,civil,
+   average:estate!==null&&civil!==null?(estate+civil)/2:null,
+   passed:estate!==null&&civil!==null?estate>=40&&civil>=40&&(estate+civil)/2>=60:null});
+
  }
  let improved=0,regressed=0,repeatQuestions=0;
  for(const seq of perQuestion.values()){
@@ -70,12 +83,13 @@ function compute({study={},sessions=[],links={},official=bank(),now=Date.now(),d
  const weakConcepts=[...concept.values()].map(c=>({id:c.id,correct:c.correct,answered:c.answered,
   accuracy:Math.round(c.correct*100/c.answered),questions:c.questions.size}))
   .sort((a,b)=>a.accuracy-b.accuracy||b.answered-a.answered||a.id.localeCompare(b.id));
- const dueIds=new Set(Object.entries(study.review||{}).filter(([id,row])=>official[id]?.verified&&
-  (subject==='all'||official[id]?.subject===subject)&&Number(row?.nextAt)>0&&row.nextAt<=now).map(([id])=>id));
- for(const r of window.CK86ExamBridge?.pending?.(now)||[]){
-  if(official[r.id]?.verified&&(subject==='all'||official[r.id]?.subject===subject))dueIds.add(r.id);
- }
- const due=dueIds.size;
+ const queue=window.CK86ExamBridge?.getDue?.({at:now,attempts:sessions,
+  reviews:study.review||{},mistakes:study.mistakes||[],bank:official,subject})||{due:0,future:0};
+ const due=queue.due;
+ const optionCoverage=window.CK83Links?.reviewSummary?.()||{assessed:0,reasoned:0,sourceLinked:0,totalOptions:4000};
+ const sortedTrends=trends.slice().sort((a,b)=>a.at-b.at);
+ const scores=sortedTrends.map(x=>subject==='estate'?x.estate:subject==='civil'?x.civil:x.average).filter(x=>x!==null);
+ const firstScore=scores.length?scores[0]:null,lastScore=scores.length?scores.at(-1):null;
  const average=values=>values.length?Number((values.reduce((a,b)=>a+b,0)/values.length).toFixed(1)):null;
  return {
   days:n,subject,from:dayKeys[0],to:dayKeys.at(-1),daily:dayKeys.map(d=>dayMap[d]),
@@ -87,7 +101,10 @@ function compute({study={},sessions=[],links={},official=bank(),now=Date.now(),d
   accuracy:outcomes.answered?Math.round(outcomes.correct*100/outcomes.answered):null,
   averageEstate:average(statsBySubject.estate.score),
   averageCivil:average(statsBySubject.civil.score),
-  repeatQuestions,improved,regressed,due,weakConcepts,optionCoverage,
+  repeatQuestions,improved,regressed,due,future:queue.future,weakConcepts,optionCoverage,
+  years:[...yearly.values()].filter(x=>x.seen>0).sort((a,b)=>b.year-a.year),
+  trends:sortedTrends.slice(-10),firstScore,lastScore,
+  scoreDelta:scores.length>=2?Number((lastScore-firstScore).toFixed(1)):null,
   conceptSample:weakConcepts.reduce((sum,x)=>sum+x.answered,0)
  };
 }
@@ -110,7 +127,7 @@ function renderReport(report){
   ['반복 풀이 개선',report.improved+' / '+report.repeatQuestions+'문항'],['복습 시점 도래',report.due+'문항']
  ];
  const labelMap=window.CK83Links?.getLabels?.()||{};
- const weak=report.weakConcepts.slice(0,12);
+ const weak=report.weakConcepts.slice(0,12),option=report.optionCoverage||{};
  return '<p class="ck83-analytics-warning">다음 수치는 이 브라우저에 기록된 학습 활동만 반영합니다. 미검수 개념 후보·법령·해설을 성적에 반영하지 않으며 합격 확률을 예측하지 않습니다.</p>'+
  '<dl class="ck83-analytics-stats">'+counts.map(([name,value])=>'<div><dt>'+esc(name)+'</dt><dd>'+esc(value)+'</dd></div>').join('')+'</dl>'+
  '<section class="ck83-analytics-section"><h4>일별 학습 활동 · '+report.from+' ~ '+report.to+'</h4>'+barChart(report)+'</section>'+
@@ -120,6 +137,22 @@ function renderReport(report){
   '<div><strong>'+esc(labelMap[c.id]||c.id)+'</strong><span>정답 '+c.correct+'/'+c.answered+
   ' · '+c.accuracy+'%'+(c.answered<5?' · 표본 부족':'')+'</span></div>').join('')+'</div>':
  '<p>아직 사용자 직접 연결과 제출된 시험 응답의 교집합이 없습니다. 기출 ↔ 개념 연결에서 직접 분류하면 여기서 비교할 수 있습니다.</p>')+'</section>'+
+ '<section class="ck83-analytics-section"><h4>공식 기출 연도별 기록</h4><p>선택 기간에 제출한 시험 중 실제 확인된 문항만 집계합니다.</p>'+
+  (report.years.length?'<div class="ck83-yearly-rows">'+report.years.map(x=>
+    '<div><strong>'+x.year+'년 공식 기출 · 제출 '+x.attempts+'회</strong><span>답 '+x.answered+'/'+x.seen+
+    ' · 정답 '+x.correct+' · '+(x.answered?Math.round(x.correct*100/x.answered)+'%':'응답 없음')+'</span></div>').join('')+'</div>':
+    '<p>이 기간에 확인된 공식 기출 응답이 없습니다.</p>')+'</section>'+
+ '<section class="ck83-analytics-section"><h4>최근 실전 점수 추이</h4>'+
+  (report.trends.length?'<div class="ck83-yearly-rows">'+report.trends.map(x=>
+    '<div><strong>'+esc(dayKey(x.at))+' · '+x.year+'년 시험</strong><span>학개론 '+statusCount(x.estate,'점')+
+    ' · 민법 '+statusCount(x.civil,'점')+' · 평균 '+statusCount(x.average,'점')+'</span></div>').join('')+'</div>':
+    '<p>완전하게 확인된 공식 과목 점수가 없습니다.</p>')+
+  '<p>첫 점수 '+statusCount(report.firstScore,'점')+' → 마지막 '+statusCount(report.lastScore,'점')+
+  (report.scoreDelta!==null?' · 변화 '+(report.scoreDelta>0?'+':'')+report.scoreDelta+'점':'')+
+  ' (표본이 적으면 변화량은 불안정합니다)</p></section>'+
+ '<section class="ck83-analytics-section"><h4>4,000개 선지별 개인 검토</h4><p>개인 판단 '+(option.assessed||0)+
+  '/4000 · 근거 '+(option.reasoned||0)+'건 · 출처 '+(option.sourceLinked||0)+
+  '건. 공식 검증 완료로 집계하지 않습니다.</p></section>'+
  '<section class="ck83-analytics-section"><h4>인출 기록·타이핑</h4>'+
  '<p>회상 성공 '+report.recallSuccess+'/'+report.recallCount+
  '회 · 서로 다른 회상 문항 '+report.recallUnique+'개 · 평균 타이핑 정확도 '+

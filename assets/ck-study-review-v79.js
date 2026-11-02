@@ -7,7 +7,8 @@ const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const index=()=>window.RECALL_OFFICIAL||{};
 const valid=id=>index()[id]?.verified===true;
 const shortQuestion=q=>String(q?.question||'').replace(/\s+/g,' ').slice(0,145);
-let open=false,candidates=null,occurrences=null,loading=null,selectedConcept='',subject='all',query='',revealed=new Set(),tab='review',scheduled=false;
+let open=false,candidates=null,occurrences=null,loading=null,selectedConcept='',subject='all',query='',revealed=new Set(),tab='review',scheduled=false,page=0;
+const PAGE_SIZE=24;
 const labels={estate:'학개론',civil:'민법'};
 const now=()=>Date.now();
 const fmt=date=>new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}).format(new Date(date));
@@ -17,37 +18,12 @@ function localReview(){
   review:data.review&&typeof data.review==='object'?data.review:{},
   scores:data.scores||{},notes:data.notes||{}};
 }
-function dueRows(){
+function dueReport(){
  const data=localReview();
- const rows=new Map();
- const latest=new Map();
- for(const attempt of window.CK82FullExam?.getAttempts?.()||[]){
-  if(attempt?.status!=='submitted'||!Array.isArray(attempt.answers)||attempt.answers.length!==80)continue;
-  const at=Number(attempt.submittedAt);if(!Number.isFinite(at)||at<=0)continue;
-  for(let i=0;i<80;i++){
-   const id=attempt.year+'-'+(i+1),q=index()[id],answer=attempt.answers[i];
-   if(!q?.verified||!Array.isArray(q.correct))continue;
-   if(!latest.has(id)||latest.get(id).at<at)latest.set(id,{at,correct:Number.isInteger(answer)&&q.correct.map(Number).includes(answer)});
-  }
- }
- for(const mistake of data.mistakes){
-  const scheduled=data.review?.[mistake?.year+'-'+mistake?.number];
-  if(Number(scheduled?.nextAt)>now())continue;
-  if(mistake?.type!=='exam'||mistake.resolved||!Number.isInteger(Number(mistake.year))||!Number.isInteger(Number(mistake.number)))continue;
-  const id=mistake.year+'-'+mistake.number;
-  const last=latest.get(id);
-  if(valid(id)&&!(last?.correct&&last.at>=Number(mistake.updated||0)))rows.set(id,{id,reason:'내 오답',at:Number(mistake.updated)||0});
- }
- for(const item of window.CK86ExamBridge?.pending?.()||[]){
-  if(valid(item.id)&&!rows.has(item.id))rows.set(item.id,item);
- }
- for(const [id,r] of Object.entries(data.review)){
-  if(!valid(id)||!r||Number(r.nextAt)>now())continue;
-  rows.set(id,{id,reason:'복습 예약',at:Number(r.nextAt)||0});
- }
- return [...rows.values()].filter(r=>subject==='all'||index()[r.id]?.subject===subject)
-  .sort((a,b)=>a.at-b.at||a.id.localeCompare(b.id));
+ return window.CK86ExamBridge?.getDue?.({reviews:data.review,mistakes:data.mistakes,subject})||
+  {rows:[],futureRows:[],cleared:[],due:0,future:0,latestCount:0};
 }
+function dueRows(){return dueReport().rows;}
 function mount(){
  const search=document.getElementById('ck76-search'),host=search?.parentNode||document.querySelector('#main');
  if(!host||document.getElementById('ck79-review'))return;
@@ -72,13 +48,25 @@ function row(q,id,reason,review){
   '</article>';
 }
 function renderReview(){
- const allRows=dueRows(),data=localReview();
- const rows=(window.CK83Recall?.rankDue?.(allRows,data.review,data.mistakes)||allRows).slice(0,80);
- const future=Object.entries(data.review).filter(([id,r])=>valid(id)&&Number(r.nextAt)>now()).length;
- return '<div class="ck79-recap"><span>지금 복습 '+allRows.length+'건'+(allRows.length>80?' · 우선 80건 표시':'')+'</span><span>이후 예약 '+future+'건</span>'+
-  '<span>기억 확인은 선택형 문제의 정답 변경과 무관합니다.</span></div>'+
-  '<div class="ck79-review-list">'+(rows.length?rows.map(r=>row(index()[r.id],r.id,r.reason,data.review[r.id])).join(''):
-   '<p>현재 복습 대기 문항이 없습니다. 10개년 기출을 풀고 오답을 남기면 자동으로 이곳에 연결됩니다.</p>')+'</div>';
+ const report=dueReport(),data=localReview();
+ const ordered=window.CK83Recall?.rankDue?.(report.rows,data.review,data.mistakes)||report.rows;
+ const pages=Math.max(1,Math.ceil(ordered.length/PAGE_SIZE));
+ page=Math.max(0,Math.min(page,pages-1));
+ const start=page*PAGE_SIZE,shown=ordered.slice(start,start+PAGE_SIZE);
+ const future=report.futureRows.slice(0,5);
+ const categories=ordered.reduce((acc,r)=>{acc[r.source]=(acc[r.source]||0)+1;return acc;},{});
+ return '<div class="ck79-recap"><span>지금 복습 '+report.due+'건</span><span>이후 예약 '+report.future+'건</span>'+
+  '<span>실전 오답·미응답 '+(categories['v82-official-mock']||0)+'건 · 기존 오답 '+(categories['personal-mistake']||0)+'건</span>'+
+  '<span>최근 정답·해소 반영 '+report.cleared.length+'건</span></div>'+
+  '<p class="ck79-review-note">마지막 시험·회상·오답 결정의 시각을 비교합니다. 최근 정답이 오래된 오답을 해소할 수 있으며, 이후 회상 예약이 있으면 그 예약이 우선합니다.</p>'+
+  '<div class="ck79-review-list">'+(shown.length?shown.map(r=>row(index()[r.id],r.id,r.reason,data.review[r.id])).join(''):
+   '<p>현재 복습 대기 문항이 없습니다. 기출 시험 오답이나 인출 실패가 발생하면 여기에 연결됩니다.</p>')+'</div>'+
+  (ordered.length?'<nav class="ck79-review-pages" aria-label="복습 문항 페이지"><span>'+Math.min(start+1,ordered.length)+'–'+
+    Math.min(start+shown.length,ordered.length)+' / '+ordered.length+'건 · '+(page+1)+'/'+pages+'쪽</span>'+
+    '<button type="button" data-ck79-prevpage'+(page<=0?' disabled':'')+'>이전 24문항</button>'+
+    '<button type="button" data-ck79-nextpage'+(page>=pages-1?' disabled':'')+'>다음 24문항</button></nav>':'')+
+  (future.length?'<details class="ck79-future"><summary>다가오는 복습 예약 (상위 '+future.length+'건)</summary><ul>'+
+    future.map(r=>'<li>'+esc(r.id)+' · '+fmt(r.at)+'</li>').join('')+'</ul></details>':'');
 }
 async function loadConcepts(){
  if(candidates&&occurrences)return true;
@@ -158,14 +146,16 @@ function openQuestion(id){
  else window.CK76Study?.openQuestion?.(q.year,q.number,q.subject);
 }
 document.addEventListener('click',event=>{
- const t=event.target.closest?.('[data-ck79-toggle],[data-ck79-tab],[data-ck79-show],[data-ck79-mark],[data-ck79-open],[data-ck79-edit],[data-ck79-concept]');
+ const t=event.target.closest?.('[data-ck79-toggle],[data-ck79-tab],[data-ck79-show],[data-ck79-mark],[data-ck79-open],[data-ck79-edit],[data-ck79-concept],[data-ck79-prevpage],[data-ck79-nextpage]');
  if(!t)return;
  if(t.hasAttribute('data-ck79-toggle')){
   open=!open;t.setAttribute('aria-expanded',String(open));t.textContent=open?'복습 접기':'복습 열기';
   const body=document.querySelector('#ck79-review [data-ck79-body]');if(body)body.hidden=!open;
   if(open)paint();return;
  }
- if(t.hasAttribute('data-ck79-tab')){tab=t.dataset.ck79Tab;paint();return;}
+ if(t.hasAttribute('data-ck79-tab')){tab=t.dataset.ck79Tab;page=0;paint();return;}
+ if(t.hasAttribute('data-ck79-prevpage')){page=Math.max(0,page-1);paint();return;}
+ if(t.hasAttribute('data-ck79-nextpage')){page++;paint();return;}
  if(t.hasAttribute('data-ck79-show')){
   const id=t.dataset.ck79Show;
   if(revealed.has(id))revealed.delete(id);else revealed.add(id);
@@ -182,7 +172,7 @@ document.addEventListener('click',event=>{
  if(t.hasAttribute('data-ck79-concept')){selectedConcept=t.dataset.ck79Concept;paint();}
 });
 document.addEventListener('change',e=>{
- if(e.target?.matches?.('[data-ck79-subject]')){subject=e.target.value;paint();}
+ if(e.target?.matches?.('[data-ck79-subject]')){subject=e.target.value;page=0;paint();}
 });
 document.addEventListener('input',e=>{
  if(!e.target?.matches?.('[data-ck79-concept-search]'))return;
@@ -207,5 +197,5 @@ const main=document.getElementById('main');
 if(main&&window.MutationObserver){observer=new MutationObserver(records=>{
  if(records.some(x=>Array.from(x.addedNodes).some(n=>n.nodeType===1&&(n.matches?.('.ck-v7-stage,#ck76-search')||n.querySelector?.('#ck76-search')))))schedule();
 });observer.observe(main,{childList:true,subtree:true});}
-window.CK79Review=Object.freeze({dueRows,openQuestion,ranked:()=>candidates?.perConceptCandidates||[],getStatus:()=>({open,tab,loaded:Boolean(candidates)})});
+window.CK79Review=Object.freeze({dueRows,dueReport,openQuestion,ranked:()=>candidates?.perConceptCandidates||[],getStatus:()=>({open,tab,loaded:Boolean(candidates)})});
 })();

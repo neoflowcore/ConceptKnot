@@ -59,21 +59,24 @@ function effectiveConfig(config=settings){
  return config.examDate||!examDateFromMain()?config:{...config,examDate:examDateFromMain()};
 }
 function studyData(){
- const s=window.CK79Study?.snapshot?.()||{};
- const reviews=s.review&&typeof s.review==='object'?s.review:{};
- const mistakes=(Array.isArray(s.mistakes)?s.mistakes:[]).filter(x=>x?.type==='exam'&&!x.resolved);
- const now=Date.now(),due=Object.entries(reviews).filter(([id,v])=>BANK()[id]?.verified&&Number(v?.nextAt)>0&&Number(v.nextAt)<=now);
- const missed=new Set(mistakes.map(x=>x.year+'-'+x.number));
- const unique=new Set([...due.map(([id])=>id),...missed]);
- for(const row of window.CK86ExamBridge?.pending?.(now)||[])if(BANK()[row.id]?.verified)unique.add(row.id);
+ const study=window.CK79Study?.snapshot?.()||{};
+ const report=window.CK86ExamBridge?.getDue?.({
+  reviews:study.review||{},mistakes:study.mistakes||{},bank:BANK()
+ })||{rows:[],due:0,future:0};
  const sessions=window.CK82FullExam?.getAttempts?.()||[];
- const scores=sessions.filter(x=>x?.status==='submitted'&&Number.isFinite(x.score?.estate)&&Number.isFinite(x.score?.civil));
- const sums=scores.reduce((v,x)=>({estate:v.estate+x.score.estate,civil:v.civil+x.score.civil}),{estate:0,civil:0});
- return {due:unique.size,dueIds:[...unique].filter(id=>BANK()[id]?.verified),
-  mistakes:mistakes.length,examCount:scores.length,
-  estateAverage:scores.length?sums.estate/scores.length:null,
+ const scores=[];
+ for(const row of sessions){
+  if(row?.status!=='submitted'||!window.CK82FullExam?.checkBank?.(row.year)?.ok)continue;
+  const graded=window.CK82FullExam?.gradeAttempt?.(row);
+  if(graded&&Number.isFinite(graded.estate)&&Number.isFinite(graded.civil))scores.push(graded);
+ }
+ const sums=scores.reduce((v,x)=>({estate:v.estate+x.estate,civil:v.civil+x.civil}),{estate:0,civil:0});
+ return {due:report.due,dueIds:report.rows.map(x=>x.id),future:report.future||0,
+  mistakes:report.rows.filter(x=>x.source==='personal-mistake'||x.source==='v82-official-mock').length,
+  examCount:scores.length,estateAverage:scores.length?sums.estate/scores.length:null,
   civilAverage:scores.length?sums.civil/scores.length:null,
-  recallCount:Object.keys(reviews).length};
+  recallCount:Object.keys(study.review||{}).length,
+  source:'verified-local-records'};
 }
 function kstWeekday(iso){return new Date(iso+'T12:00:00+09:00').getUTCDay();}
 function weightedSubject(config,stats,index){
@@ -243,7 +246,7 @@ if(main&&window.MutationObserver)new MutationObserver(changes=>{
   (n.matches?.('.ck79-plan-controls')||n.querySelector?.('.ck79-plan-controls')))))scheduleMount();
 }).observe(main,{subtree:true,childList:true});
 window.addEventListener('ck:official-bank-ready',()=>{if(open)render();});
-window.CK84Plan=Object.freeze({defaults,sanitize,compute,isoValid,todayKst,kstWeekday,
+window.CK84Plan=Object.freeze({defaults,sanitize,compute,isoValid,todayKst,kstWeekday,studyData,
  getState:()=>({open,settings:{...settings},days:showDays,storageIssue}),
  open:()=>{mount();if(root&&!open)toggle();}});
 })();
