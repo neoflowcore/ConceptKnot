@@ -49,11 +49,11 @@ function read(){
   storageIssue='';lastRaw=raw;return result;
  }catch{storageIssue='개념 연결 기록을 읽지 못했습니다. 저장을 차단합니다.';return empty();}
 }
-let state=read(),taxonomy=null,candidates=null,loading=null,root=null,expanded=false,selectedId='2025-1',selectedConcept='',status='',queued=false,dirty=false;
+let state=read(),taxonomy=null,candidates=null,loading=null,root=null,expanded=false,selectedId='2025-1',selectedConcept='',status='',queued=false,dirty=false,storageConflict=false;
 const unsavedChoices=new Map();
 const chosenFor=id=>new Set(unsavedChoices.get(id)||state.records[id]?.conceptIds||[]);
 function persist(next){
- if(storageIssue)return false;
+ if(storageIssue||storageConflict)return false;
  const clean=sanitize(next);if(!clean)return false;
  try{
   if(localStorage.getItem(KEY)!==lastRaw){storageIssue='다른 탭에서 개념 연결을 수정했습니다. 새로고침 후 저장하세요.';return false;}
@@ -178,7 +178,13 @@ function paint(){
  '<button type="button" data-ck83-import>JSON 복원</button><input type="file" data-ck83-file hidden accept=".json,application/json">'+
  '<span data-ck83-status role="status">'+esc(status)+'</span></div>';
 }
+function confirmDiscard(){
+ if(!dirty&&!unsavedChoices.size)return true;
+ if(!window.confirm?.('저장하지 않은 개인 판단·근거가 있습니다. 변경을 버리고 이동할까요?'))return false;
+ dirty=false;unsavedChoices.clear();return true;
+}
 function toggle(){
+ if(expanded&&!confirmDiscard())return;
  expanded=!expanded;
  const button=root?.querySelector('[data-ck83-toggle]'),body=root?.querySelector('[data-ck83-body]');
  if(button){button.setAttribute('aria-expanded',String(expanded));button.textContent=expanded?'개인 연결 접기':'개인 연결 열기';}
@@ -206,7 +212,7 @@ function save(e){
  }
  const record={conceptIds:concepts,evidence:String(e.querySelector('[data-ck83-evidence]')?.value||'').trim().slice(0,1200),
   optionNotes:collectOptionNotes(e,id),updatedAt:Date.now()};
- if(!persist({...state,records:{...state.records,[id]:record}})){actionMessage(e,'저장 실패 · 브라우저 용량을 확인하세요.');return;}
+ if(!persist({...state,records:{...state.records,[id]:record}})){actionMessage(e,storageIssue||(storageConflict?'다른 탭에서 기록 변경 · 복사 후 새로고침 필요':'저장 실패 · 저장공간을 확인하세요.'));return;}
  dirty=false;unsavedChoices.delete(id);actionMessage(e,'개인 연결·선지별 판단을 저장했습니다. 공식 검수와 구별됩니다.');
 }
 function remove(e){
@@ -250,6 +256,7 @@ document.addEventListener('click',event=>{
  }
  if(t.hasAttribute('data-ck83-open')){
   const q=official()[t.dataset.ck83Open];if(!q?.verified)return;
+  if(!confirmDiscard())return;
   selectedId=q.id;
   if(q.year>=2021)window.CK78Analysis?.open?.(q.year,q.number);
   else window.CK76Study?.openQuestion?.(q.year,q.number,q.subject);
@@ -271,6 +278,7 @@ document.addEventListener('change',event=>{
   unsavedChoices.set(id,selected);dirty=true;return;
  }
  if(t.matches?.('[data-ck83-year],[data-ck83-number]')){
+  if(!confirmDiscard()){paint();return;}
   selectedId=Number(root?.querySelector('[data-ck83-year]')?.value)+'-'+Number(root?.querySelector('[data-ck83-number]')?.value);
   if(Number(selectedId.split('-')[0])<2021)
    window.CK89OfficialBank?.loadYear?.(Number(selectedId.split('-')[0])).then(paint)
@@ -288,9 +296,10 @@ document.addEventListener('input',event=>{
  const e=t.closest('[data-ck83-editor]'),box=e?.querySelector('[data-ck83-choices]');
  if(box)box.innerHTML=choices(e.dataset.ck83Editor,t.value);
 });
-window.addEventListener('storage',e=>{if(e.key!==KEY)return;state=read();
- if(dirty||unsavedChoices.size){status='다른 탭에서 개인 기록이 변경되었습니다. 현재 편집 중인 내용은 복사해 보관하고 새로고침하세요.';const el=root?.querySelector('[data-ck83-status]');if(el)el.textContent=status;return;}
- if(expanded)paint();modal();});
+window.addEventListener('storage',e=>{if(e.key!==KEY)return;
+ if(dirty||unsavedChoices.size){storageConflict=true;status='다른 탭의 변경이 감지되어 저장을 차단했습니다. 현재 입력을 복사한 뒤 새로고침하세요.';
+  const el=root?.querySelector('[data-ck83-status]');if(el)el.textContent=status;return;}
+ state=read();if(expanded)paint();modal();});
 window.addEventListener('ck:official-bank-ready',()=>{if(expanded)paint();modal();});
 function schedule(){if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;mount();modal();});}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',schedule,{once:true});else schedule();
@@ -304,7 +313,20 @@ if(window.MutationObserver)new MutationObserver(changes=>{
  if(!d.querySelector('[data-ck83-editor="'+d.dataset.ck78Current+'"]')&&
   changes.some(c=>[...c.addedNodes].some(n=>n.nodeType===1&&(n.matches?.('.ck78-modal-scroll')||n.querySelector?.('.ck78-modal-scroll')))))schedule();
 }).observe(document.body,{childList:true,subtree:true});
-window.CK83Links=Object.freeze({sanitize,getRecords:records,getLink,linkedQuestions:linked,reviewSummary,
- getStatus:()=>({linked:Object.keys(state.records).length,concepts:taxonomy?.size||0,unsavedEdits:unsavedChoices.size+(dirty?1:0),storageIssue,expanded}),
+function openQuestion(id){
+ if(!validId(id))return false;
+ const year=Number(id.split('-')[0]);
+ const show=()=>{if(!confirmDiscard())return false;selectedId=id;mount();if(!root)return false;
+  if(!expanded)toggle();else paint();
+  root.scrollIntoView?.({behavior:'smooth',block:'nearest'});return true;};
+ if(official()[id]?.verified)return show();
+ if(year<=2020&&window.CK89OfficialBank?.loadYear){
+  return window.CK89OfficialBank.loadYear(year).then(()=>official()[id]?.verified?show():false)
+   .catch(e=>{status='공식 문항 로딩 실패: '+e.message;return false;});
+ }
+ return false;
+}
+window.CK83Links=Object.freeze({sanitize,getRecords:records,getLink,linkedQuestions:linked,reviewSummary,openQuestion,
+ getStatus:()=>({linked:Object.keys(state.records).length,concepts:taxonomy?.size||0,unsavedEdits:unsavedChoices.size+(dirty?1:0),storageIssue,storageConflict,expanded}),
  open:()=>{mount();if(root&&!expanded)toggle();}});
 })();

@@ -66,7 +66,8 @@ function row(q,id,reason,review){
   '<div class="ck79-actions"><button type="button" data-ck79-show="'+esc(id)+'">'+(revealed.has(id)?'정답 가리기':'정답 확인')+'</button>'+
   '<button type="button" data-ck79-mark="again" data-ck79-id="'+esc(id)+'">짧게 재복습</button>'+
   '<button type="button" data-ck79-mark="remember" data-ck79-id="'+esc(id)+'">기억했음</button>'+
-  '<button type="button" data-ck79-open="'+esc(id)+'">원문 보기</button></div>'+
+  '<button type="button" data-ck79-open="'+esc(id)+'">원문 보기</button>'+
+  '<button type="button" data-ck79-edit="'+esc(id)+'">선지별 개인 근거 편집</button></div>'+
   (revealed.has(id)?'<p class="ck79-key">공식 채점 처리: '+esc(q.correct.join(' 또는 '))+'번 · '+esc(recognized)+'</p>':'')+
   '</article>';
 }
@@ -157,7 +158,7 @@ function openQuestion(id){
  else window.CK76Study?.openQuestion?.(q.year,q.number,q.subject);
 }
 document.addEventListener('click',event=>{
- const t=event.target.closest?.('[data-ck79-toggle],[data-ck79-tab],[data-ck79-show],[data-ck79-mark],[data-ck79-open],[data-ck79-concept]');
+ const t=event.target.closest?.('[data-ck79-toggle],[data-ck79-tab],[data-ck79-show],[data-ck79-mark],[data-ck79-open],[data-ck79-edit],[data-ck79-concept]');
  if(!t)return;
  if(t.hasAttribute('data-ck79-toggle')){
   open=!open;t.setAttribute('aria-expanded',String(open));t.textContent=open?'복습 접기':'복습 열기';
@@ -177,6 +178,7 @@ document.addEventListener('click',event=>{
   return;
  }
  if(t.hasAttribute('data-ck79-open')){openQuestion(t.dataset.ck79Open);return;}
+ if(t.hasAttribute('data-ck79-edit')){window.CK83Links?.openQuestion?.(t.dataset.ck79Edit);return;}
  if(t.hasAttribute('data-ck79-concept')){selectedConcept=t.dataset.ck79Concept;paint();}
 });
 document.addEventListener('change',e=>{
