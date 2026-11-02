@@ -11,7 +11,7 @@ const KEY_LIMITS=Object.freeze({
  'ck80-explain-drafts-v1':1000000,
  'ck81-review-workbench-v1':1000000,
  'ck82-exam-sessions-v1':2300000,
- 'ck83-personal-concept-links-v1':1300000,
+ 'ck83-personal-concept-links-v1':5200000,
  'ck84-study-plan-v1':20000,
  'ck84-personal-materials-v1':2400000
 });

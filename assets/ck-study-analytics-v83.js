@@ -87,7 +87,7 @@ function compute({study={},sessions=[],links={},official=bank(),now=Date.now(),d
   accuracy:outcomes.answered?Math.round(outcomes.correct*100/outcomes.answered):null,
   averageEstate:average(statsBySubject.estate.score),
   averageCivil:average(statsBySubject.civil.score),
-  repeatQuestions,improved,regressed,due,weakConcepts,
+  repeatQuestions,improved,regressed,due,weakConcepts,optionCoverage,
   conceptSample:weakConcepts.reduce((sum,x)=>sum+x.answered,0)
  };
 }
