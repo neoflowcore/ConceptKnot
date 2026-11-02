@@ -44,7 +44,7 @@ function compute({study={},sessions=[],links={},official=bank(),now=Date.now(),d
    if(!q?.verified||(subject!=='all'&&sub!==subject))continue;
    if(answer===null||answer===undefined){outcomes.blank++;continue;}
    if(!Number.isInteger(answer)||answer<1||answer>5)continue;
-   const correct=Array.isArray(q.correct)&&q.correct.includes(answer);
+   const correct=Array.isArray(q.correct)&&q.correct.map(Number).includes(answer);
    outcomes.answered++;statsBySubject[sub].answered++;
    if(correct){outcomes.correct++;statsBySubject[sub].correct++;}
    else{outcomes.wrong++;}
@@ -70,8 +70,12 @@ function compute({study={},sessions=[],links={},official=bank(),now=Date.now(),d
  const weakConcepts=[...concept.values()].map(c=>({id:c.id,correct:c.correct,answered:c.answered,
   accuracy:Math.round(c.correct*100/c.answered),questions:c.questions.size}))
   .sort((a,b)=>a.accuracy-b.accuracy||b.answered-a.answered||a.id.localeCompare(b.id));
- const due=Object.entries(study.review||{}).filter(([id,row])=>official[id]?.verified&&
-  (subject==='all'||official[id]?.subject===subject)&&Number(row?.nextAt)>0&&row.nextAt<=now).length;
+ const dueIds=new Set(Object.entries(study.review||{}).filter(([id,row])=>official[id]?.verified&&
+  (subject==='all'||official[id]?.subject===subject)&&Number(row?.nextAt)>0&&row.nextAt<=now).map(([id])=>id));
+ for(const r of window.CK86ExamBridge?.pending?.(now)||[]){
+  if(official[r.id]?.verified&&(subject==='all'||official[r.id]?.subject===subject))dueIds.add(r.id);
+ }
+ const due=dueIds.size;
  const average=values=>values.length?Number((values.reduce((a,b)=>a+b,0)/values.length).toFixed(1)):null;
  return {
   days:n,subject,from:dayKeys[0],to:dayKeys.at(-1),daily:dayKeys.map(d=>dayMap[d]),

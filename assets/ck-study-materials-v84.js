@@ -32,14 +32,28 @@ function sanitize(data){
  }
  return clean;
 }
-function read(){try{return sanitize(JSON.parse(localStorage.getItem(KEY)||'null'))||empty();}catch{return empty();}}
+let storageIssue='';
+function read(){
+ try{
+  const raw=localStorage.getItem(KEY);
+  if(raw===null){storageIssue='';return empty();}
+  const clean=sanitize(JSON.parse(raw));
+  if(!clean){storageIssue='교재 자료의 저장 형식이 손상되었습니다. 원본을 내려받기 전 저장을 차단합니다.';return empty();}
+  storageIssue='';return clean;
+ }catch{
+  storageIssue='교재 자료를 읽지 못했습니다. 원본을 보호하기 위해 저장을 차단합니다.';
+  return empty();
+ }
+}
 let store=read(),root=null,visible=false,working=false,cancel=false,sourceText='',sourceType='manual',
  sourcePages=0,currentId='',sourceTitle='',message='',query='',lastFile=null,queued=false,unsavedNote='',unsavedRef='';
 const newId=()=>('m'+Date.now().toString(36)+Math.floor(Math.random()*1679616).toString(36).padStart(4,'0'));
 function write(next){
+ if(storageIssue){note(storageIssue);return false;}
  const checked=sanitize(next);if(!checked)return false;
  try{
   const latest=read();
+  if(storageIssue){note(storageIssue);return false;}
   if(latest.revision!==store.revision){store=latest;note('다른 탭에서 자료가 변경되었습니다. 현재 편집 내용은 유지합니다. 복사 후 새로 확인해 주세요.');return false;}
   checked.revision=store.revision+1;
   localStorage.setItem(KEY,JSON.stringify(checked));store=checked;return true;
@@ -275,7 +289,9 @@ function mount(){
 function paint(){
  if(!root||!visible)return;
  const body=root.querySelector('[data-ck84-mat-body]');body.hidden=false;
- body.innerHTML='<p class="ck84-mat-warning">OCR·PDF 텍스트 분리 결과는 검수 전입니다. 공식 기출 원문·정답에 자동 반영하지 않습니다.</p>'+
+ body.innerHTML=(storageIssue?'<div class="ck84-mat-warning" role="alert">'+esc(storageIssue)+
+ '<button type="button" data-ck84-mat-raw>손상된 자료 원본 JSON 다운로드</button></div>':'')+
+ '<p class="ck84-mat-warning">OCR·PDF 텍스트 분리 결과는 검수 전입니다. 공식 기출 원문·정답에 자동 반영하지 않습니다.</p>'+
  '<div class="ck84-mat-tools"><label>파일 <input type="file" data-ck84-mat-file accept=".pdf,.txt,.md,.png,.jpg,.jpeg,.webp,.bmp,application/pdf,image/*,text/plain"></label>'+
  '<label>PDF 모드 <select data-ck84-mat-mode><option value="text">텍스트 레이어 추출</option>'+
  '<option value="ocr">스캔 PDF OCR(최대 8페이지)</option></select></label>'+
@@ -314,8 +330,18 @@ function toggle(){
 document.addEventListener('click',event=>{
  const t=event.target.closest?.('[data-ck84-mat-toggle],[data-ck84-mat-extract],[data-ck84-mat-cancel],'+
  '[data-ck84-mat-new],[data-ck84-mat-preview],[data-ck84-mat-save],[data-ck84-mat-export],'+
- '[data-ck84-mat-import],[data-ck84-mat-open],[data-ck84-mat-remove],[data-ck84-mat-visit]');
+ '[data-ck84-mat-import],[data-ck84-mat-open],[data-ck84-mat-remove],[data-ck84-mat-visit],[data-ck84-mat-raw]');
  if(!t||!root?.contains(t))return;
+ if(t.hasAttribute('data-ck84-mat-raw')){
+  try{
+   const raw=localStorage.getItem(KEY);
+   if(raw==null){note('저장된 교재 자료 원본이 없습니다.');return;}
+   const b=new Blob([raw],{type:'application/json;charset=utf-8'}),url=URL.createObjectURL(b),a=document.createElement('a');
+   a.href=url;a.download='ConceptKnot_교재_손상원본.json';document.body.appendChild(a);a.click();a.remove();
+   setTimeout(()=>URL.revokeObjectURL(url),3000);
+  }catch{note('손상 원본 내려받기 실패. 브라우저 저장 데이터를 지우지 마세요.');}
+  return;
+ }
  if(t.hasAttribute('data-ck84-mat-toggle')){toggle();return;}
  if(t.hasAttribute('data-ck84-mat-extract')){
   extract(root.querySelector('[data-ck84-mat-file]')?.files?.[0],root.querySelector('[data-ck84-mat-mode]')?.value);
@@ -359,6 +385,6 @@ if(main&&window.MutationObserver)new MutationObserver(changes=>{
 }).observe(main,{subtree:true,childList:true});
 window.CK84Materials=Object.freeze({sanitize,parseQuestions,orderedText,findDocuments,findOfficial,
  getDocuments:()=>store.documents.map(x=>({...x})),
- getState:()=>({open:visible,working,documents:store.documents.length,revision:store.revision}),
+ getState:()=>({open:visible,working,documents:store.documents.length,revision:store.revision,storageIssue}),
  open:()=>{mount();if(root&&!visible)toggle();}});
 })();
