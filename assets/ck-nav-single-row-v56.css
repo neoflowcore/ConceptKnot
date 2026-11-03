@@ -88,3 +88,7 @@
 @media (prefers-reduced-motion: reduce) {
   #main .ck-v7-nav-pill.ck4-unified {scroll-behavior: auto !important;}
 }
+
+/* v106: prevent scroll-anchoring from resetting the user-controlled tab rail. */
+#main .ck-v7-nav-pill.ck4-unified{overflow-anchor:none!important}
+#main .ck-v7-nav-pill.ck4-unified > .board-tabs{overflow-anchor:none!important}

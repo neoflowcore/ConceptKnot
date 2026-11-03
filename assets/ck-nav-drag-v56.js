@@ -14,10 +14,36 @@
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
   let currentPill = null;
   let activeObserver = null;
+  let rememberedLeft = 0;
+  let selectedAnchor = null;
+  let cleanupCurrent = null;
   const clamp = (value, lo, hi) => Math.max(lo, Math.min(hi, value));
+  const maxScroll = pill => Math.max(0, pill.scrollWidth - pill.clientWidth);
+  // Navigation re-renders the ribbon: keep its last horizontal position in module state.
+  function remember(pill) {
+    if (pill === currentPill && pill.isConnected) rememberedLeft = pill.scrollLeft;
+  }
+  function restore(pill, anchor = selectedAnchor) {
+    if (!pill || pill !== currentPill || !pill.isConnected) return;
+    const limit = maxScroll(pill);
+    if (!limit) return; // temporarily unmeasured width must not erase saved position
+    pill.scrollLeft = clamp(rememberedLeft, 0, limit);
+    if (anchor && performance.now() - anchor.at < 750) {
+      const target = Array.from(pill.querySelectorAll('.board-tab[data-go]'))
+        .find(tab => tab.dataset.go === anchor.id);
+      const active = pill.querySelector('.board-tab.active');
+      if (target && (!active || active.dataset.go === anchor.id)) {
+        const drift = target.getBoundingClientRect().left - anchor.left;
+        if (Number.isFinite(drift)) pill.scrollLeft = clamp(pill.scrollLeft + drift, 0, limit);
+      }
+    }
+    rememberedLeft = pill.scrollLeft;
+  }
 
   function bind(pill) {
     if (pill === currentPill || !pill || !pill.querySelector('.board-tabs')) return;
+    if (currentPill?.isConnected) remember(currentPill);
+    cleanupCurrent?.();
     currentPill = pill;
     activeObserver?.disconnect();
     let down = null;
@@ -29,8 +55,37 @@
       momentumFrame = 0;
     };
 
+    // Record the tapped tab before the app's bubbling router destroys the old node.
+    pill.addEventListener('click', event => {
+      if (performance.now() < suppressClickUntil) return;
+      const tab = event.target.closest?.('.board-tab[data-go]');
+      if (!tab || !pill.contains(tab)) return;
+      remember(pill);
+      const rect = tab.getBoundingClientRect(), rail = pill.getBoundingClientRect();
+      if (event.detail === 0 || rect.right <= rail.left || rect.left >= rail.right) {
+        selectedAnchor = null; // programmatic or keyboard navigation: preserve scrollLeft
+        return;
+      }
+      const anchor = {id:tab.dataset.go, left:rect.left, at:performance.now()};
+      selectedAnchor = anchor;
+      requestAnimationFrame(() => { if (selectedAnchor === anchor) restore(currentPill, anchor); });
+      setTimeout(() => { if (selectedAnchor === anchor) restore(currentPill, anchor); }, 490);
+    }, true);
+    pill.addEventListener('scroll', () => remember(pill), {passive:true});
+    const brand = pill.querySelector('.ck-v7-logo');
+    const brandObserver = brand && typeof ResizeObserver === 'function'
+      ? new ResizeObserver(() => {
+          if (selectedAnchor && performance.now() - selectedAnchor.at < 750)
+            restore(pill, selectedAnchor);
+        }) : null;
+    brandObserver?.observe(brand);
+    cleanupCurrent = () => { cancelMomentum(); brandObserver?.disconnect(); };
+    restore(pill);
+    requestAnimationFrame(() => restore(pill));
     pill.addEventListener('dragstart', event => event.preventDefault());
     pill.addEventListener('pointerdown', event => {
+      // Any new touch/pen/mouse scroll stops a pending logo animation correction.
+      selectedAnchor = null;
       if ((event.pointerType !== 'mouse' && event.pointerType !== 'pen') ||
           event.button !== 0 || event.target.closest('input,textarea,select,[contenteditable="true"]')) return;
       cancelMomentum();

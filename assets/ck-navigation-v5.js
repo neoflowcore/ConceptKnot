@@ -104,14 +104,7 @@
       revealObserver?.disconnect();revealObserver=null;
       // No intersection reveal on tab switch: the whole glass sheet rises once.
     }
-    const current=pill.querySelector('.board-tab.active');
-    if(current){
-      const strip=current.parentElement;
-      if(strip.scrollWidth>strip.clientWidth){
-        const pos=current.offsetLeft-strip.offsetLeft-(strip.clientWidth-current.offsetWidth)/2;
-        strip.scrollTo({left:Math.max(0,pos),behavior:reduced()?'instant':'smooth'});
-      }
-    }
+    // v106: horizontal position belongs to the user's drag, never active-tab auto-centering.
     homeToStudy=false;
   }
   new MutationObserver(records=>{
