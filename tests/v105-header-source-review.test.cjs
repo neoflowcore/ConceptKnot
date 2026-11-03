@@ -17,7 +17,7 @@ test('10-year personal audit rows preserve official bank and sanitize CSV cells'
  assert.equal(rows.length,1);assert.equal(rows[0].special,'복수정답 인정');
  assert.equal(rows[0].low,true);assert.equal(rows[0].sourced,1);
  assert.equal(api.reviewMatrix(rows).length,10);
- assert.equal(api.csvCell('=1+1'),'"\\'=1+1"');
+ assert.equal(api.csvCell('=1+1'),"\"'=1+1\"");
  assert.match(api.makeReviewCsv(rows),/내 출처 수/);
  assert.deepEqual(q.correct,[1,3]);
 });

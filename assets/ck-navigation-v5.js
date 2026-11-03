@@ -82,6 +82,11 @@
     bar.classList.add('ck105-anchored-tools');
     pill.classList.add('ck4-unified');
     const id=view();
+    // v105: the independent study-tools dock must not cover the garden intro.
+    if(id==='landing'){
+      const dock=document.getElementById('ck103-tools-dock');
+      if(dock?.open)dock.open=false;
+    }
     if(id==='landing'){
       const stage=frame.querySelector('.ck-v7-stage');
       if(stage){
