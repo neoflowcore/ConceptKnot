@@ -76,7 +76,10 @@
     const pill=bar?.querySelector('.ck-v7-nav-pill');
     const date=bar?.querySelector('.ck-v7-date-pill');
     if(!frame||!pill)return;
-    if(date&&date.parentElement!==pill)pill.append(date);
+    // v105: the persistent settings cluster belongs to the outer fixed rail.
+    // Only the brand and tabs remain in the independently scrolling element.
+    if(date&&date.parentElement!==bar)bar.append(date);
+    bar.classList.add('ck105-anchored-tools');
     pill.classList.add('ck4-unified');
     const id=view();
     if(id==='landing'){

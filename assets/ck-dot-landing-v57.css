@@ -256,3 +256,56 @@ html[data-ck-theme="dark"] body:not([data-ck-v8-tab="landing"]) {
  /* Keep the scroll control to the side of the search field on short desktop windows. */
  .ck-dot-landing .ck-dot-scroll {left:clamp(86px,16vw,230px)!important;}
 }
+
+
+/* v105: the logo/text animation and tabs cannot push or scroll the right controls. */
+html body #main .ck-v7-global-nav.ck105-anchored-tools{
+ display:flex!important;flex-flow:row nowrap!important;align-items:center!important;
+ box-sizing:border-box!important;gap:0!important;width:100%!important;
+ max-width:100%!important;min-width:0!important;
+ background:var(--ck58-ribbon,#fcfcf9)!important;border-radius:0 0 30px 30px!important;
+ box-shadow:0 8px 24px rgba(13,57,49,.15)!important;
+}
+html body #main .ck-v7-global-nav.ck105-anchored-tools > .ck-v7-nav-pill.ck4-unified{
+ flex:1 1 0%!important;width:auto!important;min-width:0!important;
+ max-width:none!important;margin:0!important;padding-right:4px!important;
+ border:0!important;border-radius:0 0 0 30px!important;box-shadow:none!important;
+ overflow-x:auto!important;overflow-y:hidden!important;
+ overscroll-behavior-x:contain!important;
+}
+html body #main .ck-v7-global-nav.ck105-anchored-tools > .ck-v7-date-pill{
+ position:relative!important;z-index:2!important;display:flex!important;
+ flex:0 0 auto!important;align-items:center!important;justify-content:flex-end!important;
+ width:max-content!important;min-width:max-content!important;max-width:none!important;
+ height:52px!important;min-height:52px!important;max-height:52px!important;
+ box-sizing:border-box!important;white-space:nowrap!important;overflow:hidden!important;
+ gap:6px!important;margin:0 0 0 auto!important;
+ padding:1px clamp(8px,1vw,16px) 1px 12px!important;
+ border:0!important;border-left:1px solid rgba(125,147,137,.25)!important;
+ border-radius:0 0 30px 0!important;background:var(--ck58-ribbon,#fcfcf9)!important;
+ color:var(--ck58-tab-ink,#203930)!important;box-shadow:none!important;touch-action:auto!important;
+}
+html body #main .ck-v7-global-nav.ck105-anchored-tools > .ck-v7-date-pill > *{flex-shrink:0!important}
+html[data-ck-theme="dark"] body #main .ck-v7-global-nav.ck105-anchored-tools > .ck-v7-date-pill{
+ border-left-color:rgba(184,214,203,.19)!important;
+}
+@media(max-width:1050px){
+ html body #main .ck-v7-global-nav.ck105-anchored-tools > .ck-v7-date-pill span{display:none!important}
+}
+@media(max-width:850px){
+ html body #main .ck-v7-global-nav.ck105-anchored-tools > .ck-v7-date-pill{
+  height:49px!important;min-height:49px!important;max-height:49px!important;
+  gap:4px!important;padding:1px 6px 1px 7px!important;
+ }
+ html body #main .ck-v7-global-nav.ck105-anchored-tools > .ck-v7-date-pill button{
+  min-width:27px!important;width:27px!important;height:27px!important;padding:0!important;
+ }
+}
+@media(max-width:420px){
+ html body #main .ck-v7-global-nav.ck105-anchored-tools > .ck-v7-date-pill{
+  gap:2px!important;padding:1px 5px!important;
+ }
+ html body #main .ck-v7-global-nav.ck105-anchored-tools > .ck-v7-date-pill button{
+  min-width:25px!important;width:25px!important;height:25px!important;
+ }
+}

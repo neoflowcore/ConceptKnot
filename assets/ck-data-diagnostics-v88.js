@@ -36,6 +36,82 @@ function inspect(storage=localStorage){
   }catch{return {key,name,status:'invalid',bytes:0};}
  });
 }
+
+/* v105: personal evidence readiness never changes the official answer bank. */
+const canonicalId=id=>/^20(?:1[6-9]|2[0-5])-(?:[1-9]|[1-7]\d|80)$/.test(String(id||''));
+function reviewRows(records=window.RECALL_OFFICIAL||{},links=window.CK83Links?.getRecords?.()||{}){
+ const rows=[];
+ for(const [id,q] of Object.entries(records||{})){
+  if(!canonicalId(id)||q?.verified!==true||q.id!==id)continue;
+  const year=Number(id.split('-')[0]),number=Number(id.split('-')[1]);
+  const saved=links?.[id]||{},notes=saved.optionNotes||{};
+  const options=Array.from({length:5},(_,i)=>notes[i+1]||{});
+  const assessed=options.filter(n=>['true','false','conditional'].includes(n.assessment)).length;
+  const reasoned=options.filter(n=>String(n.reason||'').trim()).length;
+  const sourced=options.filter(n=>String(n.source||'').trim()).length;
+  const values=[q.checks?.primaryText?.score,q.checks?.primaryText?.ocrScore].filter(Number.isFinite);
+  const score=values.length?Math.min(...values):null;
+  const special=q.correct?.length===5?'전원정답 인정':q.correct?.length>1?'복수정답 인정':'일반';
+  const visual=q.checks?.visualReview===true?'시각검토 표시':
+   q.checks?.visualReview===false?'미검토 표시':'검토 표시 없음';
+  const diagrams=Array.isArray(q.diagrams)&&q.diagrams.length>0;
+  const low=score!==null&&score<.9;
+  const priority=(visual!=='시각검토 표시'?5:0)+(low?10:0)+(score===null?2:0)+
+   (special!=='일반'?8:0)+(diagrams?4:0)+(sourced<5?3:0);
+  rows.push({id,year,number,subject:q.subject,assessed,reasoned,sourced,
+   linked:Array.isArray(saved.conceptIds)?saved.conceptIds.length:0,
+   visual,score,low,special,diagrams,priority,
+   accepted:Array.isArray(q.correct)?q.correct.join('/'):'' ,
+   paperUrl:typeof q.paperUrl==='string'&&/^https:\/\/[a-z0-9.-]+\//i.test(q.paperUrl)?q.paperUrl:''});
+ }
+ return rows.sort((a,b)=>b.year-a.year||a.number-b.number);
+}
+function reviewMatrix(rows=reviewRows()){
+ return Array.from({length:10},(_,i)=>2025-i).map(year=>{
+  const r=rows.filter(x=>x.year===year);
+  return {year,count:r.length,visual:r.filter(x=>x.visual==='시각검토 표시').length,
+   assessed:r.reduce((n,x)=>n+x.assessed,0),sourced:r.reduce((n,x)=>n+x.sourced,0),
+   low:r.filter(x=>x.low).length,special:r.filter(x=>x.special!=='일반').length};
+ });
+}
+function csvCell(value){
+ const text=String(value??'').replace(/[\r\n\t]+/g,' ').trim();
+ return '"'+(/^[=+\-@]/.test(text)?"'"+text:text).replace(/"/g,'""')+'"';
+}
+function makeReviewCsv(rows=reviewRows()){
+ const head=['문항ID','연도','문항번호','과목','채점 인정','인정정답','시각검토 메타',
+  'OCR/원문 유사도','그림/표','내 선지판단 수(5)','내 이유 수(5)','내 출처 수(5)',
+  '내 연결개념 수','대조 우선점','원문 PDF'];
+ return [head.map(csvCell).join(','),...rows.map(r=>[r.id,r.year,r.number,
+  r.subject==='estate'?'학개론':'민법',r.special,r.accepted,r.visual,
+  r.score===null?'미기재':r.score.toFixed(3),r.diagrams?'있음':'없음',
+  r.assessed,r.reasoned,r.sourced,r.linked,r.priority,r.paperUrl
+ ].map(csvCell).join(','))].join('\r\n')+'\r\n';
+}
+let auditExporting=false,notice='';
+async function exportReviewCsv(){
+ if(auditExporting)return false;
+ auditExporting=true;notice='전체 등록 상태를 확인 중입니다.';
+ const feedback=()=>{const el=root?.querySelector('[data-v105-status]');if(el)el.textContent=notice;};
+ feedback();
+ try{
+  if(window.CK89OfficialBank?.loadAll)await window.CK89OfficialBank.loadAll();
+  const quality=bankQuality(),rows=reviewRows();
+  if(quality.total!==800||quality.structured!==800||rows.length!==800){
+   notice='800문항 전부 구조 등록되지 않아 부분 CSV를 내보내지 않았습니다.';
+   feedback();return false;
+  }
+  const blob=new Blob(['\uFEFF',makeReviewCsv(rows)],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download='ConceptKnot_10개년_원문검토_개인진행.csv';
+  document.body.append(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),2500);
+  notice='800문항 CSV 저장 완료 · 개인 작업표이며 법령/해설 공식 검수 완료 표시가 아닙니다.';
+  feedback();return true;
+ }catch(e){notice='내보내기 실패: '+(e?.message||'확인 필요');feedback();return false;}
+ finally{auditExporting=false;}
+}
+
 function bankQuality(records=window.RECALL_OFFICIAL||{}){
  const result={total:0,structured:0,visualReviewed:0,visualUnreviewed:0,visualUnknown:0,
   multikey:0,allAccepted:0,lowTextSimilarity:0,missingTextSimilarity:0,years:{}};
@@ -143,6 +219,7 @@ let root=null;
 function render(){
  if(!root)return;
  const wasOpen=root.querySelector('.ck88-review-queue')?.open===true;
+ const matrixOpen=root.querySelector('.ck88-audit-matrix')?.open===true;
  const values=inspect(),problem=values.filter(x=>x.status==='invalid'),quality=bankQuality(),queue=visualQueue({year:queueYear,mode:queueMode});
  root.querySelector('[data-v88-body]').innerHTML='<p>읽기 전용 검사 · 데이터를 초기화하거나 수정하지 않습니다. 손상 기록은 복원 전 원본을 보존하세요.</p>'+
  '<p><strong>공식 기출 등록 구조: '+quality.structured+'/'+quality.total+'문항</strong> · 10개년 목표 800문항 · 시각 검토 명시 '+quality.visualReviewed+'건 / 미검토 표시 '+quality.visualUnreviewed+'건 / 표시 없음 '+quality.visualUnknown+'건</p>'+
@@ -170,6 +247,21 @@ function render(){
  (x.status==='ok'?'정상 형식':x.status==='empty'?'저장 기록 없음':'손상 의심 · 덮어쓰기 금지')+
  ' · '+x.bytes+'자</span></div>').join('')+'</div>'+
  '<p role="status">'+(problem.length?'검사가 필요한 기록 '+problem.length+'종 · 원본을 먼저 저장하세요.':'구조 오류 감지 없음. 실제 기기 동작 검증은 별도입니다.')+'</p>';
+
+ const table=reviewMatrix();
+ const audit=document.createElement('details');audit.className='ck88-audit-matrix';
+ audit.innerHTML='<summary>10개년 원문·선지 근거 검토 준비도 · 개인 작업표</summary>'+
+  '<p>시각검토 표시는 공식 파일의 메타데이터, 선지 판단과 출처는 개인 기록입니다. 내용의 법령 적합성이나 전문가 검수를 보증하지 않습니다.</p>'+
+  '<button type="button" data-v105-export>10개년 800문항 검토용 CSV</button>'+
+  '<p data-v105-status role="status">'+safe(notice)+'</p>'+
+  '<div class="ck88-audit-years">'+table.map(x=>'<div><strong>'+x.year+'년 · '+x.count+'/80</strong>'+
+  '<span>시각검토 표시 '+x.visual+'/80 · 낮은 텍스트 유사도 '+x.low+'건</span>'+
+  '<span>내 선지판단 '+x.assessed+'/400 · 출처 '+x.sourced+'/400 · 특수정답 '+x.special+'건</span>'+
+  '<button type="button" data-v105-year="'+x.year+'">해당 연도 원문 검토 후보</button></div>').join('')+
+  '</div>';
+ root.querySelector('[data-v88-body]').append(audit);
+ if(matrixOpen)audit.open=true;
+
  if(wasOpen)root.querySelector('.ck88-review-queue').open=true;
 }
 function mount(){
@@ -195,11 +287,21 @@ document.addEventListener('click',event=>{
 });
 document.addEventListener('change',e=>{if(e.target?.matches?.('[data-v88-year]')){queueYear=Number(e.target.value);render();loadOlderYear(queueYear);}
  if(e.target?.matches?.('[data-v88-queue-mode]')){queueMode=['all','unreviewed','low-text'].includes(e.target.value)?e.target.value:'all';render();}});
+
+document.addEventListener('click',event=>{
+ const t=event.target.closest?.('[data-v105-export],[data-v105-year]');
+ if(!t||!root?.contains(t))return;
+ if(t.hasAttribute('data-v105-export')){exportReviewCsv();return;}
+ queueYear=Number(t.dataset.v105Year);render();
+ const details=root.querySelector('.ck88-review-queue');if(details)details.open=true;
+ loadOlderYear(queueYear);
+});
+
 const target=document.getElementById('main');
 if(target&&window.MutationObserver)new MutationObserver(()=>{
  if(!document.getElementById('ck88-data-diagnostics')&&
   document.querySelector('#main [data-action="backup"]'))mount();
 }).observe(target,{childList:true});
 window.addEventListener('ck:official-bank-ready',()=>{if(root)render();});
-window.CK88Diagnostics=Object.freeze({inspect,bankQuality,visualQueue,exportVisualQueue,loadOlderYear,mount});
+window.CK88Diagnostics=Object.freeze({inspect,bankQuality,visualQueue,exportVisualQueue,loadOlderYear,mount,reviewRows,reviewMatrix,csvCell,makeReviewCsv,exportReviewCsv});
 })();
