@@ -1235,7 +1235,7 @@ function renderListen(){const r=spokenRecord(),t=ttsSettings();return `${titleBl
  <select class="field" id="tts-marathon-mode"><option value="qa" ${t.marathonMode==='qa'?'selected':''}>문제 + 정답 문장</option><option value="answer" ${t.marathonMode==='answer'?'selected':''}>정답만 듣기</option><option value="all" ${t.marathonMode==='all'?'selected':''}>문제 + 전체 선지</option></select>
  <label for="tts-play-scope">재생 범위</label>
  <select class="field" id="tts-play-scope"><option value="single" ${t.playScope==='single'?'selected':''}>현재 문제만 듣기</option><option value="all" ${t.playScope==='all'?'selected':''}>선택 연도·과목 전체 연속재생</option></select>
- <div class="listen-controls"><button class="btn" data-tts-official-all>▶ 선택한 방식으로 듣기</button><button type="button" class="btn secondary" data-ck108-resume>▶ 중단 지점 이어 듣기</button><button class="btn secondary" data-tts-stop>■ 정지</button></div>
+ <div class="listen-controls"><button class="btn" data-tts-official-all>▶ 선택한 방식으로 듣기</button><button type="button" class="btn secondary" data-ck108-resume>▶ 중단 지점 이어 듣기</button><button type="button" class="btn secondary" data-ck109-due>▶ 내 오답·복습 대기열 듣기</button><button class="btn secondary" data-tts-stop>■ 정지</button></div>
  <p class="small" id="ck20-marathon-status" role="status">${ttsBatchActive?esc(ttsBatchLabel)+' 연속재생 중':'AI 음성 선택 시 연속재생도 AI 여성 음성으로 읽습니다.'}</p>
 </div><div class="flex"><select class="field" id="tts-year" style="width:auto" aria-label="기출 연도">${EXAMS.map(y=>`<option value="${y.year}" ${y.year===state.year?'selected':''}>${y.year}년</option>`).join('')}</select><select class="field" id="tts-number" style="width:auto" aria-label="문제 번호">${Array.from({length:40},(_,i)=>examRange()[0]+i).map(n=>`<option value="${n}" ${n===state.examQuestion?'selected':''}>${n}번</option>`).join('')}</select></div><p class="small muted">10개년 공식 기출 800문항이 등록되어 있습니다. 해당 연도 A형 최종정답을 기준으로 읽으며 원문 문장이 비어 있거나 변경된 경우에만 아래에서 수동 대조·저장하세요.</p><label for="tts-source">①~⑤가 포함된 문항 붙여넣기</label><textarea class="field" id="tts-source" placeholder="문제 문장
 ① 첫 번째 지문
@@ -1268,6 +1268,10 @@ document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)r
  if(b.hasAttribute('data-ck108-resume')){
   const result=ck108Resume();
   if(!result.ok)throw Error('이어 들을 저장 지점이 없습니다. 먼저 과목 전체를 재생해 주세요.');
+ }
+ if(b.hasAttribute('data-ck109-due')){
+  const result=ck109ReadDue(ttsSettings().marathonMode,40);
+  if(!result.ok)throw Error('현재 복습할 개인 오답 기록이 없거나, 등록 공식 문항을 아직 불러오지 못했습니다.');
  }
  if(b.hasAttribute('data-install')){if(installPrompt){installPrompt.prompt();installPrompt=null;}else toast('Android: 브라우저 메뉴 → 앱 설치 또는 홈 화면에 추가. iPhone: Safari 공유 → 홈 화면에 추가.');}
  }catch(err){toast(err.message);}});
@@ -1544,8 +1548,41 @@ function ck107ReadOfficial(year,number,mode='qa',scope='single',resumeAt=0){
  return {ok:true,items:items.length,excluded,missing,mode,continuous};
 }
 
+
+/* v109: read-only bridge from the actual latest exam/recall queue to TTS.
+   This never turns candidate concepts into verified explanations or reopens
+   resolved mistakes; CK86ExamBridge is the single source of due decisions. */
+function ck109ReadDue(mode='qa',limit=40){
+ mode=['qa','answer','all'].includes(mode)?mode:'qa';
+ const safeLimit=Number.isInteger(Number(limit))?Math.max(1,Math.min(40,Number(limit))):40;
+ const bridge=window.CK86ExamBridge;
+ if(!bridge?.getDue)return {ok:false,items:0,reason:'due-engine-unavailable'};
+ let report;
+ try{report=bridge.getDue({bank:window.RECALL_OFFICIAL||{}});}catch{
+  return {ok:false,items:0,reason:'due-report-error'};
+ }
+ const queue=Array.isArray(report?.rows)?report.rows:[];
+ const items=[],seen=new Set();let excluded=0,missing=0;
+ for(const row of queue){
+  const id=String(row?.id||'');
+  if(!/^20(?:1[6-9]|2[0-5])-(?:[1-9]|[1-7]\d|80)$/.test(id)||seen.has(id))continue;
+  seen.add(id);
+  try{
+   const [year,number]=id.split('-').map(Number);
+   const record=officialAudioEntry(year,number);
+   if(record.special==='allAccepted'&&mode!=='all'){excluded++;continue;}
+   items.push(record);
+  }catch{missing++;}
+  if(items.length>=safeLimit)break;
+ }
+ if(!items.length)return {ok:false,items:0,excluded,missing,reason:'due-empty'};
+ ttsPlay(items,{continuous:items.length>1,mode,label:'개인 오답·복습 대기 '+items.length+'문항'});
+ return {ok:true,items:items.length,excluded,missing,mode};
+}
+
 window.CK76Voice=Object.freeze({
  getState:()=>({...ck76Voice}),
+ playDue:ck109ReadDue,
  playOfficial:ck107ReadOfficial,
  resume:ck108Resume,
  getBookmark:ck108Bookmark,

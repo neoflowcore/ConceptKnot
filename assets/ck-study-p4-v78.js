@@ -73,6 +73,7 @@ function voiceToolbar(){
   '<button type="button" data-ck107-voice="all">▶ 문제 + 5선지</button>'+
   '<button type="button" data-ck107-voice-scope="subject">과목 40문항 연속</button>'+
   '<button type="button" data-ck107-voice-resume>▶ 중단 지점 이어 듣기</button>'+
+  '<button type="button" data-ck109-due>▶ 내 오답·복습 대기 듣기</button>'+
   '<button type="button" data-ck107-voice-stop>■ 정지</button></div>'+
   '<p class="ck107-voice-status" data-ck107-voice-status role="status" aria-live="polite">'+
   '장시간 재생·백그라운드·AI 모델 음색은 실제 기기 검증 전입니다.</p></section>';
@@ -267,7 +268,7 @@ document.addEventListener('click',e=>{
   else status('저장 실패 · 브라우저 저장공간을 확인하세요.');
  }
  if(target.closest('[data-ck78-ai-copy]'))copyPrompt();
- const voice=target.closest('[data-ck107-voice],[data-ck107-voice-scope],[data-ck107-voice-resume],[data-ck107-voice-stop]');
+ const voice=target.closest('[data-ck107-voice],[data-ck107-voice-scope],[data-ck107-voice-resume],[data-ck107-voice-stop],[data-ck109-due]');
  if(voice&&dialog?.contains(voice)){
   const line=dialog.querySelector('[data-ck107-voice-status]');
   if(voice.hasAttribute('data-ck107-voice-stop')){
@@ -277,10 +278,12 @@ document.addEventListener('click',e=>{
   if(!q){if(line)line.textContent='공식 문항을 불러오지 못했습니다.';return;}
   const mode=voice.dataset.ck107Voice||'qa';
   const scope=voice.hasAttribute('data-ck107-voice-scope')?'subject':'single';
-  const result=voice.hasAttribute('data-ck107-voice-resume')?
-   window.CK76Voice?.resume?.():window.CK76Voice?.playOfficial?.(q.year,q.number,mode,scope);
+  const result=voice.hasAttribute('data-ck109-due')?
+   window.CK76Voice?.playDue?.(window.CK76Voice?.getState?.().mode||'qa',40):
+   voice.hasAttribute('data-ck107-voice-resume')?
+    window.CK76Voice?.resume?.():window.CK76Voice?.playOfficial?.(q.year,q.number,mode,scope);
   if(line)line.textContent=result?.ok?
-   (scope==='subject'||voice.hasAttribute('data-ck107-voice-resume')?'과목 연속 듣기':'현재 문항 듣기')+' 요청 · '+result.items+
+   (voice.hasAttribute('data-ck109-due')?'개인 복습 대기열':scope==='subject'||voice.hasAttribute('data-ck107-voice-resume')?'과목 연속 듣기':'현재 문항 듣기')+' 요청 · '+result.items+
     '문항 · 전원정답 제외 '+result.excluded+'건 · 실제 소리는 기기에서 확인':
    '읽을 문항이 없거나 음성 기능이 준비되지 않았습니다. 공식 원문 로딩·TTS 설정을 확인하세요.';
   return;
