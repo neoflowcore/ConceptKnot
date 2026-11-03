@@ -189,13 +189,14 @@ function exportDue(){
  }catch{return false;}
 }
 function mount(){
- const search=document.getElementById('ck76-search'),host=search?.parentNode||document.querySelector('#main');
+ const dock=document.querySelector('#ck103-tools-dock .ck103-tools-content');
+ const host=dock||document.getElementById('main');
  if(!host||document.getElementById('ck79-review'))return;
  const node=document.createElement('section');node.id='ck79-review';node.className='ck79-review';
  node.innerHTML='<div class="ck79-review-head"><strong>개념·오답 인출 복습</strong>'+
   '<button type="button" data-ck79-toggle aria-expanded="false">복습 열기</button></div>'+
   '<div data-ck79-body hidden></div>';
- if(search)search.after(node);else host.prepend(node);
+ host.append(node);
 }
 function row(q,id,reason,review){
  const recognized=q.correct.length===5?'전원정답 채점 인정 · 선지별 진위 별도 검토':

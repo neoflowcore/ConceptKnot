@@ -40,10 +40,11 @@ function mount(){
   '<button type="submit">검색</button></div></form>'+
   '<p class="ck76-search-status" id="ck76-search-status" role="status">기기 안에 등록된 공식 원문만 검색합니다.</p>'+
   '<div id="ck76-search-results" class="ck76-search-results"></div></div>';
- const target=document.querySelector('#main .ck-v7-nav-pill')||
-  document.querySelector('#main .board-tabs')||document.querySelector('#main');
- if(target?.parentNode)target.parentNode.insertBefore(root,target.nextSibling);
- else document.body.prepend(root);
+ // Never insert secondary panels into the one-row global navigation.
+ const dock=document.querySelector('#ck103-tools-dock .ck103-tools-content');
+ const main=document.getElementById('main');
+ const host=dock||main;
+ if(host)host.append(root);
 }
 function searchUi(){
  const root=document.getElementById('ck76-search'),panel=root?.querySelector('.ck76-search-panel');
@@ -128,6 +129,15 @@ function applyScrub(root,value){
  const explanation=root.querySelector('.ck21-chart-explanation');
  if(explanation)explanation.textContent=amount?c.answer:'곡선을 이동해 개념 변화를 확인하세요.';
 }
+function openSearch(){
+ mount();
+ const dock=document.getElementById('ck103-tools-dock');
+ if(dock)dock.open=true;
+ const toggle=document.querySelector('#ck76-search [data-ck76-search-collapse]');
+ if(toggle?.getAttribute('aria-expanded')!=='true')toggle.click();
+ document.getElementById('ck76-search-query')?.focus();
+ return Boolean(toggle);
+}
 // Use the existing dot-home search position as the entry point; do not redesign the owl.
 document.addEventListener('click',event=>{
  const launcher=event.target.closest?.('.ck-dot-search-placeholder');
@@ -137,12 +147,14 @@ document.addEventListener('click',event=>{
  if(home)home.click();
  // Navigation mounts the persistent search panel; focus only after rendering.
  requestAnimationFrame(()=>{
-  mount();
-  const toggle=document.querySelector('#ck76-search [data-ck76-search-collapse]');
-  if(toggle?.getAttribute('aria-expanded')!=='true')toggle?.click();
-  document.getElementById('ck76-search-query')?.focus();
+  openSearch();
  });
 },true);
+document.addEventListener('keydown',event=>{
+ if(!['Enter',' '].includes(event.key)||event.isComposing||!event.target.closest?.('.ck-dot-search-placeholder'))return;
+ event.preventDefault();
+ event.target.click();
+});
 document.addEventListener('click',e=>{
  const toggle=e.target.closest?.('[data-ck76-search-collapse]');
  if(toggle){
@@ -185,5 +197,5 @@ if(main&&window.MutationObserver)new MutationObserver(changes=>{
    (el.matches?.('.ck-v7-stage,.ck21-chart-section,#ck10-final-root')||
     el.querySelector?.('.ck21-chart-section,#ck10-final-root')))))schedule();
 }).observe(main,{childList:true,subtree:true});
-window.CK76Search=Object.freeze({ranked,openQuestion,getState:()=>({query:lastQuery,results:lastResults.length}),applyScrub});
+window.CK76Search=Object.freeze({ranked,openQuestion,open:openSearch,getState:()=>({query:lastQuery,results:lastResults.length}),applyScrub});
 })();

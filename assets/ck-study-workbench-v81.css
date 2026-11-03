@@ -44,7 +44,7 @@ html body #ck103-tools-dock > .ck103-tools-content{
  background:rgba(246,249,247,.98);border:1px solid rgba(135,151,139,.38);
  border-radius:16px;box-shadow:0 15px 50px rgba(0,0,0,.23);
 }
-html body #ck103-tools-dock .ck103-tools-content > :is(.ck81-workbench,.ck83-link-tools,.ck83-analytics,.ck84-materials){
+html body #ck103-tools-dock .ck103-tools-content > :is(.ck76-search,.ck79-review,.ck81-workbench,.ck83-link-tools,.ck83-analytics,.ck84-materials){
  position:static!important;display:block!important;width:100%;box-sizing:border-box;margin:6px 0!important;
 }
 html[data-ck-theme="dark"] body #ck103-tools-dock > summary{
@@ -53,7 +53,7 @@ html[data-ck-theme="dark"] body #ck103-tools-dock > summary{
 html[data-ck-theme="dark"] body #ck103-tools-dock > .ck103-tools-content{
  background:rgba(18,34,35,.98);color:#e0eee8;border-color:rgba(121,158,149,.28);
 }
-html body[data-ck-v8-tab="landing"] #ck103-tools-dock{display:none!important}
+html body[data-ck-v8-tab="landing"] #ck103-tools-dock:not([open]){display:none!important}
 @media(max-width:620px){
  html body #ck103-tools-dock{top:calc(env(safe-area-inset-top,0px) + 62px);right:9px;width:calc(100vw - 18px)}
  html body #ck103-tools-dock > .ck103-tools-content{max-height:calc(100dvh - 114px)}

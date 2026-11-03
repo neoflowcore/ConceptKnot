@@ -244,3 +244,15 @@ html[data-ck-theme="dark"] body:not([data-ck-v8-tab="landing"]) {
     height:49px!important;min-height:49px!important;max-height:49px!important;
   }
 }
+
+/* v104: homepage search is a keyboard-accessible launcher, not a dead placeholder. */
+.ck-dot-landing .ck-dot-search-placeholder {
+ pointer-events:auto!important;cursor:pointer!important;
+}
+.ck-dot-landing .ck-dot-search-placeholder:focus-visible {
+ outline:3px solid #276952!important;outline-offset:3px;
+}
+@media(min-width:701px) {
+ /* Keep the scroll control to the side of the search field on short desktop windows. */
+ .ck-dot-landing .ck-dot-scroll {left:clamp(86px,16vw,230px)!important;}
+}

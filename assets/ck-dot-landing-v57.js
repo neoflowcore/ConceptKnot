@@ -318,9 +318,10 @@
     host.appendChild(notesLayer());
     const search = document.createElement('div');
     search.className = 'ck-dot-search-placeholder';
-    search.setAttribute('role', 'search');
-    search.setAttribute('aria-label', '전체 검색 (준비 중)');
-    search.innerHTML = '<span class="ck-dot-search-help" aria-hidden="true">?</span><span>전체 검색 · 준비 중</span>';
+    search.setAttribute('role', 'button');
+    search.setAttribute('tabindex', '0');
+    search.setAttribute('aria-label', '공식 기출 통합 검색 열기');
+    search.innerHTML = '<span class="ck-dot-search-help" aria-hidden="true">⌕</span><span>공식 기출 통합 검색</span>';
     host.appendChild(search);
     const scroll = document.createElement('button'); scroll.type = 'button';
     scroll.className = 'ck-dot-scroll'; scroll.textContent = 'SCROLL DOWN ↓';

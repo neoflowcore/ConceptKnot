@@ -389,7 +389,7 @@ function render(){
 }
 
 /* v103: preserve personal-tool DOM in a compact dock instead of prepending to the header. */
-const TOOL_DOCK_IDS=['ck81-workbench','ck83-link-tools','ck83-analytics','ck84-materials'];
+const TOOL_DOCK_IDS=['ck76-search','ck79-review','ck81-workbench','ck83-link-tools','ck83-analytics','ck84-materials'];
 function ensureToolsDock(){
  const main=document.getElementById('main'),body=document.body;
  if(!main||!body||typeof body.append!=='function')return null;
@@ -426,8 +426,12 @@ function mount(){
  root.innerHTML='<div class="ck81-heading"><div><strong>해설 검토 작업대</strong><small>2021~2025 · 400문항 · 오프라인 개인 관리</small></div>'+
   '<button type="button" data-ck81-toggle aria-expanded="false">작업대 열기</button></div>'+
   '<div data-ck81-panel hidden></div>';
- const previous=document.getElementById('ck79-review')||document.getElementById('ck76-search');
- if(previous?.parentNode)previous.after(root);else host.prepend(root);
+ const content=ensureToolsDock();
+ if(content)content.append(root);
+ else {
+  const previous=document.getElementById('ck79-review')||document.getElementById('ck76-search');
+  if(previous?.parentNode)previous.after(root);else host.prepend(root);
+ }
  alignToolsDock();
 }
 function toggle(){
