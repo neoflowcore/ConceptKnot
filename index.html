@@ -1583,6 +1583,8 @@ function ck109ReadDue(mode='qa',limit=40){
 window.CK76Voice=Object.freeze({
  getState:()=>({...ck76Voice}),
  playDue:ck109ReadDue,
+ getPreferences:()=>({engine:ttsSettings().engine,rate:ttsSettings().rate,
+  mode:ttsSettings().marathonMode,neuralVoice:ttsSettings().neuralVoice}),
  playOfficial:ck107ReadOfficial,
  resume:ck108Resume,
  getBookmark:ck108Bookmark,

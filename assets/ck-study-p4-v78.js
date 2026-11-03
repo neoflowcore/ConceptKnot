@@ -65,8 +65,15 @@ function learningActions(q,entry){
   '<button data-ck107-open-exam type="button">원래 기출문제로 이동</button></div></section>';
 }
 function voiceToolbar(){
+ const pref=window.CK76Voice?.getPreferences?.()||{engine:'native',rate:1.5,mode:'qa',neuralVoice:'F1'};
+ const bookmark=window.CK76Voice?.getBookmark?.();
+ let due=0;try{due=Number(window.CK86ExamBridge?.getDue?.()?.due)||0;}catch{}
+ const engine=pref.engine==='neural'?'AI 여성 '+pref.neuralVoice:'기기 한국어 음성';
+ const summary='현재 '+engine+' · '+pref.rate+'배 · 개인 복습 대기 '+due+'문항'+
+  (bookmark?' · 이어 듣기 '+bookmark.year+'년 '+bookmark.number+'번부터':'');
  return '<section class="ck107-voice-toolbar" aria-label="현재 문항 음성 읽기"><h3>선택한 문항 음성 학습</h3>'+
   '<p>선택한 음성 엔진·배속을 사용합니다. 정답 인정과 선지의 참·거짓은 별개입니다.</p>'+
+  '<p class="ck107-voice-preference">'+esc(summary)+'</p>'+
   '<div role="group" aria-label="문제 읽기 방식" class="ck107-voice-buttons">'+
   '<button type="button" data-ck107-voice="qa">▶ 문제 + 정답</button>'+
   '<button type="button" data-ck107-voice="answer">▶ 정답만</button>'+
@@ -279,7 +286,7 @@ document.addEventListener('click',e=>{
   const mode=voice.dataset.ck107Voice||'qa';
   const scope=voice.hasAttribute('data-ck107-voice-scope')?'subject':'single';
   const result=voice.hasAttribute('data-ck109-due')?
-   window.CK76Voice?.playDue?.(window.CK76Voice?.getState?.().mode||'qa',40):
+   window.CK76Voice?.playDue?.(window.CK76Voice?.getPreferences?.().mode||'qa',40):
    voice.hasAttribute('data-ck107-voice-resume')?
     window.CK76Voice?.resume?.():window.CK76Voice?.playOfficial?.(q.year,q.number,mode,scope);
   if(line)line.textContent=result?.ok?
