@@ -72,6 +72,7 @@ function voiceToolbar(){
   '<button type="button" data-ck107-voice="answer">▶ 정답만</button>'+
   '<button type="button" data-ck107-voice="all">▶ 문제 + 5선지</button>'+
   '<button type="button" data-ck107-voice-scope="subject">과목 40문항 연속</button>'+
+  '<button type="button" data-ck107-voice-resume>▶ 중단 지점 이어 듣기</button>'+
   '<button type="button" data-ck107-voice-stop>■ 정지</button></div>'+
   '<p class="ck107-voice-status" data-ck107-voice-status role="status" aria-live="polite">'+
   '장시간 재생·백그라운드·AI 모델 음색은 실제 기기 검증 전입니다.</p></section>';
@@ -266,7 +267,7 @@ document.addEventListener('click',e=>{
   else status('저장 실패 · 브라우저 저장공간을 확인하세요.');
  }
  if(target.closest('[data-ck78-ai-copy]'))copyPrompt();
- const voice=target.closest('[data-ck107-voice],[data-ck107-voice-scope],[data-ck107-voice-stop]');
+ const voice=target.closest('[data-ck107-voice],[data-ck107-voice-scope],[data-ck107-voice-resume],[data-ck107-voice-stop]');
  if(voice&&dialog?.contains(voice)){
   const line=dialog.querySelector('[data-ck107-voice-status]');
   if(voice.hasAttribute('data-ck107-voice-stop')){
@@ -276,9 +277,10 @@ document.addEventListener('click',e=>{
   if(!q){if(line)line.textContent='공식 문항을 불러오지 못했습니다.';return;}
   const mode=voice.dataset.ck107Voice||'qa';
   const scope=voice.hasAttribute('data-ck107-voice-scope')?'subject':'single';
-  const result=window.CK76Voice?.playOfficial?.(q.year,q.number,mode,scope);
+  const result=voice.hasAttribute('data-ck107-voice-resume')?
+   window.CK76Voice?.resume?.():window.CK76Voice?.playOfficial?.(q.year,q.number,mode,scope);
   if(line)line.textContent=result?.ok?
-   (scope==='subject'?'과목 연속 듣기':'현재 문항 듣기')+' 요청 · '+result.items+
+   (scope==='subject'||voice.hasAttribute('data-ck107-voice-resume')?'과목 연속 듣기':'현재 문항 듣기')+' 요청 · '+result.items+
     '문항 · 전원정답 제외 '+result.excluded+'건 · 실제 소리는 기기에서 확인':
    '읽을 문항이 없거나 음성 기능이 준비되지 않았습니다. 공식 원문 로딩·TTS 설정을 확인하세요.';
   return;
@@ -313,7 +315,7 @@ async function showReviewDashboard(){
  selected='report';
  el.innerHTML='<p role="status">검수 현황 조회 중…</p><button data-ck78-close>닫기</button>';
  let report={questions:400,withCandidateMatches:0,parsedCompoundStatements:0,
-   reviewStages:{unstarted:396,draft:4,published:0},verifiedOptionVerdicts:0,requiredOptionVerdicts:2000};
+   reviewStages:{unstarted:368,draft:32,published:0},verifiedOptionVerdicts:0,requiredOptionVerdicts:2000};
  try{const response=await fetch('./data/reports/analysis-candidates-v78.json',{cache:'force-cache'});
   if(response.ok)report=await response.json();
  }catch{}
