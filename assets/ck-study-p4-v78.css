@@ -40,3 +40,20 @@ html[data-ck-theme=dark] .ck78-analysis-dialog .ck78-recognized{color:#a2dbbe}
 .ck78-analysis-dialog .ck78-review-grid dd{font-size:20px;font-weight:750;margin:3px 0}
 #ck76-search [data-ck78-review-report]{margin-left:auto;font-size:11px;white-space:nowrap}
 @media(max-width:520px){.ck78-analysis-dialog{width:96vw;max-height:95dvh}.ck78-analysis-dialog .ck78-modal-scroll{padding:11px;max-height:calc(95dvh - 130px)}.ck78-analysis-dialog .ck78-review-grid{grid-template-columns:1fr}.ck78-analysis-dialog .ck78-modal-footer{padding:9px;gap:6px}}
+
+/* v107: study analysis and voice share the official question dialog. */
+.ck78-analysis-dialog .ck107-voice-toolbar{border:1px solid rgba(115,142,129,.36);border-radius:10px;padding:11px;margin:0 0 13px;background:rgba(120,153,140,.07)}
+.ck78-analysis-dialog .ck107-voice-buttons,.ck78-analysis-dialog .ck107-learning-buttons{display:flex;gap:6px;flex-wrap:wrap;margin:9px 0}
+.ck78-analysis-dialog .ck107-voice-status{font-size:12px;opacity:.87;min-height:1.4em}
+.ck78-analysis-dialog .ck107-learning-flow{padding:10px 0}
+.ck78-analysis-dialog .ck107-review-caption{font-size:12px;opacity:.78}
+.ck78-analysis-dialog .ck107-personal-progress{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.ck78-analysis-dialog .ck107-personal-progress span{border:1px solid rgba(125,155,138,.29);border-radius:7px;padding:7px;font-size:12px}
+.ck78-analysis-dialog .ck107-learning-flow details{margin:10px 0}
+.ck78-analysis-dialog .ck107-learning-flow summary{cursor:pointer;font-weight:700}
+.ck78-analysis-dialog .ck107-learning-flow li{line-height:1.55;margin:6px 0;font-size:12px}
+.ck78-analysis-dialog .ck107-coverage{margin-top:14px;border-top:1px solid rgba(125,155,138,.26);padding-top:12px}
+.ck78-analysis-dialog .ck107-year-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.ck78-analysis-dialog .ck107-year-grid div{display:grid;gap:3px;padding:9px;border:1px solid rgba(125,155,138,.28);border-radius:8px}
+.ck78-analysis-dialog .ck107-year-grid span{font-size:12px;opacity:.84}
+@media(max-width:530px){.ck78-analysis-dialog .ck107-personal-progress,.ck78-analysis-dialog .ck107-year-grid{grid-template-columns:minmax(0,1fr)}}

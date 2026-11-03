@@ -13,6 +13,86 @@ const typeNames={select_incorrect:'틀린 지문 찾기',select_correct:'옳은 
  compound_statements:'ㄱ·ㄴ·ㄷ 진술 조합',calculation_or_numeric:'계산·수치 확인',
  legal_temporal_review:'시험연도 법령 확인',visual_original_check:'그림·표 원문 대조',
  multiple_accepted:'복수정답 인정',all_accepted:'전원정답 처리'};
+
+/* v107: classifications are review hints, never claims that an option is true. */
+function classify(q,entry=null){
+ if(!q||typeof q.question!=='string')return [];
+ const word=q.question.normalize('NFKC'),hints=(entry?.questionType||[]).filter(t=>typeNames[t]);
+ if(/옳지\s*않|틀린|아닌\s*것|잘못된\s*것/.test(word))hints.push('select_incorrect');
+ else if(/옳은\s*것|맞는\s*것|타당한\s*것/.test(word))hints.push('select_correct');
+ if(/[ㄱ-ㅎ][\s.、)]/.test(word)||/ㄱ.*ㄴ.*ㄷ/.test(word))hints.push('compound_statements');
+ if(/계산|산출|수익률|탄력성|현재가치|할인율|평균|분산|원가|공급량|수요량/.test(word))hints.push('calculation_or_numeric');
+ if(/그림|그래프|도표|아래\s*표|곡선/.test(word)||q.diagrams?.length)hints.push('visual_original_check');
+ if(/판례|법령|법률|민법|법정|개정|시행\s*당시/.test(word))hints.push('legal_temporal_review');
+ const keys=Array.isArray(q.correct)?q.correct:[];
+ if(keys.length===5)hints.push('all_accepted');
+ else if(keys.length>1)hints.push('multiple_accepted');
+ return [...new Set(hints)];
+}
+function personalProgress(q){
+ const entry=window.CK83Links?.getLink?.(q?.id)||{};
+ const notes=entry.optionNotes||{};
+ const all=Array.from({length:5},(_,i)=>notes[String(i+1)]||{});
+ return {concepts:Array.isArray(entry.conceptIds)?entry.conceptIds.length:0,
+  assessed:all.filter(n=>['true','false','conditional'].includes(n.assessment)).length,
+  reasoned:all.filter(n=>String(n.reason||'').trim()).length,
+  sourced:all.filter(n=>String(n.source||'').trim()).length};
+}
+function reviewSteps(q,entry=null){
+ const kinds=classify(q,entry);
+ const prompts=['문제가 옳은 지문과 틀린 지문 중 무엇을 묻는지 표시하고, 5개 선지의 판단을 각각 기록하세요.',
+  '정답 인정과 각 선지의 법적·사실적 진위를 구분하고 시험연도 원문을 대조하세요.',
+  '법령·판례·교재의 정확한 조문 또는 페이지를 적고 기준 시행일을 확인하세요.'];
+ if(kinds.includes('compound_statements'))prompts.push('ㄱ·ㄴ·ㄷ 진술을 각각 검토한 다음 조합형 보기와 대조하세요.');
+ if(kinds.includes('calculation_or_numeric'))prompts.push('주어진 수치·단위·반올림 조건을 표시하고 계산식과 대입 과정을 별도로 검산하세요.');
+ if(kinds.includes('visual_original_check'))prompts.push('그림·그래프·표는 텍스트만으로 판단하지 말고 원본 PDF를 확인하세요.');
+ if(kinds.includes('all_accepted'))prompts.push('전원정답은 채점상 ①~⑤ 인정이며 5개 선지가 모두 참이라는 뜻이 아닙니다.');
+ else if(kinds.includes('multiple_accepted'))prompts.push('복수정답이 인정된 배경과 지문별 옳고 그름을 별개로 검토하세요.');
+ return prompts;
+}
+function learningActions(q,entry){
+ const progress=personalProgress(q);
+ const steps=reviewSteps(q,entry);
+ return '<section class="ck107-learning-flow"><h3>분석 → 선지 근거 → 인출 복습</h3>'+
+  '<p class="ck107-review-caption">자동 분류는 검토 후보입니다. 개인 메모도 공식 해설의 검증 상태를 바꾸지 않습니다.</p>'+
+  '<div class="ck107-personal-progress"><span>개인 개념 연결 '+progress.concepts+'건</span>'+
+   '<span>선지 판단 '+progress.assessed+'/5</span>'+
+   '<span>판단 이유 '+progress.reasoned+'/5</span>'+
+   '<span>근거 출처 '+progress.sourced+'/5</span></div>'+
+  '<details><summary>문항 검토 체크리스트 · '+steps.length+'항목</summary><ol>'+
+    steps.map(s=>'<li>'+esc(s)+'</li>').join('')+'</ol></details>'+
+  '<div class="ck107-learning-buttons"><button data-ck107-personal-link type="button">선지별 판단·근거 작성</button>'+
+  '<button data-ck107-open-exam type="button">원래 기출문제로 이동</button></div></section>';
+}
+function voiceToolbar(){
+ return '<section class="ck107-voice-toolbar" aria-label="현재 문항 음성 읽기"><h3>선택한 문항 음성 학습</h3>'+
+  '<p>선택한 음성 엔진·배속을 사용합니다. 정답 인정과 선지의 참·거짓은 별개입니다.</p>'+
+  '<div role="group" aria-label="문제 읽기 방식" class="ck107-voice-buttons">'+
+  '<button type="button" data-ck107-voice="qa">▶ 문제 + 정답</button>'+
+  '<button type="button" data-ck107-voice="answer">▶ 정답만</button>'+
+  '<button type="button" data-ck107-voice="all">▶ 문제 + 5선지</button>'+
+  '<button type="button" data-ck107-voice-scope="subject">과목 40문항 연속</button>'+
+  '<button type="button" data-ck107-voice-stop>■ 정지</button></div>'+
+  '<p class="ck107-voice-status" data-ck107-voice-status role="status" aria-live="polite">'+
+  '장시간 재생·백그라운드·AI 모델 음색은 실제 기기 검증 전입니다.</p></section>';
+}
+function yearCoverage(){
+ const bank=window.RECALL_OFFICIAL||{};
+ const years=Array.from({length:10},(_,i)=>2025-i).map(year=>{
+  const entries=Array.from({length:80},(_,i)=>bank[year+'-'+(i+1)]).filter(q=>q?.verified===true);
+  return {year,loaded:entries.length,special:entries.filter(q=>q.correct?.length>1).length};
+ });
+ const count=years.reduce((a,r)=>a+r.loaded,0);
+ const personal=window.CK83Links?.reviewSummary?.()||{};
+ return '<div class="ck107-coverage"><h3>10개년 원문·개인 근거 등록 현황</h3>'+
+  '<p>현재 브라우저에 로드된 공식 문항 '+count+'/800개 · 개인 연결 문항 '+
+   Number(personal.questions||0)+'/800개 · 내 선지 출처 기입 '+
+   Number(personal.sourceLinked||0)+'/4000개</p>'+
+  '<div class="ck107-year-grid">'+years.map(r=>'<div><strong>'+r.year+'년</strong>'+
+   '<span>원문 '+r.loaded+'/80 · 특수정답 '+r.special+'건</span></div>').join('')+'</div>'+
+  '<p>원문 등록·개인 연결은 해설 및 법령·판례의 전문가 검수 완료를 의미하지 않습니다.</p></div>';
+}
+
 function lookup(id){const q=window.RECALL_OFFICIAL?.[id];return q?.verified===true?q:null;}
 async function dataFor(year){
  if(year<2021||year>2025)return null;
@@ -65,7 +145,7 @@ function dialogHtml(q,entry,tx,missing=false){
  const status=entry?.quality?.status||'unstarted',all=q.correct?.length===5,
    multiple=q.correct?.length>1&&!all;
  const header=q.year+'년 '+q.number+'번 · '+(names[q.subject]||q.subject);
- const types=(entry?.questionType||[]).filter(x=>typeNames[x]).map(x=>typeNames[x]);
+ const types=classify(q,entry).map(x=>typeNames[x]);
  const code=entry?.questionId||q.id;
  const draft=status==='draft',published=status==='published';
  const notes=entry?.notes||'';
@@ -79,6 +159,7 @@ function dialogHtml(q,entry,tx,missing=false){
   '</small><h2 id="ck78-heading">'+esc(header)+'</h2></div>'+
   '<button type="button" data-ck78-close aria-label="닫기">×</button></div>'+
   '<div class="ck78-modal-scroll">'+
+  voiceToolbar()+
   '<p class="ck78-status-line">최종정답: <strong>'+esc(keyLabel(q))+'</strong></p>'+
   (all||multiple?'<p class="ck78-warning">'+(all?
    '전원정답은 5개 선지가 모두 옳다는 뜻이 아닙니다. 채점 인정과 진위 판단은 분리해 확인하세요.':
@@ -98,6 +179,7 @@ function dialogHtml(q,entry,tx,missing=false){
     (entry.traps?.length?'<p>혼동 포인트: '+esc(entry.traps[0].text)+'</p>':'')+
     '</section>':'<section class="ck78-empty"><p>이 문항은 해설 작성·법령·판례 검수가 완료되지 않았습니다. 아래 체크리스트와 메모로 학습을 진행하세요.</p></section>')+
   (missing?'<p class="ck78-warning">연도별 해설 파일을 불러오지 못했습니다. 공식 문제와 최종정답 표시만 사용할 수 있습니다.</p>':'')+
+  learningActions(q,entry)+
   '<section class="ck78-review"><h3>분석 및 검토 대상</h3>'+
   '<p>'+esc(types.length?types.join(' · '):'정답 근거 · 선지별 판단 · 시험 당시 법령 확인')+'</p>'+
   (notes?'<p>'+esc(notes)+'</p>':'')+
@@ -117,14 +199,20 @@ function dialogHtml(q,entry,tx,missing=false){
   (similar.length?'<section class="ck78-related"><h3>원문 키워드 일치 · 유사 여부 미검수</h3>'+
    '<div>'+similar.map(p=>'<button type="button" data-ck78-open-question="'+esc(p.id)+'">'+
    p.year+'년 '+p.number+'번</button>').join('')+'</div></section>':'')+
-  '<p class="ck78-modal-source"><a href="'+esc(source)+'" target="_blank" rel="noopener noreferrer">Q-Net 공식 원문 · 최신법 여부 별도 확인</a></p>'+
+  '<p class="ck78-modal-source"><a href="'+esc(source)+'" target="_blank" rel="noopener noreferrer">시험지/원문 참조 링크 · 제공처 확인</a> · '+
+  '<a href="https://www.q-net.or.kr/cst003.do?gId=08&amp;gSite=L&amp;id=cst00309" target="_blank" rel="noopener noreferrer">Q-Net 공식 출처 확인</a></p>'+
   '</div>'+
   '<footer class="ck78-modal-footer"><button data-ck78-prev type="button" '+(q.number<=1?'disabled':'')+'>← 이전 문항</button>'+
   '<button data-ck78-next type="button" '+(q.number>=80?'disabled':'')+'>다음 문항 →</button>'+
   '<button data-ck78-close type="button">닫기</button></footer>';
 }
 async function open(year,number,from){
- const id=Number(year)+'-'+Number(number),q=lookup(id);
+ const id=Number(year)+'-'+Number(number);
+ let q=lookup(id);
+ // Older official years are loaded separately; no guessed text if still unavailable.
+ if(!q&&Number(year)>=2016&&Number(year)<=2020&&window.CK89OfficialBank?.loadYear){
+  try{await window.CK89OfficialBank.loadYear(Number(year));q=lookup(id);}catch{return false;}
+ }
  if(!q)return false;
  const el=modal();
  if(!el.open){trigger=from||document.activeElement;el.showModal();}
@@ -178,6 +266,36 @@ document.addEventListener('click',e=>{
   else status('저장 실패 · 브라우저 저장공간을 확인하세요.');
  }
  if(target.closest('[data-ck78-ai-copy]'))copyPrompt();
+ const voice=target.closest('[data-ck107-voice],[data-ck107-voice-scope],[data-ck107-voice-stop]');
+ if(voice&&dialog?.contains(voice)){
+  const line=dialog.querySelector('[data-ck107-voice-status]');
+  if(voice.hasAttribute('data-ck107-voice-stop')){
+   window.CK76Voice?.stop?.();if(line)line.textContent='음성 재생 정지 요청';return;
+  }
+  const q=lookup(selected);
+  if(!q){if(line)line.textContent='공식 문항을 불러오지 못했습니다.';return;}
+  const mode=voice.dataset.ck107Voice||'qa';
+  const scope=voice.hasAttribute('data-ck107-voice-scope')?'subject':'single';
+  const result=window.CK76Voice?.playOfficial?.(q.year,q.number,mode,scope);
+  if(line)line.textContent=result?.ok?
+   (scope==='subject'?'과목 연속 듣기':'현재 문항 듣기')+' 요청 · '+result.items+
+    '문항 · 전원정답 제외 '+result.excluded+'건 · 실제 소리는 기기에서 확인':
+   '읽을 문항이 없거나 음성 기능이 준비되지 않았습니다. 공식 원문 로딩·TTS 설정을 확인하세요.';
+  return;
+ }
+ if(target.closest('[data-ck107-personal-link]')){
+  const q=lookup(selected);
+  if(!q)return;
+  dialog?.close();
+  const result=window.CK83Links?.openQuestion?.(q.id);
+  if(!result)window.CK83Links?.open?.();
+  return;
+ }
+ if(target.closest('[data-ck107-open-exam]')){
+  const q=lookup(selected);
+  if(q){dialog?.close();window.CK76Study?.openQuestion?.(q.year,q.number,q.subject);}
+  return;
+ }
  if(target.closest('[data-ck78-prev],[data-ck78-next]')){
   const q=lookup(selected);if(!q)return;
   const direction=target.closest('[data-ck78-next]')?1:-1;
@@ -212,7 +330,7 @@ async function showReviewDashboard(){
    ['문제 원문에서 추출된 조합 진술',report.parsedCompoundStatements||0]
   ].map(([label,value])=>'<div><dt>'+esc(label)+'</dt><dd>'+esc(value)+'</dd></div>').join('')+'</dl>'+
   '<p>키워드 후보와 질문 유형은 자동 추출 값입니다. 검수된 출제 빈도, 법령 근거 또는 해설로 간주하지 않습니다.</p>'+
-  '<p>최종 해설을 발행하려면 공식 문제지·선지·최종정답·시험연도 법령의 근거를 별도로 검증해야 합니다.</p></div>'+
+  '<p>최종 해설을 발행하려면 공식 문제지·선지·최종정답·시험연도 법령의 근거를 별도로 검증해야 합니다.</p>'+yearCoverage()+'</div>'+
   '<footer class="ck78-modal-footer"><button data-ck78-close>닫기</button></footer>';
 }
 let queued=false;
@@ -243,6 +361,6 @@ if(root&&window.MutationObserver)new MutationObserver(changes=>{
   (node.matches?.('.ck-v7-stage,.registered-question,#ck76-search')||
    node.querySelector?.('.registered-question,#ck76-search')))))schedule();
 }).observe(root,{childList:true,subtree:true});
-window.CK78Analysis=Object.freeze({open,showReviewDashboard,lookup,keyLabel,
+window.CK78Analysis=Object.freeze({open,showReviewDashboard,lookup,keyLabel,classify,reviewSteps,personalProgress,yearCoverage,
  getStatus:()=>({status:selected||'idle',opened:Boolean(dialog?.open),loadedYears:[...years.keys()]})});
 })();
