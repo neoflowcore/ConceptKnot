@@ -35,12 +35,12 @@ function lookup(options={}){
 }
 test('v118 assets and manual deployment-only configuration are linked',()=>{
  const html=read('index.html'),sw=read('sw.js'),vercel=JSON.parse(read('vercel.json'));
- for(const asset of ['ck-pdf-workspace-v15.js?v=118','ck-ocr-v118.js?v=118',
+ for(const asset of ['ck-pdf-workspace-v15.js?v=118','ck-ocr-v118.js?v=119',
   'ck-ocr-v118.css?v=118','ck-manual-qa-v115.js?v=118','ck-data-integrity-v86.js?v=118']){
   assert.ok(html.includes(asset),'missing HTML '+asset);
   assert.ok(sw.includes(asset),'missing SW '+asset);
  }
- assert.match(sw,/conceptknot-study-v118-ocr-content-fingerprint/);
+ assert.match(sw,/conceptknot-study-v119-ocr-memory-control/);
  assert.equal(vercel.git.deploymentEnabled,false);
  assert.equal(fs.existsSync(path.join(__dirname,'..','.github','workflows')),false);
 });

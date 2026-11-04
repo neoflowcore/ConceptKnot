@@ -6,7 +6,7 @@
 'use strict';
 const KEY='ck118-personal-ocr-draft-v1';
 const LIB_URL='https://cdn.jsdelivr.net/npm/tesseract.js@7.0.0/dist/tesseract.min.js';
-const MAX_TEXT=80000,MAX_IMAGE=12*1024*1024;
+const MAX_TEXT=80000,MAX_IMAGE=12*1024*1024,MAX_SOURCE_PIXELS=24000000,MAX_OCR_PIXELS=3000000;
 let panel=null,host=null,frame=0,libPromise=null,worker=null;
 let jobId=0,working=false,dirty=false,timer=0,lastRaw=null,issue='',draft=read();
 const choices=['png','jpg','jpeg','webp','bmp'];
@@ -112,16 +112,16 @@ function loadLib(){
 function buttons(disabled){
  if(!panel)return;
  panel.querySelectorAll('[data-ck118-scan]').forEach(b=>b.disabled=disabled);
+ const imageInput=panel.querySelector('[data-ck118-file]');if(imageInput)imageInput.disabled=disabled;
  const cancel=panel.querySelector('[data-ck118-cancel]');
  if(cancel)cancel.disabled=!disabled;
 }
 function cancel(reason='OCR 중단'){
- const id=++jobId;
- if(worker){
-  const current=worker;worker=null;
-  Promise.resolve(current.terminate()).catch(()=>{});
- }
- if(working)status(reason+' · 처리 중인 인식 작업을 종료합니다.');
+ if(!working&&!worker)return jobId;
+ const id=++jobId,old=worker;worker=null;
+ working=false;buttons(false);
+ if(old){try{Promise.resolve(old.terminate()).catch(()=>{})}catch{}}
+ status(reason+' · 이전 인식 결과가 화면에 반영되지 않도록 중단했습니다.');
  return id;
 }
 function validImage(file){
@@ -129,6 +129,26 @@ function validImage(file){
  const ext=(file.name||'').split('.').pop().toLowerCase();
  return /^image\/(png|jpeg|webp|bmp)$/.test(file.type||'')||
   (file.type===''&&choices.includes(ext));
+}
+async function prepareImage(file){
+ if(!validImage(file))throw Error('PNG/JPG/WebP/BMP 이미지 12MB 이하만 인식할 수 있습니다.');
+ if(typeof createImageBitmap!=='function')
+  throw Error('브라우저가 안전한 이미지 크기 검사를 지원하지 않습니다.');
+ const image=await createImageBitmap(file);
+ try{
+  const width=Number(image.width),height=Number(image.height);
+  if(!Number.isFinite(width)||!Number.isFinite(height)||width<=0||height<=0||
+   width*height>MAX_SOURCE_PIXELS)
+   throw Error('원본 이미지가 2,400만 화소를 초과합니다. 해상도를 줄인 뒤 다시 선택하세요.');
+  const scale=Math.min(1,1800/width,2200/height,Math.sqrt(MAX_OCR_PIXELS/(width*height)));
+  const canvas=document.createElement('canvas');
+  canvas.width=Math.max(1,Math.floor(width*scale));
+  canvas.height=Math.max(1,Math.floor(height*scale));
+  const ctx=canvas.getContext('2d');
+  if(!ctx)throw Error('OCR 이미지 변환 캔버스를 만들지 못했습니다.');
+  ctx.drawImage(image,0,0,canvas.width,canvas.height);
+  return canvas;
+ }finally{try{image.close?.()}catch{}}
 }
 async function recognize(kind,file){
  if(working||!panel?.isConnected)return false;
@@ -141,7 +161,9 @@ async function recognize(kind,file){
   let inputImage=null,source='';
   if(kind==='image'){
    if(!validImage(file))throw Error('PNG/JPG/WebP/BMP 이미지 12MB 이하를 선택하세요.');
-   inputImage=file;source='이미지 '+safeSource(file.name);
+   inputImage=await prepareImage(file);
+   if(run!==jobId||self!==panel||scope!==host)return false;
+   source='이미지 '+safeSource(file.name);
   }else{
    const info=window.CKPDF15?.getState?.();
    if(!info||!info.pages)throw Error('먼저 원본 PDF를 열고 로딩을 완료하세요.');
@@ -161,8 +183,8 @@ async function recognize(kind,file){
    const percent=Math.max(0,Math.min(100,Math.round((entry.progress||0)*100/10)*10));
    if(percent!==displayed){displayed=percent;status('OCR 처리 중 · '+String(entry.status||'인식')+' '+percent+'%');}
   }});
-  worker=currentWorker;
   if(run!==jobId||self!==panel||scope!==host)return false;
+  worker=currentWorker;
   const output=await currentWorker.recognize(inputImage);
   if(run!==jobId||self!==panel||scope!==host)return false;
   const text=String(output?.data?.text||'').slice(0,MAX_TEXT);
@@ -177,8 +199,6 @@ async function recognize(kind,file){
   if(worker===currentWorker)worker=null;
   if(currentWorker){try{await currentWorker.terminate()}catch{}}
   if(run===jobId){
-   working=false;buttons(false);
-  }else if(!worker){
    working=false;buttons(false);
   }
  }
