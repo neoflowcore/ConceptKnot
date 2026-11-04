@@ -57,3 +57,7 @@ html[data-ck-theme=dark] .ck78-analysis-dialog .ck78-recognized{color:#a2dbbe}
 .ck78-analysis-dialog .ck107-year-grid div{display:grid;gap:3px;padding:9px;border:1px solid rgba(125,155,138,.28);border-radius:8px}
 .ck78-analysis-dialog .ck107-year-grid span{font-size:12px;opacity:.84}
 @media(max-width:530px){.ck78-analysis-dialog .ck107-personal-progress,.ck78-analysis-dialog .ck107-year-grid{grid-template-columns:minmax(0,1fr)}}
+
+/* v111: accessible real-time voice status and review queue entry. */
+.ck78-analysis-dialog .ck107-voice-toolbar [data-ck111-open]{font-weight:700}
+.ck78-analysis-dialog [data-ck107-voice-status]{min-height:2em}

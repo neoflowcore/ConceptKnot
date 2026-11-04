@@ -111,7 +111,7 @@ body{font-family:Pretendard,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;bac
 <link rel="stylesheet" href="./assets/ck-pen-scope-v59.css">
 <link rel="stylesheet" href="./assets/ck-typing-precision-v62.css?v=76">
 <link rel="stylesheet" href="./assets/ck-study-p6-v76.css?v=76">
-<link rel="stylesheet" href="./assets/ck-study-p4-v78.css?v=107">
+<link rel="stylesheet" href="./assets/ck-study-p4-v78.css?v=111">
 <link rel="stylesheet" href="./assets/ck-study-review-v79.css?v=79">
 <link rel="stylesheet" href="./assets/ck-study-final-v79.css?v=79">
 <link rel="stylesheet" href="./assets/ck-study-charts-v79.css?v=79">
@@ -1332,6 +1332,10 @@ function ck76VoiceState(status,reason=''){
  }
  const bar=document.getElementById('listen-bar');
  if(bar&&['idle','ended','error'].includes(status))bar.hidden=true;
+ try{window.dispatchEvent(new CustomEvent('ck:tts-state',{detail:{
+  status,message:reason,position:ck76Voice.position,total:ck76Voice.total,
+  engine:ck76Voice.engine,label:ck76Voice.label
+ }}));}catch{}
 }
 const ck76PreviousStop=ttsStop;
 ttsStop=function(announce=true){
@@ -1532,9 +1536,19 @@ function ck107ReadOfficial(year,number,mode='qa',scope='single',resumeAt=0){
   }catch{missing++;}
  }
  if(!items.length){
+  ttsStop(false);
+  ck76VoiceState('error','현재 읽을 수 있는 공식 문항이 없습니다. 원문 등록 또는 전원정답 제외를 확인하세요.');
   const bar=document.getElementById('listen-status');
   if(bar)bar.textContent='공식 등록 문항을 불러오지 못했습니다. 전원정답 제외 또는 자료 미로딩을 확인하세요.';
   return {ok:false,items:0,excluded,missing,reason:'no-records'};
+ }
+ // Never silently announce success for a partial 40-question official playlist.
+ if(continuous&&missing){
+  // A newly requested playlist cancels the previous speech, even on validation failure.
+  ttsStop(false);
+  ck76VoiceState('error','공식 원문 '+missing+'문항이 미로딩 상태입니다. 원문을 불러온 후 다시 재생하세요.');
+  if(window.CK89OfficialBank?.loadYear)window.CK89OfficialBank.loadYear(y).catch(()=>{});
+  return {ok:false,items:0,excluded,missing,mode,reason:'incomplete-bank'};
  }
  const title=y+'년 '+(n<=40?'부동산학개론':'민법')+' '+(continuous?'과목 연속 듣기':'문항 듣기');
  const segmentNumbers=[];
@@ -1544,7 +1558,8 @@ function ck107ReadOfficial(year,number,mode='qa',scope='single',resumeAt=0){
  }
  ck108Playlist=continuous?{year:y,mode,continuous,segmentNumbers,lastNumber:0}:null;
  ttsPlay(items,{continuous,mode,label:title,__ck107Official:true});
- if(continuous&&ck108Playlist)ck108Progress(0);
+ // The TTS bookmark is written by onstart, never before audio is accepted.
+ if(ck76Voice.status==='error')return {ok:false,items:0,excluded,missing,mode,reason:'audio-error'};
  return {ok:true,items:items.length,excluded,missing,mode,continuous};
 }
 
@@ -1577,6 +1592,7 @@ function ck109ReadDue(mode='qa',limit=40){
  }
  if(!items.length)return {ok:false,items:0,excluded,missing,reason:'due-empty'};
  ttsPlay(items,{continuous:items.length>1,mode,label:'개인 오답·복습 대기 '+items.length+'문항'});
+ if(ck76Voice.status==='error')return {ok:false,items:0,excluded,missing,mode,reason:'audio-error'};
  return {ok:true,items:items.length,excluded,missing,mode};
 }
 
@@ -3848,7 +3864,7 @@ render();setInterval(timerTick,500);
 <script src="./assets/ck-experience-v9.js" defer></script>
 <script src="./assets/ck-study-extensions-v10.js?v=59" defer></script>
 <script src="./assets/ck-study-p6-v76.js?v=76" defer></script>
-<script src="./assets/ck-study-p4-v78.js?v=107" defer></script>
+<script src="./assets/ck-study-p4-v78.js?v=111" defer></script>
 <script src="./assets/ck-study-review-v79.js?v=79" defer></script>
 <script src="./assets/ck-study-final-v79.js?v=79" defer></script>
 <script src="./assets/ck-study-charts-v79.js?v=79" defer></script>
@@ -3858,6 +3874,8 @@ render();setInterval(timerTick,500);
 <script src="./assets/ck-full-exam-v82.js?v=82" defer></script>
 <script src="./assets/ck-study-recall-v83.js?v=83" defer></script>
 <script src="./assets/ck-study-links-v83.js?v=83" defer></script>
+<link rel="stylesheet" href="./assets/ck-evidence-queue-v111.css?v=111">
+<script src="./assets/ck-evidence-queue-v111.js?v=111" defer></script>
 <script src="./assets/ck-study-analytics-v83.js?v=83" defer></script>
 <script src="./assets/ck-study-plan-v84.js?v=84" defer></script>
 <script src="./assets/ck-study-materials-v84.js?v=84" defer></script>

@@ -7,7 +7,7 @@
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const safeUrl=url=>/^https:\/\/(?:[\w.-]+)(?:\/|$)/.test(String(url||''))?String(url):'';
 const years=new Map(),requests=new Map();
-let dialog,trigger=null,selected=null,taxonomy=null;
+let dialog,trigger=null,selected=null,taxonomy=null,openGeneration=0;
 const names={estate:'부동산학개론',civil:'민법 및 민사특별법'};
 const typeNames={select_incorrect:'틀린 지문 찾기',select_correct:'옳은 지문 찾기',
  compound_statements:'ㄱ·ㄴ·ㄷ 진술 조합',calculation_or_numeric:'계산·수치 확인',
@@ -81,6 +81,8 @@ function voiceToolbar(){
   '<button type="button" data-ck107-voice-scope="subject">과목 40문항 연속</button>'+
   '<button type="button" data-ck107-voice-resume>▶ 중단 지점 이어 듣기</button>'+
   '<button type="button" data-ck109-due>▶ 내 오답·복습 대기 듣기</button>'+
+  '<button type="button" data-ck111-open>선지 근거 검토 대기열</button>'+
+  '<button type="button" data-ck107-voice-pause>일시정지 / 계속</button>'+
   '<button type="button" data-ck107-voice-stop>■ 정지</button></div>'+
   '<p class="ck107-voice-status" data-ck107-voice-status role="status" aria-live="polite">'+
   '장시간 재생·백그라운드·AI 모델 음색은 실제 기기 검증 전입니다.</p></section>';
@@ -131,7 +133,7 @@ function modal(){
   if(e.target.closest?.('[data-ck78-close]'))dialog.close();
   else if(e.target===dialog)dialog.close();
  });
- dialog.addEventListener('close',()=>{trigger?.focus?.();trigger=null;selected=null});
+ dialog.addEventListener('close',()=>{openGeneration++;trigger?.focus?.();trigger=null;selected=null});
  document.body.appendChild(dialog);
  return dialog;
 }
@@ -216,13 +218,13 @@ function dialogHtml(q,entry,tx,missing=false){
   '<button data-ck78-close type="button">닫기</button></footer>';
 }
 async function open(year,number,from){
- const id=Number(year)+'-'+Number(number);
+ const id=Number(year)+'-'+Number(number),request=++openGeneration;
  let q=lookup(id);
  // Older official years are loaded separately; no guessed text if still unavailable.
  if(!q&&Number(year)>=2016&&Number(year)<=2020&&window.CK89OfficialBank?.loadYear){
-  try{await window.CK89OfficialBank.loadYear(Number(year));q=lookup(id);}catch{return false;}
+  try{await window.CK89OfficialBank.loadYear(Number(year));if(request!==openGeneration)return false;q=lookup(id);}catch{return false;}
  }
- if(!q)return false;
+ if(!q||request!==openGeneration)return false;
  const el=modal();
  if(!el.open){trigger=from||document.activeElement;el.showModal();}
  selected=id;
@@ -232,13 +234,22 @@ async function open(year,number,from){
  try{const values=await Promise.all([dataFor(q.year),loadTaxonomy()]);
   found=values[0]?.get(q.id)||null;tx=values[1];
  }catch(err){missing=true;}
- if(selected!==id||!el.open)return true;
+ if(request!==openGeneration||selected!==id||!el.open)return false;
  el.innerHTML=dialogHtml(q,found,tx,missing);
  el.dataset.ck78Current=id;
  el.querySelector('#ck78-heading')?.focus?.();
  return true;
 }
 function status(text){const node=dialog?.querySelector('[data-ck78-status]');if(node)node.textContent=text;}
+window.addEventListener('ck:tts-state',event=>{
+ if(!dialog?.open)return;
+ const el=dialog.querySelector('[data-ck107-voice-status]');if(!el)return;
+ const d=event.detail||{};
+ const label={idle:'대기',preparing:'준비 중',ready:'준비 완료',speaking:'재생 중',
+  paused:'일시정지',stopping:'종료 중',ended:'완료',error:'오류'}[d.status]||'음성';
+ el.textContent=label+' · '+(d.message||'')+
+  (d.position&&d.total?' · '+d.position+'/'+d.total:'');
+});
 function copyPrompt(){
  const q=lookup(selected);
  if(!q)return;
@@ -275,15 +286,18 @@ document.addEventListener('click',e=>{
   else status('저장 실패 · 브라우저 저장공간을 확인하세요.');
  }
  if(target.closest('[data-ck78-ai-copy]'))copyPrompt();
- const voice=target.closest('[data-ck107-voice],[data-ck107-voice-scope],[data-ck107-voice-resume],[data-ck107-voice-stop],[data-ck109-due]');
+ const voice=target.closest('[data-ck107-voice],[data-ck107-voice-scope],[data-ck107-voice-resume],[data-ck107-voice-pause],[data-ck107-voice-stop],[data-ck109-due]');
  if(voice&&dialog?.contains(voice)){
   const line=dialog.querySelector('[data-ck107-voice-status]');
   if(voice.hasAttribute('data-ck107-voice-stop')){
    window.CK76Voice?.stop?.();if(line)line.textContent='음성 재생 정지 요청';return;
   }
+  if(voice.hasAttribute('data-ck107-voice-pause')){
+   window.CK76Voice?.pause?.();return;
+  }
   const q=lookup(selected);
   if(!q){if(line)line.textContent='공식 문항을 불러오지 못했습니다.';return;}
-  const mode=voice.dataset.ck107Voice||'qa';
+  const mode=voice.dataset.ck107Voice||window.CK76Voice?.getPreferences?.().mode||'qa';
   const scope=voice.hasAttribute('data-ck107-voice-scope')?'subject':'single';
   const result=voice.hasAttribute('data-ck109-due')?
    window.CK76Voice?.playDue?.(window.CK76Voice?.getPreferences?.().mode||'qa',40):
@@ -321,6 +335,7 @@ document.addEventListener('click',e=>{
  if(target.closest('[data-ck78-review-report]'))showReviewDashboard();
 });
 async function showReviewDashboard(){
+ openGeneration++;
  const el=modal();if(!el.open){trigger=document.activeElement;el.showModal();}
  selected='report';
  el.innerHTML='<p role="status">검수 현황 조회 중…</p><button data-ck78-close>닫기</button>';
@@ -342,7 +357,8 @@ async function showReviewDashboard(){
    ['문제 원문에서 추출된 조합 진술',report.parsedCompoundStatements||0]
   ].map(([label,value])=>'<div><dt>'+esc(label)+'</dt><dd>'+esc(value)+'</dd></div>').join('')+'</dl>'+
   '<p>키워드 후보와 질문 유형은 자동 추출 값입니다. 검수된 출제 빈도, 법령 근거 또는 해설로 간주하지 않습니다.</p>'+
-  '<p>최종 해설을 발행하려면 공식 문제지·선지·최종정답·시험연도 법령의 근거를 별도로 검증해야 합니다.</p>'+yearCoverage()+'</div>'+
+  '<p>최종 해설을 발행하려면 공식 문제지·선지·최종정답·시험연도 법령의 근거를 별도로 검증해야 합니다.</p>'+
+  '<button type="button" data-ck111-open>800문항 선지 근거 검토 대기열 열기</button>'+yearCoverage()+'</div>'+
   '<footer class="ck78-modal-footer"><button data-ck78-close>닫기</button></footer>';
 }
 let queued=false;

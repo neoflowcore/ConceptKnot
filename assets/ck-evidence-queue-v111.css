@@ -1,0 +1,27 @@
+/* v111 · evidence queue lives inside the existing 자료·분석 dock. */
+#ck111-review-queue{min-width:0;max-width:100%;color:inherit}
+#ck111-review-queue .ck111-details{border:1px solid rgba(127,145,140,.32);border-radius:14px;overflow:hidden;margin:8px 0;background:rgba(145,171,159,.07)}
+#ck111-review-queue summary{cursor:pointer;display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px;font-size:13px;font-weight:750}
+#ck111-review-queue summary span{font-size:11px;opacity:.7;font-weight:500}
+#ck111-review-queue .ck111-body{padding:9px 12px 14px}
+#ck111-review-queue .ck111-body>p{font-size:12px;line-height:1.6;opacity:.84;margin:7px 0}
+#ck111-review-queue .ck111-stats,#ck111-review-queue .ck111-actions,#ck111-review-queue .ck111-filters,#ck111-review-queue .ck111-progress{display:flex;flex-wrap:wrap;align-items:center;gap:7px}
+#ck111-review-queue .ck111-stats span{background:rgba(120,160,139,.13);border-radius:7px;padding:6px 8px;font-size:12px}
+#ck111-review-queue button{font:inherit;font-size:12px;cursor:pointer;border:1px solid rgba(115,145,133,.42);border-radius:8px;background:rgba(125,161,146,.1);color:inherit;padding:7px 10px}
+#ck111-review-queue button:disabled{cursor:default;opacity:.35}
+#ck111-review-queue button:focus-visible,#ck111-review-queue select:focus-visible{outline:2px solid #54ab8b;outline-offset:2px}
+#ck111-review-queue .ck111-filters{align-items:stretch;margin:12px 0}
+#ck111-review-queue .ck111-filters label{display:grid;gap:5px;flex:1 1 135px;font-size:12px;min-width:0}
+#ck111-review-queue select{width:100%;min-width:0;font:inherit;padding:8px;border-radius:7px;border:1px solid rgba(115,145,133,.4);background:var(--ck58-ribbon,#f7f9f7);color:inherit}
+#ck111-review-queue .ck111-items{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(290px,100%),1fr));gap:8px}
+#ck111-review-queue .ck111-item{padding:10px;border:1px solid rgba(127,145,140,.27);border-radius:10px;min-width:0}
+#ck111-review-queue .ck111-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:5px}
+#ck111-review-queue .ck111-head strong{font-size:13px}
+#ck111-review-queue .ck111-head small{opacity:.7;font-size:11px}
+#ck111-review-queue .ck111-item>p{font-size:12px;line-height:1.55;overflow-wrap:anywhere;margin:8px 0}
+#ck111-review-queue .ck111-progress span{font-size:11px;opacity:.8}
+#ck111-review-queue .ck111-item .ck111-actions{margin-top:9px}
+#ck111-review-queue .ck111-pages{display:flex;align-items:center;justify-content:center;gap:9px;margin:13px 0 0;font-size:12px}
+#ck111-review-queue .ck111-status{min-height:1.4em}
+#ck76-search .ck111-open{margin-left:5px;white-space:nowrap;font-size:11px}
+@media(max-width:560px){#ck111-review-queue .ck111-body{padding:8px}#ck111-review-queue summary{display:block}#ck111-review-queue summary span{display:block;margin-top:3px}}
