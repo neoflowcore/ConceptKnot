@@ -14,7 +14,8 @@ const KEY_LIMITS=Object.freeze({
  'ck83-personal-concept-links-v1':5200000,
  'ck84-study-plan-v1':20000,
  'ck84-personal-materials-v1':2400000,
- 'ck115-manual-device-verification-v1':50000
+ 'ck115-manual-device-verification-v1':50000,
+ 'ck118-personal-ocr-draft-v1':120000
 });
 const BAD='학습기록 백업에 유효하지 않은 자료가 있습니다.';
 const isObject=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
@@ -67,7 +68,8 @@ function validationMethod(key){
   'ck83-personal-concept-links-v1':()=>window.CK83Links?.sanitize,
   'ck84-study-plan-v1':()=>window.CK84Plan?.sanitize,
   'ck84-personal-materials-v1':()=>window.CK84Materials?.sanitize,
-  'ck115-manual-device-verification-v1':()=>window.CK115QA?.sanitize
+  'ck115-manual-device-verification-v1':()=>window.CK115QA?.sanitize,
+  'ck118-personal-ocr-draft-v1':()=>window.CK118OCR?.sanitize
  };
  return map[key]?.();
 }

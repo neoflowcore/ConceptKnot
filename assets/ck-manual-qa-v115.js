@@ -22,7 +22,11 @@ const TASKS=Object.freeze([
  {id:'pdf',group:'PDF',name:'PDF 두 페이지 펼쳐보기·오른쪽 페이지 필기·도구 전환 후 필기 보존'},
  {id:'chart',group:'그래프',name:'E₀→E₁ 수요·공급 변화 방향 및 예시/일반 결론 구분'},
  {id:'motion',group:'성능',name:'학습 탭에서 배경 애니메이션 정지·GPU 사용량 안정'},
- {id:'dark',group:'디자인',name:'다크모드 배경·탭 바깥 색상·문자 대비 및 화면 회전 확인'}
+ {id:'dark',group:'디자인',name:'다크모드 배경·탭 바깥 색상·문자 대비 및 화면 회전 확인'},
+ {id:'pdf-hash',group:'PDF',name:'다른 PDF가 같은 파일명·용량이어도 필기가 잘못 붙지 않는지 확인'},
+ {id:'pdf-legacy',group:'PDF',name:'이전 버전 PDF 필기 확인 후 내용지문 보관함에 보존·복원 확인'},
+ {id:'ocr-pdf',group:'OCR',name:'한국어 스캔 PDF 현재쪽 OCR · 처리 중 중단 · 브라우저 숨김시 CPU 종료 확인'},
+ {id:'ocr-draft',group:'OCR',name:'이미지 OCR·①~⑤ 초안 분리·편집·새로고침·전체 JSON 백업 및 복원 확인'}
 ]);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const plain=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
@@ -112,7 +116,7 @@ function render(){
  const oldOpen=panel.querySelector('details')?.open===true;
  const c=summary();
  panel.innerHTML='<details class="ck115-qa-details"'+(oldOpen?' open':'')+'>'+
- '<summary><strong>실기검증표 v115 · 직접 PASS/FAIL 기록</strong><span data-ck115-counter>'+
+ '<summary><strong>실기검증표 v118 · 직접 PASS/FAIL 기록</strong><span data-ck115-counter>'+
  '수기 PASS '+c.pass+'/'+c.total+' · FAIL '+c.fail+' · 미확인 '+c.pending+'</span></summary>'+
  '<p class="ck115-qa-warning"><strong>필수 수기 검증:</strong> 이 항목은 자동으로 PASS 처리되지 않습니다. PC와 Android Brave, S Pen을 직접 사용해 재현한 경우에만 표시하세요. 모든 기록은 현재 브라우저에만 보관됩니다.</p>'+
  '<div class="ck115-qa-tools"><button type="button" data-ck115-diagnose>현재 기기 상태 확인</button>'+
@@ -149,7 +153,7 @@ function diagnose(){
 }
 function exportText(){
  const snap=gather(),c=summary(snap);
- const lines=['ConceptKnot v115 사용자 수기 실기검증표','개인 기기에서 수동으로 표시한 결과; 공식 검증 아님',
+ const lines=['ConceptKnot v118 사용자 수기 실기검증표','개인 기기에서 수동으로 표시한 결과; 공식 검증 아님',
   '작성일: '+new Date().toISOString(),'PASS '+c.pass+'/'+c.total+' · FAIL '+c.fail+
   ' · 미확인 '+c.pending+' · 해당 없음 '+c.skip,''];
  TASKS.forEach((task,i)=>{
@@ -160,7 +164,7 @@ function exportText(){
  try{
   const blob=new Blob(['\uFEFF',lines.join('\n')],{type:'text/plain;charset=utf-8'});
   const url=URL.createObjectURL(blob),a=document.createElement('a');
-  a.href=url;a.download='ConceptKnot_v115_수기실기검증_'+new Date().toISOString().slice(0,10)+'.txt';
+  a.href=url;a.download='ConceptKnot_v118_수기실기검증_'+new Date().toISOString().slice(0,10)+'.txt';
   document.body.appendChild(a);a.click();a.remove();
   setTimeout(()=>URL.revokeObjectURL(url),3000);
   announce('TXT를 저장했습니다. 저장 오류가 있었더라도 현재 화면의 수기 입력을 포함합니다.');

@@ -16,10 +16,10 @@ function extract(source,first,after){
 }
 test('v117 entry point, cache and routing guard linked without automatic deploy',()=>{
  const html=read('index.html'),sw=read('sw.js'),config=JSON.parse(read('vercel.json'));
- assert.match(html,/ck-pdf-workspace-v15\.js\?v=117/);
+ assert.match(html,/ck-pdf-workspace-v15\.js\?v=118/);
  assert.match(html,/window\.CKPDF15\?\.canLeave\?\.\(\)===false/);
- assert.match(sw,/conceptknot-study-v117-pdf-ink-backup-rescue/);
- assert.equal((sw.match(/ck-pdf-workspace-v15\.js\?v=117/g)||[]).length,2);
+ assert.match(sw,/conceptknot-study-v118-ocr-content-fingerprint/);
+ assert.equal((sw.match(/ck-pdf-workspace-v15\.js\?v=118/g)||[]).length,2);
  assert.equal((sw.match(/ck-pdf-tools-v117\.css\?v=117/g)||[]).length,2);
  assert.equal(config.git.deploymentEnabled,false);
  assert.ok(!fs.existsSync(path.join(__dirname,'..','.github','workflows')));
@@ -48,7 +48,7 @@ test('strict JSON backup schema rejects wrong file, malicious key and invalid po
  assert.equal(validate({...sample,annotations:{'999':[]}},90),null);
 });
 test('legacy PDF ink loads correctly but malformed/corrupt records cannot be silently overwritten',()=>{
- const script=extract(pdf(),'function restore(s){','function persist(s){');
+ const script=extract(pdf(),'function restore(s,keyOverride){','function persist(s){');
  let raw=null;
  const restore=new Function('annotationId','localStorage','clamp','INK_MAX_STROKES',
   script+'return restore;')(()=> 'ck15-ink:2025:official',{getItem:()=>raw},(x,a,b)=>Math.min(b,Math.max(a,x)),12000);

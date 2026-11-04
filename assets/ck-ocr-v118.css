@@ -1,0 +1,23 @@
+/* ConceptKnot v118 OCR UI — low-motion, accessible, browser-local research draft. */
+.ck118-ocr{margin:10px 0 8px;max-width:100%;min-width:0;border:1px solid rgba(130,130,130,.25);border-radius:12px;padding:8px 10px;background:rgba(125,125,125,.04);color:inherit;font:inherit}
+.ck118-ocr details{display:block;max-width:100%}
+.ck118-ocr summary{display:flex;align-items:center;flex-wrap:wrap;gap:8px;cursor:pointer;line-height:1.45}
+.ck118-ocr summary strong{font-size:13px}
+.ck118-ocr summary small{opacity:.7;font-size:11px}
+.ck118-ocr p,.ck118-ocr small{font-size:12px;line-height:1.5}
+.ck118-ocr p{margin:7px 0}
+.ck118-ocr .ck118-ocr-actions{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:9px 0}
+.ck118-ocr button{appearance:none;border:1px solid currentColor;border-radius:8px;padding:5px 9px;background:transparent;color:inherit;font:inherit;font-size:12px;cursor:pointer;min-height:31px}
+.ck118-ocr button:hover{background:rgba(125,125,125,.1)}
+.ck118-ocr button:disabled{opacity:.45;cursor:not-allowed}
+.ck118-ocr button:focus-visible,.ck118-ocr input:focus-visible,.ck118-ocr textarea:focus-visible{outline:2px solid #5ab8a6;outline-offset:2px}
+.ck118-ocr .ck118-ocr-actions label{display:inline-flex;align-items:center;gap:6px;font-size:12px}
+.ck118-ocr input[type=file]{max-width:245px;width:auto;font-size:11px}
+.ck118-ocr .ck118-ocr-status{min-height:1.3em;font-size:11px;font-weight:600;overflow-wrap:anywhere}
+.ck118-ocr .ck118-ocr-editor{display:flex;flex-direction:column;gap:4px;font-size:12px}
+.ck118-ocr .ck118-ocr-editor span{font-size:11px;opacity:.75;overflow-wrap:anywhere}
+.ck118-ocr textarea{width:100%;min-height:140px;max-height:55vh;box-sizing:border-box;resize:vertical;border:1px solid rgba(125,125,125,.4);border-radius:8px;background:rgba(125,125,125,.03);color:inherit;font:inherit;font-size:13px;line-height:1.55;padding:8px;white-space:pre-wrap}
+.ck118-ocr .ck118-ocr-options{white-space:pre-wrap;overflow-wrap:anywhere;max-height:220px;overflow:auto;font-size:12px;line-height:1.6;margin:6px 0;padding:8px;border:1px dashed rgba(125,125,125,.25);border-radius:8px;background:transparent}
+.ck118-ocr [hidden]{display:none!important}
+@media(max-width:420px){.ck118-ocr{padding:6px}.ck118-ocr button{font-size:11px;padding:5px 7px}.ck118-ocr input[type=file]{max-width:175px}.ck118-ocr summary{gap:4px}}
+@media(prefers-reduced-motion:reduce){.ck118-ocr,.ck118-ocr *{transition:none!important;animation:none!important}}

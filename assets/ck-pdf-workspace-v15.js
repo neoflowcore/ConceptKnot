@@ -40,8 +40,8 @@ function annotationId(s){
  if(file)return ANNOTATION_PREFIX+s.year+':file:'+encodeURIComponent(file.name)+':'+file.size;
  return ANNOTATION_PREFIX+s.year+':official';
 }
-function restore(s){
-  s.annotationKey=annotationId(s);
+function restore(s,keyOverride){
+ s.annotationKey=keyOverride||annotationId(s);
  let data=null;s.inkIssue='';s.loadedInkRaw=null;s.inkDirty=false;s.inkBackedUp=false;
  try{
   s.loadedInkRaw=localStorage.getItem(s.annotationKey);
@@ -296,7 +296,11 @@ async function loadDocument(s){
   s.loadingTask=task;
   const doc=await task.promise;
   if(token!==s.documentToken||!s.host.isConnected){doc.destroy();return}
-  s.pdf=doc;s.page=Math.min(s.page,doc.numPages);s.baseViewport=null;
+  if(s.file&&!await selectFileInkIdentity(s,bytes,token)){doc.destroy();return;}
+   if(token!==s.documentToken||!s.host?.isConnected){doc.destroy();return;}
+   s.pdf=doc;s.page=Math.min(s.page,doc.numPages);s.baseViewport=null;
+   const recoverButton=s.host.querySelector?.('[data-ck117-ink-raw]');
+   if(recoverButton)recoverButton.hidden=!((s.inkIssue&&s.loadedInkRaw!==null)||s.legacyReadIssue);
   const body=els(s.host,'[data-ck15-fallback]'),scroll=els(s.host,'[data-ck15-scroll]');
   if(body)body.hidden=true;if(scroll)scroll.hidden=false;
   await paintPdf(s);
@@ -537,14 +541,97 @@ async function pdfFingerprint(bytes){
  const digest=await window.crypto.subtle.digest('SHA-256',bytes);
  return Array.from(new Uint8Array(digest),v=>v.toString(16).padStart(2,'0')).join('');
 }
+
+async function selectFileInkIdentity(s,bytes,token){
+ if(!s.file)return true;
+ const oldKey=annotationId(s);
+ s.legacyKey=oldKey;
+ alertStatus(s,'PDF 내용 지문(SHA-256)과 필기 보관함을 확인하는 중입니다.');
+ let digest='';
+ try{digest=await pdfFingerprint(bytes)}catch{digest=''}
+ if(token!==s.documentToken||!s.host?.isConnected)return false;
+ if(!/^[a-f0-9]{64}$/.test(digest)){
+  s.documentFingerprint='';
+  s.annotationKey=ANNOTATION_PREFIX+s.year+':unverified-session';
+  s.loadedInkRaw=null;s.annotations=Object.create(null);s.redo=Object.create(null);
+  s.inkIssue='이 브라우저에서 PDF SHA-256을 확인할 수 없어 파일별 필기 자동 저장을 중단했습니다. 필기 JSON/PDF로 수동 백업하세요.';
+  alertStatus(s,s.inkIssue);return true;
+ }
+ const key=ANNOTATION_PREFIX+'v118:'+s.year+':sha256:'+digest;
+ s.documentFingerprint=digest;
+ restore(s,key);
+ if(s.loadedInkRaw!==null){
+  if(s.inkIssue)alertStatus(s,s.inkIssue);
+  return true;
+ }
+ // An older version used file name+size alone. Never silently bind that ink to a new PDF.
+ let oldRaw=null;
+ try{oldRaw=localStorage.getItem(oldKey)}
+ catch{alertStatus(s,'이전 방식 필기를 읽지 못했습니다. 기존 저장소를 변경하지 않았습니다.');return true}
+ if(oldRaw===null)return true;
+ const legacy={year:s.year,file:s.file};
+ restore(legacy,oldKey);
+ if(legacy.inkIssue){
+  s.legacyReadIssue=legacy.inkIssue;
+  alertStatus(s,'이전 방식의 필기가 있지만 안전 검사를 통과하지 못했습니다. 기존 키의 원본은 유지됩니다.');
+  return true;
+ }
+ const count=Object.values(legacy.annotations).reduce((n,lines)=>n+lines.length,0);
+ if(count===0)return true;
+ if(!window.confirm?.('이 PDF와 이름·크기가 같은 이전 버전 필기 '+count+'획을 발견했습니다.\n'
+   +'동일한 이름·크기의 다른 PDF 필기일 수도 있습니다. 지금 열린 PDF의 필기임을 직접 확인했을 때만 "확인"을 선택하세요.\n'
+   +'기존 저장본은 삭제하지 않습니다. 다른 파일이면 취소를 선택하세요.'))return true;
+ if(token!==s.documentToken||!s.host?.isConnected)return false;
+ try{
+  if(localStorage.getItem(key)!==null||localStorage.getItem(oldKey)!==oldRaw){
+   alertStatus(s,'필기 이관 중 다른 탭 변경이 감지됐습니다. 원본을 유지했습니다.');return true;
+  }
+  localStorage.setItem(key,JSON.stringify(legacy.annotations));
+  restore(s,key);
+  s.migratedLegacy=true;
+  alertStatus(s,'이전 필기 '+count+'획을 현재 PDF 내용 지문으로 별도 복사했습니다. 이전 저장본은 그대로 유지했습니다.');
+ }catch{
+  s.inkIssue='기존 필기를 새 보관함에 복사하지 못했습니다. 이전 저장본을 유지하고 자동 저장을 차단했습니다.';
+  alertStatus(s,s.inkIssue);
+ }
+ return true;
+}
+async function renderOcrPage(pageNo){
+ const root=session;
+ if(!root?.pdf||!root.host?.isConnected)throw Error('먼저 PDF 원문을 여세요.');
+ const num=Number(pageNo);
+ if(!Number.isInteger(num)||num<1||num>root.pdf.numPages)throw Error('OCR 페이지 번호가 올바르지 않습니다.');
+ const stamp=root.documentToken,documentRef=root.pdf;
+ const page=await documentRef.getPage(num);
+ if(root!==session||stamp!==root.documentToken||!root.host?.isConnected)throw Error('PDF 문서가 변경됐습니다.');
+ const view=page.getViewport({scale:1});
+ const factor=Math.max(.1,Math.min(2,1600/Math.max(1,view.width),2000/Math.max(1,view.height),
+  Math.sqrt(3000000/Math.max(1,view.width*view.height))));
+ const viewport=page.getViewport({scale:factor});
+ const canvas=document.createElement('canvas');
+ canvas.width=Math.max(1,Math.round(viewport.width));
+ canvas.height=Math.max(1,Math.round(viewport.height));
+ const context=canvas.getContext('2d');
+ if(!context)throw Error('OCR 이미지 캔버스를 만들지 못했습니다.');
+ const job=page.render({canvasContext:context,viewport});
+ try{await job.promise}catch(err){
+  if(err?.name==='RenderingCancelledException')throw Error('OCR 렌더링이 취소됐습니다.');
+  throw err;
+ }
+ if(root!==session||stamp!==root.documentToken||!root.host?.isConnected)throw Error('OCR 중 문서가 변경됐습니다.');
+ return {canvas,page:num,year:root.year,documentKey:root.annotationKey};
+}
+
 function backupDamagedInk(root){
  if(!root?.inkIssue)return false;
  try{
-  const text=root.loadedInkRaw;
+  const text=root.loadedInkRaw!==null?root.loadedInkRaw:
+   (root.legacyReadIssue&&root.legacyKey?localStorage.getItem(root.legacyKey):null);
   if(text===null)throw Error('보존할 원본이 없습니다.');
   downloadBlob(new Blob([text],{type:'application/json;charset=utf-8'}),
    'ConceptKnot-'+root.year+'-PDF-손상원본-수정금지.json');
-  alertStatus(root,'기존 필기 원본 다운로드를 요청했습니다. 파일을 확인하고 복원을 진행하세요.');
+  root.damagedExportRequested=true;
+  alertStatus(root,'기존 필기 원본 다운로드를 요청했습니다. 파일이 실제로 저장됐는지 확인하고 복원을 진행하세요.');
   return true;
  }catch(e){alertStatus(root,'기존 필기 원본 보존 오류: '+(e.message||e));return false}
 }
@@ -555,7 +642,7 @@ async function backupInk(s){
  if(root.second)finishInput(root.second);
  try{
   const data={format:INK_BACKUP_FORMAT,version:1,documentKey:root.annotationKey,
-   year:root.year,pdfHash:await pdfFingerprint(root.bytes),exportedAt:new Date().toISOString(),
+   year:root.year,pdfHash:root.documentFingerprint||await pdfFingerprint(root.bytes),exportedAt:new Date().toISOString(),
    annotations:root.annotations};
   if(session!==root)throw Error('백업 중 PDF 화면이 변경됐습니다.');
   const text=JSON.stringify(data);
@@ -574,15 +661,21 @@ async function restoreInkFile(s,file){
  try{
   if(root.inkDirty&&!root.inkBackedUp)
    throw Error('저장되지 않은 현재 필기를 먼저 JSON/PDF로 백업하세요');
+  if(root.inkIssue&&!root.damagedExportRequested)
+   throw Error('손상된 필기 원본을 먼저 JSON 파일로 다운로드하세요');
   const text=await file.text();
   if(text.length>INK_BACKUP_LIMIT)throw Error('파일 크기 제한 초과');
   const loaded=validateInkBackup(JSON.parse(text),root.pdf.numPages);
   if(!loaded)throw Error('지원하지 않는 필기 JSON 구조 또는 잘못된 좌표');
-  if(loaded.documentKey!==root.annotationKey)throw Error('연도 또는 원본 PDF가 일치하지 않습니다');
-  if(loaded.pdfHash){
-   const current=await pdfFingerprint(root.bytes);
-   if(current&&current!==loaded.pdfHash)throw Error('원본 PDF의 지문(SHA-256)이 다릅니다');
-  }
+  const current=root.documentFingerprint||await pdfFingerprint(root.bytes);
+  const matchedKey=loaded.documentKey===root.annotationKey;
+  const legacyVerified=!!root.file&&loaded.documentKey===root.legacyKey&&
+   !!current&&loaded.pdfHash===current;
+  if(!matchedKey&&!legacyVerified)
+   throw Error('원본 PDF 또는 저장 키가 일치하지 않습니다. 이전 방식 필기는 SHA-256 일치 확인이 필요합니다');
+  if(loaded.pdfHash&&(!current||current!==loaded.pdfHash))
+   throw Error('원본 PDF의 SHA-256을 확인할 수 없거나 일치하지 않습니다');
+  if(root.file&&!current)throw Error('내용 지문을 확인할 수 없는 PDF는 안전 복원할 수 없습니다');
   if(session!==root||!root.host?.isConnected)throw Error('파일 검사 중 PDF 화면이 변경됐습니다');
   if(localStorage.getItem(root.annotationKey)!==root.loadedInkRaw)
    throw Error('다른 탭에서 PDF 필기가 수정되어 복원을 중단했습니다');
@@ -790,7 +883,13 @@ function attach(){
   touchPoints:new Map(),gesture:null,pinch:null,activeStroke:null,pdf:null,bytes:null,renderTask:null
  };
  try{s.spread=localStorage.getItem('ck17-pdf-spread')==='true'}catch(e){s.spread=false}
- session=s;restore(s);bind(s);loadDocument(s);
+ session=s;
+ if(!file)restore(s);
+ else{
+  s.annotationKey=annotationId(s);s.legacyKey=s.annotationKey;s.documentFingerprint='';
+  s.loadedInkRaw=null;s.inkIssue='';s.inkDirty=false;s.inkBackedUp=false;
+ }
+ bind(s);loadDocument(s);
 }
 function scheduleAttach(){
  if(attachFrame)return;
@@ -798,6 +897,13 @@ function scheduleAttach(){
 }
 document.addEventListener('change',e=>{
  if(e.target.id!=='pdf-upload'||!e.target.files?.[0])return;
+ // Capture runs before the inline study engine's bubble listener.
+ // Never replace an unsaved ink session with a new local PDF.
+ if(session&&session.inkDirty&&!session.inkBackedUp){
+  e.preventDefault();e.stopImmediatePropagation();e.target.value='';
+  alertStatus(session,'저장되지 않은 PDF 필기가 있어 파일 변경을 차단했습니다. 필기 JSON/PDF를 먼저 백업하세요.');
+  return;
+ }
  const file=e.target.files[0];
  if(file.type!=='application/pdf'&&!/\.pdf$/i.test(file.name))return;
  pendingFile=file;
@@ -836,10 +942,10 @@ function boot(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});
 else boot();
 window.CKPDF15=Object.freeze({
- canLeave:canLeavePdf,validateInkBackup,
+ canLeave:canLeavePdf,validateInkBackup,renderOcrPage,
  exportInk:()=>session&&backupInk(session),
  extractText:()=>session&&extractVisibleText(session),
- getState:()=>session?{year:session.year,page:session.page,pages:session.pdf?.numPages||0,zoom:session.zoom,spread:!!session.spread,tool:session.tool,annotationCount:Object.values(session.annotations).reduce((n,lines)=>n+lines.length,0),inkDirty:!!session.inkDirty,inkBackedUp:!!session.inkBackedUp,inkIssue:session.inkIssue||''}:null,
+ getState:()=>session?{year:session.year,page:session.page,pages:session.pdf?.numPages||0,zoom:session.zoom,spread:!!session.spread,tool:session.tool,annotationCount:Object.values(session.annotations).reduce((n,lines)=>n+lines.length,0),inkDirty:!!session.inkDirty,inkBackedUp:!!session.inkBackedUp,inkIssue:session.inkIssue||'',documentKey:session.annotationKey||'',fingerprintVerified:!!session.documentFingerprint,migratedLegacy:!!session.migratedLegacy}:null,
  zoom:(scale)=>session&&applyZoom(session,scale),
  page:(page)=>session&&goPage(session,page)
 });
