@@ -48,8 +48,8 @@ test('cancelled job makes UI available and terminates active worker',()=>{
 test('versioned code is linked once in HTML, twice in service worker asset lists',()=>{
  const html=fs.readFileSync(path.join(__dirname,'..','index.html'),'utf8');
  const sw=fs.readFileSync(path.join(__dirname,'..','sw.js'),'utf8');
- assert.match(html,/ck-ocr-v118\.js\?v=119/);
- assert.equal((sw.match(/ck-ocr-v118\.js\?v=119/g)||[]).length,2);
- assert.match(sw,/conceptknot-study-v119-ocr-memory-control/);
+ assert.match(html,/ck-ocr-v118\.js\?v=120/);
+ assert.equal((sw.match(/ck-ocr-v118\.js\?v=120/g)||[]).length,2);
+ assert.match(sw,/conceptknot-study-v120-ocr-page-queue/);
  assert.match(source(),/createWorker\(\['kor','eng'\]/);
 });

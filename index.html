@@ -1682,7 +1682,7 @@ window.CK76Voice=Object.freeze({
 
 
 /* P5: spaced-recall state and companion local backup for the separate final-note editor. */
-const ck79ExtraKeys=Object.freeze(['ck10-exam-final-v1','ck11-final-page-count','ck80-explain-drafts-v1','ck81-review-workbench-v1','ck82-exam-sessions-v1','ck83-personal-concept-links-v1','ck84-study-plan-v1','ck84-personal-materials-v1','ck115-manual-device-verification-v1','ck118-personal-ocr-draft-v1']);
+const ck79ExtraKeys=Object.freeze(['ck10-exam-final-v1','ck11-final-page-count','ck80-explain-drafts-v1','ck81-review-workbench-v1','ck82-exam-sessions-v1','ck83-personal-concept-links-v1','ck84-study-plan-v1','ck84-personal-materials-v1','ck115-manual-device-verification-v1','ck118-personal-ocr-draft-v1','ck120-ocr-page-drafts-v1']);
 const ck79StorageView=()=>Object.fromEntries(ck79ExtraKeys.flatMap(k=>{
  try{const value=localStorage.getItem(k);return typeof value==='string'?[[k,value]]:[];}catch{return []}
 }));
@@ -1700,7 +1700,8 @@ function ck79RestoreExtras(data){
   const sizeLimit=key==='ck80-explain-drafts-v1'?3500000:
    key==='ck83-personal-concept-links-v1'?5200000:
    key==='ck82-exam-sessions-v1'?2300000:
-   key==='ck84-personal-materials-v1'?2400000:1024*1024;
+   key==='ck84-personal-materials-v1'?2400000:
+   key==='ck120-ocr-page-drafts-v1'?1800000:1024*1024;
   if(typeof value!=='string'||value.length>sizeLimit)continue;
   if(key==='ck80-explain-drafts-v1'){
    try{
@@ -1718,7 +1719,7 @@ function ck79RestoreExtras(data){
    }catch{continue;}
   }
   if(key==='ck11-final-page-count'&&!/^[1-5]$/.test(value))continue;
-  if(key==='ck81-review-workbench-v1'||key==='ck82-exam-sessions-v1'||key==='ck83-personal-concept-links-v1'||key==='ck84-study-plan-v1'||key==='ck84-personal-materials-v1'||key==='ck115-manual-device-verification-v1'||key==='ck118-personal-ocr-draft-v1'){
+  if(key==='ck81-review-workbench-v1'||key==='ck82-exam-sessions-v1'||key==='ck83-personal-concept-links-v1'||key==='ck84-study-plan-v1'||key==='ck84-personal-materials-v1'||key==='ck115-manual-device-verification-v1'||key==='ck118-personal-ocr-draft-v1'||key==='ck120-ocr-page-drafts-v1'){
    try{
     const parsed=JSON.parse(value);
     if(key==='ck81-review-workbench-v1'){
@@ -1735,6 +1736,8 @@ function ck79RestoreExtras(data){
      if(!window.CK115QA?.sanitize?.(parsed))continue;
     }else if(key==='ck118-personal-ocr-draft-v1'){
      if(!window.CK118OCR?.sanitize?.(parsed))continue;
+    }else if(key==='ck120-ocr-page-drafts-v1'){
+     if(!window.CK118OCR?.sanitizePageStore?.(parsed))continue;
     }
    }catch{continue;}
   }
@@ -3992,20 +3995,20 @@ render();setInterval(timerTick,500);
 <script src="./assets/ck-study-analytics-v83.js?v=117" defer></script>
 <script src="./assets/ck-study-plan-v84.js?v=84" defer></script>
 <script src="./assets/ck-study-materials-v84.js?v=84" defer></script>
-<script src="./assets/ck-data-integrity-v86.js?v=118" defer></script>
+<script src="./assets/ck-data-integrity-v86.js?v=120" defer></script>
 <script src="./assets/ck-exam-bridge-v86.js?v=86" defer></script>
 <link rel="stylesheet" href="./assets/ck-data-diagnostics-v88.css?v=88">
 <script src="./assets/ck-data-diagnostics-v88.js?v=88" defer></script>
 <script src="./assets/ck-experience-v14.js" defer></script>
 <script src="./assets/ck-pdf-workspace-v15.js?v=118" defer></script>
-<link rel="stylesheet" href="./assets/ck-ocr-v118.css?v=118">
-<script src="./assets/ck-ocr-v118.js?v=119" defer></script>
+<link rel="stylesheet" href="./assets/ck-ocr-v118.css?v=120">
+<script src="./assets/ck-ocr-v118.js?v=120" defer></script>
 <script src="./assets/ck-layout-v16.js" defer></script>
 <script src="./assets/ck-pdf-night-v19.js" defer></script>
 <script src="./assets/ck-shortcuts-v19.js" defer></script>
 <script src="./assets/ck-official-explain-v30.js" defer></script>
 <link rel="stylesheet" href="./assets/ck-manual-qa-v115.css?v=115">
-<script src="./assets/ck-manual-qa-v115.js?v=118" defer></script>
+<script src="./assets/ck-manual-qa-v115.js?v=120" defer></script>
 
 </body>
 </html>

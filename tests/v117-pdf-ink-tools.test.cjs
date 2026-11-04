@@ -18,7 +18,7 @@ test('v117 entry point, cache and routing guard linked without automatic deploy'
  const html=read('index.html'),sw=read('sw.js'),config=JSON.parse(read('vercel.json'));
  assert.match(html,/ck-pdf-workspace-v15\.js\?v=118/);
  assert.match(html,/window\.CKPDF15\?\.canLeave\?\.\(\)===false/);
- assert.match(sw,/conceptknot-study-v118-ocr-content-fingerprint/);
+ assert.match(sw,/conceptknot-study-v120-ocr-page-queue/);
  assert.equal((sw.match(/ck-pdf-workspace-v15\.js\?v=118/g)||[]).length,2);
  assert.equal((sw.match(/ck-pdf-tools-v117\.css\?v=117/g)||[]).length,2);
  assert.equal(config.git.deploymentEnabled,false);
