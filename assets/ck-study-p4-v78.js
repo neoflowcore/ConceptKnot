@@ -8,6 +8,7 @@ const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;
 const safeUrl=url=>/^https:\/\/(?:[\w.-]+)(?:\/|$)/.test(String(url||''))?String(url):'';
 const years=new Map(),requests=new Map();
 let dialog,trigger=null,selected=null,taxonomy=null,openGeneration=0;
+let noteDirty=false,noteTimer=0;
 const names={estate:'부동산학개론',civil:'민법 및 민사특별법'};
 const typeNames={select_incorrect:'틀린 지문 찾기',select_correct:'옳은 지문 찾기',
  compound_statements:'ㄱ·ㄴ·ㄷ 진술 조합',calculation_or_numeric:'계산·수치 확인',
@@ -133,7 +134,11 @@ function modal(){
   if(e.target.closest?.('[data-ck78-close]'))dialog.close();
   else if(e.target===dialog)dialog.close();
  });
- dialog.addEventListener('close',()=>{openGeneration++;trigger?.focus?.();trigger=null;selected=null});
+ dialog.addEventListener('close',()=>{
+  clearTimeout(noteTimer);
+  if(noteDirty)flushNote(true);
+  openGeneration++;trigger?.focus?.();trigger=null;selected=null;
+ });
  document.body.appendChild(dialog);
  return dialog;
 }
@@ -202,7 +207,7 @@ function dialogHtml(q,entry,tx,missing=false){
   '</section>'+
   '<section class="ck80-editor-entry"><button type="button" data-ck80-toggle aria-expanded="false">내 해설 초안 작성/수정</button><p>공식 자료와 별개로 근거를 확인하면서 작성합니다. 게시/검수 상태는 자동으로 승격되지 않습니다.</p><div data-ck80-workspace hidden></div></section>'+ 
   '<section class="ck78-notes"><label for="ck78-personal-note">내 풀이·오답 원인 메모 (기존 학습 데이터에 저장)</label>'+
-  '<textarea id="ck78-personal-note" maxlength="6000" rows="3" placeholder="근거를 직접 작성하세요.">'+esc(noteText(q))+'</textarea>'+
+  '<textarea id="ck78-personal-note" maxlength="6000" rows="3" placeholder="근거를 직접 작성하세요." aria-label="내 풀이 및 오답 메모 자동 저장">'+esc(noteText(q))+'</textarea>'+
   '<div class="ck78-note-actions"><button type="button" data-ck78-note-save>메모 저장</button>'+
   '<button type="button" data-ck78-ai-copy>AI 해설 질문 복사</button>'+
   '<span data-ck78-status role="status"></span></div>'+
@@ -218,7 +223,14 @@ function dialogHtml(q,entry,tx,missing=false){
   '<button data-ck78-close type="button">닫기</button></footer>';
 }
 async function open(year,number,from){
- const id=Number(year)+'-'+Number(number),request=++openGeneration;
+ const id=Number(year)+'-'+Number(number);
+ // Programmatic navigation is subject to the same unsaved-edit guard as clicks.
+ if(dialog?.open&&noteDirty&&!flushNote(true))return false;
+ if(dialog?.open&&window.CK80Editorial?.hasUnsavedChanges?.()&&
+  window.CK80Editorial?.confirmLeave?.()===false)return false;
+ if(dialog?.open&&window.CK83Links?.getStatus?.()?.unsavedEdits>0&&
+  window.CK83Links?.confirmDiscard?.()===false)return false;
+ const request=++openGeneration;
  let q=lookup(id);
  // Older official years are loaded separately; no guessed text if still unavailable.
  if(!q&&Number(year)>=2016&&Number(year)<=2020&&window.CK89OfficialBank?.loadYear){
@@ -241,6 +253,39 @@ async function open(year,number,from){
  return true;
 }
 function status(text){const node=dialog?.querySelector('[data-ck78-status]');if(node)node.textContent=text;}
+function flushNote(silent=false,force=false){
+ if(!noteDirty&&!force)return true;
+ const field=dialog?.querySelector('#ck78-personal-note'),q=lookup(selected);
+ if(!field||!q)return false;
+ let saved=false;
+ try{saved=Boolean(window.CK78Study?.saveNote?.(q.id,String(field.value||'').slice(0,6000)));}catch{}
+ if(!saved){status('내 풀이 메모 저장 실패 · 내용을 복사해 보관하고 저장 권한을 확인하세요.');return false;}
+ noteDirty=false;clearTimeout(noteTimer);
+ if(!silent)status('내 풀이 메모 저장 완료 · 기존 학습 백업에 포함됩니다.');
+ return true;
+}
+function saveNoteSoon(){
+ clearTimeout(noteTimer);
+ noteTimer=setTimeout(()=>flushNote(true),900);
+}
+document.addEventListener('input',event=>{
+ if(event.target?.id!=='ck78-personal-note'||!dialog?.contains(event.target))return;
+ noteDirty=true;status('내 풀이 메모 입력 중 · 자동 저장 대기');saveNoteSoon();
+});
+document.addEventListener('focusout',event=>{
+ if(event.target?.id==='ck78-personal-note'&&noteDirty)flushNote(true);
+},true);
+document.addEventListener('cancel',event=>{
+ if(event.target===dialog&&noteDirty&&!flushNote())event.preventDefault();
+},true);
+document.addEventListener('click',event=>{
+ if(!dialog?.open||!noteDirty)return;
+ const close=event.target===dialog||event.target?.closest?.('[data-ck78-close],[data-ck78-prev],[data-ck78-next],[data-ck78-open-question],[data-ck107-personal-link],[data-ck107-open-exam],[data-ck111-open],[data-ck81-toggle],.ck-v7-nav-pill .board-tab,.ck-v7-logo,[data-ck4-target],[data-ck4-prev],[data-ck4-next]');
+ if(close&&!flushNote(true)){event.preventDefault();event.stopImmediatePropagation();}
+},true);
+window.addEventListener('beforeunload',event=>{
+ if(noteDirty&&!flushNote(true)){event.preventDefault();event.returnValue='';}
+});
 window.addEventListener('ck:tts-state',event=>{
  if(!dialog?.open)return;
  const el=dialog.querySelector('[data-ck107-voice-status]');if(!el)return;
@@ -282,8 +327,8 @@ document.addEventListener('click',e=>{
  if(!target?.closest)return;
  if(target.closest('[data-ck78-note-save]')){
   const q=lookup(selected),value=dialog?.querySelector('#ck78-personal-note')?.value;
-  if(q&&window.CK78Study?.saveNote?.(q.id,value))status('내 학습 메모 저장됨 · 기존 백업에 포함');
-  else status('저장 실패 · 브라우저 저장공간을 확인하세요.');
+  if(q){noteDirty=true;flushNote(false,true);}
+  else status('저장 실패 · 현재 문항을 다시 확인하세요.');
  }
  if(target.closest('[data-ck78-ai-copy]'))copyPrompt();
  const voice=target.closest('[data-ck107-voice],[data-ck107-voice-scope],[data-ck107-voice-resume],[data-ck107-voice-pause],[data-ck107-voice-stop],[data-ck109-due]');
@@ -335,6 +380,11 @@ document.addEventListener('click',e=>{
  if(target.closest('[data-ck78-review-report]'))showReviewDashboard();
 });
 async function showReviewDashboard(){
+ if(dialog?.open&&noteDirty&&!flushNote(true))return false;
+ if(dialog?.open&&window.CK80Editorial?.hasUnsavedChanges?.()&&
+  window.CK80Editorial?.confirmLeave?.()===false)return false;
+ if(dialog?.open&&window.CK83Links?.getStatus?.()?.unsavedEdits>0&&
+  window.CK83Links?.confirmDiscard?.()===false)return false;
  openGeneration++;
  const el=modal();if(!el.open){trigger=document.activeElement;el.showModal();}
  selected='report';
@@ -390,5 +440,6 @@ if(root&&window.MutationObserver)new MutationObserver(changes=>{
    node.querySelector?.('.registered-question,#ck76-search')))))schedule();
 }).observe(root,{childList:true,subtree:true});
 window.CK78Analysis=Object.freeze({open,showReviewDashboard,lookup,keyLabel,classify,reviewSteps,personalProgress,yearCoverage,
+ flushNote:()=>flushNote(true),hasUnsavedNote:()=>noteDirty,
  getStatus:()=>({status:selected||'idle',opened:Boolean(dialog?.open),loadedYears:[...years.keys()]})});
 })();

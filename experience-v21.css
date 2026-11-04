@@ -110,3 +110,18 @@ html.ck16-reveal #main .ck-v7-content{animation:ck21-study-appear .19s ease-out 
 #main .ck-v7-board:not(.ck9-spen-active) .ck21-spen-tools{display:none!important}
 body.ck22-pen-locked{position:fixed!important;width:100%;overflow:hidden!important;overscroll-behavior:none;touch-action:none}
 @media(prefers-reduced-motion:reduce){html.ck16-reveal #main .ck-v7-content{animation:none!important}}
+
+/* v114 — explicit E0/E1 shift visualization. Pure SVG/CSS, no WebGL or idle loop. */
+#main .ck21-equilibrium-guide{fill:none;stroke:#cbbf9f;stroke-width:1.4;stroke-dasharray:5 5;opacity:.65}
+#main .ck21-equilibrium-point-original{fill:#e7d7a0;stroke:#133e39;stroke-width:1.5}
+#main .ck21-equilibrium-point-next{fill:#76c7a6;stroke:#123b37;stroke-width:1.6}
+#main .ck21-equilibrium-label{font-size:12px;font-weight:750;paint-order:stroke;stroke:rgba(9,34,32,.5);stroke-width:2px}
+#main .ck21-equilibrium-moving{opacity:0;transition:transform .9s cubic-bezier(.2,.7,.2,1),opacity .18s linear}
+#main .ck21-chart-svg .ck21-equilibrium-moving.ck21-shifted{
+ transform:translate(var(--ck21-dx,0px),var(--ck21-dy,0px));opacity:1;
+}
+#main .ck21-equilibrium-outcome{font-size:12px;line-height:1.6;border-left:2px solid #79b49d;padding:3px 10px;margin:10px 0}
+#main .ck21-eq-after{display:none}
+#main .ck21-chart-section.ck21-revealed .ck21-eq-after{display:inline}
+#main .ck21-chart-section.ck21-revealed .ck21-eq-before{display:none}
+@media(prefers-reduced-motion:reduce){#main .ck21-equilibrium-moving{transition:none!important}}

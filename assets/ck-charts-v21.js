@@ -42,6 +42,43 @@ const charts=[
 ];
 let selected=0,phase=false;
 const escape=v=>String(v||'').replace(/[&<>"']/g,a=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','"':'&quot;'}[a]));
+// Coordinate geometry follows the two schematic straight lines used in svg().
+function equilibriumPoint(demandShift=0,supplyShift=0){
+ const demandSlope=200/385,supplySlope=-220/370;
+ const x=(300-86+demandSlope*(100+demandShift)-supplySlope*(110+supplyShift))/
+  (demandSlope-supplySlope);
+ return {x,y:86+demandSlope*(x-100-demandShift)};
+}
+function equilibriumDelta(c){
+ if(!['demand','supply','both'].includes(c.type))return null;
+ const d=c.type==='demand'||c.type==='both'?Number(c.shift)||0:0;
+ const s=c.type==='supply'||c.type==='both'?Number(c.shift)||0:0;
+ const origin=equilibriumPoint(),next=equilibriumPoint(d,s);
+ return {origin,next,dx:next.x-origin.x,dy:next.y-origin.y};
+}
+function equilibriumOutcome(c){
+ const delta=equilibriumDelta(c);
+ if(!delta)return '';
+ if(c.type==='both')return '수요·공급이 같은 폭으로 증가한 도식 예시에서는 균형수량이 늘고 균형가격은 같습니다. 실제 일반문제에서는 두 이동 폭에 따라 가격 방향이 달라집니다.';
+ const quantity=delta.dx>1?'증가':delta.dx< -1?'감소':'불변';
+ const price=delta.dy< -1?'상승':delta.dy>1?'하락':'불변';
+ return '이 도식에서 균형가격 '+price+' · 균형거래량 '+quantity+
+  '. 공급 또는 수요의 다른 요인이 고정된 비교정태 예시입니다.';
+}
+function equilibriumSvg(c){
+ const e=equilibriumDelta(c);if(!e)return '';
+ const fmt=n=>Number(n.toFixed(2));
+ const x=fmt(e.origin.x),y=fmt(e.origin.y);
+ return '<g class="ck21-equilibrium-reference">'+
+  '<line x1="'+x+'" y1="'+y+'" x2="'+x+'" y2="315" class="ck21-equilibrium-guide"/>'+
+  '<line x1="86" y1="'+y+'" x2="'+x+'" y2="'+y+'" class="ck21-equilibrium-guide"/>'+
+  '<circle cx="'+x+'" cy="'+y+'" r="6" class="ck21-equilibrium-point-original"/>'+
+  '<text x="'+(x-24)+'" y="'+(y-13)+'" class="ck21-equilibrium-label">E₀</text></g>'+
+  '<g class="ck21-equilibrium-moving ck21-transform-target'+(phase?' ck21-shifted':'')+
+  '" style="--ck21-dx:'+fmt(e.dx)+'px;--ck21-dy:'+fmt(e.dy)+'px">'+
+  '<circle cx="'+x+'" cy="'+y+'" r="7" class="ck21-equilibrium-point-next"/>'+
+  '<text x="'+(x+11)+'" y="'+(y-12)+'" class="ck21-equilibrium-label">E₁</text></g>';
+}
 function svg(c){
  const type=c.type;
  const demand='<path class="ck21-curve demand" d="M100 86 L485 286"/>';
@@ -50,7 +87,7 @@ function svg(c){
  const moving=type==='demand'||type==='both'?'demand':type==='supply'?'supply':'';
  const shiftClass='ck21-transform-target '+(phase?'ck21-shifted':'');
  const d='<g class="'+(moving==='demand'?shiftClass:'')+'" style="--ck21-dx:'+(moving==='demand'?offset:'0px')+'">'+demand+'</g>';
- const s='<g class="'+(moving==='supply'||type==='both'?shiftClass:'')+'" style="--ck21-dx:'+(moving==='supply'?offset:type==='both'?'55px':'0px')+'">'+supply+'</g>';
+ const s='<g class="'+(moving==='supply'||type==='both'?shiftClass:'')+'" style="--ck21-dx:'+(moving==='supply'||type==='both'?offset:'0px')+'">'+supply+'</g>';
  let line='',extra='',renderSupply=s,renderDemand=d;
  if(type==='distance'){renderSupply='';renderDemand='<path class="ck21-curve demand" d="M120 85 Q 255 225 485 295"/>'}
  if(type==='elasticity'){renderDemand='<path class="ck21-curve demand" d="M135 142 L460 220"/><path class="ck21-curve supply" d="M285 65 L320 310"/>';renderSupply='';extra='<text x="390" y="178">탄력적</text><text x="324" y="88">비탄력적</text>'}
@@ -62,16 +99,19 @@ function svg(c){
  return '<svg class="ck21-chart-svg" viewBox="0 0 560 348" role="img" aria-label="'+escape(c.title)+' · '+escape(c.effect)+'">'
   +'<g class="ck21-grid"><path d="M85 120 H505 M85 205 H505 M85 285 H505 M185 50 V315 M295 50 V315 M405 50 V315"/></g>'
   +ruler+'<text x="18" y="42">'+escape(c.axis[1])+'</text><text x="430" y="340">'+escape(c.axis[0])+'</text>'
-  +renderDemand+renderSupply+line+extra+'</svg>';
+  +renderDemand+renderSupply+line+extra+equilibriumSvg(c)+'</svg>';
 }
 function render(){
  const c=charts[selected];
- return '<div class="ck21-chart-section"><header class="ck21-chart-head"><h2>기출에서 이해하는 그래프 · '+charts.length+'가지</h2><p>반드시 재생 버튼을 눌러야 움직입니다. 실제 시장 데이터가 아닌 경제원리 도식입니다.</p></header>'
+ return '<div class="ck21-chart-section'+(phase?' ck21-revealed':'')+'"><header class="ck21-chart-head"><h2>기출에서 이해하는 그래프 · '+charts.length+'가지</h2><p>반드시 재생 버튼을 눌러야 움직입니다. 실제 시장 데이터가 아닌 경제원리 도식입니다.</p></header>'
   +'<div class="ck21-chart-tabs" role="group" aria-label="차트 종류">'+charts.map((v,i)=>'<button type="button" data-ck21-chart="'+i+'" aria-pressed="'+(i===selected)+'">'+escape(v.title)+'</button>').join('')+'</div>'
   +'<div class="ck21-chart-card"><div class="ck21-chart-stage">'+svg(c)+'</div>'
   +'<div class="ck21-chart-copy"><span>'+escape(c.group)+' · 관련 기출 '+escape(c.source.slice(0,4))+'년 '+escape(c.source.split('-')[1])+'번</span><h3>'+escape(c.title)+'</h3><p><strong>질문</strong> '+escape(c.question)+'</p>'
   +'<div class="ck21-chart-actions"><button type="button" data-ck21-play>'+(phase?'↩ 시작 상태로':'▶ 차트 움직임 보기')+'</button><button type="button" data-ck21-exam="'+escape(c.source)+'">연결 기출 보기</button></div>'
-  +'<p class="ck21-chart-explanation">'+(phase?escape(c.answer):'움직임을 실행하면 개념·정답 근거가 나타납니다.')+'</p><small>그림과 계산은 개념 학습용으로 단순화했습니다. 특정 연도 문제의 그래프 원본 재현이 아닙니다.</small></div></div></div>';
+  +'<p class="ck21-chart-explanation">'+(phase?escape(c.answer):'움직임을 실행하면 개념·정답 근거가 나타납니다.')+'</p>'+
+ (equilibriumDelta(c)?'<p class="ck21-equilibrium-outcome" aria-live="polite"><span class="ck21-eq-before">E₀는 기존 균형점입니다. 재생하면 E₁의 방향이 표시됩니다.</span>'+
+ '<span class="ck21-eq-after">'+escape(equilibriumOutcome(c))+'</span></p>':'')+
+ '<small>그림과 계산은 개념 학습용으로 단순화했습니다. 특정 연도 문제의 그래프 원본 재현이 아닙니다.</small></div></div></div>';
 }
 const problems=[
  {id:'chart-demand-shift',t:'수요곡선 이동',q:'정상재에서 소득이 증가하고 다른 조건이 일정할 때 수요곡선은?',a:['우측 이동','좌측 이동','곡선 위 아래로만 이동','변하지 않음','수직선이 됨'],ok:1,fast:'소득 증가 → 정상재 수요 증가 → 곡선 우측 이동',guard:'자기 가격 변화는 곡선 위 이동이다.',f:'수요 변화 ≠ 수요량 변화',chart:'demand-income'},
@@ -88,5 +128,7 @@ const problems=[
 function choose(i){if(!Number.isInteger(i)||i<0||i>=charts.length)return false;selected=i;phase=false;return true}
 function play(){phase=!phase;return phase}
 function pickFromProblem(id){const index=charts.findIndex(x=>x.id===id);if(index>=0){choose(index);return true}return false}
-window.CK21Charts=Object.freeze({render,charts:Object.freeze(charts),problems:Object.freeze(problems),choose,play,getState:()=>({selected,phase,id:charts[selected].id}),selectProblem:pickFromProblem});
+window.CK21Charts=Object.freeze({render,charts:Object.freeze(charts),problems:Object.freeze(problems),
+ choose,play,equilibriumPoint,equilibriumDelta,equilibriumOutcome,
+ getState:()=>({selected,phase,id:charts[selected].id}),selectProblem:pickFromProblem});
 })();

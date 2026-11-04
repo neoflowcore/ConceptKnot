@@ -309,6 +309,7 @@ async function importJson(file){
 
 function confirmLeave(){
  if(!editing)return true;
+ if(window.CK78Analysis?.hasUnsavedNote?.()&&window.CK78Analysis?.flushNote?.()===false)return false;
  if(!window.confirm?.('저장하지 않은 해설 수정이 있습니다. 저장하지 않고 이동할까요?'))return false;
  editing=false;open=false;return true;
 }

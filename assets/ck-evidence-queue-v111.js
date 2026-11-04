@@ -6,7 +6,11 @@ const validId=id=>/^20(?:1[6-9]|2[0-5])-(?:[1-9]|[1-7]\d|80)$/.test(String(id||'
 const hasText=x=>typeof x==='string'&&x.trim().length>0;
 const names={estate:'학개론',civil:'민법'};
 const PAGE=24;
+const PICK_LIMIT=5;
 let panel=null,expanded=false,year='all',subject='all',condition='no-source',page=0,status='',scheduled=false;
+let search='',sort='priority',searchTimer=0,composing=false;
+const chosenIds=new Set();
+const normalize=x=>String(x??'').normalize('NFKC').toLowerCase().replace(/\s+/g,' ').trim();
 function types(q){try{return window.CK78Analysis?.classify?.(q)||[]}catch{return []}}
 function rows(bank=window.RECALL_OFFICIAL||{},links=window.CK83Links?.getRecords?.()||{},
  drafts=window.CK80Editorial?.getRecords?.()||{}){
@@ -58,6 +62,11 @@ function summary(data){
   special:data.filter(x=>x.special!=='normal').length};
 }
 function matches(r){
+ const terms=normalize(search).split(' ').filter(Boolean).slice(0,8);
+ if(terms.length){
+  const body=normalize([r.id,r.year,names[r.subject],r.question,...r.options].join(' '));
+  if(!terms.every(term=>body.includes(term)))return false;
+ }
  return (year==='all'||String(r.year)===String(year))&&
   (subject==='all'||r.subject===subject)&&(
    condition==='all'||condition==='no-source'&&r.sourced<5||
@@ -65,6 +74,46 @@ function matches(r){
    condition==='incomplete'&&!r.ready||condition==='ready'&&r.ready||
    condition==='special'&&r.special!=='normal'||condition==='visual'&&r.visual||
    condition==='calc'&&r.calc||condition==='legal'&&r.legal||condition==='low-text'&&r.lowText);
+}
+function ordered(data){
+ const values=data.slice();
+ if(sort==='year-asc')values.sort((a,b)=>a.year-b.year||a.number-b.number);
+ else if(sort==='year-desc')values.sort((a,b)=>b.year-a.year||a.number-b.number);
+ else if(sort==='least-source')values.sort((a,b)=>a.sourced-b.sourced||a.draftSourced-b.draftSourced||b.priority-a.priority);
+ else values.sort((a,b)=>b.priority-a.priority||b.year-a.year||a.number-b.number);
+ return values;
+}
+function chosenRows(data){
+ const byId=new Map(data.map(r=>[r.id,r]));
+ return [...chosenIds].map(id=>byId.get(id)).filter(Boolean);
+}
+function reviewPacket(data){
+ const picks=Array.isArray(data)?data.slice(0,PICK_LIMIT):[];
+ if(!picks.length)return '';
+ const parts=[
+  'ConceptKnot 선택 문항 개인 근거 검토 묶음 (공식 검증 완료 아님)',
+  '시험 당시 A형 문제·최종정답·법령/판례 시행 시점·원본 PDF를 별도로 확인하세요.',
+  '정답 채점 인정과 각 선지의 참·거짓은 다릅니다. 복수/전원정답일 때 특히 주의하세요.',''
+ ];
+ for(const row of picks){
+  parts.push('=== '+row.year+'년 '+row.number+'번 · '+names[row.subject]+' · '+row.id+' ===',
+   '문제: '+row.question,'채점 인정 번호: '+row.correct.join(', ')+
+   (row.correct.length===5?' (전원정답; 선지 모두 참 아님)':''),
+   '원문 대조 URL: '+(row.source||'미기재'));
+  row.options.forEach((option,i)=>{
+   const n=row.notes[String(i+1)]||{},d=row.draftOptions?.[i]||{};
+   parts.push('①②③④⑤'[i]+' '+option,
+    '  CK83 개인 판단: '+(n.assessment||'미기록')+' / 이유: '+(n.reason||'미기록')+' / 출처: '+(n.source||'미기록'),
+    '  CK80 개인 초안: '+(d.verdict||'미기록')+' / 이유: '+(d.why||'미기록')+' / 출처: '+(d.source||'미기록'),
+    '  공식 검토 체크: [ ] 원본 PDF [ ] 시험 당시 조문/판례 [ ] 최종정답 공지 [ ] 예외·시행일');
+  });
+  parts.push('');
+ }
+ return parts.join('\n');
+}
+function selectionSummary(data){
+ const actual=chosenRows(data);
+ return {count:actual.length,ids:actual.map(r=>r.id),complete:actual.filter(r=>r.ready).length};
 }
 function csv(v){
  const s=String(v??'').replace(/[\r\n\t]+/g,' ').trim();
@@ -115,9 +164,11 @@ function saveCsv(kind){
 }
 function paint(){
  if(!panel)return;
- const all=rows(),stats=summary(all),matched=all.filter(matches);
+ const all=rows(),stats=summary(all),matched=ordered(all.filter(matches));
  const last=Math.max(1,Math.ceil(matched.length/PAGE));page=Math.max(0,Math.min(page,last-1));
  const selected=matched.slice(page*PAGE,(page+1)*PAGE);
+ const pick=selectionSummary(all);
+ const allComplete=bankComplete(all);
  panel.innerHTML='<details class="ck111-details"'+(expanded?' open':'')+'>'+
  '<summary>선지 근거 검토 대기열 <span>선지 메모 판단·이유·출처 5/5: '+stats.done+'/'+stats.loaded+'문항</span></summary>'+
  '<div class="ck111-body"><p>자동 분류·우선점은 검토 순서의 힌트일 뿐 정답 판단이나 검증된 출제 빈도가 아닙니다. 공식 문제·정답은 변경하지 않습니다.</p>'+
@@ -131,10 +182,19 @@ function paint(){
  '<button data-ck111-export="filtered" type="button">현재 필터 문항 CSV</button>'+
  '<button data-ck111-export="filtered-options" type="button">현재 필터 선지 CSV</button>'+
  '<button data-ck112-workbench type="button">10개년 해설 검토 작업대</button>'+
+ '<button data-ck114-packet type="button"'+(!pick.count?' disabled':'')+
+  '>선택 '+pick.count+'/5문항 개인 근거 TXT</button>'+
+ '<button data-ck114-clear type="button"'+(!pick.count?' disabled':'')+'>선택 해제</button>'+
  '<button data-ck112-voice-top type="button">▶ 현재 페이지 상위 5문항 듣기</button>'+
  '<button data-ck112-voice-stop type="button">■ 음성 정지</button></div>'+
  '<p class="ck111-status" role="status" aria-live="polite">'+esc(status)+'</p>'+
- '<div class="ck111-filters"><label>연도<select data-ck111-year>'+
+ '<div class="ck111-filters"><label>문항·선지 검색<input data-ck114-search type="search" maxlength="120"'+
+ ' placeholder="연도·문항번호·키워드" value="'+esc(search)+'" aria-label="전체 기출 문항과 5선지 검색"></label>'+
+ '<label>정렬<select data-ck114-sort>'+
+ [['priority','검토 우선 순위'],['year-desc','최신 연도 순'],['year-asc','과거 연도 순'],
+  ['least-source','개인 근거 누락 순']].map(x=>
+  '<option value="'+x[0]+'"'+(sort===x[0]?' selected':'')+'>'+x[1]+'</option>').join('')+
+ '</select></label><label>연도<select data-ck111-year>'+
  '<option value="all">전체</option>'+Array.from({length:10},(_,i)=>2025-i).map(y=>
  '<option value="'+y+'"'+(String(year)===String(y)?' selected':'')+'>'+y+'년</option>').join('')+
  '</select></label><label>과목<select data-ck111-subject>'+
@@ -146,9 +206,13 @@ function paint(){
  ['visual','그림/표 확인'],['calc','계산/수치'],['legal','법령/판례'],['low-text','텍스트 차이 후보'],
  ['ready','개인 기록 5/5'],['all','전체']].map(x=>
  '<option value="'+x[0]+'"'+(condition===x[0]?' selected':'')+'>'+x[1]+'</option>').join('')+
- '</select></label></div><p class="ck111-count">검토 대상 '+matched.length+'건 · '+(page+1)+'/'+last+'페이지</p>'+
+ '</select></label></div><p class="ck111-count">검토 대상 '+matched.length+'건 · '+(page+1)+'/'+last+
+ '페이지 · 개인 선택 '+pick.count+'/5 · 원문 '+(allComplete?'800/800 전체 로딩':'전체 로딩 미완료')+'</p>'+
  '<div class="ck111-items">'+(selected.map(r=>
- '<article class="ck111-item"><div class="ck111-head"><strong>'+r.year+'년 '+r.number+'번 · '+names[r.subject]+'</strong>'+
+ '<article class="ck111-item"><div class="ck111-head"><label class="ck114-pick"><input type="checkbox" data-ck114-pick="'+r.id+
+  '" '+(chosenIds.has(r.id)?'checked ':'')+
+  (!chosenIds.has(r.id)&&pick.count>=PICK_LIMIT?'disabled ':'')+'aria-label="'+r.year+'년 '+r.number+'번 검토 묶음 선택">선택</label>'+
+ '<strong>'+r.year+'년 '+r.number+'번 · '+names[r.subject]+'</strong>'+
  '<small>우선점 '+r.priority+' · '+(r.special==='all'?'전원정답':r.special==='multiple'?'복수정답':'일반')+'</small></div>'+
  '<p>'+esc(r.question.replace(/\s+/g,' ').slice(0,190))+'</p>'+
  '<div class="ck111-progress"><span>내 판단 '+r.assessed+'/5</span><span>이유 '+r.reasoned+'/5</span>'+
@@ -158,7 +222,9 @@ function paint(){
  '<div class="ck111-actions"><button type="button" data-ck111-analyze="'+r.id+'">문항 분석</button>'+
  '<button type="button" data-ck111-edit="'+r.id+'">①~⑤ 개인 근거 작성</button>'+
  '<button type="button" data-ck112-draft="'+r.id+'">내 해설 초안 작성</button>'+
- '<button type="button" data-ck112-voice-row="'+r.id+'">▶ 바로 듣기</button></div></article>'
+ '<button type="button" data-ck112-voice-row="'+r.id+'">▶ 바로 듣기</button>'+
+ (r.source?'<a class="ck114-pdf-source" href="'+esc(r.source)+'" target="_blank" rel="noopener noreferrer">시험지 원문 확인</a>':'')+
+ '</div></article>'
  ).join('')||'<p>해당 조건의 문항이 없습니다.</p>')+'</div>'+
  '<nav class="ck111-pages" aria-label="검토 대기열 페이지"><button type="button" data-ck111-page="prev"'+
  (page===0?' disabled':'')+'>이전</button><span>'+(page+1)+' / '+last+'</span>'+
@@ -177,7 +243,10 @@ function mount(){
 function open(){
  if(!mount())return false;
  const dlg=document.getElementById('ck78-analysis-dialog');
+ if(dlg?.open&&window.CK78Analysis?.flushNote?.()===false)return false;
  if(dlg?.open&&window.CK80Editorial?.confirmLeave?.()===false)return false;
+ if(dlg?.open&&window.CK83Links?.getStatus?.()?.unsavedEdits>0&&
+  window.CK83Links?.confirmDiscard?.()===false)return false;
  if(dlg?.open)dlg.close();
  const dock=panel.closest?.('#ck103-tools-dock');if(dock)dock.open=true;
  expanded=true;paint();panel.scrollIntoView?.({behavior:'smooth',block:'nearest'});return true;
@@ -201,6 +270,20 @@ document.addEventListener('click',event=>{
  if(event.target.closest?.('[data-ck111-open]')){event.preventDefault();open();return;}
  if(!panel?.contains(event.target))return;
  const b=event.target.closest?.('button');if(!b)return;
+ if(b.hasAttribute('data-ck114-clear')){chosenIds.clear();status='선택한 검토 문항을 해제했습니다.';paint();return;}
+ if(b.hasAttribute('data-ck114-packet')){
+  const content=reviewPacket(chosenRows(rows()));
+  if(!content){status='검토할 문항을 1~5개 선택하세요.';paint();return;}
+  try{
+   const url=URL.createObjectURL(new Blob(['\uFEFF',content],{type:'text/plain;charset=utf-8'}));
+   const a=document.createElement('a');a.href=url;
+   a.download='ConceptKnot_선택문항_개인근거검토_'+new Date().toISOString().slice(0,10)+'.txt';
+   document.body.append(a);a.click();a.remove();
+   setTimeout(()=>URL.revokeObjectURL(url),3000);
+   status='선택한 '+chosenRows(rows()).length+'문항의 개인 메모·출처를 구분한 TXT를 저장했습니다.';
+  }catch{status='TXT 다운로드에 실패했습니다. 브라우저 저장 권한을 확인하세요.';}
+  paint();return;
+ }
  if(b.hasAttribute('data-ck112-workbench')){
   if(!window.CK81Workbench?.open){status='10개년 작업대를 아직 불러오지 못했습니다.';paint();return;}
   window.CK81Workbench.open();return;
@@ -259,11 +342,46 @@ document.addEventListener('click',event=>{
 document.addEventListener('change',event=>{
  if(!panel?.contains(event.target))return;
  const el=event.target;
- if(el.matches?.('[data-ck111-year]'))year=/^(?:all|201[6-9]|202[0-5])$/.test(el.value)?el.value:'all';
+ if(el.matches?.('[data-ck114-pick]')){
+  const id=el.dataset.ck114Pick;
+  if(!validId(id))return;
+  if(!el.checked)chosenIds.delete(id);
+  else if(chosenIds.size<PICK_LIMIT)chosenIds.add(id);
+  else{el.checked=false;status='한 번에 최대 5개 문항을 선택할 수 있습니다.';}
+  paint();return;
+ }
+ if(el.matches?.('[data-ck114-sort]'))sort=['priority','year-desc','year-asc','least-source'].includes(el.value)?el.value:'priority';
+ else if(el.matches?.('[data-ck111-year]'))year=/^(?:all|201[6-9]|202[0-5])$/.test(el.value)?el.value:'all';
  else if(el.matches?.('[data-ck111-subject]'))subject=['all','estate','civil'].includes(el.value)?el.value:'all';
  else if(el.matches?.('[data-ck111-condition]'))condition=['all','no-source','no-draft-source','incomplete','ready','special','visual','calc','legal','low-text'].includes(el.value)?el.value:'no-source';
  else return;
  page=0;paint();
+});
+function scheduleSearch(el){
+ clearTimeout(searchTimer);
+ if(composing)return;
+ searchTimer=setTimeout(()=>{
+  if(!panel?.contains(el))return;
+  search=String(el.value||'').slice(0,120);page=0;
+  const caret=el.selectionStart;
+  paint();
+  const input=panel?.querySelector('[data-ck114-search]');
+  input?.focus?.();
+  if(Number.isInteger(caret))try{input?.setSelectionRange(caret,caret);}catch{}
+ },180);
+}
+document.addEventListener('compositionstart',event=>{
+ if(panel?.contains(event.target)&&event.target.matches?.('[data-ck114-search]'))composing=true;
+});
+document.addEventListener('compositionend',event=>{
+ if(panel?.contains(event.target)&&event.target.matches?.('[data-ck114-search]')){
+  composing=false;scheduleSearch(event.target);
+ }
+});
+document.addEventListener('input',event=>{
+ const el=event.target;if(!panel?.contains(el)||!el.matches?.('[data-ck114-search]'))return;
+ if(search===String(el.value||'').slice(0,120)&&!composing)return;
+ scheduleSearch(el);
 });
 document.addEventListener('ck:personal-links-updated',()=>{if(expanded&&panel?.isConnected)paint();});
 document.addEventListener('ck:personal-editor-updated',()=>{if(expanded&&panel?.isConnected)paint();});
@@ -275,5 +393,6 @@ if(main&&window.MutationObserver)new MutationObserver(changes=>{
  if(changes.some(c=>Array.from(c.addedNodes).some(n=>n.nodeType===1&&
  (n.matches?.('#ck103-tools-dock,#ck76-search')||n.querySelector?.('#ck103-tools-dock,#ck76-search')))))schedule();
 }).observe(main,{childList:true,subtree:true});
-window.CK111Evidence=Object.freeze({rows,bankComplete,summary,csvDocument,csv,open,getState:()=>({expanded,year,subject,condition,page,loaded:rows().length})});
+window.CK111Evidence=Object.freeze({rows,bankComplete,summary,csvDocument,csv,ordered,reviewPacket,selectionSummary,open,
+ getState:()=>({expanded,year,subject,condition,page,sort,search,chosen:[...chosenIds],loaded:rows().length})});
 })();

@@ -49,7 +49,7 @@ function read(){
   storageIssue='';lastRaw=raw;return result;
  }catch{storageIssue='개념 연결 기록을 읽지 못했습니다. 저장을 차단합니다.';return empty();}
 }
-let state=read(),taxonomy=null,candidates=null,loading=null,root=null,expanded=false,selectedId='2025-1',selectedConcept='',status='',queued=false,dirty=false,storageConflict=false;
+let state=read(),taxonomy=null,candidates=null,loading=null,root=null,expanded=false,selectedId='2025-1',selectedConcept='',status='',queued=false,dirty=false,storageConflict=false,openRequest=0;
 const unsavedChoices=new Map();
 const chosenFor=id=>new Set(unsavedChoices.get(id)||state.records[id]?.conceptIds||[]);
 function persist(next){
@@ -162,6 +162,8 @@ function mount(){
 }
 function paint(){
  const body=root?.querySelector('[data-ck83-body]');if(!body||!expanded)return;
+ // A delayed re-render must never destroy the student's unfinished edits.
+ if(dirty||unsavedChoices.size)return;
  const q=official()[selectedId],all=taxonomy?[...taxonomy.values()]:[];
  if(!all.some(c=>c.id===selectedConcept))selectedConcept=all[0]?.id||'';
  const matched=linked(selectedConcept),coverage=reviewSummary();
@@ -182,6 +184,7 @@ function paint(){
 }
 function confirmDiscard(){
  if(!dirty&&!unsavedChoices.size)return true;
+ if(window.CK78Analysis?.hasUnsavedNote?.()&&window.CK78Analysis?.flushNote?.()===false)return false;
  if(!window.confirm?.('저장하지 않은 개인 판단·근거가 있습니다. 변경을 버리고 이동할까요?'))return false;
  dirty=false;unsavedChoices.clear();return true;
 }
@@ -253,7 +256,12 @@ async function restore(file){
   status='개념 연결 복원: 새 '+change.added+'건 · 갱신 '+change.updated+
    '건 · 오래된/동일 '+change.preserved+'건 유지';
   paint();
- }catch(e){status='복원 실패: '+e.message;paint();}
+ }catch(e){
+  status='복원 실패: '+e.message;
+  // Import may fail after the user started typing; retain their live fields.
+  if(!dirty&&!unsavedChoices.size)paint();
+  else{const text=root?.querySelector('[data-ck83-status]');if(text)text.textContent=status;}
+ }
 }
 document.addEventListener('click',event=>{
  const t=event.target.closest?.('[data-ck83-toggle],[data-ck83-save],[data-ck83-delete],[data-ck83-add],'+
@@ -303,7 +311,10 @@ document.addEventListener('change',event=>{
     .catch(err=>{status='구형 기출 로딩 실패: '+err.message;paint();});
   paint();return;
  }
- if(t.matches?.('[data-ck83-inverse]')){selectedConcept=t.value;paint();}
+ if(t.matches?.('[data-ck83-inverse]')){
+  if(!confirmDiscard()){t.value=selectedConcept;return;}
+  selectedConcept=t.value;paint();
+ }
  if(t.matches?.('[data-ck83-assess]'))dirty=true;
  if(t.matches?.('[data-ck83-file]'))restore(t.files?.[0]).finally(()=>{t.value='';});
 });
@@ -318,7 +329,11 @@ window.addEventListener('storage',e=>{if(e.key!==KEY)return;
  if(dirty||unsavedChoices.size){storageConflict=true;status='다른 탭의 변경이 감지되어 저장을 차단했습니다. 현재 입력을 복사한 뒤 새로고침하세요.';
   const el=root?.querySelector('[data-ck83-status]');if(el)el.textContent=status;return;}
  state=read();if(expanded)paint();modal();});
-window.addEventListener('ck:official-bank-ready',()=>{if(expanded)paint();modal();});
+window.addEventListener('ck:official-bank-ready',()=>{
+ if(expanded&&!dirty&&!unsavedChoices.size)paint();
+ // Skip reopening the same modal editor when the user has live input.
+ if(!dirty&&!unsavedChoices.size)modal();
+});
 function schedule(){if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;mount();modal();});}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',schedule,{once:true});else schedule();
 const main=document.getElementById('main');
@@ -333,8 +348,17 @@ if(window.MutationObserver)new MutationObserver(changes=>{
 }).observe(document.body,{childList:true,subtree:true});
 function openQuestion(id){
  if(!validId(id))return false;
+ const request=++openRequest;
  const year=Number(id.split('-')[0]);
- const show=()=>{if(!confirmDiscard())return false;selectedId=id;mount();if(!root)return false;
+ const show=()=>{
+  if(request!==openRequest)return false;
+  const active=root?.querySelector?.('[data-ck83-editor="'+id+'"]');
+  if(selectedId===id&&expanded&&active){
+   const dock=root.closest?.('#ck103-tools-dock');if(dock)dock.open=true;
+   root.scrollIntoView?.({behavior:'smooth',block:'nearest'});return true;
+  }
+  if(!confirmDiscard())return false;
+  selectedId=id;mount();if(!root)return false;
   if(!expanded)toggle();else paint();
   const dock=root.closest?.('#ck103-tools-dock');if(dock)dock.open=true;
   root.scrollIntoView?.({behavior:'smooth',block:'nearest'});return true;};
@@ -345,7 +369,23 @@ function openQuestion(id){
  }
  return false;
 }
+document.addEventListener('click',event=>{
+ if(!dirty&&!unsavedChoices.size)return;
+ const t=event.target,dialog=document.getElementById('ck78-analysis-dialog');
+ const leave=t===dialog||t?.closest?.('[data-ck78-prev],[data-ck78-next],[data-ck78-close],[data-ck78-open-question],'+
+  '[data-ck111-open],[data-ck114-packet],.ck-v7-nav-pill .board-tab,.ck-v7-logo,'+
+  '[data-ck4-target],[data-ck4-prev],[data-ck4-next]');
+ if(leave&&!confirmDiscard()){event.preventDefault();event.stopImmediatePropagation();}
+},true);
+document.addEventListener('cancel',event=>{
+ if(event.target===document.getElementById('ck78-analysis-dialog')&&!confirmDiscard())event.preventDefault();
+},true);
+window.addEventListener('beforeunload',event=>{
+ if(!dirty&&!unsavedChoices.size)return;
+ event.preventDefault();event.returnValue='';
+});
 window.CK83Links=Object.freeze({sanitize,getRecords:records,getLink,linkedQuestions:linked,reviewSummary,openQuestion,
+ confirmDiscard,
  getStatus:()=>({linked:Object.keys(state.records).length,concepts:taxonomy?.size||0,unsavedEdits:unsavedChoices.size+(dirty?1:0),storageIssue,storageConflict,expanded}),
  open:()=>{mount();const dock=root?.closest?.('#ck103-tools-dock');if(dock)dock.open=true;if(root&&!expanded)toggle();}});
 })();
