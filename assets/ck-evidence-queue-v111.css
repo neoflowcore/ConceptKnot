@@ -25,3 +25,7 @@
 #ck111-review-queue .ck111-status{min-height:1.4em}
 #ck76-search .ck111-open{margin-left:5px;white-space:nowrap;font-size:11px}
 @media(max-width:560px){#ck111-review-queue .ck111-body{padding:8px}#ck111-review-queue summary{display:block}#ck111-review-queue summary span{display:block;margin-top:3px}}
+
+/* v113: keep export controls usable across narrow/mobile layouts. */
+#ck111-review-queue .ck111-actions [data-ck111-export]{flex:0 1 auto;white-space:normal}
+@media(max-width:420px){#ck111-review-queue .ck111-actions [data-ck111-export]{flex:1 1 125px}}

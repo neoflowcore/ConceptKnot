@@ -32,3 +32,7 @@
  .ck80-editor-entry .ck80-editor-option{padding:9px}
  .ck80-editor-entry .ck80-editor-option .ck80-option-citation textarea{min-height:60px}
 }
+
+/* v113: non-destructive editor completeness counter. */
+.ck80-editor-entry [data-ck113-coverage]{font-size:12px;line-height:1.5;font-variant-numeric:tabular-nums;overflow-wrap:anywhere;margin:10px 0 4px;padding:8px 10px;border:1px solid rgba(115,145,133,.35);border-radius:8px}
+.ck80-editor-entry [data-ck80-save]:focus-visible{outline:2px solid #54ab8b;outline-offset:2px}

@@ -75,12 +75,14 @@ function csvDocument(data,kind){
  if(kind==='options'){
   head=['문항','연도','과목','선지번호','원문 선지','채점 인정(참거짓 아님)',
    '개인 판단','개인 판단 이유(미검수)','CK83 개인 출처(미검수)',
+   'CK80 해설 초안 판단(미검수)','CK80 해설 초안 이유(미검수)',
    'CK80 해설 초안 출처(미검수)','출처 URL'];
   body=data.flatMap(r=>r.options.map((option,i)=>{
    const note=r.notes[String(i+1)]||{};
    return [r.id,r.year,names[r.subject],i+1,option,
     r.correct.includes(i+1)?'인정':'미인정',note.assessment||'unreviewed',
-    note.reason||'',note.source||'',r.draftOptions?.[i]?.source||'',r.source];
+    note.reason||'',note.source||'',r.draftOptions?.[i]?.verdict||'unreviewed',
+    r.draftOptions?.[i]?.why||'',r.draftOptions?.[i]?.source||'',r.source];
   }));
  }else{
   head=['문항','연도','번호','과목','문제','채점 인정','개념 연결','개인 선지판단 수(5)',
@@ -97,10 +99,15 @@ function csvDocument(data,kind){
 function saveCsv(kind){
  const all=rows();
  if(!bankComplete(all)){status='전 연도 각 80문항, 총 800문항이 로드된 경우에만 내보낼 수 있습니다.';paint();return false;}
+ const filtered=kind==='filtered'||kind==='filtered-options',options=kind==='options'||kind==='filtered-options';
+ const chosen=filtered?all.filter(matches):all;
+ if(!chosen.length){status='현재 필터에서 내보낼 검토 대상이 없습니다.';paint();return false;}
  try{
-  const blob=new Blob(['\uFEFF',csvDocument(all,kind)],{type:'text/csv;charset=utf-8'});
+  const blob=new Blob(['\uFEFF',csvDocument(chosen,options?'options':'summary')],{type:'text/csv;charset=utf-8'});
   const uri=URL.createObjectURL(blob),a=document.createElement('a');
-  a.href=uri;a.download=kind==='options'?'ConceptKnot_4000선지_개인검토.csv':'ConceptKnot_800문항_개인검토.csv';
+  a.href=uri;a.download=filtered?
+   (options?'ConceptKnot_필터_선지검토.csv':'ConceptKnot_필터_문항검토.csv'):
+   (options?'ConceptKnot_4000선지_개인검토.csv':'ConceptKnot_800문항_개인검토.csv');
   document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(uri),2500);
   status='개인 검토용 CSV를 저장했습니다. 공식 법령·판례 검증 완료 기록이 아닙니다.';
   paint();return true;
@@ -121,6 +128,8 @@ function paint(){
  '<div class="ck111-actions"><button data-ck111-load type="button">10개년 원문 불러오기</button>'+
  '<button data-ck111-export="summary" type="button">800문항 CSV</button>'+
  '<button data-ck111-export="options" type="button">4,000선지 CSV</button>'+
+ '<button data-ck111-export="filtered" type="button">현재 필터 문항 CSV</button>'+
+ '<button data-ck111-export="filtered-options" type="button">현재 필터 선지 CSV</button>'+
  '<button data-ck112-workbench type="button">10개년 해설 검토 작업대</button>'+
  '<button data-ck112-voice-top type="button">▶ 현재 페이지 상위 5문항 듣기</button>'+
  '<button data-ck112-voice-stop type="button">■ 음성 정지</button></div>'+
@@ -167,7 +176,9 @@ function mount(){
 }
 function open(){
  if(!mount())return false;
- const dlg=document.getElementById('ck78-analysis-dialog');if(dlg?.open)dlg.close();
+ const dlg=document.getElementById('ck78-analysis-dialog');
+ if(dlg?.open&&window.CK80Editorial?.confirmLeave?.()===false)return false;
+ if(dlg?.open)dlg.close();
  const dock=panel.closest?.('#ck103-tools-dock');if(dock)dock.open=true;
  expanded=true;paint();panel.scrollIntoView?.({behavior:'smooth',block:'nearest'});return true;
 }

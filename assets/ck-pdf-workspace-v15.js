@@ -155,6 +155,8 @@ async function paintPdf(s){
 function releaseSecond(s){
  if(!s.second)return;
  const child=s.second;
+ // Persist any unfinished right-page ink before detaching the canvas.
+ finishInput(child);
  child.paintToken++;
  if(child.renderTask){try{child.renderTask.cancel()}catch(err){}}
  child.host?.remove();
@@ -202,7 +204,8 @@ function applyZoom(s,newZoom,clientX,clientY){
 }
 async function goPage(s,page){
  if(!s.pdf)return;
- endPenSession(s);
+ // A page change is not a tab exit: preserve the deliberate S Pen mode.
+ finishInput(s);
  s.page=clamp(Math.round(page),1,s.pdf.numPages);
  if(s.spread)s.page=1+2*Math.floor((s.page-1)/2);
  releaseSecond(s);
@@ -285,16 +288,21 @@ function setPenMode(s,on){
  s.host?.querySelector('[data-ck15-spen]')?.setAttribute('aria-pressed',String(!!on));
  if(s.second)setPenMode(s.second,on);
 }
-function endPenSession(s){
+function finishInput(s){
  if(!s)return;
- if(s.second)endPenSession(s.second);
+ if(s.second)finishInput(s.second);
  const id=s.strokePointer;s.strokePointer=null;
  commitStroke(s);
  if(s.eraseDirty){persist(s);s.eraseDirty=false;}
  s.erasing=null;s.erasePoint=null;s.gesture=null;s.pinch=null;s.touchPoints.clear();
  const ink=s.host&&els(s.host,'[data-ck15-ink-canvas]');
  if(id!=null){try{if(ink?.hasPointerCapture(id))ink.releasePointerCapture(id)}catch{}}
- setPenMode(s,false);redrawInk(s);
+ redrawInk(s);
+}
+function endPenSession(s){
+ if(!s)return;
+ finishInput(s);
+ setPenMode(s,false);
 }
 function onPointerDown(s,event){
  if(!s.pdf||!s.host.isConnected)return;
@@ -387,7 +395,7 @@ function onPointerUp(s,event){
  redrawInk(s);
 }
 function updateTool(s,tool){
- if(s.strokePointer!=null)endPenSession(s);
+ if(s.strokePointer!=null||s.erasing!=null)finishInput(s);
  s.tool=tool;
  if(s.second)updateTool(s.second,tool);
  s.host.querySelectorAll('[data-ck15-tool]').forEach(btn=>btn.setAttribute('aria-pressed',String(btn.dataset.ck15Tool===tool)));
@@ -441,7 +449,11 @@ async function act(s,button){
   if(!s.pdf){alertStatus(s,'설정이 저장되었습니다. 원문 PDF 로딩 후 자동 적용됩니다.');return}
   s.zoom=1;await goPage(s,s.page);return;
  }
- if('ck15Spen'in action){setPenMode(s,!s.penMode);return;}
+ if('ck15Spen'in action){
+  if(s.penMode)endPenSession(s);
+  else setPenMode(s,true);
+  return;
+ }
  if(!s.pdf){alertStatus(s,'PDF 로딩 중이거나 읽기에 실패했습니다. 원문 상태를 확인하세요.');return}
  if(action.ck15Tool){updateTool(s,action.ck15Tool);return}
  if('ck15Zoom'in action){applyZoom(s,s.zoom+(Number(action.ck15Zoom)>0?.2:-.2));return}

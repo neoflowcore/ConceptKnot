@@ -59,7 +59,7 @@ window.CK102Restore=Object.freeze({timestamp,records,documents});
 (function(){
 'use strict';
 const KEY='ck80-explain-drafts-v1',MAX_RECORDS=800;
-const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','"':'&#39;'}[c]));
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const questionId=id=>/^20(?:1[6-9]|2[0-5])-(?:[1-9]|[1-7]\d|80)$/.test(String(id||''));
 const MAX={short:450,reason:4000,option:1600,source:260,evidence:1200,hold:550};
 const clip=(v,n)=>String(v??'').trim().slice(0,n);
@@ -147,6 +147,16 @@ function setStatus(text){
  lastStatus=text;const node=panel()?.querySelector('[data-ck80-status]');if(node)node.textContent=text;
 }
 function existing(id,base){return compareDraft(id,base);}
+
+function refreshCoverage(){
+ const w=panel(),node=w?.querySelector('[data-ck113-coverage]');
+ if(!node)return;
+ const fields=selector=>Array.from(w.querySelectorAll(selector));
+ const assessed=fields('[data-ck80-option-verdict]').filter(x=>['true','false','unknown'].includes(x.value)).length;
+ const reasons=fields('[data-ck80-option-reason]').filter(x=>String(x.value||'').trim()).length;
+ const sources=fields('[data-ck80-option-source]').filter(x=>String(x.value||'').trim()).length;
+ node.textContent='현재 입력 · 선지 판단 '+assessed+'/5 · 이유 '+reasons+'/5 · 개인 근거 '+sources+'/5 (저장 전에는 반영되지 않음)';
+}
 function editorHtml(d){
  const item=q(d.questionId),sourceCount=count();
  const sel=(val,label,active)=>'<option value="'+val+'"'+(val===active?' selected':'')+'>'+label+'</option>';
@@ -174,6 +184,7 @@ function editorHtml(d){
     sel('draft','초안(검수 완료 아님)',d.status)+sel('review_hold','근거 확인 필요 · 보류',d.status)+'</select></label>'+
   '<label>검수 보류 사유 <textarea rows="2" data-ck80-field="reviewHoldReason" maxlength="'+MAX.hold+'" '+
     'placeholder="법령 당시 기준/원문 도표/선지 진위 등 미확인 이유">'+esc(d.reviewHoldReason)+'</textarea></label>'+
+  '<p class="ck113-editor-coverage" data-ck113-coverage role="status" aria-live="polite">개인 검토 입력 상태</p>'+
   '<div class="ck80-editor-buttons">'+
   '<button type="button" data-ck80-save>내 검토 초안 저장</button>'+
   '<button type="button" data-ck80-export>내 초안 전체 JSON 내보내기</button>'+
@@ -215,18 +226,22 @@ async function showEditor(){
  if(!questionId(id)){setVisible(false);return;}
  selected=id;const target=r.querySelector('[data-ck80-workspace]');
  if(!target)return;
- if(open&&target.dataset.ck80For===id){setVisible(false);return;}
+ if(target.dataset.ck80For===id&&target.querySelector('[data-ck80-save]')){
+  // Folding and unfolding the same draft must not discard unsaved input.
+  setVisible(!open);return;
+ }
  target.hidden=false;target.textContent='기존 해설 초안을 읽는 중입니다.';
  try{
   const map=await patchYear(Number(id.slice(0,4)));
   if(root()?.dataset.ck78Current!==id)return;
   record=existing(id,map.get(id));target.innerHTML=editorHtml(record);
-  target.dataset.ck80For=id;setVisible(true);editing=false;
+  target.dataset.ck80For=id;setVisible(true);editing=false;refreshCoverage();
  }catch(e){target.textContent='검토 초안을 열 수 없습니다: '+(e?.message||'읽기 오류');}
 }
 function filename(){return 'ConceptKnot_해설_개인검토초안_'+new Date().toISOString().slice(0,10)+'.json';}
 function exportJson(){
  const drafts=store();
+ if(storageIssue){setStatus(storageIssue);return;}
  if(!Object.keys(drafts).length){setStatus('저장한 초안이 아직 없습니다.');return;}
  const body={schemaVersion:'1.0.0',scope:'personal-unpublished-2016-2025',exportedAt:new Date().toISOString(),
   officialSourceUnchanged:true,records:Object.fromEntries(Object.entries(drafts).filter(([id])=>questionId(id)))};
@@ -291,6 +306,12 @@ async function importJson(file){
   if(questionId(selected)){const w=panel();if(w){w.dataset.ck80For='';setVisible(false);showEditor();}}
  }catch(e){setStatus('가져오기 실패 · '+(e.message||'JSON 형식 확인'));}
 }
+
+function confirmLeave(){
+ if(!editing)return true;
+ if(!window.confirm?.('저장하지 않은 해설 수정이 있습니다. 저장하지 않고 이동할까요?'))return false;
+ editing=false;open=false;return true;
+}
 document.addEventListener('click',e=>{
  const b=e.target.closest?.('[data-ck80-toggle],[data-ck80-save],[data-ck80-export],[data-ck80-import]');
  if(!b)return;
@@ -303,13 +324,29 @@ document.addEventListener('change',e=>{
  if(!e.target.matches?.('[data-ck80-import-file]'))return;
  importJson(e.target.files?.[0]).finally(()=>{e.target.value='';});
 });
-document.addEventListener('input',e=>{if(e.target.closest?.('[data-ck80-workspace]')){editing=true;setStatus('변경 중 · 저장 버튼을 누르세요.');}});
+
+function markInput(e){
+ if(!e.target.closest?.('[data-ck80-workspace]')||
+    !e.target.matches?.('textarea,select,input:not([type="file"])'))return;
+ editing=true;refreshCoverage();setStatus('변경 중 · 저장 버튼을 누르세요.');
+}
+document.addEventListener('input',markInput);
+document.addEventListener('change',markInput);
+
 document.addEventListener('click',e=>{
- if(!editing||!e.target.closest?.('[data-ck78-prev],[data-ck78-next],[data-ck78-close],[data-ck78-open-question]'))return;
- if(!window.confirm?.('저장하지 않은 해설 수정이 있습니다. 저장하지 않고 이동할까요?')){
-  e.preventDefault();e.stopImmediatePropagation();
- }else editing=false;
+ if(!editing)return;
+ const leaving=e.target===root()||
+   !!e.target.closest?.('[data-ck78-prev],[data-ck78-next],[data-ck78-close],[data-ck78-open-question],[data-ck78-review-report],[data-ck-v8-tab],.ck-v7-logo,.ck-v7-nav-pill .board-tab,[data-ck4-target],[data-ck4-prev],[data-ck4-next]');
+ if(leaving&&!confirmLeave()){e.preventDefault();e.stopImmediatePropagation();}
 },true);
-window.CK80Editorial=Object.freeze({count,lookup:id=>store()[id]||null,
+// A native dialog can also close via Escape or backdrop without a close-button click.
+document.addEventListener('cancel',e=>{
+ if(e.target===root()&&!confirmLeave())e.preventDefault();
+},true);
+window.addEventListener('beforeunload',e=>{
+ if(!editing)return;
+ e.preventDefault();e.returnValue='';
+});
+window.CK80Editorial=Object.freeze({count,confirmLeave,hasUnsavedChanges:()=>editing,lookup:id=>store()[id]||null,
  getRecords:()=>store(),validateImportRecord,getStatus:()=>({selected,open,editing,lastStatus,storageIssue})});
 })();
