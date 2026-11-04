@@ -189,7 +189,7 @@ test('offline v115 assets, guarded restore and manual-only deployment configurat
   assert.ok(html.includes(asset),'HTML: '+asset);
   assert.ok(sw.includes(asset),'SW: '+asset);
  }
- assert.match(sw,/conceptknot-study-v120/);
+ assert.match(sw,/conceptknot-study-v121/);
  const pdfIndex=[...html.matchAll(/ck-pdf-workspace-v15\.js(?:\?v=\d+)?/g)].map(x=>x[0]);
  const pdfCache=[...sw.matchAll(/ck-pdf-workspace-v15\.js(?:\?v=\d+)?/g)].map(x=>x[0]);
  assert.deepEqual(pdfIndex,['ck-pdf-workspace-v15.js?v=118']);

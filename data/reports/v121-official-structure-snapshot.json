@@ -1,0 +1,106 @@
+{
+  "schemaVersion": "1.0.0",
+  "auditAsOf": "2026-11-04",
+  "sourceBranch": "main",
+  "sourceCommit": "55ceb2529f307b5209e4f5491cc5e47f590a4bb0",
+  "scope": "STRUCTURAL_ONLY_NOT_LEGAL_OR_ANSWER_KEY_INDEPENDENT_VERIFICATION",
+  "officialQuestionCount": 800,
+  "yearCount": 10,
+  "questionsPerYear": 80,
+  "subjectsPerYear": {
+    "estate": 40,
+    "civil": 40
+  },
+  "uniqueQuestionIds": 800,
+  "structureIssuesDetected": 0,
+  "specialAnswers": {
+    "allAccepted": 8,
+    "multipleAccepted2to4": 3
+  },
+  "recentExplanationCount": 400,
+  "explanations": {
+    "draft": 32,
+    "unstarted": 368,
+    "published": 0,
+    "reasonReviewed": 0,
+    "sourceChecked": 0,
+    "allFiveOptionsReviewed": 0
+  },
+  "perYear": [
+    {
+      "year": 2016,
+      "count": 80,
+      "allAccepted": 2,
+      "multipleAccepted2to4": 0
+    },
+    {
+      "year": 2017,
+      "count": 80,
+      "allAccepted": 0,
+      "multipleAccepted2to4": 0
+    },
+    {
+      "year": 2018,
+      "count": 80,
+      "allAccepted": 0,
+      "multipleAccepted2to4": 0
+    },
+    {
+      "year": 2019,
+      "count": 80,
+      "allAccepted": 1,
+      "multipleAccepted2to4": 0
+    },
+    {
+      "year": 2020,
+      "count": 80,
+      "allAccepted": 0,
+      "multipleAccepted2to4": 1
+    },
+    {
+      "year": 2021,
+      "count": 80,
+      "allAccepted": 1,
+      "multipleAccepted2to4": 1
+    },
+    {
+      "year": 2022,
+      "count": 80,
+      "allAccepted": 1,
+      "multipleAccepted2to4": 1
+    },
+    {
+      "year": 2023,
+      "count": 80,
+      "allAccepted": 2,
+      "multipleAccepted2to4": 0
+    },
+    {
+      "year": 2024,
+      "count": 80,
+      "allAccepted": 1,
+      "multipleAccepted2to4": 0
+    },
+    {
+      "year": 2025,
+      "count": 80,
+      "allAccepted": 0,
+      "multipleAccepted2to4": 0
+    }
+  ],
+  "sources": [
+    "data/official-2016-2020.json",
+    "data/official-2021-2025.json",
+    "data/explanations/official-2021.json",
+    "data/explanations/official-2022.json",
+    "data/explanations/official-2023.json",
+    "data/explanations/official-2024.json",
+    "data/explanations/official-2025.json"
+  ],
+  "limitations": [
+    "Official bank field verified=true is a registered-structure marker, not independent Q-Net recheck of each answer.",
+    "No legal precedent, current statute, PDF diagram, historical exam-version applicability or five-option meaning certified.",
+    "Published explanation count and source checks remain zero. Do not equate question count with expert review.",
+    "Browser audit explicitly fetched by user action, not automatic network or CI."
+  ]
+}

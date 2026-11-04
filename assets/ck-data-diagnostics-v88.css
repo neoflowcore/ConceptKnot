@@ -10,3 +10,13 @@
 .ck88-audit-years span{font-size:11px;line-height:1.55;opacity:.8;overflow-wrap:anywhere}
 .ck88-audit-years button{justify-self:start;font-size:11px}
 @media(max-width:680px){.ck88-audit-years{grid-template-columns:minmax(0,1fr)}}
+
+/* v121: bounded source-file structure audit, rendered with textContent. */
+.ck121-static-audit{margin-top:10px}
+.ck121-static-audit button{margin:5px 5px 5px 0;font-size:12px}
+.ck121-static-audit button:disabled{opacity:.45;cursor:not-allowed}
+.ck121-static-audit [data-v121-status]{min-height:1.4em;overflow-wrap:anywhere}
+.ck121-static-audit [data-v121-result]{display:grid;gap:5px}
+.ck121-audit-table{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
+.ck121-audit-table p{padding:5px 7px;margin:0;border:1px solid rgba(130,140,120,.22);border-radius:6px}
+@media(max-width:550px){.ck121-audit-table{grid-template-columns:minmax(0,1fr)}}

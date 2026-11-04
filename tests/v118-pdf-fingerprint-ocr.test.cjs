@@ -40,7 +40,7 @@ test('v118 assets and manual deployment-only configuration are linked',()=>{
   assert.ok(html.includes(asset),'missing HTML '+asset);
   assert.ok(sw.includes(asset),'missing SW '+asset);
  }
- assert.match(sw,/conceptknot-study-v120-ocr-page-queue/);
+ assert.match(sw,/conceptknot-study-v121-structure-evidence/);
  assert.equal(vercel.git.deploymentEnabled,false);
  assert.equal(fs.existsSync(path.join(__dirname,'..','.github','workflows')),false);
 });

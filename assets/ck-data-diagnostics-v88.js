@@ -1,7 +1,10 @@
 /* v88 personal data diagnostics — read-only until explicit download. */
 (function(){
 'use strict';
-const items=[['recallgraph-first-exam-v1','학습기록'],['ck10-exam-final-v1','최종 정리본'],['ck11-final-page-count','정리본 페이지'],['ck80-explain-drafts-v1','개인 해설'],['ck81-review-workbench-v1','해설 작업대'],['ck82-exam-sessions-v1','실전 기록'],['ck83-personal-concept-links-v1','개념 연결'],['ck84-study-plan-v1','학습계획'],['ck84-personal-materials-v1','개인 교재']];
+const items=[['recallgraph-first-exam-v1','학습기록'],['ck10-exam-final-v1','최종 정리본'],['ck11-final-page-count','정리본 페이지'],['ck80-explain-drafts-v1','개인 해설'],['ck81-review-workbench-v1','해설 작업대'],['ck82-exam-sessions-v1','실전 기록'],['ck83-personal-concept-links-v1','개념 연결'],['ck84-study-plan-v1','학습계획'],['ck84-personal-materials-v1','개인 교재'],
+ ['ck115-manual-device-verification-v1','수기 실기검증표'],
+ ['ck118-personal-ocr-draft-v1','개인 OCR 단일 초안'],
+ ['ck120-ocr-page-drafts-v1','OCR 페이지별 초안 보관함']];
 const safe=s=>String(s??'').replace(/[&<>"']/g,x=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[x]));
 function inspect(storage=localStorage){
  return items.map(([key,name])=>{
@@ -29,7 +32,10 @@ function inspect(storage=localStorage){
     'ck82-exam-sessions-v1':()=>window.CK82FullExam?.cleanStore?.(data),
     'ck83-personal-concept-links-v1':()=>window.CK83Links?.sanitize?.(data),
     'ck84-study-plan-v1':()=>window.CK84Plan?.sanitize?.(data),
-    'ck84-personal-materials-v1':()=>window.CK84Materials?.sanitize?.(data)
+    'ck84-personal-materials-v1':()=>window.CK84Materials?.sanitize?.(data),
+    'ck115-manual-device-verification-v1':()=>window.CK115QA?.sanitize?.(data),
+    'ck118-personal-ocr-draft-v1':()=>window.CK118OCR?.sanitize?.(data),
+    'ck120-ocr-page-drafts-v1':()=>window.CK118OCR?.sanitizePageStore?.(data)
    };
    const valid=methods[key]?Boolean(methods[key]()):true;
    return {key,name,status:valid?'ok':'invalid',bytes:raw.length};
@@ -223,8 +229,9 @@ function render(){
  const values=inspect(),problem=values.filter(x=>x.status==='invalid'),quality=bankQuality(),queue=visualQueue({year:queueYear,mode:queueMode});
  root.querySelector('[data-v88-body]').innerHTML='<p>읽기 전용 검사 · 데이터를 초기화하거나 수정하지 않습니다. 손상 기록은 복원 전 원본을 보존하세요.</p>'+
  '<p><strong>공식 기출 등록 구조: '+quality.structured+'/'+quality.total+'문항</strong> · 10개년 목표 800문항 · 시각 검토 명시 '+quality.visualReviewed+'건 / 미검토 표시 '+quality.visualUnreviewed+'건 / 표시 없음 '+quality.visualUnknown+'건</p>'+
- '<p>복수 인정 '+quality.multikey+'건(전원정답 '+quality.allAccepted+'건 포함) · OCR/텍스트 유사도 0.90 미만 '+quality.lowTextSimilarity+'건 · 점수 미기재 '+quality.missingTextSimilarity+'건. 낮은 유사도는 자동 오류 판정이 아닌 원문 대조 우선순위입니다.</p>'+
- '<p>구조 등록·채점 인정은 선지별 법령/원문 전문가 검수 완료와 다릅니다.</p>'+
+ '<p>특수 정답 '+quality.multikey+'건(복수정답 '+(quality.multikey-quality.allAccepted)+'건, 전원정답 '+quality.allAccepted+'건) · OCR/텍스트 유사도 0.90 미만 '+quality.lowTextSimilarity+'건 · 점수 미기재 '+quality.missingTextSimilarity+'건. 낮은 유사도는 자동 오류 판정이 아닌 원문 대조 우선순위입니다.</p>'+
+ '<p>구조 등록·채점 인정은 선지별 법령/원문 전문가 검수 완료와 다릅니다. '+
+ '2026-11-01 저장소 해설 보고서에서는 최근 5개년 400문항 중 개인/초기 해설 초안 32건, 출처 검수 완료 0건으로 기록되어 있습니다. 이 수치는 실시간 검수 진행률이 아닙니다.</p>'+
  '<details class="ck88-review-queue"><summary>원문 시각 검토 후보 · 연도별 우선 12문항 (읽기 전용)</summary>'+
  '<label>시험연도 <select data-v88-year>'+Array.from({length:10},(_,i)=>2025-i).map(year=>
  '<option value="'+year+'"'+(queueYear===year?' selected':'')+'>'+year+'년</option>').join('')+'</select></label>'+
@@ -264,13 +271,200 @@ function render(){
 
  if(wasOpen)root.querySelector('.ck88-review-queue').open=true;
 }
+
+/* v121: explicit click only, static evidence structure inspection. No writes to official question files. */
+const AUDIT_FILES=[
+ './data/official-2016-2020.json','./data/official-2021-2025.json',
+ './data/explanations/official-2021.json','./data/explanations/official-2022.json',
+ './data/explanations/official-2023.json','./data/explanations/official-2024.json',
+ './data/explanations/official-2025.json'
+];
+let auditBusy=false,auditResult=null,auditError='';
+function auditStatic(bundles,explanations){
+ const errors=[],byYear={},questions=new Map(),ids=new Set();
+ const add=message=>{if(errors.length<70)errors.push(message);};
+ let issueCount=0;
+ const issue=message=>{issueCount++;add(message)};
+ for(let y=2016;y<=2025;y++)byYear[y]={year:y,total:0,estate:0,civil:0,specialAll:0,specialMulti:0};
+ if(!Array.isArray(bundles)||bundles.length!==2||bundles.some(x=>!Array.isArray(x))){
+  return {ok:false,issueCount:1,errors:['공식 문제 번들 구조를 읽지 못했습니다.']};
+ }
+ const rows=[...bundles[0],...bundles[1]];
+ for(const q of rows){
+  if(!q||typeof q!=='object'){issue('문항 항목이 객체가 아닙니다.');continue}
+  const id=String(q.id||''),year=Number(q.year),number=Number(q.number);
+  if(!Number.isInteger(year)||year<2016||year>2025||!Number.isInteger(number)||number<1||number>80){
+   issue('연도·문항번호 범위 오류: '+id);continue;
+  }
+  const group=byYear[year];group.total++;
+  if(q.subject==='estate')group.estate++;else if(q.subject==='civil')group.civil++;
+  if(q.id!==year+'-'+number||ids.has(id))issue('문항 ID 불일치·중복: '+id);
+  ids.add(id);questions.set(id,q);
+  if(q.subject!==(number<=40?'estate':'civil'))issue('과목 구분 불일치: '+id);
+  if(q.verified!==true||typeof q.question!=='string'||q.question.trim().length<5||
+   !Array.isArray(q.options)||q.options.length!==5||
+   q.options.some(v=>typeof v!=='string'||!v.trim()))issue('문항/5선지 구조 오류: '+id);
+  if(!Array.isArray(q.correct)||q.correct.length===0||q.correct.length>5||
+   new Set(q.correct).size!==q.correct.length||
+   q.correct.some(v=>!Number.isInteger(v)||v<1||v>5))issue('정답 배열 오류: '+id);
+  if(typeof q.originalUrl!=='string'||!q.originalUrl.startsWith('https://'))
+   issue('출처 링크 누락: '+id);
+  if(q.correct?.length===5)group.specialAll++;
+  else if(q.correct?.length>=2&&q.correct?.length<=4)group.specialMulti++;
+ }
+ for(let y=2016;y<=2025;y++){
+  const x=byYear[y];
+  if(x.total!==80||x.estate!==40||x.civil!==40)
+   issue(y+'년 80문항/학개론40/민법40 구성 불일치: '+JSON.stringify(x));
+ }
+ let explanationCount=0,draft=0,unstarted=0,published=0,sourceChecked=0,reasonReviewed=0,
+  fullOptionVerdicts=0,reasonDrafts=0;
+ if(!Array.isArray(explanations)||explanations.length!==5)
+  issue('최근 5개년 해설 번들 수가 5개가 아닙니다.');
+ else for(let i=0;i<5;i++){
+  const year=2021+i,bundle=explanations[i],seen=new Set();
+  if(!bundle||bundle.year!==year||bundle.originalAnswersProtected!==true||
+   !Array.isArray(bundle.records)||bundle.records.length!==80){
+   issue(year+'년 해설 번들 형식·80건 구성 오류');continue;
+  }
+  for(const row of bundle.records){
+   explanationCount++;
+   if(!row||typeof row!=='object'){issue(year+'년 빈 해설 항목');continue}
+   const id=row.questionId,q=questions.get(id);
+   if(typeof id!=='string'||seen.has(id)||!q||q.year!==year||row.examYear!==year||
+    row.number!==q.number||row.subject!==q.subject||
+    JSON.stringify(row.officialAnswer)!==JSON.stringify(q.correct)){
+    issue('해설-원문 연결 오류: '+String(id));continue;
+   }
+   seen.add(id);
+   if(!Array.isArray(row.options)||row.options.length!==5||
+    row.options.some((opt,n)=>opt?.no!==n+1))issue('해설의 5개 선지 번호 오류: '+id);
+   const quality=row.quality||{};
+   if(quality.status==='draft')draft++;
+   else if(quality.status==='unstarted')unstarted++;
+   else if(quality.status==='published')published++;
+   else issue('해설 검토 단계 값 오류: '+id);
+   if(quality.sourceChecked===true)sourceChecked++;
+   if(quality.reasonReviewed===true)reasonReviewed++;
+   if(quality.optionVerdictsReviewed===5)fullOptionVerdicts++;
+   if(typeof row.answerReason==='string'&&row.answerReason.trim())reasonDrafts++;
+   if(quality.status==='published'&&
+    !(quality.reasonReviewed===true&&quality.sourceChecked===true&&
+      quality.optionVerdictsReviewed===5&&row.options.every(opt=>opt.sourceChecked===true&&
+       ['true','false','conditional'].includes(opt.verdict))))
+     issue('출처·근거·선지 검수 없이 published로 표시됨: '+id);
+  }
+ }
+ if(rows.length!==800||ids.size!==800)issue('등록 문항 800개/고유 ID가 일치하지 않습니다.');
+ if(explanationCount!==400)issue('2021~2025 해설이 총 400개가 아닙니다.');
+ const totals=Object.values(byYear).reduce((acc,x)=>{
+  acc.allAccepted+=x.specialAll;acc.multiple+=x.specialMulti;return acc;
+ },{allAccepted:0,multiple:0});
+ return {ok:issueCount===0,issueCount,errors,officialCount:rows.length,uniqueIds:ids.size,
+  explanationCount,draft,unstarted,published,sourceChecked,reasonReviewed,
+  fullOptionVerdicts,reasonDrafts,totals,years:Object.values(byYear)};
+}
+function auditText(report){
+ if(!report)return '검사 결과 없음';
+ const lines=['ConceptKnot 원문/해설 구조 감사',
+  '브라우저에서 JSON 구조만 검사. 법령·판례·출처 진위 전문가 검증 완료 아님.',
+  '검사일: '+new Date().toISOString(),'구조 오류: '+report.issueCount,
+  '공식 원문 등록: '+report.officialCount+' (고유 ID '+report.uniqueIds+')',
+  '최근 해설: '+report.explanationCount+' · 초안 '+report.draft+
+   ' · 미작성 '+report.unstarted+' · 검토공개 '+report.published,
+  '해설 출처 검수: '+report.sourceChecked+' · 이유 검토: '+report.reasonReviewed+
+   ' · 5선지 검토: '+report.fullOptionVerdicts,
+  '전원정답 인정: '+report.totals.allAccepted+' · 2~4개 복수정답 인정: '+report.totals.multiple,''];
+ for(const row of report.years)lines.push(
+  row.year+' | '+row.total+'/80 | 학개론 '+row.estate+'/40 | 민법 '+row.civil+
+  '/40 | 전원정답 '+row.specialAll+' | 복수정답 '+row.specialMulti);
+ if(report.errors.length)lines.push('','검사 오류 (최대 70건 표시)',...report.errors);
+ return lines.join('\n');
+}
+function renderAudit(){
+ const area=root?.querySelector('[data-v121-audit]');
+ if(!area)return;
+ const status=area.querySelector('[data-v121-status]'),output=area.querySelector('[data-v121-result]');
+ const trigger=area.querySelector('[data-v121-run]'),save=area.querySelector('[data-v121-export]');
+ if(trigger)trigger.disabled=auditBusy;
+ if(save)save.disabled=!auditResult;
+ if(status)status.textContent=auditBusy?'7개 등록·해설 JSON 파일을 읽고 있습니다.':
+  auditError||(!auditResult?'사용자가 검사 버튼을 눌렀을 때만 실행합니다.':
+  '구조 불일치 '+auditResult.issueCount+'건 · 이것은 원문 법령·해설 내용 검수가 아닙니다.');
+ if(!output)return;
+ output.replaceChildren();
+ if(!auditResult)return;
+ const summary=document.createElement('p');
+ summary.textContent='등록 문항 '+auditResult.officialCount+'/800 (고유 ID '+
+  auditResult.uniqueIds+') · 해설 '+auditResult.explanationCount+'/400 · 초안 '+
+  auditResult.draft+' · 미작성 '+auditResult.unstarted+' · 전문가 검수 완료 상태 '+
+  auditResult.published;
+ output.append(summary);
+ const explain=document.createElement('p');
+ explain.textContent='해설 출처 검수 '+auditResult.sourceChecked+'/400 · 이유 검토 '+
+  auditResult.reasonReviewed+'/400 · 전체 5선지 검토 '+auditResult.fullOptionVerdicts+
+  '/400 · 전원정답 인정 '+auditResult.totals.allAccepted+
+  '건 · 복수정답 인정 '+auditResult.totals.multiple+'건';
+ output.append(explain);
+ const table=document.createElement('div');table.className='ck121-audit-table';
+ for(const item of auditResult.years){
+  const row=document.createElement('p');row.textContent=item.year+'년 '+item.total+
+   '/80 · 학개론 '+item.estate+'/40 · 민법 '+item.civil+'/40';
+  table.appendChild(row);
+ }
+ output.append(table);
+ if(auditResult.issueCount){
+  const warn=document.createElement('p');
+  warn.textContent='구조 오류 '+auditResult.issueCount+'건: '+auditResult.errors.slice(0,3).join(' / ');
+  warn.setAttribute('role','alert');output.append(warn);
+ }
+}
+async function runAudit(){
+ if(auditBusy)return false;
+ auditBusy=true;auditError='';auditResult=null;renderAudit();
+ try{
+  const loaded=await Promise.all(AUDIT_FILES.map(async path=>{
+   const response=await fetch(path,{cache:'no-store'});
+   if(!response.ok)throw Error(path+' HTTP '+response.status);
+   const declared=Number(response.headers?.get?.('content-length')||0);
+   if(declared>2500000)throw Error(path+' 파일이 검사 용량 제한을 초과했습니다');
+   const text=await response.text();
+   if(text.length>2500000)throw Error(path+' 파일이 검사 용량 제한을 초과했습니다');
+   return JSON.parse(text);
+  }));
+  auditResult=auditStatic(loaded.slice(0,2),loaded.slice(2));
+  return auditResult.ok;
+ }catch(error){
+  auditError='원본 검사 실패: '+String(error?.message||error).slice(0,240);
+  return false;
+ }finally{
+  auditBusy=false;renderAudit();
+ }
+}
+function saveAudit(){
+ if(!auditResult)return false;
+ try{
+  const blob=new Blob(['\uFEFF'+auditText(auditResult)],{type:'text/plain;charset=utf-8'});
+  const url=URL.createObjectURL(blob),link=document.createElement('a');
+  link.href=url;link.download='ConceptKnot_공식문항_구조감사_'+new Date().toISOString().slice(0,10)+'.txt';
+  document.body.append(link);link.click();link.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),2000);
+  return true;
+ }catch{auditError='결과 TXT를 저장할 수 없습니다.';renderAudit();return false}
+}
 function mount(){
  const exists=document.getElementById('ck88-data-diagnostics');if(exists){root=exists;return;}
  const host=document.getElementById('main');if(!host)return;
  root=document.createElement('section');root.id='ck88-data-diagnostics';root.className='ck88-diagnostics';
  root.innerHTML='<div class="ck88-head"><strong>내 학습 데이터 안전 점검</strong><button type="button" data-v88-refresh>진단 새로고침</button>'+
- '<button type="button" data-v88-raw>9종 원본 백업 내려받기</button></div><div data-v88-body></div>';
- host.append(root);render();
+ '<button type="button" data-v88-raw>12종 원본 백업 내려받기</button></div><div data-v88-body></div>'+
+ '<details class="ck88-audit-matrix ck121-static-audit" data-v121-audit>'+
+ '<summary>공식 800문항·해설 400건 구조 점검 (수동 실행)</summary>'+
+ '<p>저장소 내 7개 JSON을 버튼 클릭 시에만 읽습니다. 정답 진위·법령·판례의 전문 검수는 별개입니다.</p>'+
+ '<button type="button" data-v121-run>원문·해설 구조 검사</button>'+
+ '<button type="button" data-v121-export disabled>검사 결과 TXT</button>'+
+ '<p data-v121-status role="status"></p><div data-v121-result></div></details>';
+ host.append(root);render();renderAudit();
 }
 document.addEventListener('click',event=>{
  const t=event.target.closest?.('[data-v88-refresh],[data-v88-raw],[data-v88-open],[data-v88-review-export]');
@@ -284,6 +478,13 @@ document.addEventListener('click',event=>{
    else window.CK76Study?.openQuestion?.(q.year,q.number,q.subject);
   }
  }else render();
+});
+document.addEventListener('click',event=>{
+ const button=event.target?.closest?.('[data-v121-run],[data-v121-export]');
+ if(!button||!document.getElementById('ck88-data-diagnostics')?.contains(button))return;
+ event.preventDefault();
+ if(button.hasAttribute('data-v121-run')){runAudit();return}
+ if(button.hasAttribute('data-v121-export'))saveAudit();
 });
 document.addEventListener('change',e=>{if(e.target?.matches?.('[data-v88-year]')){queueYear=Number(e.target.value);render();loadOlderYear(queueYear);}
  if(e.target?.matches?.('[data-v88-queue-mode]')){queueMode=['all','unreviewed','low-text'].includes(e.target.value)?e.target.value:'all';render();}});
@@ -303,5 +504,5 @@ if(target&&window.MutationObserver)new MutationObserver(()=>{
   document.querySelector('#main [data-action="backup"]'))mount();
 }).observe(target,{childList:true});
 window.addEventListener('ck:official-bank-ready',()=>{if(root)render();});
-window.CK88Diagnostics=Object.freeze({inspect,bankQuality,visualQueue,exportVisualQueue,loadOlderYear,mount,reviewRows,reviewMatrix,csvCell,makeReviewCsv,exportReviewCsv});
+window.CK88Diagnostics=Object.freeze({inspect,bankQuality,visualQueue,exportVisualQueue,loadOlderYear,mount,reviewRows,reviewMatrix,csvCell,makeReviewCsv,exportReviewCsv,auditStatic,auditText,runAudit});
 })();
