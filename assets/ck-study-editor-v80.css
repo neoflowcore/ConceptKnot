@@ -18,3 +18,17 @@
 .ck80-editor-buttons button{padding:8px 11px}
 .ck80-editor-buttons [data-ck80-status]{flex-basis:100%;font-size:12px;min-height:17px}
 @media(max-width:520px){.ck80-editor-option label{display:grid}.ck80-editor-option select{max-width:100%}}
+
+/* v112: source evidence is a separate text field below each verdict/reason. */
+.ck80-editor-entry .ck80-editor-option .ck80-option-citation{
+ display:grid;grid-template-columns:minmax(0,1fr);align-items:start;gap:5px;
+ font-size:12px;font-weight:600;margin:9px 0 0;
+}
+.ck80-editor-entry .ck80-editor-option .ck80-option-citation textarea{
+ display:block;width:100%;max-width:100%;min-height:54px;
+ color:inherit;font-size:12px;line-height:1.5;
+}
+@media(max-width:540px){
+ .ck80-editor-entry .ck80-editor-option{padding:9px}
+ .ck80-editor-entry .ck80-editor-option .ck80-option-citation textarea{min-height:60px}
+}

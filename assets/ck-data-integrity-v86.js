@@ -1,4 +1,4 @@
-/* ConceptKnot v86 — guarded local backups and restore.
+/* ConceptKnot v112 — guarded 10-year personal backups and restore.
  * One browser turn, synchronous writes, best-effort rollback on partial failure.
  * This is not a cross-tab transactional database. No network or remote sync.
  */
@@ -8,7 +8,7 @@ const MAX_FILE=16*1024*1024;
 const KEY_LIMITS=Object.freeze({
  'ck10-exam-final-v1':250000,
  'ck11-final-page-count':8,
- 'ck80-explain-drafts-v1':1000000,
+ 'ck80-explain-drafts-v1':3500000,
  'ck81-review-workbench-v1':1000000,
  'ck82-exam-sessions-v1':2300000,
  'ck83-personal-concept-links-v1':5200000,
@@ -43,11 +43,19 @@ function validateFinal(value){
 }
 function validateDraft(value){
  const x=JSON.parse(value);
- if(!isObject(x)||Object.keys(x).length>400)return false;
+ if(!isObject(x)||Object.keys(x).length>800)return false;
  for(const [id,v] of Object.entries(x)){
-  if(!/^202[1-5]-(?:[1-9]|[1-7]\d|80)$/.test(id)||!isObject(v))return false;
+  if(!/^20(?:1[6-9]|2[0-5])-(?:[1-9]|[1-7]\d|80)$/.test(id)||!isObject(v))return false;
+  // Keep legacy partial user drafts readable while prohibiting automatic
+  // publication or malformed option structures in a restore.
+  if(v.published===true||v.status==='published')return false;
   if(typeof v.summaryEasy!=='undefined'&&typeof v.summaryEasy!=='string')return false;
   if(typeof v.answerReason!=='undefined'&&typeof v.answerReason!=='string')return false;
+  if(typeof v.evidence!=='undefined'&&typeof v.evidence!=='string')return false;
+  if(v.options!==undefined&&(!Array.isArray(v.options)||v.options.length!==5||
+    v.options.some((opt,i)=>!isObject(opt)||opt.no!==i+1||
+      !['unreviewed','true','false','unknown'].includes(opt.verdict)||
+      (opt.source!==undefined&&(typeof opt.source!=='string'||opt.source.length>260)))))return false;
  }
  return true;
 }

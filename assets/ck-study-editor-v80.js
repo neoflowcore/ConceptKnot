@@ -53,15 +53,15 @@ function documents(current,incoming,max=35){
 }
 window.CK102Restore=Object.freeze({timestamp,records,documents});
 })();
-/* ConceptKnot P4 editorial desk v80 — local-only source-aware draft workspace.
+/* ConceptKnot P4 editorial desk v112 — full 10-year local source-aware draft workspace.
  * It never alters canonical exam data or labels an unreviewed answer "published".
  */
 (function(){
 'use strict';
-const KEY='ck80-explain-drafts-v1',MAX_RECORDS=400;
+const KEY='ck80-explain-drafts-v1',MAX_RECORDS=800;
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','"':'&#39;'}[c]));
-const questionId=id=>/^20(?:2[1-5])-(?:[1-9]|[1-7]\d|80)$/.test(String(id||''));
-const MAX={short:450,reason:4000,option:1600,evidence:1200,hold:550};
+const questionId=id=>/^20(?:1[6-9]|2[0-5])-(?:[1-9]|[1-7]\d|80)$/.test(String(id||''));
+const MAX={short:450,reason:4000,option:1600,source:260,evidence:1200,hold:550};
 const clip=(v,n)=>String(v??'').trim().slice(0,n);
 let selected='',record=null,loaded=new Map(),open=false,editing=false,lastStatus='대기';
 let storageIssue='',lastRaw=undefined;
@@ -85,7 +85,8 @@ const count=()=>Object.keys(store()).filter(questionId).length;
 function saveToStore(id,draft){
  if(!questionId(id)||!draft||typeof draft!=='object')return false;
  const current=store();
- if(storageIssue||Object.keys(current).length>MAX_RECORDS+5)return false;
+ if(storageIssue||Object.keys(current).filter(questionId).length>=MAX_RECORDS&&
+    !Object.prototype.hasOwnProperty.call(current,id))return false;
  try{
   const raw=localStorage.getItem(KEY);
   if(lastRaw!==raw){
@@ -97,7 +98,14 @@ function saveToStore(id,draft){
   localStorage.setItem(KEY,next);lastRaw=next;storageIssue='';return true;
  }catch{return false;}
 }
-function patchYear(year){if(loaded.has(year))return Promise.resolve(loaded.get(year));
+function patchYear(year){
+ if(loaded.has(year))return Promise.resolve(loaded.get(year));
+ // 2016–2020 have 400 verified questions but NO official explanation JSON.
+ // Open an empty personal draft; never fabricate a source-backed answer.
+ if(Number.isInteger(year)&&year>=2016&&year<=2020){
+  const unseeded=new Map();loaded.set(year,unseeded);return Promise.resolve(unseeded);
+ }
+ if(!Number.isInteger(year)||year<2021||year>2025)return Promise.reject(Error('지원하지 않는 연도'));
  return fetch('./data/explanations/official-'+year+'.json',{cache:'force-cache'})
   .then(res=>{if(!res.ok)throw Error('문항 데이터 불러오기 '+res.status);return res.json();})
   .then(data=>{
@@ -127,7 +135,7 @@ function compareDraft(id,base){
  return {questionId:id,status:'draft',summaryEasy:clip(base?.summaryEasy,MAX.short),
   answerReason:clip(base?.answerReason,MAX.reason),
   options:Array.from({length:5},(_,i)=>({
-   no:i+1,verdict:'unreviewed',why:clip(base?.options?.[i]?.draftReason,MAX.option)
+   no:i+1,verdict:'unreviewed',why:clip(base?.options?.[i]?.draftReason,MAX.option),source:''
   })),
   evidence:'',reviewHoldReason:'',examAsOf:id.slice(0,4),
   updatedAt:null,source:'official-question-rooted study draft, not an editorial publication',
@@ -143,6 +151,7 @@ function editorHtml(d){
  const item=q(d.questionId),sourceCount=count();
  const sel=(val,label,active)=>'<option value="'+val+'"'+(val===active?' selected':'')+'>'+label+'</option>';
  return '<div class="ck80-editor-summary"><span><strong>개인 검토 초안 '+sourceCount+'개</strong> · 공식 게시 콘텐츠와 분리 저장</span>'+
+  (item?.year<=2020?'<p><strong>2016~2020년은 기본 해설 자료가 아직 제공되지 않습니다.</strong> 빈 개인 작성 칸으로 시작하며, 원문·법령·판례 근거를 직접 확인해 기록하세요.</p>':'')+
   '<p>공식 최종정답('+esc(item?.correct?.join(' 또는 ')||'-')+'번)은 수정할 수 없습니다. 선지 판단은 직접 근거를 확인한 경우에만 기록하고, 여기에서 게시 완료로 전환하지 않습니다.</p></div>'+
   '<label>15초 쉬운 설명 <textarea rows="3" data-ck80-field="summaryEasy" maxlength="'+MAX.short+'">'+esc(d.summaryEasy)+'</textarea></label>'+
   '<label>공식 정답에 해당하는 논리 · 출처 대조 전 <textarea rows="5" data-ck80-field="answerReason" maxlength="'+MAX.reason+'">'+esc(d.answerReason)+'</textarea></label>'+
@@ -155,7 +164,9 @@ function editorHtml(d){
     sel('unreviewed','근거 미검수',v.verdict)+sel('true','참 · 개인 검토',v.verdict)+
     sel('false','거짓 · 개인 검토',v.verdict)+sel('unknown','진위 보류',v.verdict)+
     '</select></label><textarea rows="2" maxlength="'+MAX.option+'" data-ck80-option-reason="'+i+'" '+
-    'placeholder="이 지문의 성립 요건과 근거를 적으세요">'+esc(v.why)+'</textarea></div>';
+    'placeholder="이 지문의 성립 요건과 근거를 적으세요">'+esc(v.why)+'</textarea>'+
+    '<label class="ck80-option-citation">개인 근거 출처 · 미검수<textarea rows="2" maxlength="'+MAX.source+'" data-ck80-option-source="'+i+'" '+
+    'placeholder="조문·판례번호·원문 PDF 쪽수·시험 당시 시행일 등">'+esc(v.source||'')+'</textarea></label></div>';
   }).join('')+'</div>'+
   '<label>원문·조문·판례 출처 확인 메모 <textarea rows="3" data-ck80-field="evidence" maxlength="'+MAX.evidence+'" '+
   'placeholder="출처 문서, URL, 시험 당시 시행 시점, 대조한 PDF 페이지 등">'+esc(d.evidence)+'</textarea></label>'+
@@ -181,7 +192,8 @@ function collect(){
   options:Array.from({length:5},(_,i)=>{
    const verdict=w.querySelector('[data-ck80-option-verdict="'+i+'"]')?.value;
    return {no:i+1,verdict:['unreviewed','true','false','unknown'].includes(verdict)?verdict:'unreviewed',
-    why:clip(w.querySelector('[data-ck80-option-reason="'+i+'"]')?.value,MAX.option)};
+    why:clip(w.querySelector('[data-ck80-option-reason="'+i+'"]')?.value,MAX.option),
+    source:clip(w.querySelector('[data-ck80-option-source="'+i+'"]')?.value,MAX.source)};
   }),
   updatedAt:new Date().toISOString(),source:'personal study review; editorial publication never automatic',
   sourceChecked:false,reasonReviewed:false,published:false};
@@ -190,7 +202,9 @@ function save(){
  const draft=collect();if(!draft)return false;
  if(draft.status==='review_hold'&&!draft.reviewHoldReason){setStatus('보류로 저장하려면 보류 사유를 적어 주세요.');return false;}
  if(!saveToStore(selected,draft)){setStatus(storageIssue||'저장 실패 · 용량 또는 저장 권한 확인 필요');return false;}
- record=draft;editing=false;setStatus('개인 초안 저장됨 · 공식 해설 게시/검수와는 별개입니다.');return true;
+ record=draft;editing=false;setStatus('개인 초안 저장됨 · 공식 해설 게시/검수와는 별개입니다.');
+ try{document.dispatchEvent(new CustomEvent('ck:personal-editor-updated',{detail:{id:selected}}));}catch{}
+ return true;
 }
 function setVisible(yes){const w=panel();if(!w)return;open=yes;w.hidden=!yes;
  const t=root()?.querySelector('[data-ck80-toggle]');
@@ -214,7 +228,7 @@ function filename(){return 'ConceptKnot_해설_개인검토초안_'+new Date().t
 function exportJson(){
  const drafts=store();
  if(!Object.keys(drafts).length){setStatus('저장한 초안이 아직 없습니다.');return;}
- const body={schemaVersion:'1.0.0',scope:'personal-unpublished-2021-2025',exportedAt:new Date().toISOString(),
+ const body={schemaVersion:'1.0.0',scope:'personal-unpublished-2016-2025',exportedAt:new Date().toISOString(),
   officialSourceUnchanged:true,records:Object.fromEntries(Object.entries(drafts).filter(([id])=>questionId(id)))};
  const bytes=new Blob(['\uFEFF',JSON.stringify(body,null,2)],{type:'application/json'});
  const url=URL.createObjectURL(bytes),link=document.createElement('a');link.href=url;
@@ -233,20 +247,29 @@ function validateImportRecord(id,v){
  return {questionId:id,status:v.status,examAsOf:id.slice(0,4),
   summaryEasy:clip(v.summaryEasy,MAX.short),answerReason:clip(v.answerReason,MAX.reason),
   evidence:clip(v.evidence,MAX.evidence),reviewHoldReason:hold,
-  options:v.options.map((opt,i)=>({no:i+1,verdict:opt.verdict,why:clip(opt.why,MAX.option)})),
+  options:v.options.map((opt,i)=>({no:i+1,verdict:opt.verdict,why:clip(opt.why,MAX.option),
+   source:clip(opt.source,MAX.source)})),
   updatedAt:stamp?new Date(stamp).toISOString():null,source:'personal import, unpublished',
   sourceChecked:false,reasonReviewed:false,published:false};
 }
 async function importJson(file){
- if(!file||file.size>4*1024*1024){setStatus('JSON 파일을 확인하세요(최대 4MB).');return;}
+ if(!file||file.size>8*1024*1024){setStatus('JSON 파일을 확인하세요(최대 8MB).');return;}
  if(editing){setStatus('저장하지 않은 해설 편집이 있습니다. 먼저 저장하거나 복사한 뒤 복원하세요.');return;}
  try{
   if(!window.CK102Restore?.records)throw Error('안전 복원 모듈을 불러오지 못했습니다.');
   const raw=await file.text(),data=JSON.parse(raw.replace(/^\uFEFF/,''));
-  if(data.schemaVersion!=='1.0.0'||data.scope!=='personal-unpublished-2021-2025'||
-    !data.records||typeof data.records!=='object'||Array.isArray(data.records))throw Error('파일 형식이 다릅니다.');
+  if(data.schemaVersion!=='1.0.0'||
+    !['personal-unpublished-2021-2025','personal-unpublished-2016-2025'].includes(data.scope)||
+    !data.records||typeof data.records!=='object'||Array.isArray(data.records))
+     throw Error('지원하지 않는 개인 해설 백업 형식입니다.');
   const items=Object.entries(data.records);
-  if(items.length>MAX_RECORDS)throw Error('400문항 초과');
+  if(items.length>MAX_RECORDS)throw Error('800문항 초과');
+  // Load the immutable legacy question bank before validating 2016–2020
+  // drafts, otherwise legitimate personal records could be rejected as missing.
+  if(items.some(([id])=>/^(?:201[6-9]|2020)-/.test(id))){
+   if(!window.CK89OfficialBank?.loadAll)throw Error('과거 5개년 공식 원문을 불러올 수 없습니다.');
+   await window.CK89OfficialBank.loadAll();
+  }
   const clean=items.map(([id,v])=>[id,validateImportRecord(id,v)]);
   if(clean.some(([id,v])=>!v))throw Error('문항 ID, 상태, 보류 사유 또는 선지 형식이 잘못되었습니다.');
   if(editing)throw Error('백업을 읽는 도중 해설 편집이 시작됐습니다. 복원을 중단했습니다.');
@@ -260,10 +283,11 @@ async function importJson(file){
   if(localStorage.getItem(KEY)!==lastRaw||editing)
    throw Error('가져오기 확인 중 다른 탭/편집 상태가 변경됐습니다. 다시 시도하세요.');
   const next=JSON.stringify(change.merged);
-  if(next.length>1000000)throw Error('해설 개인 초안 저장용량 1MB 초과. 기존 자료 유지');
+  if(next.length>3500000)throw Error('해설 개인 초안 합계 350만 글자 초과. 백업을 나눠 보관하고 기존 기록을 보호하세요.');
   localStorage.setItem(KEY,next);lastRaw=next;storageIssue='';
   setStatus('초안 복원: 새 '+change.added+'건 · 갱신 '+change.updated+
     '건 · 오래된/동일 '+change.preserved+'건 보호. 공식 해설 변경 없음.');
+  try{document.dispatchEvent(new CustomEvent('ck:personal-editor-updated',{detail:{id:null}}));}catch{}
   if(questionId(selected)){const w=panel();if(w){w.dataset.ck80For='';setVisible(false);showEditor();}}
  }catch(e){setStatus('가져오기 실패 · '+(e.message||'JSON 형식 확인'));}
 }
@@ -286,5 +310,6 @@ document.addEventListener('click',e=>{
   e.preventDefault();e.stopImmediatePropagation();
  }else editing=false;
 },true);
-window.CK80Editorial=Object.freeze({count,lookup:id=>store()[id]||null,validateImportRecord,getStatus:()=>({selected,open,editing,lastStatus,storageIssue})});
+window.CK80Editorial=Object.freeze({count,lookup:id=>store()[id]||null,
+ getRecords:()=>store(),validateImportRecord,getStatus:()=>({selected,open,editing,lastStatus,storageIssue})});
 })();

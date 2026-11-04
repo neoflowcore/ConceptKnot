@@ -115,7 +115,7 @@ body{font-family:Pretendard,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;bac
 <link rel="stylesheet" href="./assets/ck-study-review-v79.css?v=79">
 <link rel="stylesheet" href="./assets/ck-study-final-v79.css?v=79">
 <link rel="stylesheet" href="./assets/ck-study-charts-v79.css?v=79">
-<link rel="stylesheet" href="./assets/ck-study-editor-v80.css?v=80">
+<link rel="stylesheet" href="./assets/ck-study-editor-v80.css?v=112">
 <link rel="stylesheet" href="./assets/ck-study-workbench-v81.css?v=100">
 <link rel="stylesheet" href="./assets/ck-full-exam-v82.css?v=82">
 <link rel="stylesheet" href="./assets/ck-study-intelligence-v83.css?v=83">
@@ -1596,9 +1596,49 @@ function ck109ReadDue(mode='qa',limit=40){
  return {ok:true,items:items.length,excluded,missing,mode};
 }
 
+
+/* v112 · Source-bound selection playback for research packets across years.
+   A verification miss fails the entire batch, preventing misleading partial
+   reading; only explicit user clicks can start audio. */
+function ck112ReadSelected(ids,mode='qa'){
+ if(!Array.isArray(ids)||ids.length===0)return {ok:false,items:0,reason:'empty-selection'};
+ const unique=[...new Set(ids.map(String))];
+ if(unique.length>40||unique.some(id=>!
+   /^20(?:1[6-9]|2[0-5])-(?:[1-9]|[1-7]\d|80)$/.test(id)))
+   return {ok:false,items:0,reason:'invalid-selection'};
+ mode=['qa','answer','all'].includes(mode)?mode:'qa';
+ const items=[];let excluded=0,missing=0;
+ for(const id of unique){
+  const [year,n]=id.split('-').map(Number);
+  try{
+   const record=officialAudioEntry(year,n);
+   if(record.special==='allAccepted'&&mode!=='all'){excluded++;continue;}
+   items.push(record);
+  }catch{missing++;}
+ }
+ if(missing){
+  ttsStop(false);
+  ck76VoiceState('error','선택한 '+unique.length+'문항 중 공식 원문 '+missing+
+   '문항이 준비되지 않았습니다. 자료를 불러온 뒤 다시 시도하세요.');
+  return {ok:false,items:0,excluded,missing,reason:'incomplete-selection'};
+ }
+ if(!items.length){
+  ttsStop(false);
+  ck76VoiceState('error',excluded?
+   '전원정답 처리 문항은 정답 중심 듣기에서 제외됩니다. 5선지 전체 모드를 선택하세요.':
+   '음성으로 읽을 등록 문항이 없습니다.');
+  return {ok:false,items:0,excluded,missing,reason:'no-records'};
+ }
+ ttsPlay(items,{continuous:items.length>1,mode,
+  label:'개인 검토용 선택 '+items.length+'문항'});
+ if(ck76Voice.status==='error')return {ok:false,items:0,excluded,missing,reason:'audio-error'};
+ return {ok:true,items:items.length,excluded,missing,mode};
+}
+
 window.CK76Voice=Object.freeze({
  getState:()=>({...ck76Voice}),
  playDue:ck109ReadDue,
+ playSelected:ck112ReadSelected,
  getPreferences:()=>({engine:ttsSettings().engine,rate:ttsSettings().rate,
   mode:ttsSettings().marathonMode,neuralVoice:ttsSettings().neuralVoice}),
  playOfficial:ck107ReadOfficial,
@@ -1627,7 +1667,21 @@ function ck79RestoreExtras(data){
  let changed=false;
  for(const key of ck79ExtraKeys){
   const value=store[key];
-  if(typeof value!=='string'||value.length>1024*1024)continue;
+  const sizeLimit=key==='ck80-explain-drafts-v1'?3500000:
+   key==='ck83-personal-concept-links-v1'?5200000:
+   key==='ck82-exam-sessions-v1'?2300000:
+   key==='ck84-personal-materials-v1'?2400000:1024*1024;
+  if(typeof value!=='string'||value.length>sizeLimit)continue;
+  if(key==='ck80-explain-drafts-v1'){
+   try{
+    const drafts=JSON.parse(value);
+    if(!drafts||typeof drafts!=='object'||Array.isArray(drafts)||
+      Object.keys(drafts).length>800||
+      Object.entries(drafts).some(([id,entry])=>!
+       /^20(?:1[6-9]|2[0-5])-(?:[1-9]|[1-7]\d|80)$/.test(id)||
+       !entry||typeof entry!=='object'||entry.published===true))continue;
+   }catch{continue;}
+  }
   if(key==='ck10-exam-final-v1'){
    try{const pages=JSON.parse(value);
     if(!Array.isArray(pages)||pages.length!==5||pages.some(p=>!Array.isArray(p)||p.length!==2))continue;
@@ -3868,18 +3922,18 @@ render();setInterval(timerTick,500);
 <script src="./assets/ck-study-review-v79.js?v=79" defer></script>
 <script src="./assets/ck-study-final-v79.js?v=79" defer></script>
 <script src="./assets/ck-study-charts-v79.js?v=79" defer></script>
-<script src="./assets/ck-study-editor-v80.js?v=80" defer></script>
-<script src="./assets/ck-study-workbench-v81.js?v=101" defer></script>
+<script src="./assets/ck-study-editor-v80.js?v=112" defer></script>
+<script src="./assets/ck-study-workbench-v81.js?v=112" defer></script>
 <script src="./assets/ck-official-bank-v89.js?v=89" defer></script>
 <script src="./assets/ck-full-exam-v82.js?v=82" defer></script>
 <script src="./assets/ck-study-recall-v83.js?v=83" defer></script>
 <script src="./assets/ck-study-links-v83.js?v=83" defer></script>
 <link rel="stylesheet" href="./assets/ck-evidence-queue-v111.css?v=111">
-<script src="./assets/ck-evidence-queue-v111.js?v=111" defer></script>
+<script src="./assets/ck-evidence-queue-v111.js?v=112" defer></script>
 <script src="./assets/ck-study-analytics-v83.js?v=83" defer></script>
 <script src="./assets/ck-study-plan-v84.js?v=84" defer></script>
 <script src="./assets/ck-study-materials-v84.js?v=84" defer></script>
-<script src="./assets/ck-data-integrity-v86.js?v=86" defer></script>
+<script src="./assets/ck-data-integrity-v86.js?v=112" defer></script>
 <script src="./assets/ck-exam-bridge-v86.js?v=86" defer></script>
 <link rel="stylesheet" href="./assets/ck-data-diagnostics-v88.css?v=88">
 <script src="./assets/ck-data-diagnostics-v88.js?v=88" defer></script>

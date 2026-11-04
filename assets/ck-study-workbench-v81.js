@@ -1,19 +1,22 @@
-/* ConceptKnot v101 - resilient offline P4 evidence workbench.
+/* ConceptKnot v112 - complete ten-year offline P4 evidence workbench.
  * Canonical official answers and explanations are read-only.
  * Personal work readiness NEVER represents an official source/legal review.
  */
 (function(){
 'use strict';
-const KEY='ck81-review-workbench-v1',EDITOR='ck80-explain-drafts-v1',MAX=400;
+const KEY='ck81-review-workbench-v1',EDITOR='ck80-explain-drafts-v1',MAX=800;
 const VALID_STATUS=['backlog','researching','hold','ready'];
-const YEARS=[2025,2024,2023,2022,2021];
+const YEARS=Array.from({length:10},(_,i)=>2025-i);
+// Only recent years have seeded analysis JSON. Older registered questions can
+// receive personal drafts but MUST NOT be mislabeled as verified explanations.
+const EXPLANATION_YEARS=[2025,2024,2023,2022,2021];
 const SUBJECTS={estate:'부동산학개론',civil:'민법 및 민사특별법'};
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const norm=value=>String(value??'').normalize('NFKC').toLowerCase().replace(/\s+/g,' ').trim();
-const isId=id=>/^202[1-5]-(?:[1-9]|[1-7]\d|80)$/.test(String(id||''));
+const isId=id=>/^20(?:1[6-9]|2[0-5])-(?:[1-9]|[1-7]\d|80)$/.test(String(id||''));
 const official=()=>window.RECALL_OFFICIAL||{};
 let storageIssue='',lastRaw=undefined;
-let root=null,shown=false,rows=null,loading=null,loadErrors=0,local=readLocal(),statusMessage='',timer=null;
+let root=null,shown=false,rows=null,loading=null,loadErrors=0,legacyLoadError='',local=readLocal(),statusMessage='',timer=null;
 const view={year:0,subject:'all',stage:'all',search:'',page:0,pageSize:20,sort:'priority'};
 let researchBatch=5;
 function empty(){return {schemaVersion:1,scope:'personal-unpublished-workbench',records:{}};}
@@ -134,8 +137,15 @@ function load(force=false){
  if(rows&&!force)return Promise.resolve(rows);
  if(loading)return loading;
  loading=(async()=>{
+  legacyLoadError='';
+  // Keep offline personal progress even when an older source file is unavailable.
+  // The official bank validates 400 legacy records before assigning any.
+  if(window.CK89OfficialBank?.loadAll){
+   try{await window.CK89OfficialBank.loadAll();}
+   catch(error){legacyLoadError=String(error?.message||'2016~2020년 자료를 확인하지 못했습니다.');}
+  }
   const found=catalog();
-  const bundles=await Promise.allSettled(YEARS.map(async year=>{
+  const bundles=await Promise.allSettled(EXPLANATION_YEARS.map(async year=>{
    if(!force&&bundleCache.has(year))return bundleCache.get(year);
    const response=await fetch('./data/explanations/official-'+year+'.json',
     {cache:force?'reload':'force-cache'});
@@ -146,7 +156,7 @@ function load(force=false){
   }));
   loadErrors=0;
   bundles.forEach((result,i)=>{
-   const year=YEARS[i];
+   const year=EXPLANATION_YEARS[i];
    if(result.status==='fulfilled')bundleCache.set(year,result.value);
    else loadErrors++;
   });
@@ -158,10 +168,17 @@ function load(force=false){
  })().finally(()=>{loading=null;});
  return loading;
 }
-function enriched(items,drafts=personalDrafts(),study=dueIds()){
+function enriched(items,drafts=personalDrafts(),study=dueIds(),
+ personal=window.CK83Links?.getRecords?.()||{}){
  return items.map(item=>{
   const q=item.q,p=local.records[q.id]||{status:'backlog',bookmark:false,updatedAt:0};
+  const notes=personal?.[q.id]?.optionNotes||{};
+  const optionNotes=Array.from({length:5},(_,i)=>notes[String(i+1)]||{});
+  const ownAssessmentCount=optionNotes.filter(n=>['true','false','conditional'].includes(n.assessment)).length;
+  const ownSourceCount=optionNotes.filter(n=>typeof n.source==='string'&&n.source.trim()).length;
   const draft=drafts[q.id],assess=assessDraft(draft);
+  const draftSourceCount=Array.isArray(draft?.options)?draft.options.filter(o=>
+   typeof o?.source==='string'&&o.source.trim()).length:0;
   const qa=item.entry?.quality||{},scores=[q.checks?.primaryText?.score,q.checks?.primaryText?.ocrScore].filter(Number.isFinite);
   const textScore=scores.length?Math.min(...scores):null;
   const reasonReviewed=qa.reasonReviewed===true&&qa.sourceChecked===true&&
@@ -173,6 +190,7 @@ function enriched(items,drafts=personalDrafts(),study=dueIds()){
     x.sourceChecked===true&&!!String(x.why||'').trim());
   return {...item,p,draft,assess,isDue:study.due.has(q.id),isMistake:study.mistakes.has(q.id),
    textScore,visualReviewed:q.checks?.visualReview===true,
+   ownAssessmentCount,ownSourceCount,draftSourceCount,
    reasonReviewed,optionReviewed,
    canonical:qa.status||'unavailable'};
  });
@@ -183,7 +201,7 @@ function matchingRows(items,filters=view){
   const q=x.q,stage=filters.stage||'all';
   if(filters.year&&Number(filters.year)!==q.year)return false;
   if(filters.subject!=='all'&&filters.subject!==q.subject)return false;
-  if(stage==='unstarted'&&!(x.canonical==='unstarted'&&!x.draft))return false;
+  if(stage==='unstarted'&&!((x.canonical==='unstarted'||x.q.year<=2020)&&!x.draft))return false;
   if(stage==='draft'&&!(x.canonical==='draft'||x.draft))return false;
   if(stage==='incomplete'&&!(x.draft&&x.assess.done<8))return false;
   if(stage==='ready'&&x.p.status!=='ready')return false;
@@ -194,6 +212,7 @@ function matchingRows(items,filters=view){
   if(stage==='needs-source'&&x.visualReviewed&&x.reasonReviewed)return false;
   if(stage==='low-text'&&!(x.textScore!==null&&x.textScore<0.9))return false;
   if(stage==='not-reason-reviewed'&&x.reasonReviewed)return false;
+  if(stage==='no-personal-source'&&x.ownSourceCount===5)return false;
   if(terms.length){
    const text=norm(q.id+' '+q.question+' '+q.options.join(' '));
    if(!terms.every(t=>text.includes(t)))return false;
@@ -206,7 +225,8 @@ function riskScore(item){
  return (item.isDue?12:0)+(item.isMistake?7:0)+
   (specialAnswer(q)!=='일반'?8:0)+(!item.visualReviewed?5:0)+
   (item.textScore!==null&&item.textScore<0.90?6:0)+
-  (!item.reasonReviewed?3:0)+(item.canonical==='unstarted'?2:0)+
+  (!item.reasonReviewed?3:0)+(5-Math.min(5,item.ownSourceCount||0))*2+
+  (['unstarted','unavailable'].includes(item.canonical)?2:0)+
   (item.p.bookmark?4:0);
 }
 function sortRows(items,sort=view.sort){
@@ -219,19 +239,27 @@ function sortRows(items,sort=view.sort){
  return sorted;
 }
 function summary(items){
- const counts={total:items.length,canonicalDraft:0,unstarted:0,personal:0,complete:0,
+ const counts={total:items.length,canonicalDraft:0,unstarted:0,legacyUnseeded:0,personal:0,complete:0,
   ready:0,hold:0,due:0,bookmarked:0,missing:0,reviewed:0,
+  personalOptionSources:0,personalOptionAssessments:0,personalSourceComplete:0,
+  draftOptionSources:0,draftSourceComplete:0,
   reasonReviewed:0,fullyOptionReviewed:0,lowText:0,visualReviewMissing:0};
  items.forEach(x=>{
   if(x.canonical==='draft')counts.canonicalDraft++;
   if(x.canonical==='unstarted')counts.unstarted++;
-  if(x.canonical==='unavailable')counts.missing++;
+  if(x.q.year<=2020&&x.canonical==='unavailable')counts.legacyUnseeded++;
+  if(x.q.year>=2021&&x.canonical==='unavailable')counts.missing++;
   if(x.draft)counts.personal++;
   if(x.draft&&x.assess.done===8)counts.complete++;
   if(x.p.status==='ready')counts.ready++;
   if(x.p.status==='hold')counts.hold++;
   if(x.p.bookmark)counts.bookmarked++;
   if(x.isDue)counts.due++;
+  counts.personalOptionSources+=x.ownSourceCount||0;
+  counts.personalOptionAssessments+=x.ownAssessmentCount||0;
+  if(x.ownSourceCount===5)counts.personalSourceComplete++;
+  counts.draftOptionSources+=x.draftSourceCount||0;
+  if(x.draftSourceCount===5)counts.draftSourceComplete++;
   if(x.reasonReviewed)counts.reasonReviewed++;
   if(x.optionReviewed)counts.fullyOptionReviewed++;
   if(x.textScore!==null&&x.textScore<0.9)counts.lowText++;
@@ -262,7 +290,7 @@ function researchPacket(ids,items=rows,max=5){
  const selected=[...new Set(ids)].filter(id=>isId(id)&&byId.has(id)).slice(0,limit);
  if(!selected.length)return '';
  const lines=[
- 'ConceptKnot 최근 5개년 기출 출처·논리 대조 질문 · 공식 검증 해설 아님',
+ 'ConceptKnot 10개년 기출 출처·논리 대조 질문 · 공식 검증 해설 아님',
  '원칙: 원문 A형·최종정답 먼저 대조, 시험 당시 기준 법령·판례 확인, 최신 법령과 구분.',
  '선지 ①~⑤의 진위를 독립 검토하고 불확실한 경우 보류하세요.',
  '복수/전원정답 채점 인정 번호와 각 선지 자체의 참·거짓을 혼동하지 마세요.',
@@ -284,7 +312,11 @@ function researchPacket(ids,items=rows,max=5){
    '기본 해설: '+item.canonical+' / 근거 검수: '+(item.reasonReviewed?'표시 있음':'표시 없음'),
    ...references.filter(r=>r&&typeof r.url==='string').slice(0,3)
     .map(r=>'참고 링크 후보 ('+r.type+'): '+r.url),
-   '요청: 보기별 사실판단·예외·조문/판례·해당 연도 기준·출처 검토와 최종정답 인정 근거를 분리해 작성.','');
+   '요청: 보기별 사실판단·예외·조문/판례·해당 연도 기준·출처 검토와 최종정답 인정 근거를 분리해 작성.',
+   '아래 항목은 기입 템플릿이며, 사실 검증 결과가 아닙니다.',
+   ...q.options.map((_,j)=>'선지 '+(j+1)+' 판정 [참/거짓/보류]: | 근거 조문·판례/쪽수: | 시행·판단 기준일: | 검증 상태: 미확인'),
+   '정답 인정의 출처 및 정오표 검토: 미확인',
+   '시험 당시 법령과 현재 법령의 차이: 미확인','');
  });
  return lines.join('\n');
 }
@@ -292,7 +324,7 @@ function renderRows(items){
  if(!items.length)return '<p class="ck81-empty">조건에 맞는 문항이 없습니다. 필터를 변경하세요.</p>';
  return '<div class="ck81-row-list">'+items.map(x=>{
   const q=x.q,canonical=x.canonical==='draft'?'기본 해설 초안':x.canonical==='unstarted'?
-   '기본 해설 미작성':'해설 파일 확인 필요';
+   '기본 해설 미작성':q.year<=2020?'기본 해설 미제공 · 개인 작성 가능':'해설 파일 확인 필요';
   const status=local.records[q.id]?.status||'backlog';
   const verdict=x.draft?' · 내 초안 '+x.assess.done+'/8':'';
   const question=String(q.question||'').replace(/\s+/g,' ').slice(0,170);
@@ -311,6 +343,8 @@ function renderRows(items){
    (x.textScore!==null&&x.textScore<0.9?'<span>OCR/원문 대조 우선</span>':'')+
    (x.p.status==='ready'?'<span>개인 대조 준비 · 미검수</span>':'')+
    (x.p.status==='hold'?'<span>검토 보류</span>':'')+
+   '<span>내 ①~⑤ 출처 '+(x.ownSourceCount||0)+'/5</span>'+
+   (x.draft?'<span>내 해설 초안 출처 '+(x.draftSourceCount||0)+'/5</span>':'')+
    '</div><div class="ck81-item-actions">'+
    '<label>내 진행 <select data-ck81-progress="'+esc(q.id)+'" aria-label="'+esc(q.id)+' 개인 검토 진행">'+
    option('backlog','대기',status)+option('researching','근거 확인 중',status)+
@@ -318,6 +352,7 @@ function renderRows(items){
    '<button type="button" data-ck81-pin="'+esc(q.id)+'" aria-pressed="'+x.p.bookmark+
    '">'+(x.p.bookmark?'★ 중요 해제':'☆ 중요 표시')+'</button>'+
    '<button type="button" data-ck81-open="'+esc(q.id)+'">문항 분석</button>'+
+   '<button type="button" data-ck112-voice="'+esc(q.id)+'" aria-label="'+esc(q.id)+' 현재 설정으로 바로 듣기">▶ 바로 듣기</button>'+
    '<button type="button" data-ck81-edit="'+esc(q.id)+'">내 해설 편집</button>'+
    '<button type="button" data-ck81-choice-note="'+esc(q.id)+'">선지별 개인 근거</button>'+
    '<button type="button" data-ck81-prompt="'+esc(q.id)+'">대조 질문 복사</button>'+
@@ -341,15 +376,22 @@ function render(){
  const batch=found.slice(view.page*view.pageSize,(view.page+1)*view.pageSize);
  panel().innerHTML=
  '<p class="ck81-disclaimer"><strong>개인 검토 작업대 · 공식 검수 결과가 아닙니다.</strong> 입력 충실도는 내용의 정확성, 법령·판례 검증, 출제 빈도 검증을 뜻하지 않습니다. 공식 정답 800건은 변경하지 않습니다.</p>'+
- (loadErrors?'<p class="ck81-warning">해설 파일 '+loadErrors+'개 연도를 새로 불러오지 못했습니다. 직전 정상 자료가 있으면 유지하며, 미확인 자료는 검증 완료로 표시하지 않습니다. <button type="button" data-ck81-retry>자료 다시 불러오기</button></p>':'')+
+ (legacyLoadError?'<p class="ck81-warning">2016~2020년 문제 자료 확인 중 오류: '+esc(legacyLoadError)+
+  ' · 개인 작업 기록을 보호하고 있습니다. <button type="button" data-ck81-retry>원문 다시 불러오기</button></p>':'')+
+ (loadErrors?'<p class="ck81-warning">최근 5개년 해설 파일 '+loadErrors+'개 연도를 새로 불러오지 못했습니다. 직전 정상 자료가 있으면 유지하며, 미확인 자료는 검증 완료로 표시하지 않습니다. <button type="button" data-ck81-retry>자료 다시 불러오기</button></p>':'')+
  '<dl class="ck81-totals">'+[
-  ['최근 5개년 기출',totals.total],['기본 해설 초안',totals.canonicalDraft],
+  ['10개년 공식 등록 문항',totals.total],['최근 5개년 해설 초안',totals.canonicalDraft],
+  ['2016~2020 해설 미제공',totals.legacyUnseeded],
   ['내 초안',totals.personal],['내 초안 입력 8/8',totals.complete],
+  ['내 선지 출처 기록',totals.personalOptionSources+'/4000'],
+  ['내 해설 초안 출처',totals.draftOptionSources+'/4000'],
+  ['출처 5/5 기록 문항',totals.personalSourceComplete],
   ['내 개인 대조 준비',totals.ready],['복습 대기',totals.due],
   ['공식 해설 근거 검수',totals.reasonReviewed],['선지 5개 출처 검수',totals.fullyOptionReviewed]
  ].map(([name,val])=>'<div><dt>'+esc(name)+'</dt><dd>'+esc(val)+'</dd></div>').join('')+'</dl>'+
  renderMatrix(data)+
- '<p class="ck81-disclaimer">미작성 해설 '+totals.unstarted+
+ '<p class="ck81-disclaimer">개인 초안 입력 8/8은 출처 검증 완료를 의미하지 않으며 개인 출처는 별도 5/5로 확인합니다. 최근 5개년 미작성 해설 '+totals.unstarted+
+  '건 · 과거 5개년 기본 해설 미제공 '+totals.legacyUnseeded+
   '건 · 유사도 0.90 미만 '+totals.lowText+'건 · 시각 검토 미완/표시 없음 '+
   totals.visualReviewMissing+'건. 기본 초안과 개인 검토 진행은 공식 근거 감수를 의미하지 않습니다.</p>'+
  '<div class="ck81-controls">'+
@@ -361,7 +403,8 @@ function render(){
  ['all','전체'],['unstarted','기본 해설 미작성'],['draft','기본/개인 초안'],
  ['incomplete','내 초안 입력 미완'],['ready','내 개인 대조 준비'],['hold','검토 보류'],
  ['due','내 복습 대기'],['bookmark','중요 표시'],['special','복수·전원정답'],
- ['not-reason-reviewed','공식 해설 근거 미검수'],['low-text','원문 유사도 0.90 미만'],['needs-source','시각/해설 대조 필요']
+ ['not-reason-reviewed','공식 해설 근거 미검수'],['no-personal-source','내 선지 출처 미작성'],
+  ['low-text','원문 유사도 0.90 미만'],['needs-source','시각/해설 대조 필요']
  ].map(([v,label])=>option(v,label,view.stage)).join('')+'</select></label>'+
  '<label>정렬 <select data-ck81-filter="sort">'+option('priority','중요·복습 우선',view.sort)+
  option('number','연도/번호순',view.sort)+option('progress','내 입력 많은 순',view.sort)+
@@ -374,6 +417,11 @@ function render(){
  '>현재 페이지 상위 '+Math.min(researchBatch,batch.length)+'문항 출처 대조 질문 복사</button>'+
  '<button type="button" data-ck81-batch-queue'+(!batch.length?' disabled':'')+
  '>상위 '+Math.min(researchBatch,batch.length)+'문항 근거 확인 중으로 등록</button>'+
+ '<button type="button" data-ck112-packet-txt'+(!batch.length?' disabled':'')+
+ '>현재 상위 '+Math.min(researchBatch,batch.length)+'문항 질문 TXT 저장</button>'+
+ '<button type="button" data-ck112-voice-batch'+(!batch.length?' disabled':'')+
+ '>▶ 상위 '+Math.min(researchBatch,batch.length)+'문항 연속 듣기</button>'+
+ '<button type="button" data-ck112-voice-stop>■ 음성 정지</button>'+
  '<span>정답·해설은 자동 검증하거나 전송하지 않으며, 선택한 문항의 출처와 검수 상태를 복사합니다.</span></div>'+
  '<div class="ck81-pager"><strong>표시 '+found.length+'건 · '+(view.page+1)+'/'+pages+'쪽</strong>'+
  '<button type="button" data-ck81-page="prev"'+(view.page===0?' disabled':'')+'>이전</button>'+
@@ -389,7 +437,7 @@ function render(){
 }
 
 /* v103: preserve personal-tool DOM in a compact dock instead of prepending to the header. */
-const TOOL_DOCK_IDS=['ck76-search','ck79-review','ck81-workbench','ck83-link-tools','ck83-analytics','ck84-materials'];
+const TOOL_DOCK_IDS=['ck76-search','ck79-review','ck81-workbench','ck111-review-queue','ck83-link-tools','ck83-analytics','ck84-materials'];
 function ensureToolsDock(){
  const main=document.getElementById('main'),body=document.body;
  if(!main||!body||typeof body.append!=='function')return null;
@@ -423,7 +471,7 @@ function mount(){
  const existing=document.getElementById('ck81-workbench');
  if(existing){root=existing;alignToolsDock();return;}
  root=document.createElement('section');root.id='ck81-workbench';root.className='ck81-workbench';
- root.innerHTML='<div class="ck81-heading"><div><strong>해설 검토 작업대</strong><small>2021~2025 · 400문항 · 오프라인 개인 관리</small></div>'+
+ root.innerHTML='<div class="ck81-heading"><div><strong>해설 검토 작업대</strong><small>2016~2025 · 800문항 · 오프라인 개인 관리</small></div>'+
   '<button type="button" data-ck81-toggle aria-expanded="false">작업대 열기</button></div>'+
   '<div data-ck81-panel hidden></div>';
  const content=ensureToolsDock();
@@ -461,6 +509,7 @@ function download(filename,text,mime){
 function exportCsv(){
  if(!rows)return;
  const data=sortRows(matchingRows(enriched(rows)));
+ if(data.length>800){message('문항 개수 오류: CSV 다운로드를 중단했습니다.');return;}
  const titles=['문항ID','과목','연도','번호','기본 해설 상태','개인 초안 입력/8','개인 진행',
  '공식 해설 근거 검수','선지 5개 출처 검수','시각 검토','원문 유사도','검수 우선 점수',
   '중요 표시','복습 대기','특수정답 처리','문제'];
@@ -535,7 +584,7 @@ function copyPrompt(id){
 document.addEventListener('click',event=>{
  const target=event.target.closest?.('[data-ck81-toggle],[data-ck81-matrix],[data-ck81-page],'+
   '[data-ck81-pin],[data-ck81-open],[data-ck81-edit],[data-ck81-choice-note],[data-ck81-prompt],'+
-  '[data-ck81-export],[data-ck81-import],[data-ck81-clear-filters],[data-ck81-batch-prompt],[data-ck81-batch-queue],[data-ck81-retry]');
+  '[data-ck81-export],[data-ck81-import],[data-ck81-clear-filters],[data-ck81-batch-prompt],[data-ck81-batch-queue],[data-ck112-packet-txt],[data-ck112-voice],[data-ck112-voice-batch],[data-ck112-voice-stop],[data-ck81-retry]');
  if(!target||!document.getElementById('ck81-workbench')?.contains(target))return;
  if(target.hasAttribute('data-ck81-toggle')){toggle();return;}
  if(target.hasAttribute('data-ck81-retry')){
@@ -568,6 +617,35 @@ document.addEventListener('click',event=>{
   }catch(err){message('선지별 개인 근거 오류: '+(err?.message||err));}
   return;
  }
+ if(target.hasAttribute('data-ck112-voice-batch')){
+  const shown=sortRows(matchingRows(enriched(rows||[])))
+   .slice(view.page*view.pageSize,(view.page+1)*view.pageSize).slice(0,researchBatch);
+  const ids=shown.map(x=>x.q.id);
+  if(!ids.length){message('선택한 필터에 읽을 문항이 없습니다.');return;}
+  const setting=window.CK76Voice?.getPreferences?.()||{},mode=
+   ['qa','answer','all'].includes(setting.mode)?setting.mode:'qa';
+  const result=window.CK76Voice?.playSelected?.(ids,mode);
+  if(result?.ok)message('개인 검토 상위 '+result.items+'문항 연속 듣기 요청 · 실제 음성 출력을 기기에서 확인하세요.');
+  else message(result?.reason==='incomplete-selection'?'일부 공식 원문이 로드되지 않아 연속 읽기를 시작하지 않았습니다.':
+   result?.excluded&&!result?.missing?'전원정답 처리 문항은 정답 중심 듣기에서 제외됩니다. 전체 선지 모드로 변경하세요.':
+   '문항 연속 재생을 시작하지 못했습니다. 음성 엔진과 공식 원문을 확인하세요.');
+  return;
+ }
+ if(target.hasAttribute('data-ck112-voice-stop')){
+  window.CK76Voice?.stop?.();message('음성 정지를 요청했습니다.');return;
+ }
+ if(target.hasAttribute('data-ck112-voice')){
+  const id=target.dataset.ck112Voice,q=official()[id];
+  if(!q?.verified){message('공식 문항이 준비되지 않았습니다. 원문을 다시 불러오세요.');return;}
+  const settings=window.CK76Voice?.getPreferences?.()||{};
+  const mode=['qa','answer','all'].includes(settings.mode)?settings.mode:'qa';
+  const result=window.CK76Voice?.playOfficial?.(q.year,q.number,mode,'single');
+  if(result?.ok)message('현재 설정('+mode+')으로 '+q.year+'년 '+q.number+'번 음성 재생 요청 · 기기에서 실제 소리를 확인하세요.');
+  else message(q.correct.length===5&&mode!=='all'?
+   '전원정답 처리 문항은 정답 중심 듣기에서 제외됩니다. 전체 5선지 모드로 변경하세요.':
+   '문항 재생에 실패했습니다. 한국어 음성/AI 모델 또는 공식 원문 로딩을 확인하세요.');
+  return;
+ }
  if(target.hasAttribute('data-ck81-prompt')){copyPrompt(target.dataset.ck81Prompt);return;}
  if(target.hasAttribute('data-ck81-batch-queue')){
   const batch=sortRows(matchingRows(enriched(rows||[])))
@@ -578,6 +656,16 @@ document.addEventListener('click',event=>{
    result.count?'선택 '+result.count+'문항을 개인 근거 확인 중으로 일괄 기록했습니다.':
    '모두 이미 처리 중이거나 검토 보류/준비 상태여서 변경하지 않았습니다.');
   render();return;
+ }
+ if(target.hasAttribute('data-ck112-packet-txt')){
+  const batch=sortRows(matchingRows(enriched(rows||[])))
+   .slice(view.page*view.pageSize,(view.page+1)*view.pageSize);
+  const content=researchPacket(batch.slice(0,researchBatch).map(x=>x.q.id),rows,researchBatch);
+  if(!content){message('출력할 공식 기출 문항이 없습니다.');return;}
+  download('ConceptKnot_개인해설근거질문_'+new Date().toISOString().slice(0,10)+'.txt',
+   content,'text/plain;charset=utf-8');
+  message('미검수임을 표시한 '+Math.min(researchBatch,batch.length)+'문항 대조 질문을 TXT로 저장했습니다.');
+  return;
  }
  if(target.hasAttribute('data-ck81-batch-prompt')){
   const batch=sortRows(matchingRows(enriched(rows||[])))
@@ -633,6 +721,11 @@ document.addEventListener('keydown',event=>{
  event.preventDefault();
  view.page+=event.key==='ArrowRight'?1:-1;render();
 });
+window.addEventListener('ck:official-bank-ready',()=>{
+ if(rows?.length<800){rows=null;if(shown)load().then(()=>render()).catch(()=>{});}
+});
+document.addEventListener('ck:personal-links-updated',()=>{if(shown)render();});
+document.addEventListener('ck:personal-editor-updated',()=>{if(shown)render();});
 window.addEventListener('storage',event=>{
  if(event.key===KEY){
   const parsed=readLocal();
@@ -655,6 +748,7 @@ if(main&&window.MutationObserver)new MutationObserver(changes=>{
 }).observe(main,{subtree:true,childList:true});
 window.CK81Workbench=Object.freeze({sanitizeProgress,assessDraft,specialAnswer,matchingRows,summary,
  riskScore,researchPacket,dueIds,markResearchBatch,
- getState:()=>({shown,loaded:rows?.length||0,loadErrors,filters:{...view},progress:Object.keys(local.records).length,storageIssue}),
+ getState:()=>({shown,loaded:rows?.length||0,loadErrors,legacyLoadError,
+  filters:{...view},progress:Object.keys(local.records).length,storageIssue}),
  open:()=>{mount();const dock=document.getElementById('ck103-tools-dock');if(dock)dock.open=true;if(!shown)toggle();}});
 })();

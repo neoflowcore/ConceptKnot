@@ -24,7 +24,7 @@ test('P4 editorial desk is safely scoped and loaded into existing modal',()=>{
  assert.match(desk,/ck80-explain-drafts-v1/);
  assert.match(desk,/personal-unpublished-2021-2025/);
  assert.match(desk,/published:false/);
- assert.match(desk,/MAX_RECORDS=400/);
+ assert.match(desk,/MAX_RECORDS=800/);
  assert.doesNotMatch(desk,/fetch\(.+method\s*:\s*['"]POST/);
  new vm.Script(desk);new vm.Script(modal);
 });
@@ -37,8 +37,8 @@ test('owl landing search forwards to existing study index',()=>{
 test('no CI, deployment or artifact creation',()=>{
  assert.equal(parse('vercel.json').git.deploymentEnabled,false);
  assert.equal(fs.existsSync(path.join(root,'.github','workflows')),false);
- assert.match(read('sw.js'),/conceptknot-study-v80-explain-drafts/);
+ assert.match(read('sw.js'),/conceptknot-study-v112-ten-year-editor-review/);
  const html=read('index.html');
- assert.match(html,/ck-study-editor-v80.js\?v=80/);
+ assert.match(html,/ck-study-editor-v80.js\?v=112/);
  for(const m of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))new vm.Script(m[1]);
 });
