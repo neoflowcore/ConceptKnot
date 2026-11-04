@@ -58,14 +58,14 @@ function cleanStore(data){
  return {schemaVersion:VERSION,revision:Number.isInteger(data.revision)&&data.revision>=0?data.revision:0,active,history:data.history.map(sanitizeAttempt)};
 }
 function empty(){return {schemaVersion:VERSION,revision:0,active:null,history:[]};}
-let storageIssue='';
+let storageIssue='',loadedRaw=null;
 function readStore(){
  try{
   const raw=localStorage.getItem(KEY);
-  if(raw===null){storageIssue='';return empty();}
+  if(raw===null){storageIssue='';loadedRaw=null;return empty();}
   const value=cleanStore(JSON.parse(raw));
   if(!value){storageIssue='기존 시험 기록이 손상되었습니다. 원본을 보호하기 위해 저장을 차단합니다.';return empty();}
-  storageIssue='';return value;
+  storageIssue='';loadedRaw=raw;return value;
  }catch{storageIssue='시험 기록을 읽지 못했습니다. 원본을 보호하기 위해 저장을 차단합니다.';return empty();}
 }
 let state=readStore(),root=null,expanded=false,selectedYear=2025,error='',showHistory=false,historySelection=-1,scheduled=false;
@@ -74,13 +74,19 @@ function persist(next){
  const value=cleanStore(next);
  if(!value){error='유효하지 않은 답안 상태입니다. 기존 기록을 유지합니다.';return false;}
  try{
-  const latest=readStore();if(storageIssue){error=storageIssue;return false;}
-  if(latest.revision!==state.revision){
-   state=latest;error='다른 탭의 최신 기록과 충돌했습니다. 덮어쓰지 않고 최신 답안을 불러왔습니다.';
+  const raw=localStorage.getItem(KEY);
+  // Guard against another tab's same-revision write or deletion.
+  if(raw!==loadedRaw){
+   const latest=readStore();
+   if(storageIssue){error=storageIssue;return false;}
+   state=latest;
+   error='다른 탭에서 시험 기록이 변경되거나 삭제되었습니다. 덮어쓰지 않고 최신 상태를 읽었습니다.';
    if(root?.isConnected)paint();return false;
   }
-  value.revision=latest.revision+1;
-  localStorage.setItem(KEY,JSON.stringify(value));state=value;return true;
+  value.revision=state.revision+1;
+  const updated=JSON.stringify(value);
+  localStorage.setItem(KEY,updated);
+  loadedRaw=updated;state=value;return true;
  }catch{error='저장 실패: 브라우저 공간·권한을 확인하세요. 기존 기록은 유지됩니다.';return false;}
 }
 function active(){return state.active;}

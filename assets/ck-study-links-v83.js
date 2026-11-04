@@ -206,7 +206,11 @@ function modal(){
  section.innerHTML=taxonomy?editor(id):'<p>개념 연결을 준비하는 중입니다.</p>';
  const before=scroll.querySelector('.ck78-notes')||scroll.querySelector('.ck78-modal-source');
  if(before)before.before(section);else scroll.append(section);
- if(!taxonomy)load().then(()=>{if(section.isConnected&&dialog.dataset.ck78Current===id)section.innerHTML=editor(id);}).catch(()=>{section.textContent='개념 목록을 읽지 못했습니다.';});
+ if(!taxonomy)load().then(()=>{
+  // Do not replace a live editor while another CK83 workspace is dirty.
+  if(section.isConnected&&dialog.dataset.ck78Current===id&&
+      !dirty&&!unsavedChoices.size)section.innerHTML=editor(id);
+ }).catch(()=>{if(section.isConnected)section.textContent='개념 목록을 읽지 못했습니다.';});
 }
 function actionMessage(e,text){const span=e?.querySelector('[data-ck83-message]')||root?.querySelector('[data-ck83-status]');if(span)span.textContent=text;status=text;}
 function save(e){
@@ -219,6 +223,8 @@ function save(e){
   optionNotes:collectOptionNotes(e,id),updatedAt:Date.now()};
  if(!persist({...state,records:{...state.records,[id]:record}})){actionMessage(e,storageIssue||(storageConflict?'다른 탭에서 기록 변경 · 복사 후 새로고침 필요':'저장 실패 · 저장공간을 확인하세요.'));return;}
  dirty=false;unsavedChoices.delete(id);actionMessage(e,'개인 연결·선지별 판단을 저장했습니다. 공식 검수와 구별됩니다.');
+ // If a second editor was waiting for taxonomy, it may safely mount now.
+ modal();
 }
 function remove(e){
  const id=e?.dataset.ck83Editor;
@@ -304,7 +310,14 @@ document.addEventListener('change',event=>{
   unsavedChoices.set(id,selected);dirty=true;return;
  }
  if(t.matches?.('[data-ck83-year],[data-ck83-number]')){
-  if(!confirmDiscard()){paint();return;}
+  if(!confirmDiscard()){
+   // Revert the selector UI without touching unsaved textarea/select content.
+   const parts=selectedId.split('-');
+   const year=root?.querySelector('[data-ck83-year]'),number=root?.querySelector('[data-ck83-number]');
+   if(year)year.value=parts[0];
+   if(number)number.value=parts[1];
+   return;
+  }
   selectedId=Number(root?.querySelector('[data-ck83-year]')?.value)+'-'+Number(root?.querySelector('[data-ck83-number]')?.value);
   if(Number(selectedId.split('-')[0])<2021)
    window.CK89OfficialBank?.loadYear?.(Number(selectedId.split('-')[0])).then(paint)

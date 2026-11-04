@@ -123,8 +123,8 @@ test('failed personal note storage and failed exam navigation roll back in-memor
  const selected={year:2025,subject:'estate',examQuestion:1};
  const examWindow={RECALL_OFFICIAL:{'2024-12':{verified:true,subject:'civil'}}};
  let changed=0;
- new Function('window','state','save','changeView',exam)(
-  examWindow,selected,()=>false,()=>changed++);
+ new Function('window','state','save','render','ck115CanLeave','changeView',exam)(
+  examWindow,selected,()=>false,()=>changed++,()=>true,()=>changed++);
  assert.equal(examWindow.CK76Study.openQuestion(2024,12),false);
  assert.deepEqual(selected,{year:2025,subject:'estate',examQuestion:1});
  assert.equal(changed,0);
@@ -161,12 +161,12 @@ test('v114 static delivery stays manual-only with updated assets and valid inlin
  const config=json('vercel.json'),html=read('index.html'),sw=read('sw.js');
  assert.equal(config.git?.deploymentEnabled,false);
  for(const path of ['ck-evidence-queue-v111.js?v=114','ck-study-editor-v80.js?v=114',
-  'ck-study-links-v83.js?v=114','ck-study-p4-v78.js?v=114',
+  'ck-study-links-v83.js?v=115','ck-study-p4-v78.js?v=114',
   'ck-charts-v21.js?v=114','experience-v21.css?v=114']){
   assert.ok(html.includes(path),'HTML missing '+path);
   assert.ok(sw.includes(path),'Service worker missing '+path);
  }
- assert.match(sw,/conceptknot-study-v114/);
+ assert.match(sw,/conceptknot-study-v11[45]/);
  if(fs.existsSync('.github/workflows'))
   assert.equal(fs.readdirSync('.github/workflows').length,0);
  const re=/<script\b([^>]*)>([\s\S]*?)<\/script\s*>/gi;

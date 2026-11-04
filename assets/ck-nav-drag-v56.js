@@ -50,6 +50,8 @@
     let momentumFrame = 0;
     let suppressClickUntil = 0;
     let autoScrollFrame = 0;
+    let touchGesture = null;
+    let expectedTouchTab = null;
     const cancelMomentum = () => {
       if (momentumFrame) cancelAnimationFrame(momentumFrame);
       momentumFrame = 0;
@@ -58,6 +60,16 @@
     // Record the tapped tab before the app's bubbling router destroys the old node.
     pill.addEventListener('click', event => {
       if (performance.now() < suppressClickUntil) return;
+      const actual = event.target?.closest?.('[data-go]');
+      // A mobile click can be retargeted after a horizontal flick/layout shift.
+      // Never turn a finger-down on one tab into another tab or the brand link.
+      if (event.detail !== 0 && expectedTouchTab && performance.now() < expectedTouchTab.until &&
+          actual && actual.dataset?.go !== expectedTouchTab.id) {
+        expectedTouchTab = null;
+        selectedAnchor = null;
+        event.preventDefault();event.stopImmediatePropagation();return;
+      }
+      expectedTouchTab = null;
       const tab = event.target.closest?.('.board-tab[data-go]');
       if (!tab || !pill.contains(tab)) return;
       remember(pill);
@@ -74,20 +86,39 @@
     pill.addEventListener('scroll', () => remember(pill), {passive:true});
     const brand = pill.querySelector('.ck-v7-logo');
     const brandObserver = brand && typeof ResizeObserver === 'function'
+      ? new ResizeObserver(() => restore(pill, selectedAnchor)) : null;
+    brandObserver?.observe(brand);
+    const layoutObserver = typeof ResizeObserver === 'function'
       ? new ResizeObserver(() => {
-          if (selectedAnchor && performance.now() - selectedAnchor.at < 750)
+          if (pill === currentPill && pill.isConnected && maxScroll(pill) > 0)
             restore(pill, selectedAnchor);
         }) : null;
-    brandObserver?.observe(brand);
-    cleanupCurrent = () => { cancelMomentum(); brandObserver?.disconnect(); };
+    layoutObserver?.observe(pill.querySelector('.board-tabs'));
+    cleanupCurrent = () => {
+      cancelMomentum();brandObserver?.disconnect();layoutObserver?.disconnect();
+      touchGesture = null;expectedTouchTab = null;
+    };
     restore(pill);
     requestAnimationFrame(() => restore(pill));
     pill.addEventListener('dragstart', event => event.preventDefault());
     pill.addEventListener('pointerdown', event => {
       // Any new touch/pen/mouse scroll stops a pending logo animation correction.
       selectedAnchor = null;
+      // A distinct new pointerdown is a fresh intentional tap, not the old fling.
+      suppressClickUntil = 0;
+      if (event.pointerType === 'touch') {
+        cancelMomentum();
+        const tab = event.target?.closest?.('.board-tab[data-go]');
+        touchGesture = {
+          id:event.pointerId,x:Number(event.clientX)||0,y:Number(event.clientY)||0,
+          startScroll:pill.scrollLeft,moved:false,tabId:tab?.dataset?.go||null
+        };
+        expectedTouchTab=null;
+        return;
+      }
+      touchGesture=null;expectedTouchTab=null;
       if ((event.pointerType !== 'mouse' && event.pointerType !== 'pen') ||
-          event.button !== 0 || event.target.closest('input,textarea,select,[contenteditable="true"]')) return;
+          event.button !== 0 || event.target?.closest?.('input,textarea,select,[contenteditable="true"]')) return;
       cancelMomentum();
       down = {
         id: event.pointerId,
@@ -98,6 +129,12 @@
       };
     });
     pill.addEventListener('pointermove', event => {
+      if (touchGesture && touchGesture.id === event.pointerId) {
+        if (Math.abs((Number(event.clientX)||0)-touchGesture.x)>9 ||
+            Math.abs((Number(event.clientY)||0)-touchGesture.y)>11 ||
+            Math.abs(pill.scrollLeft-touchGesture.startScroll)>6)touchGesture.moved=true;
+        return; // The browser owns native horizontal touch scrolling.
+      }
       if (!down || down.id !== event.pointerId) return;
       const dx = event.clientX - down.x;
       if (!down.moved && Math.abs(dx) < 7) return;
@@ -113,6 +150,19 @@
       while (down.samples.length > 2 && now - down.samples[0].t > 110) down.samples.shift();
     });
     const endDrag = event => {
+      if (touchGesture && touchGesture.id === event.pointerId) {
+        const move=touchGesture.moved||
+          Math.abs(pill.scrollLeft-touchGesture.startScroll)>6||
+          Math.abs((Number(event.clientX)||0)-touchGesture.x)>9||
+          Math.abs((Number(event.clientY)||0)-touchGesture.y)>11;
+        if (move || event.type==='pointercancel') {
+          suppressClickUntil=performance.now()+380;
+          expectedTouchTab=null;selectedAnchor=null;
+        } else if(touchGesture.tabId){
+          expectedTouchTab={id:touchGesture.tabId,until:performance.now()+650};
+        }
+        touchGesture=null;return;
+      }
       if (!down || down.id !== event.pointerId) return;
       const drag = down;
       down = null;
@@ -164,4 +214,9 @@
   refresh();
   // If the app replaces the ribbon during navigation, bind only the new element.
   new MutationObserver(refresh).observe(main, {childList:true, subtree:true});
+  window.CK115Nav = Object.freeze({
+    getState:()=>({left:rememberedLeft,active:currentPill?.querySelector?.('.board-tab.active')?.dataset?.go||null,
+      connected:Boolean(currentPill?.isConnected),anchor:selectedAnchor?.id||null}),
+    refresh
+  });
 })();
