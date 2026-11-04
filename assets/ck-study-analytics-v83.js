@@ -8,13 +8,13 @@ const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const validTime=v=>Number.isFinite(Number(v))&&Number(v)>0;
 const dayKey=t=>new Date(Number(t)+KST).toISOString().slice(0,10);
 const bank=()=>window.RECALL_OFFICIAL||{};
-let root=null,shown=false,period=7,filterSubject='all',scheduled=false,lastReport=null;
+let root=null,shown=false,period=7,filterSubject='all',scheduled=false,lastReport=null,bankLoadIssue='';
 const snapshot=()=>window.CK79Study?.snapshot?.()||{};
 const attempts=()=>window.CK82FullExam?.getAttempts?.()||[];
 const mappings=()=>window.CK83Links?.getRecords?.()||{};
 function recallFor(history,period,now){
  const since=now-period*DAY;
- const rows=(Array.isArray(history)?history:[]).filter(x=>validTime(x.at)&&x.at>=since&&x.at<=now);
+ const rows=(Array.isArray(history)?history:[]).filter(x=>x&&validTime(x.at)&&x.at>=since&&x.at<=now);
  return {count:rows.length,remembered:rows.filter(x=>x.outcome==='remember').length,
   unique:new Set(rows.map(x=>x.id)).size};
 }
@@ -26,9 +26,9 @@ function compute({study={},sessions=[],links={},official=bank(),now=Date.now(),d
  const inRange=t=>validTime(t)&&Number(t)+KST>=from&&Number(t)<=now;
  const histories=(Array.isArray(sessions)?sessions:[]).filter(a=>a?.status==='submitted'&&
   Array.isArray(a.answers)&&a.answers.length===80&&inRange(a.submittedAt));
- const typed=(Array.isArray(study.typing)?study.typing:[]).filter(x=>inRange(x.at)&&
+ const typed=(Array.isArray(study.typing)?study.typing:[]).filter(x=>x&&inRange(x.at)&&
   (subject==='all'||x.subject===subject));
- const recalls=(Array.isArray(study.recallEvents)?study.recallEvents:[]).filter(x=>inRange(x.at)&&
+ const recalls=(Array.isArray(study.recallEvents)?study.recallEvents:[]).filter(x=>x&&inRange(x.at)&&
   (subject==='all'||official[x.id]?.subject===subject));
  const dayMap=Object.fromEntries(dayKeys.map(day=>[day,{day,typed:0,recalls:0,exams:0}]));
  typed.forEach(x=>{const d=dayKey(x.at);if(dayMap[d])dayMap[d].typed++;});
@@ -36,7 +36,7 @@ function compute({study={},sessions=[],links={},official=bank(),now=Date.now(),d
  histories.forEach(x=>{const d=dayKey(x.submittedAt);if(dayMap[d])dayMap[d].exams++;});
  const outcomes={correct:0,answered:0,wrong:0,blank:0};
  const statsBySubject={estate:{correct:0,answered:0,score:[]},civil:{correct:0,answered:0,score:[]}};
- const concept=new Map(),perQuestion=new Map(),yearly=new Map(),trends=[];
+ const concept=new Map(),perQuestion=new Map(),yearly=new Map(),trends=[],pendingYears=new Set();
  for(const exam of histories){
   const year=Number(exam.year);
   if(!Number.isInteger(year)||year<2016||year>2025)continue;
@@ -45,7 +45,8 @@ function compute({study={},sessions=[],links={},official=bank(),now=Date.now(),d
   group.attempts++;
   for(let i=0;i<80;i++){
    const q=official[year+'-'+(i+1)],answer=exam.answers[i],sub=i<40?'estate':'civil';
-   if(!q?.verified||(subject!=='all'&&sub!==subject))continue;
+    if(subject!=='all'&&sub!==subject)continue;
+    if(!q?.verified){pendingYears.add(year);continue;}
    sample[sub].seen++;group.seen++;
    if(answer===null||answer===undefined){outcomes.blank++;group.blank++;continue;}
    if(!Number.isInteger(answer)||answer<1||answer>5)continue;
@@ -91,12 +92,14 @@ function compute({study={},sessions=[],links={},official=bank(),now=Date.now(),d
  const scores=sortedTrends.map(x=>subject==='estate'?x.estate:subject==='civil'?x.civil:x.average).filter(x=>x!==null);
  const firstScore=scores.length?scores[0]:null,lastScore=scores.length?scores.at(-1):null;
  const average=values=>values.length?Number((values.reduce((a,b)=>a+b,0)/values.length).toFixed(1)):null;
+ const typingMetric=(key,max)=>typed.map(x=>x[key]).filter(x=>x!==null&&x!==undefined&&x!=='')
+  .map(Number).filter(x=>Number.isFinite(x)&&x>=0&&x<=max);
  return {
-  days:n,subject,from:dayKeys[0],to:dayKeys.at(-1),daily:dayKeys.map(d=>dayMap[d]),
+   days:n,subject,pendingYears:[...pendingYears].sort((a,b)=>a-b),from:dayKeys[0],to:dayKeys.at(-1),daily:dayKeys.map(d=>dayMap[d]),
   sessions:histories.length,recallCount:recalls.length,recallSuccess:recalls.filter(x=>x.outcome==='remember').length,
   recallUnique:new Set(recalls.map(x=>x.id)).size,typingCount:typed.length,
-  typingAccuracy:average(typed.map(x=>Number(x.accuracy)).filter(Number.isFinite)),
-  typingCpm:average(typed.map(x=>Number(x.cpm)).filter(Number.isFinite)),
+  typingAccuracy:average(typingMetric('accuracy',100)),
+  typingCpm:average(typingMetric('cpm',3000)),
   answered:outcomes.answered,correct:outcomes.correct,wrong:outcomes.wrong,blank:outcomes.blank,
   accuracy:outcomes.answered?Math.round(outcomes.correct*100/outcomes.answered):null,
   averageEstate:average(statsBySubject.estate.score),
@@ -128,7 +131,12 @@ function renderReport(report){
  ];
  const labelMap=window.CK83Links?.getLabels?.()||{};
  const weak=report.weakConcepts.slice(0,12),option=report.optionCoverage||{};
- return '<p class="ck83-analytics-warning">다음 수치는 이 브라우저에 기록된 학습 활동만 반영합니다. 미검수 개념 후보·법령·해설을 성적에 반영하지 않으며 합격 확률을 예측하지 않습니다.</p>'+
+ return (report.pendingYears?.length?'<p class="ck83-analytics-warning">공식 데이터 미로딩으로 '+
+   report.pendingYears.join('·')+'년 제출 답안의 통계가 일부 제외됐습니다. 데이터 로딩 후 다시 계산하세요.</p>'+
+   (report.pendingYears.some(y=>y<=2020)?'<button type="button" data-ck83-stats-load-bank>2016~2020 기출 데이터 재시도</button>':
+   '<p class="ck83-analytics-warning">최근 기출 기본 데이터가 누락됐습니다. 사이트 파일을 새로고침해 확인하세요.</p>'):'')+
+  (bankLoadIssue?'<p class="ck83-analytics-warning" role="alert">'+esc(bankLoadIssue)+'</p>':'')+
+  '<p class="ck83-analytics-warning">다음 수치는 이 브라우저에 기록된 학습 활동만 반영합니다. 미검수 개념 후보·법령·해설을 성적에 반영하지 않으며 합격 확률을 예측하지 않습니다.</p>'+
  '<dl class="ck83-analytics-stats">'+counts.map(([name,value])=>'<div><dt>'+esc(name)+'</dt><dd>'+esc(value)+'</dd></div>').join('')+'</dl>'+
  '<section class="ck83-analytics-section"><h4>일별 학습 활동 · '+report.from+' ~ '+report.to+'</h4>'+barChart(report)+'</section>'+
  '<section class="ck83-analytics-section"><h4>내 문항 ↔ 개념 연결 기반 응답 결과</h4>'+
@@ -206,7 +214,9 @@ function formatReportTxt(r){
   '학개론 평균 점수: '+statusCount(r.averageEstate,'점')+
   ' · 민법 평균 점수: '+statusCount(r.averageCivil,'점'),
   '복습 시점 도래: '+r.due+'건 · 향후 예약: '+r.future+'건',
-  '반복 풀이 개선: '+r.improved+' / '+r.repeatQuestions+'문항','',
+  '반복 풀이 개선: '+r.improved+' / '+r.repeatQuestions+'문항',
+   '원문 데이터 미로딩 연도: '+(r.pendingYears?.join(', ')||'없음'),'',
+
   '연도별 공식 기출 정답률'];
  for(const x of r.years||[]){
   lines.push(x.year+'년 · 제출 '+x.attempts+'회 · '+x.correct+'/'+x.answered+
@@ -250,11 +260,19 @@ function copySummary(){
 }
 document.addEventListener('click',event=>{
  const t=event.target.closest?.('[data-ck83-stats-toggle],[data-ck83-stats-days],'+
-  '[data-ck83-stats-refresh],[data-ck83-stats-copy],[data-ck83-stats-export]');
+  '[data-ck83-stats-refresh],[data-ck83-stats-copy],[data-ck83-stats-export],[data-ck83-stats-load-bank]');
  if(!t||!root?.contains(t))return;
  if(t.hasAttribute('data-ck83-stats-toggle'))toggle();
  if(t.hasAttribute('data-ck83-stats-days')){period=Number(t.dataset.ck83StatsDays);paint();}
- if(t.hasAttribute('data-ck83-stats-refresh'))paint();
+ if(t.hasAttribute('data-ck83-stats-refresh')){bankLoadIssue='';paint();}
+  if(t.hasAttribute('data-ck83-stats-load-bank')){
+   const load=window.CK89OfficialBank?.loadAll;
+   if(typeof load!=='function'){bankLoadIssue='과거 기출 로더를 찾지 못했습니다.';paint();return}
+   t.disabled=true;
+   Promise.resolve().then(()=>load()).then(()=>{bankLoadIssue='';paint()})
+    .catch(e=>{bankLoadIssue='과거 기출 로딩 실패: '+String(e?.message||e);paint()});
+   return;
+  }
  if(t.hasAttribute('data-ck83-stats-copy'))copySummary();
  if(t.hasAttribute('data-ck83-stats-export'))exportReport();
 });

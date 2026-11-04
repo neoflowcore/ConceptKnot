@@ -1,0 +1,8 @@
+/* ConceptKnot v117 PDF study utilities: manual, compact, no animation. */
+.ck117-pdf-tools{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:6px 0;padding:4px 0;font:inherit;color:inherit;min-width:0}
+.ck117-pdf-tools button{border:1px solid currentColor;color:inherit;background:transparent;padding:5px 8px;font:inherit;font-size:12px;border-radius:7px;cursor:pointer;white-space:nowrap}
+.ck117-pdf-tools button:hover{background:rgba(120,120,120,.08)}
+.ck117-pdf-tools button:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+.ck117-pdf-tools small{flex-basis:100%;font-size:11px;line-height:1.4;opacity:.8}
+.ck117-pdf-tools [hidden]{display:none!important}
+@media(max-width:420px){.ck117-pdf-tools{gap:4px}.ck117-pdf-tools button{font-size:11px;padding:4px 6px}}

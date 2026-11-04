@@ -8,6 +8,8 @@ const PDFJS_URL='https://cdn.jsdelivr.net/npm/pdfjs-dist@6.3.289/build/pdf.mjs';
 const WORKER_URL='https://cdn.jsdelivr.net/npm/pdfjs-dist@6.3.289/build/pdf.worker.mjs';
 const PDFLIB_URL='https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js';
 const ANNOTATION_PREFIX='ck15-ink:';
+const INK_BACKUP_FORMAT='conceptknot-pdf-ink',INK_BACKUP_LIMIT=12*1024*1024;
+const INK_MAX_PAGES=500,INK_MAX_STROKES=12000,INK_MAX_POINTS=400000;
 const clamp=(x,lo,hi)=>Math.max(lo,Math.min(hi,x));
 let pdfjsPromise=null,pdflibPromise=null,session=null,pendingFile=null,pendingYear=0,attachFrame=0;
 const els=(host,selector)=>host.querySelector(selector)||(selector==='[data-ck15-scroll]'?host.closest('[data-ck15-scroll]'):null);
@@ -40,7 +42,7 @@ function annotationId(s){
 }
 function restore(s){
   s.annotationKey=annotationId(s);
- let data=null;s.inkIssue='';s.loadedInkRaw=null;
+ let data=null;s.inkIssue='';s.loadedInkRaw=null;s.inkDirty=false;s.inkBackedUp=false;
  try{
   s.loadedInkRaw=localStorage.getItem(s.annotationKey);
   if(s.loadedInkRaw!==null){
@@ -50,29 +52,51 @@ function restore(s){
   }
  }catch(e){s.inkIssue='기존 PDF 필기 기록을 읽지 못하여 덮어쓰기를 차단했습니다.';}
  s.annotations=Object.create(null);
- if(data&&typeof data==='object'){
-  for(const [page,strokes] of Object.entries(data)){
-   if(!/^\d+$/.test(page)||!Array.isArray(strokes))continue;
-   s.annotations[page]=strokes.filter(x=>Array.isArray(x?.points)&&x.points.length>0&&x.points.length<30000&&/^#[0-9a-f]{6}$/i.test(x.color)&&Number.isFinite(x.width)).map(x=>({
-    color:x.color,tool:x.tool==='highlighter'?'highlighter':'pen',width:clamp(x.width,1,40),points:x.points.filter(p=>Array.isArray(p)&&p.length>=2&&Number.isFinite(p[0])&&Number.isFinite(p[1])).map(p=>[clamp(p[0],0,1),clamp(p[1],0,1),clamp(Number(p[2])||.5,.05,1)])
-   }));
+ if(data&&typeof data==='object'&&!Array.isArray(data)){
+  let total=0;
+  for(const [page,items] of Object.entries(data)){
+   if(!/^[1-9]\d*$/.test(page)||!Array.isArray(items)||items.length>INK_MAX_STROKES){
+    s.inkIssue='PDF 필기 기록의 페이지·획 구조가 손상됐습니다. 자동 덮어쓰기를 차단했습니다.';continue;
+   }
+   total+=items.length;
+   if(total>INK_MAX_STROKES){s.inkIssue='PDF 필기가 안전 검사 한도를 초과합니다. 자동 덮어쓰기를 차단했습니다.';break}
+   const lines=[];
+   for(const item of items){
+    if(!item||!Array.isArray(item.points)||!item.points.length||item.points.length>30000||
+     !/^#[0-9a-f]{6}$/i.test(item.color)||!Number.isFinite(item.width)||item.width<1||item.width>65||
+     item.points.some(p=>!Array.isArray(p)||p.length<2||!Number.isFinite(p[0])||!Number.isFinite(p[1]))){
+     s.inkIssue='PDF 필기의 좌표·색상 구조가 손상됐습니다. 자동 덮어쓰기를 차단했습니다.';continue;
+    }
+    lines.push({color:item.color,tool:item.tool==='highlighter'?'highlighter':'pen',width:clamp(item.width,1,40),
+     points:item.points.map(p=>[clamp(p[0],0,1),clamp(p[1],0,1),clamp(Number(p[2])||.5,.05,1)])});
+   }
+   s.annotations[page]=lines;
   }
  }
  s.redo=Object.create(null);
 }
 function persist(s){
  const root=s.parent||s;
- if(root.inkIssue){alertStatus(root,root.inkIssue);return false;}
+ if(root.inkIssue){
+  root.inkDirty=true;root.inkBackedUp=false;
+  alertStatus(root,root.inkIssue);return false;
+ }
  try{
   if(localStorage.getItem(root.annotationKey)!==root.loadedInkRaw){
-   root.inkIssue='다른 브라우저 탭에서 이 PDF의 필기가 변경되어 자동 저장을 차단했습니다. 현재 필기를 PDF로 별도 저장하세요.';
+   root.inkIssue='다른 탭에서 PDF 필기가 변경되었습니다. 현재 필기를 JSON/PDF로 백업한 후 새로고침하세요.';
+   root.inkDirty=true;root.inkBackedUp=false;
    alertStatus(root,root.inkIssue);return false;
   }
   const raw=JSON.stringify(root.annotations);
   localStorage.setItem(root.annotationKey,raw);
   root.loadedInkRaw=raw;
+  root.inkDirty=false;root.inkBackedUp=false;
   return true;
- }catch(e){alertStatus(root,'PDF 필기 저장 공간/권한 오류. PDF 파일을 우선 저장하세요.');return false}
+ }catch(e){
+  root.inkDirty=true;root.inkBackedUp=false;
+  alertStatus(root,'PDF 필기 저장 실패. JSON/PDF로 먼저 백업하세요 (저장 공간·권한 확인).');
+  return false;
+ }
 }
 function strokes(s){const k=String(s.page);return s.annotations[k]||(s.annotations[k]=[])}
 function drawPenStroke(ctx,ink,width,height,scale){
@@ -221,9 +245,14 @@ function applyZoom(s,newZoom,clientX,clientY){
  schedulePaint(s);
 }
 async function goPage(s,page){
- if(!s.pdf)return;
- // A page change is not a tab exit: preserve the deliberate S Pen mode.
+ if(!s.pdf)return false;
  finishInput(s);
+ if(s.second)finishInput(s.second);
+ if(s.inkDirty&&!s.inkBackedUp){
+  alertStatus(s,'저장되지 않은 필기가 있습니다. 필기 JSON 백업 또는 필기 PDF 저장 후 페이지를 이동하세요.');
+  return false;
+ }
+ // A page change is not a tab exit: preserve deliberate S Pen mode.
  s.page=clamp(Math.round(page),1,s.pdf.numPages);
  if(s.spread)s.page=1+2*Math.floor((s.page-1)/2);
  releaseSecond(s);
@@ -291,13 +320,20 @@ function eraseAt(s,event){
  const point=pointerPoint(s,event),rect=els(s.host,'[data-ck15-page]').getBoundingClientRect(),line=strokes(s),prior=s.erasePoint||point;
  const steps=Math.max(1,Math.ceil(Math.hypot((point[0]-prior[0])*rect.width,(point[1]-prior[1])*rect.height)/6));let changed=false;
  for(let i=line.length-1;i>=0;i--){for(let j=0;j<=steps;j++){const f=j/steps;if(hitTest(line[i],prior[0]+(point[0]-prior[0])*f,prior[1]+(point[1]-prior[1])*f,rect)){line.splice(i,1);changed=true;break;}}}
- s.erasePoint=point;if(changed){s.eraseDirty=true;s.redo[String(s.page)]=[];redrawInk(s);}
+ s.erasePoint=point;if(changed){
+  s.eraseDirty=true;s.redo[String(s.page)]=[];
+  const root=s.parent||s;root.inkDirty=true;root.inkBackedUp=false;
+  redrawInk(s);
+ }
 }
 function penEraser(event){return window.CKPen60?.eraser(event)===true;}
 
 function commitStroke(s){
  if(!s.activeStroke)return;
- if(s.activeStroke.points.length){strokes(s).push(s.activeStroke);s.redo[String(s.page)]=[];persist(s);}
+ if(s.activeStroke.points.length){
+  strokes(s).push(s.activeStroke);s.redo[String(s.page)]=[];
+  const root=s.parent||s;root.inkDirty=true;root.inkBackedUp=false;persist(s);
+ }
  s.activeStroke=null;
 }
 function setPenMode(s,on){
@@ -344,7 +380,7 @@ function onPointerDown(s,event){
  }else if(event.pointerType!=='pen'&&(event.detail>=2||(s.tool==='hand'&&s.lastTap&&performance.now()-s.lastTap.time<360&&Math.hypot(event.clientX-s.lastTap.x,event.clientY-s.lastTap.y)<12))){
   s.gesture={type:'zoom',x:event.clientX,y:event.clientY,initial:(s.parent||s).zoom,moved:false};
  }else if(s.tool==='pen'||s.tool==='highlighter'||event.pointerType==='pen'){
-  s.activeStroke={tool:s.tool==='highlighter'?'highlighter':'pen',color:s.color,width:s.tool==='highlighter'?s.width*3.1:s.width,points:[pointerPoint(s,event)]};
+  s.activeStroke={tool:s.tool==='highlighter'?'highlighter':'pen',color:s.color,width:clamp(s.tool==='highlighter'?s.width*3.1:s.width,1,40),points:[pointerPoint(s,event)]};
  }else{
   s.gesture={type:'pan',x:event.clientX,y:event.clientY,left:scroller.scrollLeft,top:scroller.scrollTop};
  }
@@ -372,7 +408,7 @@ function onPointerMove(s,event){
   else if(!erasing&&s.erasing!=null){
    if(s.eraseDirty){persist(s);s.eraseDirty=false;}
    s.erasing=null;s.erasePoint=null;
-   s.activeStroke={tool:s.tool==='highlighter'?'highlighter':'pen',color:s.color,width:s.tool==='highlighter'?s.width*3.1:s.width,points:[pointerPoint(s,event)]};
+   s.activeStroke={tool:s.tool==='highlighter'?'highlighter':'pen',color:s.color,width:clamp(s.tool==='highlighter'?s.width*3.1:s.width,1,40),points:[pointerPoint(s,event)]};
   }
  }
  if(s.erasing===event.pointerId){eraseAt(s,event);event.preventDefault();return;}
@@ -422,11 +458,16 @@ function updateTool(s,tool){
 }
 function undo(s){
  const list=strokes(s);if(!list.length)return;
- (s.redo[String(s.page)]||(s.redo[String(s.page)]=[])).push(list.pop());persist(s);redrawInk(s);
+ (s.redo[String(s.page)]||(s.redo[String(s.page)]=[])).push(list.pop());
+ const root=s.parent||s;root.inkDirty=true;root.inkBackedUp=false;
+ persist(s);redrawInk(s);
 }
 function redo(s){
- const undoStack=s.redo[String(s.page)]||[];
- if(!undoStack.length)return;strokes(s).push(undoStack.pop());persist(s);redrawInk(s);
+ const redoStack=s.redo[String(s.page)]||[];
+ if(!redoStack.length)return;
+ strokes(s).push(redoStack.pop());
+ const root=s.parent||s;root.inkDirty=true;root.inkBackedUp=false;
+ persist(s);redrawInk(s);
 }
 function downloadBlob(blob,name){
  const url=URL.createObjectURL(blob);
@@ -455,10 +496,181 @@ async function exportPdf(s){
  }
  const data=await out.save();
  downloadBlob(new Blob([data],{type:'application/pdf'}),'ConceptKnot-'+s.year+'-필기.pdf');
+ s.inkBackedUp=true;
 }
+
+function validateInkBackup(data,pageCount=0){
+ if(!data||data.format!==INK_BACKUP_FORMAT||data.version!==1||
+  typeof data.documentKey!=='string'||data.documentKey.length>512||
+  !data.documentKey.startsWith(ANNOTATION_PREFIX)||
+  !data.annotations||typeof data.annotations!=='object'||Array.isArray(data.annotations))return null;
+ const clean=Object.create(null),pages=Object.entries(data.annotations);
+ if(pages.length>INK_MAX_PAGES)return null;
+ let total=0,points=0;
+ for(const [page,lines] of pages){
+  const n=Number(page);
+  if(!/^[1-9]\d*$/.test(page)||n>20000||(pageCount&&n>pageCount)||
+   !Array.isArray(lines)||lines.length>INK_MAX_STROKES)return null;
+  clean[page]=[];
+  for(const line of lines){
+   total++;
+   if(total>INK_MAX_STROKES||!line||typeof line!=='object'||Array.isArray(line)||
+    !['pen','highlighter'].includes(line.tool)||typeof line.color!=='string'||
+    !/^#[0-9a-f]{6}$/i.test(line.color)||!Number.isFinite(line.width)||
+    line.width<1||line.width>40||!Array.isArray(line.points)||
+    line.points.length===0||line.points.length>30000)return null;
+   const curve=[];
+   for(const p of line.points){
+    if(!Array.isArray(p)||(p.length!==2&&p.length!==3)||
+     !p.every(v=>Number.isFinite(v)&&v>=0&&v<=1))return null;
+    curve.push([p[0],p[1],p.length===3?Math.max(.05,p[2]):.5]);
+   }
+   points+=curve.length;if(points>INK_MAX_POINTS)return null;
+   clean[page].push({color:line.color,tool:line.tool,width:line.width,points:curve});
+  }
+ }
+ return {documentKey:data.documentKey,annotations:clean,pages:pages.length,strokes:total,
+  pdfHash:typeof data.pdfHash==='string'&&/^[0-9a-f]{64}$/.test(data.pdfHash)?data.pdfHash:''};
+}
+async function pdfFingerprint(bytes){
+ if(!bytes?.length||!window.crypto?.subtle)return '';
+ const digest=await window.crypto.subtle.digest('SHA-256',bytes);
+ return Array.from(new Uint8Array(digest),v=>v.toString(16).padStart(2,'0')).join('');
+}
+function backupDamagedInk(root){
+ if(!root?.inkIssue)return false;
+ try{
+  const text=root.loadedInkRaw;
+  if(text===null)throw Error('보존할 원본이 없습니다.');
+  downloadBlob(new Blob([text],{type:'application/json;charset=utf-8'}),
+   'ConceptKnot-'+root.year+'-PDF-손상원본-수정금지.json');
+  alertStatus(root,'기존 필기 원본 다운로드를 요청했습니다. 파일을 확인하고 복원을 진행하세요.');
+  return true;
+ }catch(e){alertStatus(root,'기존 필기 원본 보존 오류: '+(e.message||e));return false}
+}
+async function backupInk(s){
+ const root=s.parent||s;
+ if(!root?.pdf)return false;
+ finishInput(root);
+ if(root.second)finishInput(root.second);
+ try{
+  const data={format:INK_BACKUP_FORMAT,version:1,documentKey:root.annotationKey,
+   year:root.year,pdfHash:await pdfFingerprint(root.bytes),exportedAt:new Date().toISOString(),
+   annotations:root.annotations};
+  if(session!==root)throw Error('백업 중 PDF 화면이 변경됐습니다.');
+  const text=JSON.stringify(data);
+  if(text.length>INK_BACKUP_LIMIT)throw Error('필기 JSON이 12MB를 초과합니다. 필기 PDF 저장을 사용하세요.');
+  downloadBlob(new Blob([text],{type:'application/json;charset=utf-8'}),
+   'ConceptKnot-'+root.year+'-PDF-필기-'+(root.file?'내파일':'기출')+'.json');
+  root.inkBackedUp=true;
+  alertStatus(root,'PDF 필기 JSON 다운로드를 요청했습니다. 다운로드 파일이 저장됐는지 확인하세요. 전체 학습 백업과 별개입니다.');
+  return true;
+ }catch(e){alertStatus(root,'필기 JSON 백업 오류: '+(e.message||e));return false}
+}
+async function restoreInkFile(s,file){
+ const root=s.parent||s;
+ if(!root?.pdf||!file)return false;
+ if(file.size>INK_BACKUP_LIMIT){alertStatus(root,'필기 JSON은 12MB 이하여야 합니다.');return false}
+ try{
+  if(root.inkDirty&&!root.inkBackedUp)
+   throw Error('저장되지 않은 현재 필기를 먼저 JSON/PDF로 백업하세요');
+  const text=await file.text();
+  if(text.length>INK_BACKUP_LIMIT)throw Error('파일 크기 제한 초과');
+  const loaded=validateInkBackup(JSON.parse(text),root.pdf.numPages);
+  if(!loaded)throw Error('지원하지 않는 필기 JSON 구조 또는 잘못된 좌표');
+  if(loaded.documentKey!==root.annotationKey)throw Error('연도 또는 원본 PDF가 일치하지 않습니다');
+  if(loaded.pdfHash){
+   const current=await pdfFingerprint(root.bytes);
+   if(current&&current!==loaded.pdfHash)throw Error('원본 PDF의 지문(SHA-256)이 다릅니다');
+  }
+  if(session!==root||!root.host?.isConnected)throw Error('파일 검사 중 PDF 화면이 변경됐습니다');
+  if(localStorage.getItem(root.annotationKey)!==root.loadedInkRaw)
+   throw Error('다른 탭에서 PDF 필기가 수정되어 복원을 중단했습니다');
+  const existing=Object.values(root.annotations).reduce((sum,lines)=>sum+lines.length,0);
+  const warning=(root.inkIssue?'기존 PDF 필기 기록에 읽기 오류가 있습니다. 먼저 손상원본을 보존하세요. ':'')+
+   '이 PDF의 필기 '+existing+'획을 백업 파일 '+loaded.strokes+'획으로 교체할까요? 기존 원본은 자동으로 합쳐지지 않습니다.';
+  if(!window.confirm?.(warning))return false;
+  const raw=JSON.stringify(loaded.annotations);
+  localStorage.setItem(root.annotationKey,raw);
+  root.annotations=loaded.annotations;
+  if(root.second)root.second.annotations=root.annotations;
+  root.loadedInkRaw=raw;root.inkIssue='';root.inkDirty=false;root.inkBackedUp=false;
+  const recoverButton=root.host?.querySelector?.('[data-ck117-ink-raw]');
+  if(recoverButton)recoverButton.hidden=true;
+  root.redo=Object.create(null);
+  if(root.second)root.second.redo=Object.create(null);
+  redrawInk(root);if(root.second)redrawInk(root.second);
+  alertStatus(root,'필기 '+loaded.strokes+'획을 로컬 복원했습니다. 원본 PDF 파일은 수정하지 않았습니다.');
+  return true;
+ }catch(e){alertStatus(root,'필기 JSON 복원 실패: '+(e.message||e)+'. 현재 기록을 유지했습니다.');return false}
+}
+async function extractVisibleText(s){
+ const root=s.parent||s;
+ if(!root?.pdf)return false;
+ const pageNums=[root.page];
+ if(root.spread&&root.page<root.pdf.numPages)pageNums.push(root.page+1);
+ try{
+  const lines=['ConceptKnot PDF 선택 텍스트 추출','선택 가능한 문자 레이어에서 추출한 초안이며 OCR·원문 검증·정답 검수 완료가 아닙니다.'];
+  let total=0;
+  for(const no of pageNums){
+   const page=await root.pdf.getPage(no),content=await page.getTextContent();
+   if(session!==root||!root.host?.isConnected)throw Error('텍스트 추출 중 문서가 변경됐습니다');
+   const parts=content.items.filter(x=>typeof x.str==='string');
+   const text=parts.map(x=>x.str+(x.hasEOL?'\n':' ')).join('').trim();
+   lines.push('','[원본 PDF '+no+'쪽]',text||'(추출 가능한 텍스트 없음: 이미지 스캔 PDF는 OCR이 필요합니다)');
+   total+=text.length;
+   if(total>250000)throw Error('현재 페이지의 텍스트가 25만 글자를 초과합니다');
+  }
+  if(total===0){alertStatus(root,'이 페이지에는 선택 가능한 PDF 텍스트가 없습니다. 스캔 이미지 OCR은 별도 작업이 필요합니다.');return false}
+  downloadBlob(new Blob(['\uFEFF'+lines.join('\n')],{type:'text/plain;charset=utf-8'}),
+   'ConceptKnot-'+root.year+'-PDF-텍스트-'+pageNums.join('-')+'.txt');
+  alertStatus(root,'PDF '+pageNums.join('·')+'쪽의 선택형 텍스트 TXT 다운로드를 요청했습니다. 공식 문항 데이터에는 반영하지 않았습니다.');
+  return true;
+ }catch(e){alertStatus(root,'PDF 텍스트 추출 실패: '+(e?.message||e));return false}
+}
+function canLeavePdf(){
+ if(!session?.host?.isConnected)return true;
+ finishInput(session);
+ if(session.second)finishInput(session.second);
+ if(session.inkDirty&&!session.inkBackedUp){
+  alertStatus(session,'저장 실패 필기가 있습니다. 먼저 필기 JSON 백업 또는 PDF 저장을 진행하세요.');
+  return false;
+ }
+ return true;
+}
+function mountInkTools(s){
+ if(s.parent||s.host.querySelector('[data-ck117-pdf-tools]'))return;
+ if(!document.querySelector('link[data-ck117-pdf-style]')){
+  const link=document.createElement('link');
+  link.rel='stylesheet';link.href='./assets/ck-pdf-tools-v117.css';
+  link.dataset.ck117PdfStyle='1';document.head.appendChild(link);
+ }
+ const row=document.createElement('div');row.className='ck117-pdf-tools';row.setAttribute('data-ck117-pdf-tools','');
+ row.innerHTML='<button type="button" data-ck117-ink-save>필기 JSON 백업</button>'+
+  '<button type="button" data-ck117-ink-load>필기 JSON 복원</button>'+
+  '<button type="button" data-ck117-ink-raw>손상원본 보존</button>'+
+  '<button type="button" data-ck117-text>현재 PDF 문자 추출</button>'+
+  '<input type="file" data-ck117-ink-file accept=".json,application/json" hidden aria-label="필기 백업 JSON 선택">'+
+  '<small>필기 JSON은 학습기록 백업과 별도 · 문자 추출은 OCR 아님</small>';
+ const save=s.host.querySelector('[data-ck15-save]');
+ (save?.parentNode||s.host).appendChild(row);
+ const raw=row.querySelector('[data-ck117-ink-raw]');
+ if(raw)raw.hidden=!s.inkIssue;
+}
+
 async function act(s,button){
  const action=button.dataset;
+ if('ck117InkSave' in action){await backupInk(s);return}
+ if('ck117InkLoad' in action){s.host.querySelector('[data-ck117-ink-file]')?.click();return}
+ if('ck117InkRaw' in action){backupDamagedInk(s);return}
+ if('ck117Text' in action){await extractVisibleText(s);return}
  if('ck17Spread'in action){
+  finishInput(s);
+  if(s.second)finishInput(s.second);
+  if(s.inkDirty&&!s.inkBackedUp){
+   alertStatus(s,'저장되지 않은 필기가 있습니다. 필기 JSON/PDF 백업 후 펼쳐보기를 변경하세요.');
+   return;
+  }
   s.spread=!s.spread;
   button.setAttribute('aria-pressed',String(s.spread));
   button.setAttribute('aria-label',s.spread?'PDF 한 페이지씩 보기':'PDF 두 페이지 나란히 보기');
@@ -492,7 +704,7 @@ function bind(s){
  const save=els(host,'[data-ck15-save]');if(save){save.textContent='PDF 저장';save.setAttribute('aria-label','필기 PDF 저장');}
  const eraser=els(host,'[data-ck15-tool=eraser]');if(eraser)eraser.title='누른 채 드래그하여 지우기';
  if(!ink||!scroller)return;
- if(!s.parent){
+ if(!s.parent){mountInkTools(s);
   const oldZoom=els(host,'output[data-ck15-zoom-value]'),oldPage=els(host,'output[data-ck15-page-label]');
   if(oldZoom)oldZoom.outerHTML='<label class="ck42-pdf-number"><input data-ck15-zoom-value aria-label="PDF 배율 직접 입력" inputmode="decimal" value="100" size="4">%</label>';
   if(oldPage)oldPage.outerHTML='<label class="ck42-pdf-number"><input data-ck15-page-label aria-label="PDF 페이지 직접 입력" inputmode="numeric" value="1" size="3"><span data-ck42-page-total> / —</span></label>';
@@ -524,8 +736,14 @@ function bind(s){
  });
  }
  host.addEventListener('click',e=>{
-  const button=e.target.closest('button[data-ck15-spen],button[data-ck15-tool],button[data-ck15-zoom],button[data-ck15-fit],button[data-ck15-prev],button[data-ck15-next],button[data-ck15-undo],button[data-ck15-redo],button[data-ck15-save],button[data-ck17-spread]');
+  const button=e.target.closest('button[data-ck15-spen],button[data-ck15-tool],button[data-ck15-zoom],button[data-ck15-fit],button[data-ck15-prev],button[data-ck15-next],button[data-ck15-undo],button[data-ck15-redo],button[data-ck15-save],button[data-ck17-spread],button[data-ck117-ink-save],button[data-ck117-ink-load],button[data-ck117-ink-raw],button[data-ck117-text]');
   if(!button)return;e.preventDefault();act(s,button);
+ });
+ host.addEventListener('change',e=>{
+  if(!e.target.matches?.('[data-ck117-ink-file]'))return;
+  const file=e.target.files?.[0];
+  e.target.value='';
+  if(file)restoreInkFile(s,file);
  });
  host.addEventListener('input',e=>{
   if(e.target.matches('[data-ck15-width]')){s.width=clamp(Number(e.target.value)||2.8,1,13);if(s.second)s.second.width=s.width;}
@@ -550,7 +768,7 @@ function attach(){
  const source=host.dataset.ck15PdfSource,year=Number(host.dataset.ck15PdfYear)||2025;
  const file=pendingYear===year?pendingFile:null;
  const id=file?year+':file:'+file.name+':'+file.size:year+':'+source;
- if(session&&session.id===id&&session.pdf){
+ if(session&&session.id===id&&session.pdf&&session.file===file){
   session.resizeObserver?.disconnect();
   releaseSecond(session);
   endPenSession(session);session.host=host;session.paintToken++;session.baseViewport=null;
@@ -590,7 +808,14 @@ document.addEventListener('change',e=>{
 window.addEventListener('storage',event=>{
  if(session&&event.key===session.annotationKey&&event.newValue!==session.loadedInkRaw){
   session.inkIssue='다른 탭에서 PDF 필기 기록이 변경되었습니다. 자동 덮어쓰기를 차단했습니다.';
+  const rawButton=session.host?.querySelector?.('[data-ck117-ink-raw]');
+  if(rawButton)rawButton.hidden=false;
   alertStatus(session,session.inkIssue);
+ }
+});
+window.addEventListener('beforeunload',event=>{
+ if(session?.inkDirty&&!session.inkBackedUp){
+  event.preventDefault();event.returnValue='';
  }
 });
 window.addEventListener('ck:pen-deactivate',()=>endPenSession(session));
@@ -611,7 +836,10 @@ function boot(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});
 else boot();
 window.CKPDF15=Object.freeze({
- getState:()=>session?{year:session.year,page:session.page,pages:session.pdf?.numPages||0,zoom:session.zoom,spread:!!session.spread,tool:session.tool,annotationCount:Object.values(session.annotations).reduce((n,lines)=>n+lines.length,0),inkIssue:session.inkIssue||''}:null,
+ canLeave:canLeavePdf,validateInkBackup,
+ exportInk:()=>session&&backupInk(session),
+ extractText:()=>session&&extractVisibleText(session),
+ getState:()=>session?{year:session.year,page:session.page,pages:session.pdf?.numPages||0,zoom:session.zoom,spread:!!session.spread,tool:session.tool,annotationCount:Object.values(session.annotations).reduce((n,lines)=>n+lines.length,0),inkDirty:!!session.inkDirty,inkBackedUp:!!session.inkBackedUp,inkIssue:session.inkIssue||''}:null,
  zoom:(scale)=>session&&applyZoom(session,scale),
  page:(page)=>session&&goPage(session,page)
 });

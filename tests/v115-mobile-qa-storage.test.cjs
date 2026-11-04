@@ -185,7 +185,7 @@ test('offline v115 assets, guarded restore and manual-only deployment configurat
  for(const asset of ['ck-nav-drag-v56.js?v=115','ck-study-links-v83.js?v=115',
   'ck-full-exam-v82.js?v=115','ck-manual-qa-v115.js?v=115',
   'ck-manual-qa-v115.css?v=115','ck-data-integrity-v86.js?v=115',
-  'ck-pdf-workspace-v15.js?v=115']){
+  'ck-pdf-workspace-v15.js?v=117']){
   assert.ok(html.includes(asset),'HTML: '+asset);
   assert.ok(sw.includes(asset),'SW: '+asset);
  }
