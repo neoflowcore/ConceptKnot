@@ -8,7 +8,7 @@ const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const validTime=v=>Number.isFinite(Number(v))&&Number(v)>0;
 const dayKey=t=>new Date(Number(t)+KST).toISOString().slice(0,10);
 const bank=()=>window.RECALL_OFFICIAL||{};
-let root=null,shown=false,period=7,filterSubject='all',scheduled=false,lastReport=null,bankLoadIssue='';
+let root=null,shown=false,period=7,filterSubject='all',scheduled=false,lastReport=null,bankLoadIssue='',labelsRequested=false;
 const snapshot=()=>window.CK79Study?.snapshot?.()||{};
 const attempts=()=>window.CK82FullExam?.getAttempts?.()||[];
 const mappings=()=>window.CK83Links?.getRecords?.()||{};
@@ -19,7 +19,7 @@ function recallFor(history,period,now){
   unique:new Set(rows.map(x=>x.id)).size};
 }
 function compute({study={},sessions=[],links={},official=bank(),now=Date.now(),days=7,subject='all'}={}){
- const n=[7,30].includes(Number(days))?Number(days):7;
+ const n=[7,30,90,365].includes(Number(days))?Number(days):7;
  const today=Math.floor((now+KST)/DAY)*DAY;
  const dayKeys=Array.from({length:n},(_,i)=>new Date(today-(n-i-1)*DAY).toISOString().slice(0,10));
  const from=today-(n-1)*DAY;
@@ -111,15 +111,35 @@ function compute({study={},sessions=[],links={},official=bank(),now=Date.now(),d
   conceptSample:weakConcepts.reduce((sum,x)=>sum+x.answered,0)
  };
 }
+/* v123: 90 days -> seven-day bins, 365 days -> calendar months. */
+function aggregateActivity(report){
+ const days=Number(report?.days)||7,rows=Array.isArray(report?.daily)?report.daily:[];
+ const grouped=new Map();
+ rows.forEach((day,i)=>{
+  const key=days<=30?day.day:days===90?'week-'+Math.floor(i/7):day.day.slice(0,7);
+  let slot=grouped.get(key);
+  if(!slot){slot={start:day.day,end:day.day,typed:0,recalls:0,exams:0,key};grouped.set(key,slot);}
+  slot.end=day.day;slot.typed+=day.typed||0;slot.recalls+=day.recalls||0;slot.exams+=day.exams||0;
+ });
+ return [...grouped.values()].map(g=>({...g,label:days<=30?g.start.slice(5):
+  days===90?g.start.slice(5)+'~'+g.end.slice(5):g.start.slice(0,7),
+  total:g.typed+g.recalls+g.exams}));
+}
 function barChart(report){
- const data=report.daily,values=data.map(x=>x.typed+x.recalls+x.exams),max=Math.max(1,...values);
- return '<div class="ck83-activity-chart" aria-label="'+report.days+'일간 일별 활동 횟수">'+
- data.map((x,i)=>{
-  const v=values[i],height=v?Math.max(5,Math.round(v/max*100)):0;
-  const label=(report.days===7||i%5===0||i===data.length-1)?x.day.slice(5):'';
-  return '<div class="ck83-activity-cell" title="'+x.day+' · 회상 '+x.recalls+', 타이핑 '+x.typed+', 실전 제출 '+x.exams+
-  '"><div class="ck83-activity-bar" style="height:'+height+'%"></div><small>'+esc(label)+'</small></div>';
- }).join('')+'</div><p class="ck83-chart-note">일별 활동 횟수 합계(회상·타이핑 완료·모의고사 제출)입니다. 공부한 시간이나 실력 향상 수치는 아닙니다.</p>';
+ const data=aggregateActivity(report),max=Math.max(1,...data.map(x=>x.total));
+ const mode=report.days<=30?'일별':report.days===90?'7일 묶음별':'월별';
+ return '<div class="ck83-activity-chart'+(report.days>30?' ck83-activity-grouped':'')+
+  '" role="img" aria-label="'+report.days+'일간 '+mode+' 학습 활동 횟수">'+
+  data.map((x,i)=>{
+   const height=x.total?Math.max(5,Math.round(x.total/max*100)):0;
+   const label=report.days<=30?(report.days===7||i%5===0||i===data.length-1?x.label:''):
+    (i%2===0||i===data.length-1?(report.days===365?x.start.slice(2,4)+'.'+x.start.slice(5,7):x.start.slice(5)):'');
+   return '<div class="ck83-activity-cell" title="'+x.start+' ~ '+x.end+
+    ' · 회상 '+x.recalls+', 타이핑 '+x.typed+', 실전 제출 '+x.exams+
+    '"><div class="ck83-activity-bar" style="height:'+height+'%"></div><small>'+esc(label)+'</small></div>';
+  }).join('')+'</div><p class="ck83-chart-note">'+mode+
+  ' 활동 횟수 합계(회상·타이핑 완료·모의고사 제출). 학습시간·능력 향상 추정값이 아닙니다.'+
+  (report.days===365?' 실전 성적은 현재 브라우저에 보존된 최근 20회 제출 기록만 포함합니다.':'')+'</p>';
 }
 function statusCount(v,suffix=''){return v===null?'자료 없음':String(v)+suffix;}
 function renderReport(report){
@@ -138,7 +158,7 @@ function renderReport(report){
   (bankLoadIssue?'<p class="ck83-analytics-warning" role="alert">'+esc(bankLoadIssue)+'</p>':'')+
   '<p class="ck83-analytics-warning">다음 수치는 이 브라우저에 기록된 학습 활동만 반영합니다. 미검수 개념 후보·법령·해설을 성적에 반영하지 않으며 합격 확률을 예측하지 않습니다.</p>'+
  '<dl class="ck83-analytics-stats">'+counts.map(([name,value])=>'<div><dt>'+esc(name)+'</dt><dd>'+esc(value)+'</dd></div>').join('')+'</dl>'+
- '<section class="ck83-analytics-section"><h4>일별 학습 활동 · '+report.from+' ~ '+report.to+'</h4>'+barChart(report)+'</section>'+
+ '<section class="ck83-analytics-section"><h4>'+(report.days<=30?'일별':report.days===90?'7일 구간별':'월별')+' 학습 활동 · '+report.from+' ~ '+report.to+'</h4>'+barChart(report)+'</section>'+
  '<section class="ck83-analytics-section"><h4>내 문항 ↔ 개념 연결 기반 응답 결과</h4>'+
  (weak.length?'<p>연결한 문제의 실제 응답만 집계합니다. 오답을 개념 전체의 이해 부족으로 단정하지 않습니다.</p>'+
  '<div class="ck83-concept-rows">'+weak.map(c=>
@@ -188,7 +208,7 @@ function paint(){
  const report=compute({study:snapshot(),sessions:attempts(),links:mappings(),days:period,subject:filterSubject});
  lastReport=report;
  body.innerHTML='<div class="ck83-stats-filters"><div role="group" aria-label="기간">'+
- [7,30].map(n=>'<button type="button" data-ck83-stats-days="'+n+'" aria-pressed="'+(period===n)+'">'+n+'일</button>').join('')+'</div>'+
+ [7,30,90,365].map(n=>'<button type="button" data-ck83-stats-days="'+n+'" aria-pressed="'+(period===n)+'">'+n+'일</button>').join('')+'</div>'+
  '<label>과목 <select data-ck83-stats-subject><option value="all">전체</option>'+
  '<option value="estate"'+(filterSubject==='estate'?' selected':'')+'>부동산학개론</option>'+
  '<option value="civil"'+(filterSubject==='civil'?' selected':'')+'>민법</option></select></label>'+
@@ -202,7 +222,14 @@ function toggle(){
  const body=root?.querySelector('[data-ck83-stats-body]'),button=root?.querySelector('[data-ck83-stats-toggle]');
  if(button){button.setAttribute('aria-expanded',String(shown));button.textContent=shown?'통계 접기':'통계 열기';}
  if(body)body.hidden=!shown;
- if(shown)paint();
+ if(shown){paint();ensureConceptLabels();}
+}
+function ensureConceptLabels(){
+ if(labelsRequested)return;
+ labelsRequested=true;
+ const load=window.CK83Links?.loadLabels;
+ if(typeof load!=='function')return;
+ Promise.resolve().then(()=>load()).then(()=>{if(shown)paint();}).catch(()=>{});
 }
 function formatReportTxt(r){
  if(!r)return '';
@@ -227,8 +254,11 @@ function formatReportTxt(r){
  for(const x of r.trends||[])lines.push(dayKey(x.at)+' · '+x.year+'년 · 학개론 '+statusCount(x.estate,'점')+
   ' · 민법 '+statusCount(x.civil,'점')+' · 평균 '+statusCount(x.average,'점'));
  if(!(r.trends||[]).length)lines.push('확인된 결과 없음');
- lines.push('','일별 학습 활동');
- for(const x of r.daily||[])lines.push(x.day+' · 회상 '+x.recalls+' · 타이핑 '+x.typed+' · 모의고사 '+x.exams);
+ lines.push('','활동 집계 ('+(r.days<=30?'일별':r.days===90?'7일 구간별':'월별')+')');
+ for(const x of aggregateActivity(r))lines.push(x.start+' ~ '+x.end+' · 회상 '+x.recalls+' · 타이핑 '+x.typed+' · 모의고사 '+x.exams);
+ if(r.days>30){lines.push('','원본 일별 학습 활동');
+  for(const x of r.daily||[])lines.push(x.day+' · 회상 '+x.recalls+' · 타이핑 '+x.typed+' · 모의고사 '+x.exams);
+ }
  lines.push('','선지별 개인 판단: '+(r.optionCoverage?.assessed||0)+'/4000',
   '판단 근거 입력: '+(r.optionCoverage?.reasoned||0)+'건 · 출처 기록: '+(r.optionCoverage?.sourceLinked||0)+'건',
   '주의: 원문/법령에 대한 공식 감수 결과를 나타내지 않습니다.');
@@ -280,6 +310,7 @@ document.addEventListener('change',event=>{
  if(event.target?.matches?.('[data-ck83-stats-subject]')){filterSubject=event.target.value;paint();}
 });
 document.addEventListener('ck:personal-links-updated',()=>{if(shown)paint();});
+document.addEventListener('ck:exam-submitted',()=>{if(shown)paint();});
 window.addEventListener('ck:official-bank-ready',()=>{if(shown)paint();});
 window.addEventListener('storage',event=>{
  if(['recallgraph-first-exam-v1','ck82-exam-sessions-v1','ck83-personal-concept-links-v1'].includes(event.key)&&shown)paint();
@@ -290,7 +321,7 @@ const main=document.getElementById('main');
 if(main&&window.MutationObserver)new MutationObserver(changes=>{
  if(!document.getElementById('ck83-analytics')&&changes.some(x=>x.addedNodes.length))schedule();
 }).observe(main,{childList:true,subtree:true});
-window.CK83Analytics=Object.freeze({compute,recallFor,dayKey,formatReportTxt,exportReport,getLastReport:()=>lastReport,
+window.CK83Analytics=Object.freeze({compute,aggregateActivity,recallFor,dayKey,formatReportTxt,exportReport,getLastReport:()=>lastReport,
  getState:()=>({shown,period,subject:filterSubject}),
  open:()=>{mount();const dock=root?.closest?.('#ck103-tools-dock');if(dock)dock.open=true;if(root&&!shown)toggle();}});
 })();

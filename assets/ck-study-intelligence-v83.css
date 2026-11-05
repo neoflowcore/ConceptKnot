@@ -4,3 +4,10 @@
 
 /* v97: analytical history legibility, no new motion */
 .ck83-yearly-rows{display:grid;gap:6px}.ck83-yearly-rows>div{display:flex;align-items:start;justify-content:space-between;flex-wrap:wrap;gap:7px;border-bottom:1px solid rgba(140,133,115,.22);padding:7px 0;font-size:12px}.ck83-yearly-rows strong{font-weight:600}.ck83-yearly-rows span{font-variant-numeric:tabular-nums}@media(max-width:520px){.ck83-yearly-rows>div{display:grid;gap:3px}}
+
+/* v123: bounded 7/30/90/365-day analytics, no motion or GPU animation. */
+.ck83-activity-chart.ck83-activity-grouped{gap:5px}
+.ck83-activity-grouped .ck83-activity-cell small{white-space:nowrap;overflow:visible;font-variant-numeric:tabular-nums}
+.ck83-stats-filters [role="group"]{display:flex;flex-wrap:wrap;gap:4px}
+.ck83-stats-filters [data-ck83-stats-days][aria-pressed="true"]{border-color:currentColor;font-weight:700}
+@media(max-width:550px){.ck83-activity-chart.ck83-activity-grouped{gap:3px}.ck83-activity-grouped .ck83-activity-cell small{font-size:8px}}

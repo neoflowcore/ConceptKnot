@@ -77,7 +77,8 @@ test('the UI is explicit-click, no writes, CSV hardened and diagnostic backup fa
  assert.match(source,/captureConsistency:'double-read'/);
  assert.doesNotMatch(source,/data\.records\[key\]=null/);
  const sw=read('sw.js');
- assert.match(sw,/conceptknot-study-v122-personal-evidence-crosscheck/);
+ assert.match(sw,/const CACHE='conceptknot-study-v\d+-/);
+ assert.match(sw,/ignoreSearch:true/);
  assert.match(sw,/ck-data-diagnostics-v88\.js\?v=122/);
  const config=JSON.parse(read('vercel.json'));
  assert.equal(config.git.deploymentEnabled,false);

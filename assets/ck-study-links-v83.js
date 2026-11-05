@@ -398,6 +398,7 @@ window.addEventListener('beforeunload',event=>{
  event.preventDefault();event.returnValue='';
 });
 window.CK83Links=Object.freeze({sanitize,getRecords:records,getLink,linkedQuestions:linked,reviewSummary,openQuestion,
+ loadLabels:load,getLabels:()=>Object.fromEntries([...(taxonomy?.values()||[])].map(x=>[x.id,x.label])),
  confirmDiscard,
  getStatus:()=>({linked:Object.keys(state.records).length,concepts:taxonomy?.size||0,unsavedEdits:unsavedChoices.size+(dirty?1:0),storageIssue,storageConflict,expanded}),
  open:()=>{mount();const dock=root?.closest?.('#ck103-tools-dock');if(dock)dock.open=true;if(root&&!expanded)toggle();}});

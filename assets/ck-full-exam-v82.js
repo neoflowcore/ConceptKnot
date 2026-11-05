@@ -69,6 +69,14 @@ function readStore(){
  }catch{storageIssue='시험 기록을 읽지 못했습니다. 원본을 보호하기 위해 저장을 차단합니다.';return empty();}
 }
 let state=readStore(),root=null,expanded=false,selectedYear=2025,error='',showHistory=false,historySelection=-1,scheduled=false;
+let clockTimer=null;
+/* v123: 1Hz clock only while exam runs visibly. Time uses deadlines, not ticks. */
+function syncClockTimer(){
+ const running=active()?.status==='running'&&!document.hidden;
+ if(!running&&clockTimer!==null){window.clearInterval?.(clockTimer);clockTimer=null;}
+ if(running&&clockTimer===null)clockTimer=setInterval(tick,1000);
+}
+
 function persist(next){
  if(storageIssue){error=storageIssue;return false;}
  const value=cleanStore(next);
@@ -79,14 +87,14 @@ function persist(next){
   if(raw!==loadedRaw){
    const latest=readStore();
    if(storageIssue){error=storageIssue;return false;}
-   state=latest;
+   state=latest;syncClockTimer();
    error='다른 탭에서 시험 기록이 변경되거나 삭제되었습니다. 덮어쓰지 않고 최신 상태를 읽었습니다.';
    if(root?.isConnected)paint();return false;
   }
   value.revision=state.revision+1;
   const updated=JSON.stringify(value);
   localStorage.setItem(KEY,updated);
-  loadedRaw=updated;state=value;return true;
+  loadedRaw=updated;state=value;syncClockTimer();return true;
  }catch{error='저장 실패: 브라우저 공간·권한을 확인하세요. 기존 기록은 유지됩니다.';return false;}
 }
 function active(){return state.active;}
@@ -206,6 +214,7 @@ function finish(reason='manual',now=Date.now()){
  expanded=true;showHistory=false;historySelection=-1;error='';paint();
  // The bridge owns an idempotent import and never changes canonical official answers.
  window.CK86ExamBridge?.reconcile?.();
+ try{document.dispatchEvent(new Event('ck:exam-submitted'));}catch{}
  return true;
 }
 
@@ -528,8 +537,9 @@ document.addEventListener('keydown',event=>{
   navigate(s.position+(event.key==='ArrowRight'?1:-1));focusRegion();
  }
 },true);
-document.addEventListener('visibilitychange',()=>{if(!document.hidden){checkExpiry();if(root?.isConnected)paint();}});
-window.addEventListener('pageshow',()=>{checkExpiry();if(root?.isConnected)paint();});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){checkExpiry();if(root?.isConnected)paint();}syncClockTimer();});
+window.addEventListener('pageshow',()=>{checkExpiry();syncClockTimer();if(root?.isConnected)paint();});
+window.addEventListener('pagehide',()=>{if(clockTimer!==null){window.clearInterval?.(clockTimer);clockTimer=null;}});
 window.addEventListener('ck:official-bank-ready',()=>{
  checkExpiry();
  if(root?.isConnected)paint();
@@ -539,7 +549,7 @@ window.addEventListener('ck:official-bank-error',event=>{
  if(root?.isConnected)paint();
 });
 window.addEventListener('storage',event=>{
- if(event.key===KEY){state=readStore();historySelection=-1;error=storageIssue||'다른 탭에서 최신 시험 기록을 불러왔습니다.';if(root?.isConnected)paint();status(error);}
+ if(event.key===KEY){state=readStore();syncClockTimer();historySelection=-1;error=storageIssue||'다른 탭에서 최신 시험 기록을 불러왔습니다.';if(root?.isConnected)paint();status(error);}
 });
 function schedule(){
  if(scheduled)return;scheduled=true;
@@ -551,13 +561,13 @@ if(main&&window.MutationObserver)new MutationObserver(records=>{
  if(!document.getElementById('ck82-full-exam')&&records.some(x=>x.addedNodes.length))schedule();
 }).observe(main,{childList:true,subtree:true});
 checkExpiry();
-setInterval(tick,1000);
+syncClockTimer();
 window.CK82FullExam=Object.freeze({
  checkBank,cleanStore,sanitizeAttempt,newAttempt,gradeAttempt,remaining,fmtClock,
  getAttempts:()=>state.history.map(x=>JSON.parse(JSON.stringify(x))),
  getState:()=>({active:active()?.status||'none',year:active()?.year||null,history:state.history.length,
-  remainingMs:remaining(active()),revision:state.revision,storageIssue,loadingYear,expiryLoadingYear,expanded,historySelection,error}),
+  remainingMs:remaining(active()),revision:state.revision,storageIssue,loadingYear,expiryLoadingYear,expanded,historySelection,error,clockTicking:clockTimer!==null}),
  start,setAnswer,navigate,pause,resume,finish,historyAt,resultSource,makeResultText,exportResult,
- open:()=>{mount();if(root&&!expanded){expanded=true;paint();focusRegion();}}
+ open:()=>{checkExpiry();syncClockTimer();mount();if(root&&!expanded){expanded=true;paint();focusRegion();}}
 });
 })();

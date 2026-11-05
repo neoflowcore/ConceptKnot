@@ -504,6 +504,7 @@ function crossEvidenceAudit(bank=window.RECALL_OFFICIAL||{},
   if(special==='all')totals.allAccepted++;
   if(special==='multi')totals.multipleAccepted++;
   let aSource=0,bSource=0,missing=0,conflicts=0,different=0,complete=0;
+  const missingIndices=[],conflictIndices=[],differentIndices=[];
   for(let k=1;k<=5;k++){
    const a=notes[String(k)]||{},b=draft[k-1]?.no===k?draft[k-1]:{};
    const av=String(a.assessment||''),bv=String(b.verdict||'');
@@ -517,20 +518,20 @@ function crossEvidenceAudit(bank=window.RECALL_OFFICIAL||{},
    if(bReason)totals.ck80Reasons++;
    if(as){aSource++;totals.ck83Sources++;yearRow.ck83Sources++;}
    if(bs){bSource++;totals.ck80Sources++;yearRow.ck80Sources++;}
-   if(!as&&!bs){missing++;totals.neitherSource++;yearRow.neitherSource++;}
+   if(!as&&!bs){missing++;missingIndices.push(k);totals.neitherSource++;yearRow.neitherSource++;}
    if(['true','false'].includes(av)&&['true','false'].includes(bv)&&av!==bv){
-    conflicts++;totals.verdictConflicts++;yearRow.verdictConflicts++;
+    conflicts++;conflictIndices.push(k);totals.verdictConflicts++;yearRow.verdictConflicts++;
    }
    // Different citations are a reconciliation prompt, not necessarily an error.
    if(as&&bs&&String(a.source).normalize('NFKC').replace(/\s+/g,' ').trim()!==
      String(b.source).normalize('NFKC').replace(/\s+/g,' ').trim()){
-    different++;totals.sourceDifferences++;
+    different++;differentIndices.push(k);totals.sourceDifferences++;
    }
    if((aAssessed&&aReason&&as)||(bAssessed&&bReason&&bs))complete++;
   }
   if(complete===5&&!conflicts){totals.personalReady++;yearRow.personalReady++;}
   rows.push({id,year,number,subject:q.subject,special,ck83Sources:aSource,
-   ck80Sources:bSource,missing,conflicts,different,complete,
+   ck80Sources:bSource,missing,conflicts,different,complete,missingIndices,conflictIndices,differentIndices,
    paperUrl:typeof q.originalUrl==='string'&&q.originalUrl.startsWith('https://')?q.originalUrl:''});
  }
  return {totals,years,rows,complete:totals.questions===800&&totals.options===4000};
@@ -551,13 +552,15 @@ function makeCrossCsv(report=crossReport){
  if(!report||!report.complete)return '';
  const header=['개인 기록 교차 점검 · 자동 공식 검증 아님','문항 ID','연도','번호',
   '과목','정답 인정 유형','CK83 출처(5)','CK80 출처(5)','두곳 모두 출처없음(5)',
-  '판정 불일치(5)','출처 문구 차이(5)','개인 검토 입력 충족(5)','공식 PDF'];
+  '판정 불일치(5)','출처 문구 차이(5)','개인 검토 입력 충족(5)',
+  '미출처 선지 번호','판정 불일치 선지 번호','출처 상이 선지 번호','공식 PDF'];
  const data=[header.map(csvCell).join(',')];
  for(const row of report.rows)data.push([
   '개인 참고용 · 미검수',row.id,row.year,row.number,
   row.subject==='estate'?'학개론':'민법',
   row.special==='all'?'전원정답 인정':row.special==='multi'?'복수정답 인정':'일반',
-  row.ck83Sources,row.ck80Sources,row.missing,row.conflicts,row.different,row.complete,row.paperUrl
+  row.ck83Sources,row.ck80Sources,row.missing,row.conflicts,row.different,row.complete,
+  row.missingIndices.join('/'),row.conflictIndices.join('/'),row.differentIndices.join('/'),row.paperUrl
  ].map(csvCell).join(','));
  return data.join('\r\n')+'\r\n';
 }
@@ -618,7 +621,9 @@ function renderCrossAudit(){
   card.innerHTML='<strong>'+safe(row.id)+' · '+(row.subject==='estate'?'학개론':'민법')+
    '</strong><small>CK83 출처 '+row.ck83Sources+'/5 · CK80 출처 '+row.ck80Sources+
    '/5 · 공통 미출처 '+row.missing+' · 판단차이 '+row.conflicts+
-   (row.special==='all'?' · 전원정답 인정':row.special==='multi'?' · 복수정답 인정':'')+
+   ' · 미출처 선지 '+(row.missingIndices.join('/')||'-')+
+   ' · 판단 충돌 선지 '+(row.conflictIndices.join('/')||'-')+
+   (row.special='all'?' · 전원정답 인정':row.special==='multi'?' · 복수정답 인정':'')+
    '</small><button type="button" data-v122-open="'+safe(row.id)+'">해당 문항·근거 열기</button>';
   cards.append(card);
  }
@@ -655,6 +660,20 @@ async function runCrossAudit(){
 function exportCrossCsv(){
  if(!crossReport?.complete)return false;
  try{
+  const links=window.CK83Links,editor=window.CK80Editorial;
+  const ls=links?.getStatus?.()||{},es=editor?.getStatus?.()||{};
+  if(ls.storageIssue||ls.storageConflict||es.storageIssue||ls.unsavedEdits||
+    editor?.hasUnsavedChanges?.()){
+   crossStatus('저장되지 않은 입력 또는 다른 탭 충돌이 있습니다. 저장 후 다시 점검하세요.');
+   return false;
+  }
+  if(!links?.getRecords||!editor?.getRecords||
+   JSON.stringify(crossEvidenceAudit(window.RECALL_OFFICIAL,links.getRecords(),editor.getRecords()))!==
+   JSON.stringify(crossReport)){
+   crossReport=null;crossStatus('개인 기록이 변경되어 결과를 무효화했습니다. 다시 검사하세요.');
+   return false;
+  }
+
   const blob=new Blob(['\uFEFF',makeCrossCsv(crossReport)],{type:'text/csv;charset=utf-8'});
   const url=URL.createObjectURL(blob),link=document.createElement('a');
   link.href=url;link.download='ConceptKnot_개인선지근거_교차점검_'+new Date().toISOString().slice(0,10)+'.csv';
