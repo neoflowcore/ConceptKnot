@@ -98,22 +98,23 @@ test('cross-store review identifies exact option indices while never writing per
  assert.deepEqual([...row.missingIndices],[2,3,4,5]);
  assert.equal(result.complete,false);
  assert.deepEqual([JSON.stringify(a),JSON.stringify(b)],before);
- assert.match(js,/개인 기록이 변경되어 결과를 무효화했습니다/);
+ assert.match(js,/function crossReportFresh\(\)/);
+ assert.match(js,/기존 검사 결과와 현재 공식 문제\/개인 메모가 다릅니다/);
 });
-test('24 device QA items preserve previous storage schema',()=>{
+test('new QA items preserve previous storage schema',()=>{
  const qa=src('assets/ck-manual-qa-v115.js');
- assert.equal([...qa.matchAll(/\{id:'[-a-z0-9]+',group:/g)].length,24);
+ assert.equal([...qa.matchAll(/\{id:'[-a-z0-9]+',group:/g)].length,25);
  assert.match(qa,/id:'annual-stats'/);assert.match(qa,/id:'evidence-cross-800'/);
  assert.match(qa,/id:'exam-idle-clock'/);
  assert.match(qa,/personal-v115-manual-qa/);
 });
 test('offline cache handles old index query version, no Actions or auto deployment',()=>{
  const sw=src('sw.js'),config=JSON.parse(src('vercel.json'));
- assert.match(sw,/conceptknot-study-v123-annual-analytics-exam-clock/);
+ assert.match(sw,/conceptknot-study-v124-evidence-packet-qa/);
  assert.match(sw,/ignoreSearch:true/);
  assert.match(sw,/ck-study-analytics-v83\.js\?v=117/);
  assert.match(sw,/ck-full-exam-v82\.js\?v=115/);
- assert.match(sw,/ck-data-diagnostics-v88\.js\?v=121/);
+ assert.match(sw,/ck-data-diagnostics-v88\.js\?v=124/);
  assert.equal(config.git.deploymentEnabled,false);
  assert.equal(fs.existsSync(path.join(__dirname,'..','.github','workflows')),false);
 });

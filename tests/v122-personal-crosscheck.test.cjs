@@ -79,7 +79,7 @@ test('the UI is explicit-click, no writes, CSV hardened and diagnostic backup fa
  const sw=read('sw.js');
  assert.match(sw,/const CACHE='conceptknot-study-v\d+-/);
  assert.match(sw,/ignoreSearch:true/);
- assert.match(sw,/ck-data-diagnostics-v88\.js\?v=122/);
+ assert.match(sw,/ck-data-diagnostics-v88\.js\?v=124/);
  const config=JSON.parse(read('vercel.json'));
  assert.equal(config.git.deploymentEnabled,false);
  assert.equal(fs.existsSync(path.join(__dirname,'..','.github','workflows')),false);

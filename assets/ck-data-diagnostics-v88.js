@@ -476,6 +476,8 @@ function saveAudit(){
  * evidence stores. A recorded source or an agreeing verdict is never official proof.
  * No personal entry is copied between CK83 and CK80 or written to canonical files. */
 let crossReport=null,crossBusy=false,crossError='',crossFilter='missing',crossYear='all',crossPage=0;
+let expandedEvidenceId='',packetCount=5;
+const chosenEvidenceIds=new Set();
 const CROSS_PAGE=16;
 const textPresent=x=>typeof x==='string'&&Boolean(x.trim());
 function crossEvidenceAudit(bank=window.RECALL_OFFICIAL||{},
@@ -493,8 +495,12 @@ function crossEvidenceAudit(bank=window.RECALL_OFFICIAL||{},
   const id=year+'-'+number,q=bank[id],yearRow=byYear.get(year);
   if(!q||q.id!==id||q.year!==year||q.number!==number||q.verified!==true||
    q.subject!==(number<=40?'estate':'civil')||
+   typeof q.question!=='string'||q.question.trim().length<5||
    !Array.isArray(q.options)||q.options.length!==5||
-   !Array.isArray(q.correct)||q.correct.length<1||q.correct.length>5){
+   q.options.some(option=>typeof option!=='string'||!option.trim())||
+   !Array.isArray(q.correct)||q.correct.length<1||q.correct.length>5||
+   new Set(q.correct.map(Number)).size!==q.correct.length||
+   q.correct.some(n=>!Number.isInteger(Number(n))||Number(n)<1||Number(n)>5)){
    totals.missingQuestion++;continue;
   }
   totals.questions++;totals.options+=5;yearRow.questions++;
@@ -536,6 +542,105 @@ function crossEvidenceAudit(bank=window.RECALL_OFFICIAL||{},
  }
  return {totals,years,rows,complete:totals.questions===800&&totals.options===4000};
 }
+function freezeCrossReport(report){
+ for(const row of report.rows){
+  Object.freeze(row.missingIndices);Object.freeze(row.conflictIndices);
+  Object.freeze(row.differentIndices);Object.freeze(row);
+ }
+ report.years.forEach(Object.freeze);
+ Object.freeze(report.totals);Object.freeze(report.years);Object.freeze(report.rows);
+ return Object.freeze(report);
+}
+
+/* v124: two personal stores never overwrite each other and never become official proof. */
+function optionEvidenceDetails(id, bank=window.RECALL_OFFICIAL||{},
+ links=window.CK83Links?.getRecords?.()||{},drafts=window.CK80Editorial?.getRecords?.()||{}){
+ if(!canonicalId(id))return null;
+ const q=bank[id],year=Number(id.split('-')[0]),number=Number(id.split('-')[1]);
+ if(!q||q.id!==id||q.year!==year||q.number!==number||q.verified!==true||
+  q.subject!==(number<=40?'estate':'civil')||
+  typeof q.question!=='string'||q.question.trim().length<5||
+  !Array.isArray(q.options)||q.options.length!==5||
+  q.options.some(option=>typeof option!=='string'||!option.trim())||
+  !Array.isArray(q.correct)||!q.correct.length||q.correct.length>5||
+  new Set(q.correct.map(Number)).size!==q.correct.length||
+  q.correct.some(n=>!Number.isInteger(Number(n))||Number(n)<1||Number(n)>5))return null;
+ const notes=links?.[id]?.optionNotes||{},draft=Array.isArray(drafts?.[id]?.options)?drafts[id].options:[];
+ const accepted=q.correct.map(Number);
+ return q.options.map((option,i)=>{
+  const no=i+1,a=notes[String(no)]||{},b=draft[i]?.no===no?draft[i]:{};
+  const verdict83=['true','false','conditional'].includes(a.assessment)?a.assessment:'unreviewed';
+  const verdict80=['true','false','unknown'].includes(b.verdict)?b.verdict:'unreviewed';
+  const source83=String(a.source||''),source80=String(b.source||'');
+  return {no,option:String(option),accepted:accepted.includes(no),verdict83,verdict80,
+   source83,source80,reason83:String(a.reason||''),reason80:String(b.why||''),
+   missing:!source83.trim()&&!source80.trim(),
+   conflict:['true','false'].includes(verdict83)&&['true','false'].includes(verdict80)&&verdict83!==verdict80,
+   different:!!source83.trim()&&!!source80.trim()&&source83.normalize('NFKC').replace(/\s+/g,' ').trim()!==
+    source80.normalize('NFKC').replace(/\s+/g,' ').trim()};
+ });
+}
+function makeCrossPacket(ids,bank=window.RECALL_OFFICIAL||{},
+ links=window.CK83Links?.getRecords?.()||{},drafts=window.CK80Editorial?.getRecords?.()||{}){
+ if(!Array.isArray(ids)||!ids.length||ids.length>5||new Set(ids).size!==ids.length)return null;
+ const clean=x=>String(x??'').replace(/[\u0000-\u001f\u007f]/g,' ').slice(0,6000);
+ const lines=['ConceptKnot · 개인 선지 근거 검토 패킷',
+  '이 패킷은 법령·판례·원문에 대한 공식 검수 완료 증빙이 아닙니다.',
+  '공식 채점 인정 번호는 선택지의 참/거짓을 뜻하지 않습니다.',
+  'CK83·CK80은 서로 독립된 개인 기록입니다.',''];
+ for(const id of ids){
+  const choices=optionEvidenceDetails(id,bank,links,drafts);if(!choices)return null;
+  const q=bank[id],special=q.correct.length===5?'전원정답 인정':
+   q.correct.length>1?'복수정답 인정':'일반';
+  lines.push('================================================',
+   id+' · '+(q.subject==='estate'?'부동산학개론':'민법 및 민사특별법')+' · '+special,
+   '채점 인정: '+q.correct.join('/'),'문제: '+clean(q.question),
+   '원문 PDF: '+clean(q.originalUrl||q.paperUrl||'미기재'),'');
+  for(const choice of choices){
+   lines.push('①②③④⑤'[choice.no-1]+' '+clean(choice.option),
+    ' · 공식 채점: '+(choice.accepted?'인정':'미인정'),
+    ' · CK83 개인 판단: '+choice.verdict83+' / 출처: '+clean(choice.source83||'미입력'),
+    ' · CK83 이유: '+clean(choice.reason83||'미입력'),
+    ' · CK80 개인 판단: '+choice.verdict80+' / 출처: '+clean(choice.source80||'미입력'),
+    ' · CK80 이유: '+clean(choice.reason80||'미입력'),
+    ' · 검토 후보: '+([choice.missing?'양쪽 출처 없음':null,
+     choice.conflict?'두 개인 기록의 참/거짓 다름':null,
+     choice.different?'출처 문구 차이':null].filter(Boolean).join(' · ')||'원문 확인 후 기록'),'');
+  }
+  lines.push('원문 PDF 쪽수 및 시험 당시 시행일 직접 검토: __________________','');
+ }
+ return lines.join('\n')+'\n';
+}
+function appendEvidenceDetail(card,id,bank,links,drafts){
+ const entries=optionEvidenceDetails(id,bank,links,drafts);if(!entries)return;
+ const outer=document.createElement('div');outer.className='ck124-option-details';
+ const notice=document.createElement('p');notice.textContent='①~⑤ 개인 기록 상세 비교 · 공식 검수 완료 아님';
+ outer.append(notice);
+ const label={true:'참(개인)',false:'거짓(개인)',conditional:'조건·시기 확인',unknown:'판정 보류',unreviewed:'미판단'};
+ for(const e of entries){
+  const sec=document.createElement('section');sec.className='ck124-option';
+  if(e.conflict||e.different)sec.classList.add('ck124-option-attention');
+  const heading=document.createElement('strong');
+  heading.textContent='선지 '+e.no+(e.accepted?' · 채점 인정':' · 채점 미인정');
+  const option=document.createElement('p');option.textContent=e.option;
+  sec.append(heading,option);
+  for(const info of ['CK83: '+label[e.verdict83]+' · 출처 '+(e.source83.trim()||'없음')+
+    ' · 이유 '+(e.reason83.trim()||'없음'),
+   'CK80: '+label[e.verdict80]+' · 출처 '+(e.source80.trim()||'없음')+
+    ' · 이유 '+(e.reason80.trim()||'없음')]){
+    const p=document.createElement('p');p.textContent=info;sec.append(p);
+  }
+  if(e.conflict||e.different||e.missing){
+   const warning=document.createElement('small');
+   warning.textContent=[e.missing?'양쪽 출처 미입력':null,
+    e.conflict?'개인 진위판정 불일치':null,e.different?'개인 출처 문구 차이':null].filter(Boolean).join(' · ');
+   sec.append(warning);
+  }
+  outer.append(sec);
+ }
+ card.append(outer);
+}
+
 function crossRows(report=crossReport){
  if(!report)return [];
  const chosen=report.rows.filter(r=>(crossYear==='all'||String(r.year)===crossYear)&&(
@@ -611,6 +716,14 @@ function renderCrossAudit(){
    '<option value="'+y+'"'+(crossYear===String(y)?' selected':'')+'>'+y+'년</option>').join('')+
   '</select></label>';
  body.append(selector);
+ const tools=document.createElement('div');tools.className='ck124-packet-toolbar';
+ tools.innerHTML='<label>TXT 문항 수 <select data-v124-count>'+
+  [1,3,5].map(n=>'<option value="'+n+'"'+(packetCount===n?' selected':'')+'>'+n+'문항</option>').join('')+
+  '</select></label><button type="button" data-v124-packet>개인 선지 근거 TXT</button>'+
+  '<button type="button" data-v124-clear>선택 초기화</button>';
+ const pickNote=document.createElement('span');
+ pickNote.textContent='선택 '+chosenEvidenceIds.size+'/5 · 미선택 시 현재 필터의 상위 '+packetCount+'문항';
+ tools.append(pickNote);body.append(tools);
  const list=crossRows(),last=Math.max(0,Math.ceil(list.length/CROSS_PAGE)-1);
  crossPage=Math.max(0,Math.min(crossPage,last));
  const counter=document.createElement('p');counter.textContent='현재 조건 '+list.length+
@@ -620,11 +733,18 @@ function renderCrossAudit(){
   const card=document.createElement('div');
   card.innerHTML='<strong>'+safe(row.id)+' · '+(row.subject==='estate'?'학개론':'민법')+
    '</strong><small>CK83 출처 '+row.ck83Sources+'/5 · CK80 출처 '+row.ck80Sources+
-   '/5 · 공통 미출처 '+row.missing+' · 판단차이 '+row.conflicts+
+   '/5 · 양쪽 모두 미출처 '+row.missing+' · 판단 차이 '+row.conflicts+
    ' · 미출처 선지 '+(row.missingIndices.join('/')||'-')+
    ' · 판단 충돌 선지 '+(row.conflictIndices.join('/')||'-')+
-   (row.special='all'?' · 전원정답 인정':row.special==='multi'?' · 복수정답 인정':'')+
-   '</small><button type="button" data-v122-open="'+safe(row.id)+'">해당 문항·근거 열기</button>';
+   (row.special==='all'?' · 전원정답 인정':row.special==='multi'?' · 복수정답 인정':'')+
+   '</small><div class="ck124-card-actions"><label><input type="checkbox" data-v124-pick="'+safe(row.id)+'"'+
+   (chosenEvidenceIds.has(row.id)?' checked':'')+'>TXT 선택</label>'+
+   '<button type="button" data-v124-expand="'+safe(row.id)+'" aria-expanded="'+(expandedEvidenceId===row.id)+'">'+
+   (expandedEvidenceId===row.id?'①~⑤ 비교 접기':'①~⑤ 상세 비교')+'</button>'+
+   '<button type="button" data-v122-open="'+safe(row.id)+'">CK83 선지 메모</button>'+ 
+   '<button type="button" data-v124-editor="'+safe(row.id)+'">CK80 해설 초안</button></div>';
+  if(expandedEvidenceId===row.id)appendEvidenceDetail(card,row.id,window.RECALL_OFFICIAL,
+   window.CK83Links?.getRecords?.()||{},window.CK80Editorial?.getRecords?.()||{});
   cards.append(card);
  }
  if(!list.length){const empty=document.createElement('p');
@@ -653,34 +773,71 @@ async function runCrossAudit(){
    throw Error('저장되지 않은 개인 기록이 있습니다. 먼저 저장하거나 복사하세요.');
   const report=crossEvidenceAudit(window.RECALL_OFFICIAL,links.getRecords(),editor.getRecords());
   if(!report.complete)throw Error('공식 문제 '+report.totals.questions+'/800문항: 부분 자료로 교차보고서를 만들지 않았습니다.');
-  crossReport=report;crossPage=0;return true;
+  crossReport=freezeCrossReport(report);crossPage=0;expandedEvidenceId='';chosenEvidenceIds.clear();return true;
  }catch(e){crossError='교차 검사 실패: '+String(e?.message||e).slice(0,210);return false;}
  finally{crossBusy=false;renderCrossAudit();}
 }
-function exportCrossCsv(){
- if(!crossReport?.complete)return false;
+/* Export only a fresh, complete, collision-free 800-question snapshot. */
+function crossReportFresh(){
+ if(!crossReport?.complete||crossBusy)return false;
  try{
   const links=window.CK83Links,editor=window.CK80Editorial;
   const ls=links?.getStatus?.()||{},es=editor?.getStatus?.()||{};
-  if(ls.storageIssue||ls.storageConflict||es.storageIssue||ls.unsavedEdits||
-    editor?.hasUnsavedChanges?.()){
-   crossStatus('저장되지 않은 입력 또는 다른 탭 충돌이 있습니다. 저장 후 다시 점검하세요.');
+  if(!links?.getRecords||!editor?.getRecords||ls.storageIssue||ls.storageConflict||
+   ls.unsavedEdits||es.storageIssue||editor.hasUnsavedChanges?.()){
+   crossReport=null;chosenEvidenceIds.clear();expandedEvidenceId='';
+   crossStatus('미저장 개인 입력·저장소 충돌·손상 기록이 있습니다. 먼저 저장 또는 백업하고 다시 검사하세요.');
    return false;
   }
-  if(!links?.getRecords||!editor?.getRecords||
-   JSON.stringify(crossEvidenceAudit(window.RECALL_OFFICIAL,links.getRecords(),editor.getRecords()))!==
-   JSON.stringify(crossReport)){
-   crossReport=null;crossStatus('개인 기록이 변경되어 결과를 무효화했습니다. 다시 검사하세요.');
+  const live83=links.getRecords();
+  // A second tab may have written before our storage event arrived.
+  const raw83=localStorage.getItem('ck83-personal-concept-links-v1');
+  const clean83=raw83===null?{records:{}}:links.sanitize?.(JSON.parse(raw83));
+  if(!clean83||JSON.stringify(clean83.records)!==JSON.stringify(live83)){
+   crossReport=null;chosenEvidenceIds.clear();expandedEvidenceId='';
+   crossStatus('다른 탭의 선지 메모 변경이 확인됐습니다. 원본 보존 후 새로고침하세요.');
    return false;
   }
-
-  const blob=new Blob(['\uFEFF',makeCrossCsv(crossReport)],{type:'text/csv;charset=utf-8'});
-  const url=URL.createObjectURL(blob),link=document.createElement('a');
-  link.href=url;link.download='ConceptKnot_개인선지근거_교차점검_'+new Date().toISOString().slice(0,10)+'.csv';
-  document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),2500);
-  crossStatus('800문항 교차 검토용 CSV 다운로드를 요청했습니다. 공식 내용 검증 완료 증빙이 아닙니다.');
+  const live=crossEvidenceAudit(window.RECALL_OFFICIAL,live83,editor.getRecords());
+  if(!live.complete||JSON.stringify(live)!==JSON.stringify(crossReport)){
+   crossReport=null;chosenEvidenceIds.clear();expandedEvidenceId='';
+   crossStatus('기존 검사 결과와 현재 공식 문제/개인 메모가 다릅니다. 다시 검사해 주세요.');
+   return false;
+  }
   return true;
- }catch(e){crossStatus('CSV 저장 실패 · '+String(e?.message||e));return false;}
+ }catch(e){
+  crossReport=null;chosenEvidenceIds.clear();expandedEvidenceId='';
+  crossStatus('검사 유효성 재확인 실패 · '+String(e?.message||e).slice(0,180));
+  return false;
+ }
+}
+function saveCrossFile(body,mime,filename){
+ if(typeof body!=='string'||!body)return false;
+ try{
+  const file=new Blob(['\uFEFF',body],{type:mime+';charset=utf-8'});
+  const url=URL.createObjectURL(file),a=document.createElement('a');
+  a.href=url;a.download=filename;document.body.append(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),2500);return true;
+ }catch(error){crossStatus('파일 다운로드 실패 · '+String(error?.message||error));return false;}
+}
+function exportCrossCsv(){
+ if(!crossReportFresh())return false;
+ const ok=saveCrossFile(makeCrossCsv(crossReport),'text/csv',
+  'ConceptKnot_개인선지근거_교차점검_'+new Date().toISOString().slice(0,10)+'.csv');
+ if(ok)crossStatus('800문항 CSV 다운로드 요청 완료 · 정답/법령 독립 검수 완료는 아닙니다.');
+ return ok;
+}
+function exportCrossPacket(){
+ if(!crossReportFresh())return false;
+ const ids=chosenEvidenceIds.size?[...chosenEvidenceIds]:crossRows().slice(0,packetCount).map(q=>q.id);
+ if(!ids.length){crossStatus('현재 필터에 문항이 없습니다. 조건을 변경하세요.');return false;}
+ const body=makeCrossPacket(ids,window.RECALL_OFFICIAL,
+  window.CK83Links.getRecords(),window.CK80Editorial.getRecords());
+ if(!body){crossStatus('공식 기출 원문이 누락되어 부분 패킷 생성을 차단했습니다.');return false;}
+ const ok=saveCrossFile(body,'text/plain',
+  'ConceptKnot_근거검토패킷_'+ids.length+'문항_'+new Date().toISOString().slice(0,10)+'.txt');
+ if(ok)crossStatus(ids.length+'문항 TXT 저장 요청 · 개인 근거는 공식 검수 상태로 승격되지 않습니다.');
+ return ok;
 }
 
 function mount(){
@@ -725,23 +882,63 @@ document.addEventListener('click',event=>{
 });
 
 document.addEventListener('click',event=>{
- const t=event.target?.closest?.('[data-v122-run],[data-v122-export],[data-v122-page],[data-v122-open]');
+ const t=event.target?.closest?.('[data-v122-run],[data-v122-export],[data-v122-page],[data-v122-open],[data-v124-expand],[data-v124-editor],[data-v124-packet],[data-v124-clear]');
  if(!t||!root?.contains(t))return;
  event.preventDefault();
  if(t.hasAttribute('data-v122-run')){runCrossAudit();return;}
  if(t.hasAttribute('data-v122-export')){exportCrossCsv();return;}
+ if(t.hasAttribute('data-v124-packet')){exportCrossPacket();return;}
+ if(t.hasAttribute('data-v124-clear')){chosenEvidenceIds.clear();renderCrossAudit();return;}
+ if(t.hasAttribute('data-v124-editor')){
+  const id=t.dataset.v124Editor;
+  if(!canonicalId(id)||!crossReport?.rows?.some(r=>r.id===id))return;
+  const [year,number]=id.split('-').map(Number);
+  if(typeof window.CK78Analysis?.open!=='function'){
+   crossStatus('원문 분석 대화상자가 준비되지 않았습니다. 새로고침 후 다시 확인하세요.');return;
+  }
+  Promise.resolve().then(()=>window.CK78Analysis.open(year,number,t)).then(ok=>{
+   if(ok!==true){
+    crossStatus('해설 창 진입이 취소됐습니다. 미저장 입력이나 공식 원문 상태를 확인하세요.');
+    return;
+   }
+   const toggle=document.querySelector('#ck78-analysis-dialog [data-ck80-toggle]');
+   if(toggle)toggle.click();
+   else crossStatus('해설 편집기가 표시되지 않았습니다. 원문·해설 모듈을 확인하세요.');
+  }).catch(e=>crossStatus('개인 해설 창 열기 실패 · '+String(e?.message||e).slice(0,150)));
+  return;
+ }
+ if(t.hasAttribute('data-v124-expand')){
+  const id=t.dataset.v124Expand;
+  if(canonicalId(id)&&crossReport?.rows?.some(row=>row.id===id)){
+   expandedEvidenceId=expandedEvidenceId===id?'':id;renderCrossAudit();
+  }
+  return;
+ }
  if(t.hasAttribute('data-v122-page')){
   crossPage=Math.max(0,crossPage+(t.dataset.v122Page==='next'?1:-1));
   renderCrossAudit();return;
  }
  const id=t.dataset.v122Open;
  if(!canonicalId(id)||!crossReport?.rows?.some(r=>r.id===id))return;
- Promise.resolve(window.CK83Links?.openQuestion?.(id)).catch(e=>
-  crossStatus('해당 문항 열기 실패 · '+String(e?.message||e)));
+ Promise.resolve().then(()=>window.CK83Links?.openQuestion?.(id)).then(ok=>{
+  if(ok===false)crossStatus('선지 메모 창 진입이 취소됐습니다. 미저장 기록과 공식 원문을 확인하세요.');
+ }).catch(e=>crossStatus('해당 문항 열기 실패 · '+String(e?.message||e)));
 });
 document.addEventListener('change',event=>{
  const target=event.target;
  if(!root?.contains(target))return;
+ if(target.matches?.('[data-v124-pick]')){
+  const id=target.dataset.v124Pick;
+  if(!canonicalId(id)||!crossReport?.rows?.some(row=>row.id===id))return;
+  if(!target.checked)chosenEvidenceIds.delete(id);
+  else if(chosenEvidenceIds.size<5)chosenEvidenceIds.add(id);
+  else{target.checked=false;crossStatus('묶음당 최대 5문항을 선택할 수 있습니다.');return;}
+  renderCrossAudit();return;
+ }
+ if(target.matches?.('[data-v124-count]')){
+  packetCount=[1,3,5].includes(Number(target.value))?Number(target.value):5;
+  renderCrossAudit();return;
+ }
  if(target.matches?.('[data-v122-filter]')){
   crossFilter=['missing','conflict','citation','special','ready','all'].includes(target.value)?
    target.value:'missing';crossPage=0;renderCrossAudit();
@@ -753,7 +950,7 @@ document.addEventListener('change',event=>{
 });
 function invalidateCrossAudit(){
  if(!crossReport)return;
- crossReport=null;crossError='개인 기록이 변경됐습니다. 다시 검사 버튼을 눌러 갱신하세요.';
+ crossReport=null;chosenEvidenceIds.clear();expandedEvidenceId='';crossError='개인 기록이 변경됐습니다. 다시 검사 버튼을 눌러 갱신하세요.';
  renderCrossAudit();
 }
 document.addEventListener('ck:personal-links-updated',invalidateCrossAudit);
@@ -781,5 +978,5 @@ if(target&&window.MutationObserver)new MutationObserver(()=>{
   document.querySelector('#main [data-action="backup"]'))mount();
 }).observe(target,{childList:true});
 window.addEventListener('ck:official-bank-ready',()=>{if(root)render();});
-window.CK88Diagnostics=Object.freeze({inspect,bankQuality,visualQueue,exportVisualQueue,loadOlderYear,mount,reviewRows,reviewMatrix,csvCell,makeReviewCsv,exportReviewCsv,auditStatic,auditText,runAudit,crossEvidenceAudit,makeCrossCsv,runCrossAudit,exportCrossCsv});
+window.CK88Diagnostics=Object.freeze({inspect,bankQuality,visualQueue,exportVisualQueue,loadOlderYear,mount,reviewRows,reviewMatrix,csvCell,makeReviewCsv,exportReviewCsv,auditStatic,auditText,runAudit,crossEvidenceAudit,makeCrossCsv,runCrossAudit,exportCrossCsv,optionEvidenceDetails,makeCrossPacket,exportCrossPacket,crossReportFresh});
 })();
