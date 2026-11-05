@@ -52,3 +52,14 @@
 .ck124-option strong,.ck124-option p,.ck124-option small{font-size:12px;line-height:1.5;margin:0;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word}
 .ck124-option small{font-weight:650}
 @media(max-width:550px){.ck124-packet-toolbar{display:grid;grid-template-columns:minmax(0,1fr)}.ck124-card-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.ck124-card-actions>*{min-width:0}.ck124-card-actions button{white-space:normal;overflow-wrap:anywhere}}
+
+/* v125 manual offline readiness: text-only, no GPU animations or remote requests. */
+.ck125-offline-health{min-width:0}
+.ck125-offline-health [data-v125-offline-status]{
+ font-size:12px;line-height:1.6;overflow-wrap:anywhere;word-break:break-word;
+ padding:8px 0;margin:4px 0
+}
+.ck125-offline-health button[data-v125-offline-run]{
+ max-width:100%;white-space:normal;min-height:32px
+}
+.ck125-offline-health button[data-v125-offline-run]:disabled{opacity:.6;cursor:progress}

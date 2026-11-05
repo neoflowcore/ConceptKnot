@@ -1247,7 +1247,7 @@ function ttsPlay(items,options={}){
  next();
 }
 function ttsVoiceOptions(){const voice=ttsChosenVoice();return ttsVoices.filter(v=>/^ko(?:-|_)/i.test(v.lang)||v.lang==='ko').map(v=>`<option value="${esc(v.voiceURI)}" ${v.voiceURI===voice?.voiceURI?'selected':''}>${esc(v.name)}${v.localService?' · 기기 음성':' · 온라인 음성'}</option>`).join('')||'<option value="">한국어 음성 준비 중 / 미설치</option>';}
-function renderListen(){const r=spokenRecord(),t=ttsSettings();return `${titleBlock('공식 기출 음성 학습','읽기 방식과 목소리, 재생 범위를 선택하세요.','LISTEN / OFFICIAL')}${tabs()}<div class="registration-summary">10개년 800문항 등록 · 792문항 타이핑/TTS · 전원정답 8문항 제외</div><div class="listen-grid"><section class="panel listen-form"><h2>목소리와 속도</h2>${neuralPanel()}<label for="tts-voice">한국어 음성</label><select class="field" id="tts-voice">${ttsVoiceOptions()}</select><p class="small muted">제공되는 음성은 기기마다 다릅니다. 원하는 여성 음색을 미리듣기로 골라주세요.</p><label for="tts-rate">읽기 속도 <output id="tts-rate-label">${t.rate}배</output></label>${ttsRateButtons()}<input id="tts-rate" type="range" min="0.75" max="2" step="0.05" value="${t.rate}" style="width:100%"><div class="listen-controls"><button class="btn secondary" data-tts-preview>목소리 미리듣기</button><button class="btn secondary" data-tts-stop>정지</button></div><hr class="rule"><p class="small muted">기기 기본 음성과 로컬 AI 여성 음성을 선택할 수 있습니다. AI 음성은 최초 준비 시 모델 다운로드가 필요합니다.</p><div class="listen-status" id="listen-status" role="status"></div><div class="callout">모바일에서 첫 재생은 버튼을 눌러 시작하세요. 화면 잠금·백그라운드에서는 기기 정책에 따라 멈출 수 있습니다.</div></section><section class="panel listen-form"><h2>10개년 공식 기출 듣기</h2>
+function renderListen(){const r=spokenRecord(),t=ttsSettings();return `${titleBlock('공식 기출 음성 학습','읽기 방식과 목소리, 재생 범위를 선택하세요.','LISTEN / OFFICIAL')}${tabs()}<div class="registration-summary">10개년 800문항 등록 · 공식 A형 원문으로 낭독 · 전원정답 8문항은 정답 지문 낭독 제외</div><div class="listen-grid"><section class="panel listen-form"><h2>목소리와 속도</h2>${neuralPanel()}<label for="tts-voice">한국어 음성</label><select class="field" id="tts-voice">${ttsVoiceOptions()}</select><p class="small muted">제공되는 음성은 기기마다 다릅니다. 원하는 여성 음색을 미리듣기로 골라주세요.</p><label for="tts-rate">읽기 속도 <output id="tts-rate-label">${t.rate}배</output></label>${ttsRateButtons()}<input id="tts-rate" type="range" min="0.75" max="2" step="0.05" value="${t.rate}" style="width:100%"><div class="listen-controls"><button class="btn secondary" data-tts-preview>목소리 미리듣기</button><button class="btn secondary" data-tts-stop>정지</button></div><hr class="rule"><p class="small muted">기기 기본 음성과 로컬 AI 여성 음성을 선택할 수 있습니다. AI 음성은 최초 준비 시 모델 다운로드가 필요합니다.</p><div class="listen-status" id="listen-status" role="status"></div><div class="callout">모바일에서 첫 재생은 버튼을 눌러 시작하세요. 화면 잠금·백그라운드에서는 기기 정책에 따라 멈출 수 있습니다.</div></section><section class="panel listen-form"><h2>10개년 공식 기출 듣기</h2>
 <div class="ck20-marathon">
  <strong>공식 기출 듣기 설정</strong>
  <p>현재 문항 또는 선택 연도·과목의 모든 문항을 순서대로 읽습니다. 원문 기준 A형, 전원정답 처리 문항은 정답 암기 낭독에서 제외합니다.</p>
@@ -1262,11 +1262,16 @@ function renderListen(){const r=spokenRecord(),t=ttsSettings();return `${titleBl
 ② 두 번째 지문
 ③ 세 번째 지문
 ④ 네 번째 지문
-⑤ 다섯 번째 지문"></textarea><button class="btn secondary" data-tts-parse>문제·선지 나누기</button><label for="tts-question">문제 문장</label><textarea id="tts-question" class="field">${esc(r.question)}</textarea>${[0,1,2,3,4].map(i=>`<label for="tts-option-${i}">${i+1}번 지문</label><textarea class="field" id="tts-option-${i}" rows="2">${esc(r.options?.[i]||'')}</textarea>`).join('')}<label><input type="checkbox" id="tts-verified" ${r.verified?'checked':''}> A형 원문과 문제·5개 지문을 대조했습니다</label><div class="listen-controls"><button class="btn secondary" data-tts-save>이 문항 저장</button><button class="btn" data-tts-official>문제 → 정답 지문 듣기</button></div><p class="small muted">등록 문장은 로컬에 저장되며 학습기록 백업에 포함됩니다. 모든 정답 처리 문항은 건너뜁니다.</p></section></div><div class="install-note"><button class="chalk-plain-btn" data-install>휴대폰 웹앱 설치 안내</button>Android: 브라우저 메뉴 → 앱 설치 / 홈 화면 추가 · iPhone: Safari 공유 → 홈 화면에 추가<br>PC HTML 파일·휴대폰·웹주소의 학습기록은 각각의 브라우저에 저장됩니다. 다른 기기로 옮길 때 내 데이터에서 백업·불러오기를 사용하세요.</div>`;}
+⑤ 다섯 번째 지문"></textarea><button class="btn secondary" data-tts-parse>문제·선지 나누기</button><label for="tts-question">문제 문장</label><textarea id="tts-question" class="field">${esc(r.question)}</textarea>${[0,1,2,3,4].map(i=>`<label for="tts-option-${i}">${i+1}번 지문</label><textarea class="field" id="tts-option-${i}" rows="2">${esc(r.options?.[i]||'')}</textarea>`).join('')}<label><input type="checkbox" id="tts-verified" ${r.verified?'checked':''}> A형 원문과 문제·5개 지문을 대조했습니다</label><div class="listen-controls"><button class="btn secondary" data-tts-save>이 문항 저장</button><button class="btn" data-tts-official>공식 A형 원문 듣기</button></div><p class="small muted">개인 대조문장은 별도 저장되지만 공식 낭독의 원문·정답을 바꾸지 않습니다. 전원정답은 정답 지문 낭독에서 제외합니다.</p></section></div><div class="install-note"><button class="chalk-plain-btn" data-install>휴대폰 웹앱 설치 안내</button>Android: 브라우저 메뉴 → 앱 설치 / 홈 화면 추가 · iPhone: Safari 공유 → 홈 화면에 추가<br>PC HTML 파일·휴대폰·웹주소의 학습기록은 각각의 브라우저에 저장됩니다. 다른 기기로 옮길 때 내 데이터에서 백업·불러오기를 사용하세요.</div>`;}
 function ttsParse(text){const matches=[...text.matchAll(/[①②③④⑤]/g)];if(matches.length!==5||matches.map(x=>x[0]).join('')!=='①②③④⑤')throw Error('①②③④⑤ 순서의 지문 5개가 필요합니다. 직접 입력도 가능합니다.');return {question:text.slice(0,matches[0].index).trim(),options:matches.map((m,i)=>text.slice(m.index+1,matches[i+1]?.index??text.length).trim())};}
 function ttsSaveOfficial(){const r={question:document.getElementById('tts-question').value.trim().slice(0,6000),options:[0,1,2,3,4].map(i=>document.getElementById('tts-option-'+i).value.trim().slice(0,4000)),verified:document.getElementById('tts-verified').checked};spokenStore()[`${state.year}-${state.examQuestion}`]=r;if(!save())throw Error('저장 공간 부족. 백업 후 공간을 확보하세요.');return r;}
-function ttsMount(){if(!('speechSynthesis' in window))return;ttsVoices=window.speechSynthesis.getVoices();const select=document.getElementById('tts-voice');if(select)select.innerHTML=ttsVoiceOptions();}
-if('speechSynthesis' in window)window.speechSynthesis.addEventListener('voiceschanged',ttsMount);
+function ttsMount(){
+ if(!('speechSynthesis' in window))return;
+ try{ttsVoices=window.speechSynthesis.getVoices()||[]}catch{ttsVoices=[];}
+ const select=document.getElementById('tts-voice');
+ if(select)select.innerHTML=ttsVoiceOptions();
+}
+if('speechSynthesis' in window&&typeof window.speechSynthesis.addEventListener==='function')window.speechSynthesis.addEventListener('voiceschanged',ttsMount);
 document.addEventListener('input',e=>{if(e.target.id==='tts-rate'){ttsSettings().rate=Number(e.target.value);document.querySelectorAll('[data-rate-preset]').forEach(b=>b.setAttribute('aria-pressed',String(Number(b.dataset.ratePreset)===Number(e.target.value))));document.getElementById('tts-rate-label').textContent=e.target.value+'배';save();}if(e.target.closest('#tts-question,[id^="tts-option-"]')){const check=document.getElementById('tts-verified');if(check)check.checked=false;}});
 document.addEventListener('change',e=>{const id=e.target.id;if(id==='tts-marathon-mode'){ttsSettings().marathonMode=['qa','answer','all'].includes(e.target.value)?e.target.value:'qa';save();return;}if(id==='tts-play-scope'){ttsSettings().playScope=e.target.value==='all'?'all':'single';save();return;}if(id==='tts-engine'){ttsStop(false);ttsSettings().engine=e.target.value==='neural'?'neural':'native';save();if(ttsSettings().engine==='neural')neuralStatus('AI 여성 음성 선택됨 · 준비 버튼 또는 재생을 눌러 모델을 로드합니다.');else neuralStatus('기기 기본 음성 선택됨');return;}if(id==='tts-voice'){ttsSettings().voice=e.target.value;save();ttsStop(false);}if(id==='tts-year'||id==='tts-number'){if(id==='tts-year')state.year=Number(e.target.value);else state.examQuestion=Number(e.target.value);save();render();}});
 document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;try{
@@ -1278,7 +1283,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)r
  if(b.hasAttribute('data-tts-exam'))ttsPlay([officialAudioEntry(state.year,state.examQuestion)],{mode:ttsSettings().marathonMode});if(b.hasAttribute('data-tts-exam-settings'))changeView('listen');
  if(b.hasAttribute('data-tts-parse')){const r=ttsParse(document.getElementById('tts-source').value);document.getElementById('tts-question').value=r.question;r.options.forEach((a,i)=>document.getElementById('tts-option-'+i).value=a);document.getElementById('tts-verified').checked=false;toast('원문과 대조한 후 저장하세요.');}
  if(b.hasAttribute('data-tts-save')){ttsSaveOfficial();toast('문항 문장을 저장했습니다.');}
- if(b.hasAttribute('data-tts-official')){ttsSaveOfficial();ttsPlay([officialAudioEntry(state.year,state.examQuestion)],{mode:ttsSettings().marathonMode});}
+ if(b.hasAttribute('data-tts-official'))ttsPlay([officialAudioEntry(state.year,state.examQuestion)],{mode:ttsSettings().marathonMode});
  if(b.hasAttribute('data-tts-official-all')){
   const result=ck107ReadOfficial(state.year,state.examQuestion,ttsSettings().marathonMode,ttsSettings().playScope==='all'?'subject':'single');
   if(!result.ok)throw Error('공식 등록 문항을 불러오지 못했거나 전원정답 처리로 제외되었습니다.');
@@ -1373,18 +1378,22 @@ function ck76AudioText(str){
   .replace(/(\d)\s*㎥/g,'$1 세제곱미터').replace(/[₩]/g,'원 ');
 }
 function officialAudioEntry(y,n){
- const id=y+'-'+n,official=window.RECALL_OFFICIAL?.[id],personal=spokenStore()[id];
- const q=officialEntry(y,n);
+ const id=y+'-'+n,official=window.RECALL_OFFICIAL?.[id];
+ // v125: reading a certified A-form paper must never substitute editable personal OCR/text.
+ // Keep personal text in its own store; only immutable canonical bank text is announced.
+ const q=official?.verified===true?official:null;
  // Official A-form bank keys outrank personal imported answer sheets.
- const key=official?.verified===true&&Array.isArray(official.correct)&&official.correct.length?
-  official.correct:(state.importedKeys[y]||KEYS[y]||[])[n-1];
+ const key=Array.isArray(official?.correct)?official.correct:[];
  const answers=normalKey(key).filter(x=>Number.isInteger(x)&&x>=1&&x<=5);
- if(!official?.verified||!q?.verified||!q.question?.trim()||!Array.isArray(q.options)||
-    q.options.length!==5||q.options.some(x=>!String(x||'').trim())||!answers.length)
+ if(!official?.verified||q?.id!==id||q.year!==y||q.number!==n||
+    q.subject!==(n<=40?'estate':'civil')||!q.question?.trim()||!Array.isArray(q.options)||
+    q.options.length!==5||q.options.some(x=>!String(x||'').trim())||
+    !Array.isArray(q.correct)||q.correct.length<1||q.correct.length>5||
+    new Set(q.correct.map(Number)).size!==q.correct.length||
+    q.correct.some(x=>!Number.isInteger(Number(x))||Number(x)<1||Number(x)>5)||!answers.length)
   throw Error('공식 문제·5개 선지·A형 최종정답의 등록을 확인해 주세요.');
  const all=answers.length===5,label=y+'년도 '+(n<=40?'부동산학개론':'민법 및 민사특별법')+' '+n+'번';
- const textSource=personal?.verified===true?' · 개인 대조문장':'';
- return {id,label:label+textSource,question:q.question.trim(),options:q.options.map(x=>x.trim()),
+ return {id,label,question:q.question.trim(),options:q.options.map(x=>x.trim()),
   answers:all?[]:answers.map(i=>q.options[i-1].trim()),
   special:all?'allAccepted':answers.length>1?'multiple':'normal'};
 }
@@ -1447,19 +1456,38 @@ ttsPlay=function(items,options={}){
   }
   const phrase=segments[index++],utt=new window.SpeechSynthesisUtterance(phrase);
   ttsUtterance=utt;utt.lang='ko-KR';utt.voice=voice;utt.rate=ttsSettings().rate;utt.pitch=1;
+  let settled=false;
   utt.onstart=()=>{
-   if(token!==ck76Voice.token)return;
+   if(token!==ck76Voice.token||settled)return;
    ck108Progress(index-1);
    ck76VoiceState('speaking','재생 중 · '+index+'/'+segments.length);
   };
-  utt.onend=()=>{if(token!==ck76Voice.token)return;errors=0;next();};
+  utt.onend=()=>{if(token!==ck76Voice.token||settled)return;settled=true;errors=0;next();};
   utt.onerror=event=>{
-   if(token!==ck76Voice.token)return;
+   if(token!==ck76Voice.token||settled)return;
+   settled=true;
    if(['canceled','interrupted'].includes(event?.error)){
    ck76VoiceState('error','음성 출력이 중단되었습니다. 다시 재생해 주세요.');return;
   }
-   if(errors<1&&event?.error==='text-too-long'){errors++;next();return;}
-   ck76VoiceState('error','기기 음성 오류: '+(event?.error||'원인 미확인'));
+   // Some Web Speech engines impose a shorter per-utterance limit.
+   // NEVER skip the failed phrase: split and retry the same text with the same exam bookmark.
+   if(event?.error==='text-too-long'&&phrase.length>=48&&errors<4){
+    const idx=index-1,half=Math.floor(phrase.length/2);
+    const space=phrase.lastIndexOf(' ',half);
+    const cut=space>24&&space<phrase.length-24?space:half;
+    const parts=[phrase.slice(0,cut).trim(),phrase.slice(cut).trim()];
+    if(parts.every(Boolean)){
+     segments.splice(idx,1,...parts);
+     if(ck108Playlist?.continuous&&Array.isArray(ck108Playlist.segmentNumbers)){
+      const number=ck108Playlist.segmentNumbers[idx];
+      ck108Playlist.segmentNumbers.splice(idx,1,number,number);
+     }
+     index=idx;errors++;ck76Voice.total=segments.length;
+     ck76VoiceState('ready','긴 문장을 나누어 다시 읽습니다. 내용은 건너뛰지 않습니다.');
+     next();return;
+    }
+   }
+   ck76VoiceState('error','기기 음성 오류: '+(event?.error||'원인 미확인')+' · 중단된 문장은 읽지 않았습니다. 다시 시작해 주세요.');
   };
   ck76Voice.position=index;
   ck76DisplayProgress(ck76Voice.label+' · '+index+'/'+segments.length+' · '+phrase.slice(0,70));
@@ -3997,8 +4025,8 @@ render();setInterval(timerTick,500);
 <script src="./assets/ck-study-materials-v84.js?v=84" defer></script>
 <script src="./assets/ck-data-integrity-v86.js?v=120" defer></script>
 <script src="./assets/ck-exam-bridge-v86.js?v=86" defer></script>
-<link rel="stylesheet" href="./assets/ck-data-diagnostics-v88.css?v=124">
-<script src="./assets/ck-data-diagnostics-v88.js?v=124" defer></script>
+<link rel="stylesheet" href="./assets/ck-data-diagnostics-v88.css?v=125">
+<script src="./assets/ck-data-diagnostics-v88.js?v=125" defer></script>
 <script src="./assets/ck-experience-v14.js" defer></script>
 <script src="./assets/ck-pdf-workspace-v15.js?v=118" defer></script>
 <link rel="stylesheet" href="./assets/ck-ocr-v118.css?v=120">
@@ -4008,7 +4036,7 @@ render();setInterval(timerTick,500);
 <script src="./assets/ck-shortcuts-v19.js" defer></script>
 <script src="./assets/ck-official-explain-v30.js" defer></script>
 <link rel="stylesheet" href="./assets/ck-manual-qa-v115.css?v=115">
-<script src="./assets/ck-manual-qa-v115.js?v=124" defer></script>
+<script src="./assets/ck-manual-qa-v115.js?v=125" defer></script>
 
 </body>
 </html>

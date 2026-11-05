@@ -127,16 +127,16 @@ test('partial, malformed or duplicate official answer keys fail closed',()=>{
  assert.equal(pure.optionEvidenceDetails('2025-1',input,{},{}),null);
  assert.deepEqual(canonical['2025-1'].correct,[2]);
 });
-test('25 direct human QA tasks and no auto deployment or workflows',()=>{
+test('expanded direct human QA tasks and no auto deployment or workflows',()=>{
  const qa=read('assets/ck-manual-qa-v115.js');
  const count=[...qa.matchAll(/\{id:'[-a-z0-9]+',group:/g)].length;
- assert.equal(count,25);
+ assert.equal(count,27);
  assert.match(qa,/id:'evidence-packet'/);
  assert.match(qa,/personal-v115-manual-qa/);
  const sw=read('sw.js');
- assert.match(sw,/conceptknot-study-v124-evidence-packet-qa/);
- assert.equal((sw.match(/ck-data-diagnostics-v88\.js\?v=124/g)||[]).length,2);
- assert.equal((sw.match(/ck-data-diagnostics-v88\.css\?v=124/g)||[]).length,2);
+ assert.match(sw,/conceptknot-study-v125-tts-canonical-critical-offline/);
+ assert.equal((sw.match(/ck-data-diagnostics-v88\.js\?v=125/g)||[]).length,3);
+ assert.equal((sw.match(/ck-data-diagnostics-v88\.css\?v=125/g)||[]).length,3);
  assert.match(sw,/ignoreSearch:true/);
  assert.equal(JSON.parse(read('vercel.json')).git.deploymentEnabled,false);
  assert.equal(fs.existsSync(path.join(__dirname,'..','.github','workflows')),false);
@@ -208,7 +208,7 @@ test('rendered 16-card panel retains a frozen snapshot and 5-question selection 
  assert.equal(editorToggled,1,'the personal CK80 editor button should be activated');
  assert.equal(api.crossReportFresh(),true);
 });
-test('pre-v124 manual QA PASS/FAIL notes load without reset or automatic writes',()=>{
+test('pre-v125 manual QA PASS/FAIL notes load without reset or automatic writes',()=>{
  const key='ck115-manual-device-verification-v1';
  const legacy={schemaVersion:1,scope:'personal-v115-manual-qa',updatedAt:0,
   entries:{tabs:{status:'pass',note:'기존 스크롤 위치 유지'},tts:{status:'fail',note:'실음성 장치 확인 필요'}}};
@@ -219,19 +219,19 @@ test('pre-v124 manual QA PASS/FAIL notes load without reset or automatic writes'
  vm.runInNewContext(read('assets/ck-manual-qa-v115.js'),
   {window,document,localStorage:storage,requestAnimationFrame:()=>1});
  const qa=window.CK115QA;
- assert.equal(qa.tasks.length,25);
+ assert.equal(qa.tasks.length,27);
  assert.equal(qa.getState().pass,1);
  assert.equal(qa.getState().fail,1);
- assert.equal(qa.getState().pending,23);
+ assert.equal(qa.getState().pending,25);
  assert.ok(qa.sanitize(legacy));
  assert.equal(qa.sanitize({...legacy,entries:{tabs:{status:'ai-pass',note:'invalid'}}}),null);
 });
-test('entry HTML and service worker load the exact v124 JS/CSS and QA assets',()=>{
+test('entry HTML and service worker load the exact v125 JS/CSS and QA assets',()=>{
  const html=read('index.html'),sw=read('sw.js');
- for(const asset of ['ck-data-diagnostics-v88.js?v=124','ck-data-diagnostics-v88.css?v=124',
-   'ck-manual-qa-v115.js?v=124']){
+ for(const asset of ['ck-data-diagnostics-v88.js?v=125','ck-data-diagnostics-v88.css?v=125',
+   'ck-manual-qa-v115.js?v=125']){
   assert.ok(html.includes(asset),'HTML must include '+asset);
-  assert.equal(sw.split(asset).length-1,2,'HOT and ASSETS must include '+asset);
+  assert.equal(sw.split(asset).length-1,3,'HOT, ASSETS and CRITICAL must include '+asset);
  }
  assert.ok(html.indexOf('ck-study-editor-v80.js')<html.indexOf('ck-data-diagnostics-v88.js'));
  assert.ok(html.indexOf('ck-study-links-v83.js')<html.indexOf('ck-data-diagnostics-v88.js'));
@@ -245,7 +245,7 @@ test('offline fallback uses current cache only, with explicit 503 on uncached fi
   const text=String(request?.url||request);
   if(text.includes('index.html'))return {status:200,marker:'current-index'};
   if(options?.ignoreSearch&&text.includes('ck-data-diagnostics-v88.js'))
-   return {status:200,marker:'v124-current-js'};
+   return {status:200,marker:'v125-current-js'};
   return null;
  }};
  const caches={open:async name=>{cacheNames.push(name);return current;},
@@ -268,9 +268,9 @@ test('offline fallback uses current cache only, with explicit 503 on uncached fi
    respondWith:p=>{result=p}});
   return await result;
  }
- assert.equal((await ask('assets/ck-data-diagnostics-v88.js?v=121')).marker,'v124-current-js');
+ assert.equal((await ask('assets/ck-data-diagnostics-v88.js?v=121')).marker,'v125-current-js');
  assert.equal((await ask('assets/ck-study-analytics-v83.js?v=117')).status,503);
  assert.equal((await ask('offline','navigate')).marker,'current-index');
- assert.ok(cacheNames.every(name=>name==='conceptknot-study-v124-evidence-packet-qa'));
+ assert.ok(cacheNames.every(name=>name==='conceptknot-study-v125-tts-canonical-critical-offline'));
  assert.ok(matchCalls.some(x=>x.ignoreSearch));
 });

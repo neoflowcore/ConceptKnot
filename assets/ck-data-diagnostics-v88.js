@@ -240,6 +240,62 @@ function downloadRaw(){
   return false;
  }
 }
+/* v125: explicitly triggered, read-only inventory of the CURRENT SW cache.
+ * A matching cache is a minimum offline prerequisite, not proof of full app operation. */
+const OFFLINE_CACHE='conceptknot-study-v125-tts-canonical-critical-offline';
+const OFFLINE_MINIMUM=Object.freeze([
+ './index.html',
+ './assets/ck-data-diagnostics-v88.js?v=125',
+ './assets/ck-data-diagnostics-v88.css?v=125',
+ './assets/ck-manual-qa-v115.js?v=125',
+ './assets/ck-study-links-v83.js?v=115',
+ './assets/ck-study-editor-v80.js?v=114',
+ './assets/ck-data-integrity-v86.js?v=120',
+ './assets/ck-official-bank-v89.js?v=89',
+ './assets/ck-full-exam-v82.js?v=115',
+ './data/official-2016-2020.json',
+ './data/official-2021-2025.json'
+]);
+async function offlineHealth(cacheStorage,controlled=false){
+ if(!cacheStorage?.keys||!cacheStorage?.open)
+  return {supported:false,installed:false,controlled:Boolean(controlled),cached:0,
+   required:OFFLINE_MINIMUM.length,missing:OFFLINE_MINIMUM.slice(),ready:false};
+ const keys=await cacheStorage.keys();
+ if(!keys.includes(OFFLINE_CACHE))
+  return {supported:true,installed:false,controlled:Boolean(controlled),cached:0,
+   required:OFFLINE_MINIMUM.length,missing:OFFLINE_MINIMUM.slice(),ready:false};
+ // Opening only after keys confirms its existence avoids creating a misleading empty cache.
+ const current=await cacheStorage.open(OFFLINE_CACHE);
+ const matches=await Promise.all(OFFLINE_MINIMUM.map(path=>
+  current.match(path,{ignoreSearch:true}).then(response=>Boolean(response?.ok))));
+ const missing=OFFLINE_MINIMUM.filter((_,i)=>!matches[i]);
+ return {supported:true,installed:true,controlled:Boolean(controlled),
+  cached:OFFLINE_MINIMUM.length-missing.length,required:OFFLINE_MINIMUM.length,
+  missing,ready:missing.length===0&&Boolean(controlled)};
+}
+async function runOfflineHealth(){
+ const host=root?.querySelector('[data-v125-offline]'),button=host?.querySelector('[data-v125-offline-run]'),
+  message=host?.querySelector('[data-v125-offline-status]');
+ if(!button||!message)return false;
+ button.disabled=true;message.textContent='이 기기의 현재 오프라인 캐시 상태를 읽고 있습니다. 네트워크로 전송하지 않습니다.';
+ try{
+  const controller=Boolean(window.navigator?.serviceWorker?.controller);
+  const result=await offlineHealth(window.caches,controller);
+  message.textContent=!result.supported?'브라우저에서 캐시 읽기를 지원하지 않습니다.':
+   !result.installed?'v125 오프라인 캐시 없음 · 아직 미배포 또는 설치 미완료입니다.':
+   '현재 캐시의 필수 파일 '+result.cached+'/'+result.required+'개 · '+
+   (controller?'서비스워커가 이 탭을 제어함(정확한 버전은 이 검사만으로 확정 불가)':'서비스워커가 이 탭을 제어하지 않음')+
+   (result.missing.length?' · 미저장: '+result.missing.slice(0,3).map(x=>x.split('/').pop()).join(', ')+
+    (result.missing.length>3?' 외 '+(result.missing.length-3)+'개':''):
+    ' · 최소 파일 목록 충족. 추가 기능 오프라인·실제 기기 동작은 별도 검사');
+  return result.ready;
+ }catch(error){
+  message.textContent='캐시 상태를 읽을 수 없습니다: '+String(error?.message||error).slice(0,160)+
+   ' · 기존 브라우저 데이터를 삭제하지 마세요.';
+  return false;
+ }finally{button.disabled=false;}
+}
+
 let root=null;
 function render(){
  if(!root)return;
@@ -857,7 +913,12 @@ function mount(){
   '<p>CK83 선지 근거와 CK80 해설 초안은 독립된 개인 기록입니다. 출처 누락·판정 불일치를 비교하며 공식 검수로 승격하지 않습니다.</p>'+ 
   '<button type="button" data-v122-run>저장된 개인 근거 교차 검사</button>'+ 
   '<button type="button" data-v122-export disabled>800문항 점검 CSV</button>'+ 
-  '<p data-v122-status role="status"></p><div data-v122-result></div></details>';
+  '<p data-v122-status role="status"></p><div data-v122-result></div></details>'+
+ '<details class="ck88-audit-matrix ck125-offline-health" data-v125-offline>'+
+ '<summary>오프라인 필수 파일 준비도 · 수동 읽기 전용</summary>'+
+ '<p>버튼을 누르면 현재 브라우저의 v125 캐시에 있는 최소 11개 파일만 확인합니다. 모든 기능이 오프라인에서 작동한다는 보증은 아닙니다.</p>'+
+ '<button type="button" data-v125-offline-run>이 기기의 오프라인 캐시 검사</button>'+
+ '<p role="status" data-v125-offline-status>미검사 · 온라인에서 최신 버전을 연 뒤 확인하세요.</p></details>';
  host.append(root);render();renderAudit();renderCrossAudit();
 }
 document.addEventListener('click',event=>{
@@ -881,6 +942,10 @@ document.addEventListener('click',event=>{
  if(button.hasAttribute('data-v121-export'))saveAudit();
 });
 
+document.addEventListener('click',event=>{
+ const t=event.target?.closest?.('[data-v125-offline-run]');
+ if(t&&root?.contains(t)){event.preventDefault();runOfflineHealth();}
+});
 document.addEventListener('click',event=>{
  const t=event.target?.closest?.('[data-v122-run],[data-v122-export],[data-v122-page],[data-v122-open],[data-v124-expand],[data-v124-editor],[data-v124-packet],[data-v124-clear]');
  if(!t||!root?.contains(t))return;
@@ -978,5 +1043,5 @@ if(target&&window.MutationObserver)new MutationObserver(()=>{
   document.querySelector('#main [data-action="backup"]'))mount();
 }).observe(target,{childList:true});
 window.addEventListener('ck:official-bank-ready',()=>{if(root)render();});
-window.CK88Diagnostics=Object.freeze({inspect,bankQuality,visualQueue,exportVisualQueue,loadOlderYear,mount,reviewRows,reviewMatrix,csvCell,makeReviewCsv,exportReviewCsv,auditStatic,auditText,runAudit,crossEvidenceAudit,makeCrossCsv,runCrossAudit,exportCrossCsv,optionEvidenceDetails,makeCrossPacket,exportCrossPacket,crossReportFresh});
+window.CK88Diagnostics=Object.freeze({inspect,bankQuality,visualQueue,exportVisualQueue,loadOlderYear,mount,reviewRows,reviewMatrix,csvCell,makeReviewCsv,exportReviewCsv,auditStatic,auditText,runAudit,crossEvidenceAudit,makeCrossCsv,runCrossAudit,exportCrossCsv,optionEvidenceDetails,makeCrossPacket,exportCrossPacket,crossReportFresh,offlineHealth,runOfflineHealth,OFFLINE_MINIMUM});
 })();

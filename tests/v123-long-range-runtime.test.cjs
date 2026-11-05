@@ -103,18 +103,18 @@ test('cross-store review identifies exact option indices while never writing per
 });
 test('new QA items preserve previous storage schema',()=>{
  const qa=src('assets/ck-manual-qa-v115.js');
- assert.equal([...qa.matchAll(/\{id:'[-a-z0-9]+',group:/g)].length,25);
+ assert.equal([...qa.matchAll(/\{id:'[-a-z0-9]+',group:/g)].length,27);
  assert.match(qa,/id:'annual-stats'/);assert.match(qa,/id:'evidence-cross-800'/);
  assert.match(qa,/id:'exam-idle-clock'/);
  assert.match(qa,/personal-v115-manual-qa/);
 });
 test('offline cache handles old index query version, no Actions or auto deployment',()=>{
  const sw=src('sw.js'),config=JSON.parse(src('vercel.json'));
- assert.match(sw,/conceptknot-study-v124-evidence-packet-qa/);
+ assert.match(sw,/conceptknot-study-v125-tts-canonical-critical-offline/);
  assert.match(sw,/ignoreSearch:true/);
  assert.match(sw,/ck-study-analytics-v83\.js\?v=117/);
  assert.match(sw,/ck-full-exam-v82\.js\?v=115/);
- assert.match(sw,/ck-data-diagnostics-v88\.js\?v=124/);
+ assert.match(sw,/ck-data-diagnostics-v88\.js\?v=125/);
  assert.equal(config.git.deploymentEnabled,false);
  assert.equal(fs.existsSync(path.join(__dirname,'..','.github','workflows')),false);
 });
