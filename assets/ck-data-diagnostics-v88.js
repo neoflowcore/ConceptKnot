@@ -25,9 +25,10 @@ function inspect(storage=localStorage){
       data.answers&&typeof data.answers==='object'&&!Array.isArray(data.answers)&&
       data.quizAnswers&&typeof data.quizAnswers==='object'&&!Array.isArray(data.quizAnswers)&&
       data.flashVisits&&typeof data.flashVisits==='object'&&!Array.isArray(data.flashVisits),
-    'ck80-explain-drafts-v1':()=>Object.entries(data).length<=400&&
-      Object.entries(data).every(([id,v])=>/^202[1-5]-(?:[1-9]|[1-7]\d|80)$/.test(id)&&
-        v&&typeof v==='object'&&!Array.isArray(v)),
+    'ck80-explain-drafts-v1':()=>Object.entries(data).length<=800&&
+      Object.entries(data).every(([id,v])=>/^20(?:1[6-9]|2[0-5])-(?:[1-9]|[1-7]\d|80)$/.test(id)&&
+        v&&typeof v==='object'&&!Array.isArray(v))&&
+      (!window.CK86Integrity?.validateExtra||window.CK86Integrity.validateExtra(key,raw)),
     'ck81-review-workbench-v1':()=>window.CK81Workbench?.sanitizeProgress?.(data),
     'ck82-exam-sessions-v1':()=>window.CK82FullExam?.cleanStore?.(data),
     'ck83-personal-concept-links-v1':()=>window.CK83Links?.sanitize?.(data),
@@ -214,12 +215,30 @@ function exportVisualQueue(year=queueYear){
  }catch{return false;}
 }
 function downloadRaw(){
- const data={schemaVersion:1,kind:'raw-recovery-only-not-direct-import',capturedAt:new Date().toISOString(),records:{}};
- for(const [key] of items){try{data.records[key]=localStorage.getItem(key);}catch{data.records[key]=null;}}
- const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
- const url=URL.createObjectURL(blob),a=document.createElement('a');
- a.href=url;a.download='ConceptKnot_원본복구용_'+new Date().toISOString().slice(0,10)+'.json';
- document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);
+ // A recovery backup must NEVER silently substitute null for inaccessible existing records.
+ // Read twice to detect a cross-tab modification during the capture window.
+ let data;
+ try{
+  data={schemaVersion:1,kind:'raw-recovery-only-not-direct-import',
+   capturedAt:new Date().toISOString(),captureConsistency:'double-read',records:{}};
+  for(const [key] of items)data.records[key]=localStorage.getItem(key);
+  for(const [key] of items){
+   if(data.records[key]!==localStorage.getItem(key))
+    throw Error('다른 탭에서 '+key+' 기록이 변경됐습니다. 다시 백업하세요.');
+  }
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download='ConceptKnot_원본복구용_'+new Date().toISOString().slice(0,10)+'.json';
+  document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);
+  const notice=root?.querySelector('[data-v122-raw-status]');
+  if(notice)notice.textContent='12종 원본을 두 번 대조해 백업을 요청했습니다. 다운로드 목록에서 파일을 확인하세요.';
+  return true;
+ }catch(error){
+  const notice=root?.querySelector('[data-v122-raw-status]');
+  if(notice)notice.textContent='원본 백업 중단 · '+String(error?.message||error).slice(0,200)+
+   ' · 누락된 기록을 빈 값으로 저장하지 않았습니다.';
+  return false;
+ }
 }
 let root=null;
 function render(){
@@ -452,19 +471,218 @@ function saveAudit(){
   return true;
  }catch{auditError='결과 TXT를 저장할 수 없습니다.';renderAudit();return false}
 }
+
+/* v122: explicitly requested, read-only cross review of TWO INDEPENDENT personal
+ * evidence stores. A recorded source or an agreeing verdict is never official proof.
+ * No personal entry is copied between CK83 and CK80 or written to canonical files. */
+let crossReport=null,crossBusy=false,crossError='',crossFilter='missing',crossYear='all',crossPage=0;
+const CROSS_PAGE=16;
+const textPresent=x=>typeof x==='string'&&Boolean(x.trim());
+function crossEvidenceAudit(bank=window.RECALL_OFFICIAL||{},
+ links=window.CK83Links?.getRecords?.()||{},
+ drafts=window.CK80Editorial?.getRecords?.()||{}){
+ const totals={questions:0,options:0,missingQuestion:0,ck83Assessed:0,ck83Reasons:0,
+  ck83Sources:0,ck80Assessed:0,ck80Reasons:0,ck80Sources:0,
+  neitherSource:0,verdictConflicts:0,sourceDifferences:0,personalReady:0,
+  allAccepted:0,multipleAccepted:0};
+ const years=Array.from({length:10},(_,i)=>2016+i).map(year=>({
+  year,questions:0,ck83Sources:0,ck80Sources:0,neitherSource:0,verdictConflicts:0,personalReady:0
+ }));
+ const byYear=new Map(years.map(row=>[row.year,row])),rows=[];
+ for(let year=2016;year<=2025;year++)for(let number=1;number<=80;number++){
+  const id=year+'-'+number,q=bank[id],yearRow=byYear.get(year);
+  if(!q||q.id!==id||q.year!==year||q.number!==number||q.verified!==true||
+   q.subject!==(number<=40?'estate':'civil')||
+   !Array.isArray(q.options)||q.options.length!==5||
+   !Array.isArray(q.correct)||q.correct.length<1||q.correct.length>5){
+   totals.missingQuestion++;continue;
+  }
+  totals.questions++;totals.options+=5;yearRow.questions++;
+  const notes=links?.[id]?.optionNotes||{};
+  const draft=Array.isArray(drafts?.[id]?.options)?drafts[id].options:[];
+  const special=q.correct.length===5?'all':q.correct.length>1?'multi':'normal';
+  if(special==='all')totals.allAccepted++;
+  if(special==='multi')totals.multipleAccepted++;
+  let aSource=0,bSource=0,missing=0,conflicts=0,different=0,complete=0;
+  for(let k=1;k<=5;k++){
+   const a=notes[String(k)]||{},b=draft[k-1]?.no===k?draft[k-1]:{};
+   const av=String(a.assessment||''),bv=String(b.verdict||'');
+   const aReason=textPresent(a.reason),bReason=textPresent(b.why);
+   const as=textPresent(a.source),bs=textPresent(b.source);
+   const aAssessed=['true','false','conditional'].includes(av);
+   const bAssessed=['true','false','unknown'].includes(bv);
+   if(aAssessed)totals.ck83Assessed++;
+   if(bAssessed)totals.ck80Assessed++;
+   if(aReason)totals.ck83Reasons++;
+   if(bReason)totals.ck80Reasons++;
+   if(as){aSource++;totals.ck83Sources++;yearRow.ck83Sources++;}
+   if(bs){bSource++;totals.ck80Sources++;yearRow.ck80Sources++;}
+   if(!as&&!bs){missing++;totals.neitherSource++;yearRow.neitherSource++;}
+   if(['true','false'].includes(av)&&['true','false'].includes(bv)&&av!==bv){
+    conflicts++;totals.verdictConflicts++;yearRow.verdictConflicts++;
+   }
+   // Different citations are a reconciliation prompt, not necessarily an error.
+   if(as&&bs&&String(a.source).normalize('NFKC').replace(/\s+/g,' ').trim()!==
+     String(b.source).normalize('NFKC').replace(/\s+/g,' ').trim()){
+    different++;totals.sourceDifferences++;
+   }
+   if((aAssessed&&aReason&&as)||(bAssessed&&bReason&&bs))complete++;
+  }
+  if(complete===5&&!conflicts){totals.personalReady++;yearRow.personalReady++;}
+  rows.push({id,year,number,subject:q.subject,special,ck83Sources:aSource,
+   ck80Sources:bSource,missing,conflicts,different,complete,
+   paperUrl:typeof q.originalUrl==='string'&&q.originalUrl.startsWith('https://')?q.originalUrl:''});
+ }
+ return {totals,years,rows,complete:totals.questions===800&&totals.options===4000};
+}
+function crossRows(report=crossReport){
+ if(!report)return [];
+ const chosen=report.rows.filter(r=>(crossYear==='all'||String(r.year)===crossYear)&&(
+  crossFilter==='all'||crossFilter==='missing'&&r.missing>0||
+  crossFilter==='conflict'&&r.conflicts>0||
+  crossFilter==='citation'&&r.different>0||
+  crossFilter==='special'&&r.special!=='normal'||
+  crossFilter==='ready'&&r.complete===5&&!r.conflicts
+ ));
+ return chosen.sort((a,b)=>b.conflicts-a.conflicts||b.missing-a.missing||
+  (b.special!=='normal')-(a.special!=='normal')||b.year-a.year||a.number-b.number);
+}
+function makeCrossCsv(report=crossReport){
+ if(!report||!report.complete)return '';
+ const header=['개인 기록 교차 점검 · 자동 공식 검증 아님','문항 ID','연도','번호',
+  '과목','정답 인정 유형','CK83 출처(5)','CK80 출처(5)','두곳 모두 출처없음(5)',
+  '판정 불일치(5)','출처 문구 차이(5)','개인 검토 입력 충족(5)','공식 PDF'];
+ const data=[header.map(csvCell).join(',')];
+ for(const row of report.rows)data.push([
+  '개인 참고용 · 미검수',row.id,row.year,row.number,
+  row.subject==='estate'?'학개론':'민법',
+  row.special==='all'?'전원정답 인정':row.special==='multi'?'복수정답 인정':'일반',
+  row.ck83Sources,row.ck80Sources,row.missing,row.conflicts,row.different,row.complete,row.paperUrl
+ ].map(csvCell).join(','));
+ return data.join('\r\n')+'\r\n';
+}
+function crossStatus(message){
+ crossError=String(message||'').slice(0,260);renderCrossAudit();
+}
+function renderCrossAudit(){
+ const host=root?.querySelector('[data-v122-cross]');
+ if(!host)return;
+ const status=host.querySelector('[data-v122-status]'),body=host.querySelector('[data-v122-result]');
+ const run=host.querySelector('[data-v122-run]'),exportButton=host.querySelector('[data-v122-export]');
+ if(run)run.disabled=crossBusy;
+ if(exportButton)exportButton.disabled=!crossReport?.complete;
+ if(status)status.textContent=crossBusy?'개인 저장소와 공식 800문항을 읽고 있습니다.':
+  crossError||(!crossReport?'버튼을 눌러 저장된 개인 출처만 읽기 전용으로 비교합니다.':
+  '구조 '+(crossReport.complete?'800/800':'부분 로딩')+' · 공식 정답과 선지 진위는 검증하지 않았습니다.');
+ if(!body)return;
+ body.replaceChildren();
+ if(!crossReport)return;
+ const t=crossReport.totals;
+ const summary=document.createElement('p');
+ summary.textContent='공식 등록 '+t.questions+'/800문항 · CK83 출처 '+t.ck83Sources+
+  '/4000 · CK80 개인 초안 출처 '+t.ck80Sources+
+  '/4000 · 양쪽 모두 출처 없음 '+t.neitherSource+'/4000선지';
+ body.append(summary);
+ const caution=document.createElement('p');
+ caution.textContent='두 개인 기록의 참/거짓 판정 불일치 '+t.verdictConflicts+
+  '선지 · 서로 다른 출처 문구 '+t.sourceDifferences+
+  '선지(오류 확정 아님) · 검토 입력만 갖춘 개인 문항 '+t.personalReady+
+  '/800(법령·판례 검증 및 게시 완료와 무관).';
+ body.append(caution);
+ const matrix=document.createElement('div');matrix.className='ck121-audit-table';
+ for(const item of crossReport.years){
+  const cell=document.createElement('p');
+  cell.textContent=item.year+'년 '+item.questions+'/80 · 출처 CK83 '+item.ck83Sources+
+   '/400, CK80 '+item.ck80Sources+'/400 · 둘 다 없음 '+item.neitherSource+
+   ' · 판단 차이 '+item.verdictConflicts;
+  matrix.append(cell);
+ }
+ body.append(matrix);
+ const selector=document.createElement('div');selector.className='ck122-cross-filters';
+ selector.innerHTML='<label>유형 <select data-v122-filter>'+
+  [['missing','두 저장소 모두 출처 없음'],['conflict','서로 다른 진위판정'],
+   ['citation','출처 문구 차이'],['special','복수·전원정답'],['ready','개인 입력 5/5'],['all','전체 문항']]
+   .map(([v,label])=>'<option value="'+v+'"'+(crossFilter===v?' selected':'')+'>'+label+'</option>').join('')+
+  '</select></label><label>연도 <select data-v122-year><option value="all">전체 10개년</option>'+
+  Array.from({length:10},(_,i)=>2025-i).map(y=>
+   '<option value="'+y+'"'+(crossYear===String(y)?' selected':'')+'>'+y+'년</option>').join('')+
+  '</select></label>';
+ body.append(selector);
+ const list=crossRows(),last=Math.max(0,Math.ceil(list.length/CROSS_PAGE)-1);
+ crossPage=Math.max(0,Math.min(crossPage,last));
+ const counter=document.createElement('p');counter.textContent='현재 조건 '+list.length+
+  '문항 · '+(crossPage+1)+'/'+(last+1)+'쪽';body.append(counter);
+ const cards=document.createElement('div');cards.className='ck122-cross-list';
+ for(const row of list.slice(crossPage*CROSS_PAGE,(crossPage+1)*CROSS_PAGE)){
+  const card=document.createElement('div');
+  card.innerHTML='<strong>'+safe(row.id)+' · '+(row.subject==='estate'?'학개론':'민법')+
+   '</strong><small>CK83 출처 '+row.ck83Sources+'/5 · CK80 출처 '+row.ck80Sources+
+   '/5 · 공통 미출처 '+row.missing+' · 판단차이 '+row.conflicts+
+   (row.special==='all'?' · 전원정답 인정':row.special==='multi'?' · 복수정답 인정':'')+
+   '</small><button type="button" data-v122-open="'+safe(row.id)+'">해당 문항·근거 열기</button>';
+  cards.append(card);
+ }
+ if(!list.length){const empty=document.createElement('p');
+  empty.textContent='현재 필터에 해당하는 문항이 없습니다. 개인 출처의 진위를 검증했다는 의미가 아닙니다.';
+  cards.append(empty);}
+ body.append(cards);
+ const pager=document.createElement('div');pager.className='ck122-cross-pages';
+ pager.innerHTML='<button type="button" data-v122-page="prev"'+(crossPage===0?' disabled':'')+
+  '>이전</button><span>'+(crossPage+1)+' / '+(last+1)+'</span>'+
+  '<button type="button" data-v122-page="next"'+(crossPage>=last?' disabled':'')+'>다음</button>';
+ body.append(pager);
+}
+async function runCrossAudit(){
+ if(crossBusy)return false;
+ crossBusy=true;crossReport=null;crossError='';renderCrossAudit();
+ try{
+  if(!window.CK89OfficialBank?.loadAll)throw Error('공식 10개년 자료 로더가 준비되지 않았습니다.');
+  await window.CK89OfficialBank.loadAll();
+  const links=window.CK83Links,editor=window.CK80Editorial;
+  if(!links?.getRecords||!editor?.getRecords)
+   throw Error('두 개인 근거 저장소가 준비되지 않았습니다.');
+  const ls=links.getStatus?.()||{},es=editor.getStatus?.()||{};
+  if(ls.storageIssue||ls.storageConflict||es.storageIssue)
+   throw Error('개인 기록 저장소에 손상 또는 탭 충돌이 있어 점검을 중단했습니다. 먼저 원본을 백업하세요.');
+  if(ls.unsavedEdits||editor.hasUnsavedChanges?.())
+   throw Error('저장되지 않은 개인 기록이 있습니다. 먼저 저장하거나 복사하세요.');
+  const report=crossEvidenceAudit(window.RECALL_OFFICIAL,links.getRecords(),editor.getRecords());
+  if(!report.complete)throw Error('공식 문제 '+report.totals.questions+'/800문항: 부분 자료로 교차보고서를 만들지 않았습니다.');
+  crossReport=report;crossPage=0;return true;
+ }catch(e){crossError='교차 검사 실패: '+String(e?.message||e).slice(0,210);return false;}
+ finally{crossBusy=false;renderCrossAudit();}
+}
+function exportCrossCsv(){
+ if(!crossReport?.complete)return false;
+ try{
+  const blob=new Blob(['\uFEFF',makeCrossCsv(crossReport)],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(blob),link=document.createElement('a');
+  link.href=url;link.download='ConceptKnot_개인선지근거_교차점검_'+new Date().toISOString().slice(0,10)+'.csv';
+  document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),2500);
+  crossStatus('800문항 교차 검토용 CSV 다운로드를 요청했습니다. 공식 내용 검증 완료 증빙이 아닙니다.');
+  return true;
+ }catch(e){crossStatus('CSV 저장 실패 · '+String(e?.message||e));return false;}
+}
+
 function mount(){
  const exists=document.getElementById('ck88-data-diagnostics');if(exists){root=exists;return;}
  const host=document.getElementById('main');if(!host)return;
  root=document.createElement('section');root.id='ck88-data-diagnostics';root.className='ck88-diagnostics';
  root.innerHTML='<div class="ck88-head"><strong>내 학습 데이터 안전 점검</strong><button type="button" data-v88-refresh>진단 새로고침</button>'+
- '<button type="button" data-v88-raw>12종 원본 백업 내려받기</button></div><div data-v88-body></div>'+
+ '<button type="button" data-v88-raw>12종 원본 백업 내려받기</button></div><p data-v122-raw-status role="status"></p><div data-v88-body></div>'+
  '<details class="ck88-audit-matrix ck121-static-audit" data-v121-audit>'+
  '<summary>공식 800문항·해설 400건 구조 점검 (수동 실행)</summary>'+
  '<p>저장소 내 7개 JSON을 버튼 클릭 시에만 읽습니다. 정답 진위·법령·판례의 전문 검수는 별개입니다.</p>'+
  '<button type="button" data-v121-run>원문·해설 구조 검사</button>'+
  '<button type="button" data-v121-export disabled>검사 결과 TXT</button>'+
- '<p data-v121-status role="status"></p><div data-v121-result></div></details>';
- host.append(root);render();renderAudit();
+ '<p data-v121-status role="status"></p><div data-v121-result></div></details>'+ 
+  '<details class="ck88-audit-matrix ck122-cross-audit" data-v122-cross>'+ 
+  '<summary>800문항 · 4,000선지 개인 근거 교차점검 (수동 실행)</summary>'+ 
+  '<p>CK83 선지 근거와 CK80 해설 초안은 독립된 개인 기록입니다. 출처 누락·판정 불일치를 비교하며 공식 검수로 승격하지 않습니다.</p>'+ 
+  '<button type="button" data-v122-run>저장된 개인 근거 교차 검사</button>'+ 
+  '<button type="button" data-v122-export disabled>800문항 점검 CSV</button>'+ 
+  '<p data-v122-status role="status"></p><div data-v122-result></div></details>';
+ host.append(root);render();renderAudit();renderCrossAudit();
 }
 document.addEventListener('click',event=>{
  const t=event.target.closest?.('[data-v88-refresh],[data-v88-raw],[data-v88-open],[data-v88-review-export]');
@@ -486,6 +704,46 @@ document.addEventListener('click',event=>{
  if(button.hasAttribute('data-v121-run')){runAudit();return}
  if(button.hasAttribute('data-v121-export'))saveAudit();
 });
+
+document.addEventListener('click',event=>{
+ const t=event.target?.closest?.('[data-v122-run],[data-v122-export],[data-v122-page],[data-v122-open]');
+ if(!t||!root?.contains(t))return;
+ event.preventDefault();
+ if(t.hasAttribute('data-v122-run')){runCrossAudit();return;}
+ if(t.hasAttribute('data-v122-export')){exportCrossCsv();return;}
+ if(t.hasAttribute('data-v122-page')){
+  crossPage=Math.max(0,crossPage+(t.dataset.v122Page==='next'?1:-1));
+  renderCrossAudit();return;
+ }
+ const id=t.dataset.v122Open;
+ if(!canonicalId(id)||!crossReport?.rows?.some(r=>r.id===id))return;
+ Promise.resolve(window.CK83Links?.openQuestion?.(id)).catch(e=>
+  crossStatus('해당 문항 열기 실패 · '+String(e?.message||e)));
+});
+document.addEventListener('change',event=>{
+ const target=event.target;
+ if(!root?.contains(target))return;
+ if(target.matches?.('[data-v122-filter]')){
+  crossFilter=['missing','conflict','citation','special','ready','all'].includes(target.value)?
+   target.value:'missing';crossPage=0;renderCrossAudit();
+ }
+ if(target.matches?.('[data-v122-year]')){
+  crossYear=/^(?:all|201[6-9]|202[0-5])$/.test(target.value)?target.value:'all';
+  crossPage=0;renderCrossAudit();
+ }
+});
+function invalidateCrossAudit(){
+ if(!crossReport)return;
+ crossReport=null;crossError='개인 기록이 변경됐습니다. 다시 검사 버튼을 눌러 갱신하세요.';
+ renderCrossAudit();
+}
+document.addEventListener('ck:personal-links-updated',invalidateCrossAudit);
+document.addEventListener('ck:personal-editor-updated',invalidateCrossAudit);
+window.addEventListener('storage',event=>{
+ if(['ck83-personal-concept-links-v1','ck80-explain-drafts-v1'].includes(event.key))
+  invalidateCrossAudit();
+});
+
 document.addEventListener('change',e=>{if(e.target?.matches?.('[data-v88-year]')){queueYear=Number(e.target.value);render();loadOlderYear(queueYear);}
  if(e.target?.matches?.('[data-v88-queue-mode]')){queueMode=['all','unreviewed','low-text'].includes(e.target.value)?e.target.value:'all';render();}});
 
@@ -504,5 +762,5 @@ if(target&&window.MutationObserver)new MutationObserver(()=>{
   document.querySelector('#main [data-action="backup"]'))mount();
 }).observe(target,{childList:true});
 window.addEventListener('ck:official-bank-ready',()=>{if(root)render();});
-window.CK88Diagnostics=Object.freeze({inspect,bankQuality,visualQueue,exportVisualQueue,loadOlderYear,mount,reviewRows,reviewMatrix,csvCell,makeReviewCsv,exportReviewCsv,auditStatic,auditText,runAudit});
+window.CK88Diagnostics=Object.freeze({inspect,bankQuality,visualQueue,exportVisualQueue,loadOlderYear,mount,reviewRows,reviewMatrix,csvCell,makeReviewCsv,exportReviewCsv,auditStatic,auditText,runAudit,crossEvidenceAudit,makeCrossCsv,runCrossAudit,exportCrossCsv});
 })();
