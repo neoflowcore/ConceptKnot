@@ -240,15 +240,38 @@ async function showEditor(){
 }
 function filename(){return 'ConceptKnot_해설_개인검토초안_'+new Date().toISOString().slice(0,10)+'.json';}
 function exportJson(){
+ if(editing){
+  setStatus('저장하지 않은 해설 수정이 있습니다. 먼저 저장한 다음 JSON 백업을 만드세요.');
+  return false;
+ }
  const drafts=store();
- if(storageIssue){setStatus(storageIssue);return;}
- if(!Object.keys(drafts).length){setStatus('저장한 초안이 아직 없습니다.');return;}
- const body={schemaVersion:'1.0.0',scope:'personal-unpublished-2016-2025',exportedAt:new Date().toISOString(),
-  officialSourceUnchanged:true,records:Object.fromEntries(Object.entries(drafts).filter(([id])=>questionId(id)))};
- const bytes=new Blob(['\uFEFF',JSON.stringify(body,null,2)],{type:'application/json'});
- const url=URL.createObjectURL(bytes),link=document.createElement('a');link.href=url;
- link.download=filename();document.body.appendChild(link);link.click();link.remove();
- setTimeout(()=>URL.revokeObjectURL(url),3000);setStatus('개인 검토 초안 JSON을 생성했습니다. 공식 콘텐츠가 아닌 개인 작성물입니다.');
+ if(storageIssue){setStatus(storageIssue);return false;}
+ const records=Object.fromEntries(Object.entries(drafts).filter(([id])=>questionId(id)));
+ if(!Object.keys(records).length){setStatus('저장한 초안이 아직 없습니다.');return false;}
+ try{
+  const start=localStorage.getItem(KEY);
+  // A previously loaded snapshot must not silently turn into another tab's export.
+  if(start!==lastRaw){
+   setStatus('다른 탭의 초안 변경이 감지됐습니다. 현재 편집을 보존하고 새로고침한 후 백업하세요.');
+   return false;
+  }
+  const body={schemaVersion:'1.0.0',scope:'personal-unpublished-2016-2025',exportedAt:new Date().toISOString(),
+   officialSourceUnchanged:true,records};
+  const json=JSON.stringify(body,null,2);
+  if(localStorage.getItem(KEY)!==start){
+   setStatus('백업 생성 중 다른 탭이 초안을 변경했습니다. 불완전한 백업 내보내기를 중단했습니다.');
+   return false;
+  }
+  const bytes=new Blob(['\uFEFF',json],{type:'application/json'});
+  const url=URL.createObjectURL(bytes),link=document.createElement('a');
+  link.href=url;link.download=filename();document.body.appendChild(link);
+  try{link.click()}finally{link.remove();setTimeout(()=>URL.revokeObjectURL(url),3000)}
+  setStatus('개인 검토 초안 JSON 다운로드를 요청했습니다. 저장된 파일을 직접 확인하세요.');
+  return true;
+ }catch(error){
+  setStatus('해설 JSON 내보내기에 실패했습니다. 저장 권한·용량을 확인하세요.');
+  return false;
+ }
 }
 function validateImportRecord(id,v){
  if(!questionId(id)||!q(id)||!v||typeof v!=='object'||v.published===true||
@@ -348,6 +371,6 @@ window.addEventListener('beforeunload',e=>{
  if(!editing)return;
  e.preventDefault();e.returnValue='';
 });
-window.CK80Editorial=Object.freeze({count,confirmLeave,hasUnsavedChanges:()=>editing,lookup:id=>store()[id]||null,
+window.CK80Editorial=Object.freeze({count,confirmLeave,exportJson,hasUnsavedChanges:()=>editing,lookup:id=>store()[id]||null,
  getRecords:()=>store(),validateImportRecord,getStatus:()=>({selected,open,editing,lastStatus,storageIssue})});
 })();

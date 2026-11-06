@@ -35,7 +35,7 @@ function lookup(options={}){
 }
 test('v118 assets and manual deployment-only configuration are linked',()=>{
  const html=read('index.html'),sw=read('sw.js'),vercel=JSON.parse(read('vercel.json'));
- for(const asset of ['ck-pdf-workspace-v15.js?v=118','ck-ocr-v118.js?v=120',
+ for(const asset of ['ck-pdf-workspace-v15.js?v=118','ck-ocr-v118.js?v=127',
   'ck-ocr-v118.css?v=120','ck-manual-qa-v115.js?v=120','ck-data-integrity-v86.js?v=120']){
   assert.ok(html.includes(asset),'missing HTML '+asset);
   assert.ok(sw.includes(asset),'missing SW '+asset);

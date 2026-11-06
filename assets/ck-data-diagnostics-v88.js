@@ -240,16 +240,16 @@ function downloadRaw(){
   return false;
  }
 }
-/* v125: explicitly triggered, read-only inventory of the CURRENT SW cache.
+/* v127: explicitly triggered, read-only inventory of the CURRENT SW cache.
  * A matching cache is a minimum offline prerequisite, not proof of full app operation. */
-const OFFLINE_CACHE='conceptknot-study-v126-active-offline-safety';
+const OFFLINE_CACHE='conceptknot-study-v127-integrity-guarded-offline';
 const OFFLINE_MINIMUM=Object.freeze([
  './index.html',
- './assets/ck-data-diagnostics-v88.js?v=125',
+ './assets/ck-data-diagnostics-v88.js?v=127',
  './assets/ck-data-diagnostics-v88.css?v=125',
- './assets/ck-manual-qa-v115.js?v=125',
+ './assets/ck-manual-qa-v115.js?v=127',
  './assets/ck-study-links-v83.js?v=115',
- './assets/ck-study-editor-v80.js?v=114',
+ './assets/ck-study-editor-v80.js?v=127',
  './assets/ck-data-integrity-v86.js?v=120',
  './assets/ck-official-bank-v89.js?v=89',
  './assets/ck-full-exam-v82.js?v=115',
@@ -266,8 +266,14 @@ async function offlineHealth(cacheStorage,controlled=false){
    required:OFFLINE_MINIMUM.length,missing:OFFLINE_MINIMUM.slice(),ready:false};
  // Opening only after keys confirms its existence avoids creating a misleading empty cache.
  const current=await cacheStorage.open(OFFLINE_CACHE);
- const matches=await Promise.all(OFFLINE_MINIMUM.map(path=>
-  current.match(path).then(response=>Boolean(response?.ok))));
+ const matches=await Promise.all(OFFLINE_MINIMUM.map(async path=>{
+  const response=await current.match(path);
+  if(!response?.ok)return false;
+  // HTTP 200 is not enough: an HTML error response must not count as JS/CSS/JSON.
+  const type=String(response.headers?.get?.('content-type')||'').toLowerCase();
+  if(path.endsWith('.html'))return !type||type.includes('text/html');
+  return !type.includes('text/html');
+ }));
  const missing=OFFLINE_MINIMUM.filter((_,i)=>!matches[i]);
  return {supported:true,installed:true,controlled:Boolean(controlled),
   cached:OFFLINE_MINIMUM.length-missing.length,required:OFFLINE_MINIMUM.length,
@@ -308,9 +314,9 @@ async function runOfflineHealth(){
   const activeCurrent=controller.cache===OFFLINE_CACHE;
   const result=await offlineHealth(window.caches,activeCurrent);
   message.textContent=!result.supported?'브라우저에서 캐시 읽기를 지원하지 않습니다.':
-   !result.installed?'v126 오프라인 캐시 없음 · 아직 미배포 또는 설치 미완료입니다.':
+   !result.installed?'v127 오프라인 캐시 없음 · 아직 미배포 또는 설치 미완료입니다.':
    '현재 캐시의 필수 파일 '+result.cached+'/'+result.required+'개 · '+
-   (activeCurrent?'현재 v126 서비스워커가 이 탭을 제어함':controller.controlled?
+   (activeCurrent?'현재 v127 서비스워커가 이 탭을 제어함':controller.controlled?
     '구형 또는 응답 없는 서비스워커가 제어 중 · 현재 세대 확인 불가':'서비스워커가 이 탭을 제어하지 않음')+
    (result.missing.length?' · 미저장: '+result.missing.slice(0,3).map(x=>x.split('/').pop()).join(', ')+
     (result.missing.length>3?' 외 '+(result.missing.length-3)+'개':''):

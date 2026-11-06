@@ -13,7 +13,7 @@ let jobId=0,working=false,dirty=false,timer=0,lastRaw=null,issue='',draft=read()
 const choices=['png','jpg','jpeg','webp','bmp'];
 const safeSource=x=>String(x||'').slice(0,180).replace(/[\r\n\t]/g,' ');
 let pageRaw=null,pageIssue='',pageStore=readPageStore();
-const empty=()=>({schemaVersion:1,source:'',text:'',updatedAt:0});
+function empty(){return {schemaVersion:1,source:'',text:'',updatedAt:0}}
 function sanitize(value){
  if(!value||typeof value!=='object'||Array.isArray(value)||value.schemaVersion!==1||
   typeof value.source!=='string'||value.source.length>180||typeof value.text!=='string'||
@@ -311,8 +311,20 @@ function deleteArchivedPage(id){
  if(saved)status('선택한 개인 OCR 초안 1건을 삭제했습니다. 이 작업은 공식 문제·정답에 영향을 주지 않습니다.');
  return saved;
 }
+function pageStoreIsCurrent(){
+ try{return !pageIssue&&localStorage.getItem(PAGE_KEY)===pageRaw}
+ catch{return false}
+}
 function downloadPageText(){
  if(!pageStore.items.length){status('보관된 페이지별 OCR 초안이 없습니다.');return false;}
+ if(!pageStoreIsCurrent()){
+  status('다른 탭에서 OCR 보관함을 변경했거나 저장소를 읽지 못했습니다. 최신 기록을 다시 불러온 후 TXT를 생성하세요.');
+  return false;
+ }
+ if(dirty){
+  status('현재 편집 중인 OCR 페이지가 아직 저장되지 않았습니다. 먼저 현재 페이지를 보관한 뒤 전체 TXT를 내려받으세요.');
+  return false;
+ }
  try{
   const lines=['ConceptKnot 개인 OCR 페이지 보관 초안',
    '자동 인식·편집 결과는 검토되지 않았습니다. 공식 시험 원문/정답/해설이 아닙니다.',
@@ -321,6 +333,11 @@ function downloadPageText(){
    lines.push('','======== '+(index+1)+'번째 개인 초안 ========',
     '출처: '+item.source,'PDF 식별키: '+(item.documentKey||'(이미지 또는 미기록)'),
     '수정 시각: '+new Date(item.updatedAt).toISOString(),'',item.text);
+  }
+  // A storage event can arrive after a different tab has written. Re-read before download.
+  if(!pageStoreIsCurrent()){
+   status('내보내기 직전 OCR 보관함이 변경됐습니다. 이전 목록으로 된 TXT를 생성하지 않았습니다.');
+   return false;
   }
   const blob=new Blob(['\uFEFF'+lines.join('\n')],{type:'text/plain;charset=utf-8'});
   const url=URL.createObjectURL(blob),link=document.createElement('a');
@@ -495,6 +512,7 @@ if(main&&window.MutationObserver)new MutationObserver(changes=>{
 }).observe(main,{subtree:true,childList:true});
 window.CK118OCR=Object.freeze({
  sanitize,sanitizePageStore,parseOptions,flush,cancel,archiveCurrentPage,refreshPageStore,
+ pageStoreIsCurrent,
  getPageStatus:()=>({count:pageStore.items.length,issue:pageIssue,revision:pageStore.revision}),
  getState:()=>({working,dirty,issue,source:draft.source,hasDraft:Boolean(draft.text),connected:Boolean(panel?.isConnected)}),
  open:()=>{if(!panel?.isConnected)mount();const details=panel?.querySelector('details');if(details)details.open=true;return Boolean(details)},

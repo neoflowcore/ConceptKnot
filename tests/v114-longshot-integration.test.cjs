@@ -160,7 +160,7 @@ test('due TTS refuses partial official bank and reports empty queue clearly',()=
 test('v114 static delivery stays manual-only with updated assets and valid inline scripts',()=>{
  const config=json('vercel.json'),html=read('index.html'),sw=read('sw.js');
  assert.equal(config.git?.deploymentEnabled,false);
- for(const path of ['ck-evidence-queue-v111.js?v=114','ck-study-editor-v80.js?v=114',
+ for(const path of ['ck-evidence-queue-v111.js?v=114','ck-study-editor-v80.js?v=127',
   'ck-study-links-v83.js?v=115','ck-study-p4-v78.js?v=114',
   'ck-charts-v21.js?v=114','experience-v21.css?v=114']){
   assert.ok(html.includes(path),'HTML missing '+path);

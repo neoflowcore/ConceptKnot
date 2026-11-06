@@ -13,7 +13,7 @@ function worker(){
   match:async request=>entries.get(typeof request==='string'?request:request.url)||null,
   put:async(k,v)=>{writes.push([k,v]);entries.set(typeof k==='string'?k:k.url,v)}
  };
- const caches={open:async()=>cache,keys:async()=>['conceptknot-study-v126-active-offline-safety'],delete:async()=>true};
+ const caches={open:async()=>cache,keys:async()=>['conceptknot-study-v127-integrity-guarded-offline'],delete:async()=>true};
  const self={location:{href:'https://app.test/sw.js',origin:'https://app.test'},
   addEventListener:(n,fn)=>{events[n]=fn},skipWaiting:async()=>{},clients:{claim:async()=>{}}};
  const ctx={self,caches,URL,console:{warn(){}},Response,
@@ -31,13 +31,13 @@ function worker(){
 test('current generation is explicitly discoverable by read-only MessageChannel',()=>{
  const {events}=worker();let response;
  events.message({data:{type:'CK_SW_VERSION_PING'},ports:[{postMessage:p=>{response=p}}]});
- assert.equal(response.cache,'conceptknot-study-v126-active-offline-safety');
+ assert.equal(response.cache,'conceptknot-study-v127-integrity-guarded-offline');
  assert.equal(response.required,11);
  response=null;events.message({data:{type:'unrelated'},ports:[{postMessage:p=>{response=p}}]});
  assert.equal(response,null);
 });
 test('CSS / JS HTML fallback is not stored or served as a successful asset',async()=>{
- const w=worker(),url='https://app.test/assets/ck-study-editor-v80.js?v=114';
+ const w=worker(),url='https://app.test/assets/ck-study-editor-v80.js?v=127';
  w.ctx.fetch=async()=>({ok:true,status:200,headers:{get:()=> 'text/html; charset=utf-8'},
   clone(){return this}});
  const result=await w.respond({url,method:'GET',mode:'cors'});
@@ -45,7 +45,7 @@ test('CSS / JS HTML fallback is not stored or served as a successful asset',asyn
  assert.equal(w.writes.length,0);
 });
 test('real script success waits for cache persistence in event lifetime',async()=>{
- const w=worker(),url='https://app.test/assets/ck-study-editor-v80.js?v=114';
+ const w=worker(),url='https://app.test/assets/ck-study-editor-v80.js?v=127';
  let finished=false;
  w.cache.put=async()=>{await Promise.resolve();finished=true};
  const result=await w.respond({url,method:'GET',mode:'cors'});
@@ -70,9 +70,10 @@ test('precise asset query match, controller version identity, and lack of guesse
 });
 test('read-only release preflight references v126 and rejects stale preflight markers',()=>{
  const pre=read('scripts/check-release-readonly.cjs');
- assert.match(pre,/conceptknot-study-v126-active-offline-safety/);
+ assert.match(pre,/conceptknot-study-v127-integrity-guarded-offline/);
  assert.doesNotMatch(pre,/conceptknot-study-v102-nondestructive-restore/);
  assert.match(pre,/controllerCacheInfo/);
+ assert.match(sw,/invalidCoreResponse\(path,response\)/);
  assert.equal(JSON.parse(read('vercel.json')).git.deploymentEnabled,false);
  assert.equal(fs.existsSync(path.join(base,'.github/workflows')),false);
  new vm.Script(sw);new vm.Script(diag);new vm.Script(pre);
