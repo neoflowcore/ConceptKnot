@@ -242,7 +242,7 @@ function downloadRaw(){
 }
 /* v125: explicitly triggered, read-only inventory of the CURRENT SW cache.
  * A matching cache is a minimum offline prerequisite, not proof of full app operation. */
-const OFFLINE_CACHE='conceptknot-study-v125-tts-canonical-critical-offline';
+const OFFLINE_CACHE='conceptknot-study-v126-active-offline-safety';
 const OFFLINE_MINIMUM=Object.freeze([
  './index.html',
  './assets/ck-data-diagnostics-v88.js?v=125',
@@ -267,11 +267,36 @@ async function offlineHealth(cacheStorage,controlled=false){
  // Opening only after keys confirms its existence avoids creating a misleading empty cache.
  const current=await cacheStorage.open(OFFLINE_CACHE);
  const matches=await Promise.all(OFFLINE_MINIMUM.map(path=>
-  current.match(path,{ignoreSearch:true}).then(response=>Boolean(response?.ok))));
+  current.match(path).then(response=>Boolean(response?.ok))));
  const missing=OFFLINE_MINIMUM.filter((_,i)=>!matches[i]);
  return {supported:true,installed:true,controlled:Boolean(controlled),
   cached:OFFLINE_MINIMUM.length-missing.length,required:OFFLINE_MINIMUM.length,
   missing,ready:missing.length===0&&Boolean(controlled)};
+}
+/* Ask the currently controlling SW which generation it actually runs.
+ * No caches are modified, no page navigation, and no network requests.
+ * Older workers without the handshake remain 'unknown', never verified. */
+async function controllerCacheInfo(){
+ const controller=window.navigator?.serviceWorker?.controller;
+ if(!controller)return {controlled:false,cache:''};
+ if(typeof window.MessageChannel!=='function')return {controlled:true,cache:''};
+ return new Promise(resolve=>{
+  const channel=new window.MessageChannel();
+  let finished=false;
+  const finish=cache=>{
+   if(finished)return;finished=true;
+   clearTimeout(timeout);
+   try{channel.port1.close();channel.port2.close()}catch{}
+   resolve({controlled:true,cache});
+  };
+  const timeout=setTimeout(()=>finish(''),1200);
+  channel.port1.onmessage=event=>{
+   const payload=event.data;
+   finish(payload?.app==='ConceptKnot'&&typeof payload.cache==='string'?payload.cache:'');
+  };
+  try{controller.postMessage({type:'CK_SW_VERSION_PING'},[channel.port2])}
+  catch{finish('')}
+ });
 }
 async function runOfflineHealth(){
  const host=root?.querySelector('[data-v125-offline]'),button=host?.querySelector('[data-v125-offline-run]'),
@@ -279,15 +304,18 @@ async function runOfflineHealth(){
  if(!button||!message)return false;
  button.disabled=true;message.textContent='이 기기의 현재 오프라인 캐시 상태를 읽고 있습니다. 네트워크로 전송하지 않습니다.';
  try{
-  const controller=Boolean(window.navigator?.serviceWorker?.controller);
-  const result=await offlineHealth(window.caches,controller);
+  const controller=await controllerCacheInfo();
+  const activeCurrent=controller.cache===OFFLINE_CACHE;
+  const result=await offlineHealth(window.caches,activeCurrent);
   message.textContent=!result.supported?'브라우저에서 캐시 읽기를 지원하지 않습니다.':
-   !result.installed?'v125 오프라인 캐시 없음 · 아직 미배포 또는 설치 미완료입니다.':
+   !result.installed?'v126 오프라인 캐시 없음 · 아직 미배포 또는 설치 미완료입니다.':
    '현재 캐시의 필수 파일 '+result.cached+'/'+result.required+'개 · '+
-   (controller?'서비스워커가 이 탭을 제어함(정확한 버전은 이 검사만으로 확정 불가)':'서비스워커가 이 탭을 제어하지 않음')+
+   (activeCurrent?'현재 v126 서비스워커가 이 탭을 제어함':controller.controlled?
+    '구형 또는 응답 없는 서비스워커가 제어 중 · 현재 세대 확인 불가':'서비스워커가 이 탭을 제어하지 않음')+
    (result.missing.length?' · 미저장: '+result.missing.slice(0,3).map(x=>x.split('/').pop()).join(', ')+
     (result.missing.length>3?' 외 '+(result.missing.length-3)+'개':''):
-    ' · 최소 파일 목록 충족. 추가 기능 오프라인·실제 기기 동작은 별도 검사');
+    ' · 최소 파일 목록 충족. '+(activeCurrent?'현재 SW 세대도 일치. ':'SW 세대 미확인. ')+
+    '추가 기능 오프라인·실제 기기 동작은 별도 검사');
   return result.ready;
  }catch(error){
   message.textContent='캐시 상태를 읽을 수 없습니다: '+String(error?.message||error).slice(0,160)+
@@ -1043,5 +1071,5 @@ if(target&&window.MutationObserver)new MutationObserver(()=>{
   document.querySelector('#main [data-action="backup"]'))mount();
 }).observe(target,{childList:true});
 window.addEventListener('ck:official-bank-ready',()=>{if(root)render();});
-window.CK88Diagnostics=Object.freeze({inspect,bankQuality,visualQueue,exportVisualQueue,loadOlderYear,mount,reviewRows,reviewMatrix,csvCell,makeReviewCsv,exportReviewCsv,auditStatic,auditText,runAudit,crossEvidenceAudit,makeCrossCsv,runCrossAudit,exportCrossCsv,optionEvidenceDetails,makeCrossPacket,exportCrossPacket,crossReportFresh,offlineHealth,runOfflineHealth,OFFLINE_MINIMUM});
+window.CK88Diagnostics=Object.freeze({controllerCacheInfo,inspect,bankQuality,visualQueue,exportVisualQueue,loadOlderYear,mount,reviewRows,reviewMatrix,csvCell,makeReviewCsv,exportReviewCsv,auditStatic,auditText,runAudit,crossEvidenceAudit,makeCrossCsv,runCrossAudit,exportCrossCsv,optionEvidenceDetails,makeCrossPacket,exportCrossPacket,crossReportFresh,offlineHealth,runOfflineHealth,OFFLINE_MINIMUM});
 })();

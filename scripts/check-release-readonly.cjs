@@ -18,7 +18,7 @@ function run(){
  const html=read('index.html'),service=read('sw.js'),vc=JSON.parse(read('vercel.json'));
  check(vc.git?.deploymentEnabled===false,'Vercel Git 자동배포가 비활성이 아닙니다.');
  check(!fs.existsSync(path.join(ROOT,'.github/workflows')),'GitHub Actions workflow 디렉터리가 존재합니다.');
- check(service.includes('conceptknot-study-v102-nondestructive-restore'),'서비스 워커 캐시 버전 불일치');
+ check(service.includes('conceptknot-study-v126-active-offline-safety'),'서비스 워커 v126 캐시 버전 불일치');
  const {scripts,css}=pathsFromHtml(html);
  for(const src of [...scripts,...css]){
   if(!isLocal(src))continue;
@@ -47,10 +47,30 @@ function run(){
     errors.push('SW 캐시 원본 누락: '+file);
   }
  }
- for(const name of ['ck-study-workbench-v81.js']){
-  check(html.includes('./assets/'+name+'?v=101'),'HTML v100 캐시 갱신 누락: '+name);
-  check(service.includes('./assets/'+name+'?v=101'),'SW v100 캐시 갱신 누락: '+name);
+ // Check actual release invariants instead of stale v100 hardcoded query strings.
+ const criticalBlock=service.match(/const CRITICAL=\[([\s\S]*?)\];/);
+ check(Boolean(criticalBlock),'서비스워커 필수 자산 선언 누락');
+ const critical=criticalBlock?[...criticalBlock[1].matchAll(/'(\.\/[^']+)'/g)].map(m=>m[1]):[];
+ check(critical.length===11,'필수 오프라인 파일 수가 11개가 아닙니다.');
+ const indexHtmlNames=new Set([...scripts,...css].filter(isLocal).map(nameOf));
+ for(const src of critical){
+  const file=nameOf(src);check(fs.existsSync(path.join(ROOT,file)),'필수 캐시 파일 없음: '+file);
+  if(file.endsWith('.js')||file.endsWith('.css'))
+   check(indexHtmlNames.has(file),'필수 자산이 HTML에 포함되지 않음: '+file);
+  check(service.includes(src),'서비스워커 필수 캐시 주소가 일치하지 않음: '+src);
  }
+ check(service.includes("CK_SW_VERSION_PING"),'활성 SW 버전 진단 응답이 없습니다.');
+ check(service.includes('e.waitUntil(caches.open(CACHE)'), '네트워크 응답 캐시 쓰기가 생명주기에 연결되지 않았습니다.');
+ const diag=read('assets/ck-data-diagnostics-v88.js');
+ check(diag.includes('controllerCacheInfo()'),'실제 활성 SW 세대 확인 로직이 없습니다.');
+ check(diag.includes('current.match(path).then('),'오프라인 자산 쿼리 버전 정확 비교 누락');
+ check(!diag.includes("current.match(path,{ignoreSearch:true})"),'오프라인 진단이 버전 쿼리를 무시합니다.');
+ for(const suffix of ['ck-data-diagnostics-v88.js?v=125','ck-data-diagnostics-v88.css?v=125','ck-manual-qa-v115.js?v=125']){
+  check(html.includes(suffix),'HTML 진단 자산 누락: '+suffix);
+  check(service.includes('./assets/'+suffix),'SW 진단 자산 누락: '+suffix);
+ }
+ check(service.includes('htmlInsteadOfAsset(e.request,r)'),'HTML 대체 자산 캐시 보호 누락');
+ check(!/on:\s*push\b/.test(service),'서비스워커에 불필요한 푸시 이벤트가 포함됨');
  const {auditOfficialBank}=require('./audit-official-bank.cjs');
  const {auditExplanations}=require('./audit-explanation-readiness.cjs');
  const official=[JSON.parse(read('data/official-2016-2020.json')),
