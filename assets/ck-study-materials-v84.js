@@ -56,7 +56,11 @@ function write(next){
  try{
   const latest=read();
   if(storageIssue){note(storageIssue);return false;}
-  if(latest.revision!==store.revision){store=latest;note('다른 탭에서 자료가 변경되었습니다. 현재 편집 내용은 유지합니다. 복사 후 새로 확인해 주세요.');return false;}
+  if(latest.revision!==store.revision||
+    JSON.stringify(latest.documents)!==JSON.stringify(store.documents)){
+   store=latest;note('다른 탭에서 자료가 변경되었습니다(동일 revision 내용 변경 포함). 현재 편집 내용은 유지합니다. 복사 후 새로 확인해 주세요.');
+   return false;
+  }
   checked.revision=store.revision+1;
   localStorage.setItem(KEY,JSON.stringify(checked));store=checked;return true;
  }catch{note('저장 공간 부족 또는 브라우저 로컬 저장 권한 오류');return false;}
@@ -280,10 +284,32 @@ function remove(id){
  }
 }
 function download(){
- const blob=new Blob(['\uFEFF',JSON.stringify(store,null,2)],{type:'application/json'});
- const url=URL.createObjectURL(blob),a=document.createElement('a');
- a.href=url;a.download='ConceptKnot_개인교재자료_'+new Date().toISOString().slice(0,10)+'.json';
- document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);
+ // Never export an empty/stale view over damaged data, or omit unsaved editor text.
+ if(storageIssue){note(storageIssue+' 손상된 기존 자료는 원본 JSON 버튼으로 별도 보관하세요.');return false;}
+ if(hasUnsavedDocument()){
+  note('저장하지 않은 교재 메모 또는 진행 중인 OCR이 있습니다. 먼저 저장/중단 후 전체 JSON을 백업하세요.');
+  return false;
+ }
+ try{
+  const raw=localStorage.getItem(KEY),latest=read();
+  if(storageIssue){note(storageIssue);return false;}
+  if(JSON.stringify(latest)!==JSON.stringify(store)){
+   note('다른 탭에서 교재 자료가 변경됐습니다. 최신 화면을 불러온 다음 JSON 백업을 다시 시도하세요.');
+   return false;
+  }
+  const json=JSON.stringify(store,null,2);
+  if(raw!==localStorage.getItem(KEY)||hasUnsavedDocument()){
+   note('백업 작성 중 교재 자료 또는 편집 상태가 변경됐습니다. 오래된 JSON을 내보내지 않았습니다.');
+   return false;
+  }
+  const blob=new Blob(['\uFEFF',json],{type:'application/json'});
+  const url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download='ConceptKnot_개인교재자료_'+new Date().toISOString().slice(0,10)+'.json';
+  document.body.appendChild(a);
+  try{a.click()}finally{a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000)}
+  note('교재 자료 JSON 다운로드를 요청했습니다. 실제 저장된 파일을 열어 내용을 확인하세요.');
+  return true;
+ }catch{note('교재 JSON 내보내기 실패 · 저장소·다운로드 권한을 확인하세요. 기존 자료는 유지합니다.');return false;}
 }
 function hasUnsavedDocument(){
  const get=name=>root?.querySelector('[data-ck84-mat-'+name+']')?.value??'';
@@ -430,7 +456,7 @@ const main=document.getElementById('main');
 if(main&&window.MutationObserver)new MutationObserver(changes=>{
  if(!document.getElementById('ck84-materials')&&changes.some(x=>x.addedNodes.length))schedule();
 }).observe(main,{subtree:true,childList:true});
-window.CK84Materials=Object.freeze({sanitize,parseQuestions,orderedText,findDocuments,findOfficial,
+window.CK84Materials=Object.freeze({sanitize,parseQuestions,orderedText,findDocuments,findOfficial,download,
  getDocuments:()=>store.documents.map(x=>({...x})),
  getState:()=>({open:visible,working,documents:store.documents.length,revision:store.revision,storageIssue,storageConflict}),
  open:()=>{mount();const dock=root?.closest?.('#ck103-tools-dock');if(dock)dock.open=true;if(root&&!visible)toggle();}});

@@ -82,6 +82,13 @@ test('mobile swipe, rapid intentional tap, retarget click and ribbon replacement
  second.pill.fire('pointerdown',{target:second.tab,clientX:90});
  second.pill.fire('pointerup',{target:second.tab,clientX:91});
  assert.notEqual(second.pill.fire('click',{target:second.tab}).stopped,true);
+ // A tab pointer-down can be re-targeted to the logo/empty rail after a layout shift.
+ second.pill.fire('pointerdown',{target:second.tab,clientX:90});
+ second.pill.fire('pointerup',{target:second.tab,clientX:91});
+ const unrelated={closest:()=>null};
+ const accidental=second.pill.fire('click',{target:unrelated});
+ assert.equal(accidental.prevented,true,'re-targeted logo click should not navigate home');
+ assert.equal(accidental.stopped,true);
  const third=mk(620);second.pill.isConnected=false;active=third.pill;observer();
  while(frames.length){for(const fn of frames.splice(0))fn(now)}
  assert.equal(third.pill.scrollLeft,330);
@@ -182,8 +189,8 @@ test('extended manual QA checks are schema validated and may join the guarded JS
 test('offline v115 assets, guarded restore and manual-only deployment configuration',()=>{
  const html=read('index.html'),sw=read('sw.js'),config=JSON.parse(read('vercel.json'));
  assert.equal(config.git.deploymentEnabled,false);
- for(const asset of ['ck-nav-drag-v56.js?v=115','ck-study-links-v83.js?v=115',
-  'ck-full-exam-v82.js?v=115','ck-manual-qa-v115.js?v=127',
+ for(const asset of ['ck-nav-drag-v56.js?v=128','ck-study-links-v83.js?v=115',
+  'ck-full-exam-v82.js?v=115','ck-manual-qa-v115.js?v=128',
   'ck-manual-qa-v115.css?v=115','ck-data-integrity-v86.js?v=120',
   'ck-pdf-workspace-v15.js?v=118']){
   assert.ok(html.includes(asset),'HTML: '+asset);

@@ -115,7 +115,8 @@ function paintNormal(m,mirror,area,key){
   while(cache.nodes.length>typed.length)cache.nodes.pop().remove();
   cache.lastText=value;
  }
- if(position!==cache.lastPosition||value!==cache.lastLaidOutText){
+ const resized=cache.layoutWidth!==null&&cache.layoutWidth!==(mirror.clientWidth||0);
+ if(position!==cache.lastPosition||value!==cache.lastLaidOutText||resized){
   if(cache.live&&cache.anchor)cache.live.insertBefore(cache.anchor,cache.nodes[position]||null);
   locateLine(mirror,'[data-ck62-anchor]');
   cache.lastPosition=position;cache.lastLaidOutText=value;
@@ -150,7 +151,8 @@ function paintLetters(m,mirror,area,key){
   }
   cache.lastText=value;
  }
- if(cache.lastPosition!==position){
+ const resized=cache.layoutWidth!==null&&cache.layoutWidth!==(mirror.clientWidth||0);
+ if(cache.lastPosition!==position||resized){
   const index=m.positions[position]??m.positions[m.positions.length-1];
   const line=locateLine(mirror,'[data-ck62-reference="'+index+'"]');
   if(line){
@@ -478,6 +480,20 @@ document.addEventListener('keyup',e=>{
 });
 document.addEventListener('mouseup',refreshCaret);
 document.addEventListener('compositionend',refreshCaret);
+// A viewport/virtual-keyboard width change can rewrap text without a keypress.
+// One animation frame is enough; keep all observers idle outside the typing tab.
+let ck31ResizeFrame=0;
+function scheduleTypingCaretResize(){
+ if(state.view!=='typing'||ck31ResizeFrame)return;
+ ck31ResizeFrame=requestAnimationFrame(()=>{
+  ck31ResizeFrame=0;
+  if(state.view!=='typing')return;
+  const editor=document.querySelector('.ck-v7-input .chalk-editor');
+  if(editor)typingGhost(editor);
+ });
+}
+window.addEventListener('resize',scheduleTypingCaretResize,{passive:true});
+window.visualViewport?.addEventListener?.('resize',scheduleTypingCaretResize,{passive:true});
 window.CK31Typing=Object.freeze({mapText,mode:currentMode,letters,clean:normalized,buildPromptForItem,buildOfficialPrompt,
  options:()=>({mode:currentMode(),enter:currentMode()==='normal',space:currentMode()==='normal'})});
 })();

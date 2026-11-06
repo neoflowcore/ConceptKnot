@@ -242,12 +242,12 @@ function downloadRaw(){
 }
 /* v127: explicitly triggered, read-only inventory of the CURRENT SW cache.
  * A matching cache is a minimum offline prerequisite, not proof of full app operation. */
-const OFFLINE_CACHE='conceptknot-study-v127-integrity-guarded-offline';
+const OFFLINE_CACHE='conceptknot-study-v128-typing-gpu-lifecycle';
 const OFFLINE_MINIMUM=Object.freeze([
  './index.html',
- './assets/ck-data-diagnostics-v88.js?v=127',
+ './assets/ck-data-diagnostics-v88.js?v=128',
  './assets/ck-data-diagnostics-v88.css?v=125',
- './assets/ck-manual-qa-v115.js?v=127',
+ './assets/ck-manual-qa-v115.js?v=128',
  './assets/ck-study-links-v83.js?v=115',
  './assets/ck-study-editor-v80.js?v=127',
  './assets/ck-data-integrity-v86.js?v=120',

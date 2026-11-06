@@ -33,9 +33,11 @@
  }
  function boot(){
   const body=document.body;if(!body)return;
+  // A hidden or background window may fire pageshow/visibilitychange while unfocused.
+  if(typeof document.hasFocus==='function')focused=document.hasFocus();
   new MutationObserver(sync).observe(body,{attributes:true,attributeFilter:['data-ck-v8-tab']});
-  document.addEventListener('visibilitychange',()=>{if(!document.hidden)focused=true;sync()});
-  window.addEventListener('pageshow',()=>{focused=true;activeLast=null;sync()});
+  document.addEventListener('visibilitychange',()=>{focused=!document.hidden&&(document.hasFocus?.()??focused);sync()});
+  window.addEventListener('pageshow',()=>{focused=document.hasFocus?.()??true;activeLast=null;sync()});
   window.addEventListener('ck:scene-activity',sync);
   window.addEventListener('blur',()=>{focused=false;sync()});
   window.addEventListener('focus',()=>{focused=true;sync()});

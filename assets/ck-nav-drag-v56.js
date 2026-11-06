@@ -62,9 +62,9 @@
       if (performance.now() < suppressClickUntil) return;
       const actual = event.target?.closest?.('[data-go]');
       // A mobile click can be retargeted after a horizontal flick/layout shift.
-      // Never turn a finger-down on one tab into another tab or the brand link.
+      // Never turn a finger-down on a tab into another tab, the brand, or an empty rail.
       if (event.detail !== 0 && expectedTouchTab && performance.now() < expectedTouchTab.until &&
-          actual && actual.dataset?.go !== expectedTouchTab.id) {
+          (!actual || actual.dataset?.go !== expectedTouchTab.id)) {
         expectedTouchTab = null;
         selectedAnchor = null;
         event.preventDefault();event.stopImmediatePropagation();return;
