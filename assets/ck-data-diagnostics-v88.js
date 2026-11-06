@@ -242,12 +242,12 @@ function downloadRaw(){
 }
 /* v127: explicitly triggered, read-only inventory of the CURRENT SW cache.
  * A matching cache is a minimum offline prerequisite, not proof of full app operation. */
-const OFFLINE_CACHE='conceptknot-study-v128-typing-gpu-lifecycle';
+const OFFLINE_CACHE='conceptknot-study-v129-five-mixed-papers';
 const OFFLINE_MINIMUM=Object.freeze([
  './index.html',
- './assets/ck-data-diagnostics-v88.js?v=128',
+ './assets/ck-data-diagnostics-v88.js?v=129',
  './assets/ck-data-diagnostics-v88.css?v=125',
- './assets/ck-manual-qa-v115.js?v=128',
+ './assets/ck-manual-qa-v115.js?v=129',
  './assets/ck-study-links-v83.js?v=115',
  './assets/ck-study-editor-v80.js?v=127',
  './assets/ck-data-integrity-v86.js?v=120',
@@ -256,14 +256,15 @@ const OFFLINE_MINIMUM=Object.freeze([
  './data/official-2016-2020.json',
  './data/official-2021-2025.json'
 ]);
+const MIXED_OFFLINE=Object.freeze(['./assets/ck-mixed-mock-v129.js?v=129','./assets/ck-mixed-mock-v129.css?v=129']);
 async function offlineHealth(cacheStorage,controlled=false){
  if(!cacheStorage?.keys||!cacheStorage?.open)
   return {supported:false,installed:false,controlled:Boolean(controlled),cached:0,
-   required:OFFLINE_MINIMUM.length,missing:OFFLINE_MINIMUM.slice(),ready:false};
+   required:OFFLINE_MINIMUM.length,missing:OFFLINE_MINIMUM.slice(),ready:false,mixedCached:0,mixedRequired:MIXED_OFFLINE.length,mixedReady:false};
  const keys=await cacheStorage.keys();
  if(!keys.includes(OFFLINE_CACHE))
   return {supported:true,installed:false,controlled:Boolean(controlled),cached:0,
-   required:OFFLINE_MINIMUM.length,missing:OFFLINE_MINIMUM.slice(),ready:false};
+   required:OFFLINE_MINIMUM.length,missing:OFFLINE_MINIMUM.slice(),ready:false,mixedCached:0,mixedRequired:MIXED_OFFLINE.length,mixedReady:false};
  // Opening only after keys confirms its existence avoids creating a misleading empty cache.
  const current=await cacheStorage.open(OFFLINE_CACHE);
  const matches=await Promise.all(OFFLINE_MINIMUM.map(async path=>{
@@ -275,9 +276,16 @@ async function offlineHealth(cacheStorage,controlled=false){
   return !type.includes('text/html');
  }));
  const missing=OFFLINE_MINIMUM.filter((_,i)=>!matches[i]);
+ const mixedMatches=await Promise.all(MIXED_OFFLINE.map(async path=>{
+  const response=await current.match(path);
+  if(!response?.ok)return false;
+  return !/text\/html/i.test(String(response.headers?.get?.('content-type')||''));
+ }));
+ const mixedCached=mixedMatches.filter(Boolean).length;
  return {supported:true,installed:true,controlled:Boolean(controlled),
   cached:OFFLINE_MINIMUM.length-missing.length,required:OFFLINE_MINIMUM.length,
-  missing,ready:missing.length===0&&Boolean(controlled)};
+  missing,ready:missing.length===0&&Boolean(controlled),mixedCached,
+  mixedRequired:MIXED_OFFLINE.length,mixedReady:mixedCached===MIXED_OFFLINE.length&&Boolean(controlled)};
 }
 /* Ask the currently controlling SW which generation it actually runs.
  * No caches are modified, no page navigation, and no network requests.
@@ -314,14 +322,16 @@ async function runOfflineHealth(){
   const activeCurrent=controller.cache===OFFLINE_CACHE;
   const result=await offlineHealth(window.caches,activeCurrent);
   message.textContent=!result.supported?'브라우저에서 캐시 읽기를 지원하지 않습니다.':
-   !result.installed?'v127 오프라인 캐시 없음 · 아직 미배포 또는 설치 미완료입니다.':
+   !result.installed?'v129 오프라인 캐시 없음 · 아직 미배포 또는 설치 미완료입니다.':
    '현재 캐시의 필수 파일 '+result.cached+'/'+result.required+'개 · '+
-   (activeCurrent?'현재 v127 서비스워커가 이 탭을 제어함':controller.controlled?
+   (activeCurrent?'현재 v129 서비스워커가 이 탭을 제어함':controller.controlled?
     '구형 또는 응답 없는 서비스워커가 제어 중 · 현재 세대 확인 불가':'서비스워커가 이 탭을 제어하지 않음')+
    (result.missing.length?' · 미저장: '+result.missing.slice(0,3).map(x=>x.split('/').pop()).join(', ')+
     (result.missing.length>3?' 외 '+(result.missing.length-3)+'개':''):
     ' · 최소 파일 목록 충족. '+(activeCurrent?'현재 SW 세대도 일치. ':'SW 세대 미확인. ')+
-    '추가 기능 오프라인·실제 기기 동작은 별도 검사');
+    '혼합 5세트 자산 '+result.mixedCached+'/'+result.mixedRequired+'개 · '+
+    (result.mixedReady?'혼합 세트 JS/CSS 확보(문항 데이터·기기 동작은 별도 확인)':'혼합 세트 오프라인 준비 미확인')+
+    ' · 실제 기기 동작은 별도 검사');
   return result.ready;
  }catch(error){
   message.textContent='캐시 상태를 읽을 수 없습니다: '+String(error?.message||error).slice(0,160)+

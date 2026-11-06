@@ -89,10 +89,10 @@ test('background landing animation does not restart when a blurred window become
 });
 test('v128 asset cache and service-worker runtime generation remain in sync',()=>{
  const sw=read('sw.js'),diag=read('assets/ck-data-diagnostics-v88.js');
- assert.match(sw,/conceptknot-study-v128-typing-gpu-lifecycle/);
- assert.match(diag,/conceptknot-study-v128-typing-gpu-lifecycle/);
- for(const name of ['ck-gpu-guard-v21.js?v=128','ck-manual-qa-v115.js?v=128',
-  'ck-data-diagnostics-v88.js?v=128']){
+ assert.match(sw,/conceptknot-study-v129-five-mixed-papers/);
+ assert.match(diag,/conceptknot-study-v129-five-mixed-papers/);
+ for(const name of ['ck-gpu-guard-v21.js?v=128','ck-manual-qa-v115.js?v=129',
+  'ck-data-diagnostics-v88.js?v=129']){
   assert.ok(html.includes(name),'HTML missing '+name);
   assert.ok(sw.includes(name),'SW missing '+name);
  }
@@ -100,8 +100,8 @@ test('v128 asset cache and service-worker runtime generation remain in sync',()=
 });
 test('manual verification and deployment economy are unchanged',()=>{
  const qa=read('assets/ck-manual-qa-v115.js');
- assert.equal((qa.match(/\{id:'[-a-z0-9]+',group:/g)||[]).length,27);
- assert.match(qa,/실기검증표 v128/);
+ assert.equal((qa.match(/\{id:'[-a-z0-9]+',group:/g)||[]).length,28);
+ assert.match(qa,/실기검증표 v129/);
  assert.equal(JSON.parse(read('vercel.json')).git.deploymentEnabled,false);
  assert.equal(fs.existsSync(path.join(BASE,'.github','workflows')),false);
 });

@@ -18,7 +18,7 @@ function run(){
  const html=read('index.html'),service=read('sw.js'),vc=JSON.parse(read('vercel.json'));
  check(vc.git?.deploymentEnabled===false,'Vercel Git 자동배포가 비활성이 아닙니다.');
  check(!fs.existsSync(path.join(ROOT,'.github/workflows')),'GitHub Actions workflow 디렉터리가 존재합니다.');
- check(service.includes('conceptknot-study-v128-typing-gpu-lifecycle'),'서비스 워커 v127 캐시 버전 불일치');
+ check(service.includes('conceptknot-study-v129-five-mixed-papers'),'서비스 워커 v129 캐시 버전 불일치');
  const {scripts,css}=pathsFromHtml(html);
  for(const src of [...scripts,...css]){
   if(!isLocal(src))continue;
@@ -63,12 +63,20 @@ function run(){
  check(service.includes('e.waitUntil(caches.open(CACHE)'), '네트워크 응답 캐시 쓰기가 생명주기에 연결되지 않았습니다.');
  const diag=read('assets/ck-data-diagnostics-v88.js');
  check(diag.includes('controllerCacheInfo()'),'실제 활성 SW 세대 확인 로직이 없습니다.');
- check(diag.includes('current.match(path).then('),'오프라인 자산 쿼리 버전 정확 비교 누락');
+ check(diag.includes('await current.match(path)'),'오프라인 자산 쿼리 버전 정확 비교 누락');
  check(!diag.includes("current.match(path,{ignoreSearch:true})"),'오프라인 진단이 버전 쿼리를 무시합니다.');
- for(const suffix of ['ck-data-diagnostics-v88.js?v=128','ck-data-diagnostics-v88.css?v=125','ck-manual-qa-v115.js?v=128']){
+ for(const suffix of ['ck-data-diagnostics-v88.js?v=129','ck-data-diagnostics-v88.css?v=125','ck-manual-qa-v115.js?v=129']){
   check(html.includes(suffix),'HTML 진단 자산 누락: '+suffix);
   check(service.includes('./assets/'+suffix),'SW 진단 자산 누락: '+suffix);
  }
+ for(const filename of ['ck-mixed-mock-v129.js?v=129','ck-mixed-mock-v129.css?v=129']){
+  check(html.includes('./assets/'+filename),'혼합 5세트 HTML 자산 누락: '+filename);
+  check(service.includes('./assets/'+filename),'혼합 5세트 오프라인 목록 누락: '+filename);
+ }
+ const mixed=read('assets/ck-mixed-mock-v129.js');
+ check(mixed.includes('ck129-mixed-sessions-v1'),'혼합 세트 별도 기록 키 누락');
+ check(mixed.includes('DURATION=6000000'),'혼합 세트 100분 타이머 규칙 누락');
+ check(mixed.includes('makeSet(set)'),'혼합 세트 배정 로직 누락');
  check(service.includes('htmlInsteadOfAsset(e.request,r)'),'HTML 대체 자산 캐시 보호 누락');
  check(service.includes('invalidCoreResponse(path,response)'),'HTTP 200 HTML 필수파일 활성화 방지 누락');
  check(service.includes('if(url.search)return null;'),'쿼리 다른 구버전 자산의 오프라인 폴백 차단 누락');

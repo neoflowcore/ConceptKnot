@@ -1,0 +1,44 @@
+/* ConceptKnot 10-year mixed practice: follows existing wood/brown and dark theme. */
+.ck129-mixed-mocks{margin:14px 0;padding:13px;border:1px solid rgba(142,134,111,.32);border-radius:13px;background:rgba(145,133,105,.07);color:inherit;max-width:100%;min-width:0}
+.ck129-mixed-mocks [hidden]{display:none!important}
+.ck129-mixed-mocks button,.ck129-mixed-mocks select{font:inherit;color:inherit;border:1px solid rgba(140,133,115,.38);border-radius:8px;background:rgba(140,133,115,.1);min-height:36px;padding:7px 10px;cursor:pointer}
+.ck129-mixed-mocks button[disabled]{opacity:.45;cursor:not-allowed}
+.ck129-mixed-mocks button:focus-visible,.ck129-mixed-mocks select:focus-visible,.ck129-mixed-mocks a:focus-visible{outline:2px solid #a39167;outline-offset:2px}
+.ck129-heading,.ck129-controls,.ck129-session-head,.ck129-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.ck129-heading,.ck129-session-head{justify-content:space-between}
+.ck129-heading strong{font-size:17px;line-height:1.4}
+.ck129-heading p,.ck129-heading small,.ck129-bank,.ck129-message,.ck129-disclaimer,.ck129-warning{font-size:12px;line-height:1.55;opacity:.82}
+.ck129-heading p{margin:5px 0}.ck129-heading small{display:block}
+.ck129-controls label{display:grid;gap:3px;font-size:12px}
+.ck129-controls select{min-width:102px}
+.ck129-bank{margin:8px 0 0}.ck129-message{margin:4px 0;color:inherit}
+.ck129-workspace{margin-top:12px;min-width:0}
+.ck129-session-head{padding:5px 0 8px}.ck129-session-head div{display:grid;gap:3px}
+.ck129-session-head small{font-size:12px;opacity:.8}.ck129-clock{font-size:27px;font-variant-numeric:tabular-nums}
+.ck129-progress{font-size:12px;margin:0 0 10px;opacity:.85}
+.ck129-layout{display:grid;grid-template-columns:minmax(0,2fr) minmax(220px,1fr);gap:12px;align-items:start}
+.ck129-question,.ck129-omr{min-width:0;border:1px solid rgba(142,134,111,.26);padding:11px;border-radius:10px}
+.ck129-stem{white-space:pre-wrap;overflow-wrap:anywhere;font-size:15px;line-height:1.7;margin:7px 0 14px}
+.ck129-options{display:grid;gap:7px}
+.ck129-mixed-mocks .ck129-options button{display:flex;gap:9px;align-items:flex-start;text-align:left;width:100%;font-size:13px;line-height:1.55}
+.ck129-options button b{font-size:17px}.ck129-options button span{min-width:0;overflow-wrap:anywhere}
+.ck129-options button[aria-pressed=true]{outline:2px solid #a08c64;background:rgba(155,137,98,.22)}
+.ck129-question a{color:inherit;display:inline-block;margin:9px 0;text-decoration:underline;font-size:12px}
+.ck129-omr>div+div{margin-top:13px}.ck129-omr h4{margin:0 0 7px;font-size:13px}
+.ck129-grid{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:4px}
+.ck129-mixed-mocks .ck129-grid button{padding:4px 0;min-width:0;min-height:31px;font-size:11px;font-variant-numeric:tabular-nums}
+.ck129-grid .answered{background:rgba(74,133,102,.2)}.ck129-grid .flagged{border-color:#ce9b39;background:rgba(206,155,57,.12)}
+.ck129-grid .current{outline:2px solid #95754a;outline-offset:0}
+.ck129-actions{margin:12px 0}.ck129-warning{color:#a45c3f}
+.ck129-scores{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:10px 0}
+.ck129-scores>div{display:grid;gap:6px;text-align:center;padding:10px;border:1px solid rgba(142,134,111,.26);border-radius:9px}
+.ck129-scores strong{font-size:22px;font-variant-numeric:tabular-nums}.ck129-scores small{font-size:12px}
+.ck129-result>h4{margin:0;font-size:16px}.ck129-result>p{font-size:12px;line-height:1.6}
+.ck129-result-list{display:grid;gap:6px;margin-top:10px;max-height:360px;overflow:auto}
+.ck129-result-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;padding:8px 9px;border:1px solid rgba(142,134,111,.2);border-radius:7px;font-size:12px}
+.ck129-result-row a{color:inherit;text-decoration:underline}
+.ck129-history{margin-top:12px;border-top:1px solid rgba(142,134,111,.24);padding-top:10px}
+.ck129-history>div{display:flex;justify-content:space-between;align-items:center;gap:7px;padding:6px 0;font-size:12px}
+@media(max-width:740px){.ck129-layout{grid-template-columns:1fr}.ck129-heading{align-items:flex-start}.ck129-controls{width:100%}.ck129-mixed-mocks{padding:10px}.ck129-scores strong{font-size:18px}}
+@media(max-width:380px){.ck129-grid{grid-template-columns:repeat(8,minmax(0,1fr));gap:2px}.ck129-mixed-mocks .ck129-grid button{font-size:10px}}
+@media(prefers-reduced-motion:reduce){.ck129-mixed-mocks *{scroll-behavior:auto!important;animation:none!important}}

@@ -108,14 +108,14 @@ test('OCR page archive is added to guarded global JSON backup and restore',()=>{
 });
 test('v120 assets are cached and release still requires manual deployment',()=>{
  const sw=read('sw.js'),html=read('index.html'),config=JSON.parse(read('vercel.json'));
- assert.match(sw,/conceptknot-study-v128-typing-gpu-lifecycle/);
+ assert.match(sw,/conceptknot-study-v129-five-mixed-papers/);
  for(const file of ['ck-ocr-v118.js?v=127','ck-ocr-v118.css?v=120','ck-data-integrity-v86.js?v=120']){
   assert.ok(html.includes(file),'HTML missing '+file);
   assert.equal(sw.split(file).length-1,file.startsWith('ck-data-integrity')?3:2,
    'ASSETS/HOT/required offline core must include '+file);
  }
- assert.ok(html.includes('ck-manual-qa-v115.js?v=128'),'HTML loads the current QA version');
- assert.equal(sw.split('ck-manual-qa-v115.js?v=128').length-1,3,
+ assert.ok(html.includes('ck-manual-qa-v115.js?v=129'),'HTML loads the current QA version');
+ assert.equal(sw.split('ck-manual-qa-v115.js?v=129').length-1,3,
   'current cache must contain the updated QA asset in both lists');
  assert.match(sw,/ignoreSearch:true/);
  assert.equal(config.git.deploymentEnabled,false);
