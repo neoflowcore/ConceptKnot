@@ -242,12 +242,12 @@ function downloadRaw(){
 }
 /* v127: explicitly triggered, read-only inventory of the CURRENT SW cache.
  * A matching cache is a minimum offline prerequisite, not proof of full app operation. */
-const OFFLINE_CACHE='conceptknot-study-v129-five-mixed-papers';
+const OFFLINE_CACHE='conceptknot-study-v130-fixed-paper-integrity';
 const OFFLINE_MINIMUM=Object.freeze([
  './index.html',
- './assets/ck-data-diagnostics-v88.js?v=129',
+ './assets/ck-data-diagnostics-v88.js?v=130',
  './assets/ck-data-diagnostics-v88.css?v=125',
- './assets/ck-manual-qa-v115.js?v=129',
+ './assets/ck-manual-qa-v115.js?v=130',
  './assets/ck-study-links-v83.js?v=115',
  './assets/ck-study-editor-v80.js?v=127',
  './assets/ck-data-integrity-v86.js?v=120',
@@ -256,7 +256,7 @@ const OFFLINE_MINIMUM=Object.freeze([
  './data/official-2016-2020.json',
  './data/official-2021-2025.json'
 ]);
-const MIXED_OFFLINE=Object.freeze(['./assets/ck-mixed-mock-v129.js?v=129','./assets/ck-mixed-mock-v129.css?v=129']);
+const MIXED_OFFLINE=Object.freeze(['./assets/ck-mixed-mock-v129.js?v=130','./assets/ck-mixed-mock-v129.css?v=130']);
 async function offlineHealth(cacheStorage,controlled=false){
  if(!cacheStorage?.keys||!cacheStorage?.open)
   return {supported:false,installed:false,controlled:Boolean(controlled),cached:0,

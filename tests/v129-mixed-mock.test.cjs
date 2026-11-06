@@ -117,7 +117,7 @@ test('new feature is linked, optional-cached, and does not enable automatic depl
  assert.match(html,/ck-mixed-mock-v129\.css\?v=129/);
  assert.match(sw,/ck-mixed-mock-v129\.js\?v=129/);
  assert.match(sw,/ck-mixed-mock-v129\.css\?v=129/);
- assert.match(sw,/conceptknot-study-v129-five-mixed-papers/);
+ assert.match(sw,/conceptknot-study-v130-fixed-paper-integrity/);
  assert.equal(vc.git.deploymentEnabled,false);
  assert.equal(fs.existsSync(path.join(root,'.github','workflows')),false);
 });

@@ -190,7 +190,7 @@ test('offline v115 assets, guarded restore and manual-only deployment configurat
  const html=read('index.html'),sw=read('sw.js'),config=JSON.parse(read('vercel.json'));
  assert.equal(config.git.deploymentEnabled,false);
  for(const asset of ['ck-nav-drag-v56.js?v=128','ck-study-links-v83.js?v=115',
-  'ck-full-exam-v82.js?v=115','ck-manual-qa-v115.js?v=129',
+  'ck-full-exam-v82.js?v=115','ck-manual-qa-v115.js?v=130',
   'ck-manual-qa-v115.css?v=115','ck-data-integrity-v86.js?v=120',
   'ck-pdf-workspace-v15.js?v=118']){
   assert.ok(html.includes(asset),'HTML: '+asset);

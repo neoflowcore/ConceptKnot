@@ -49,8 +49,15 @@ function checkIds(ids,official=bank()){
  return {ready:missing.length===0,missing};
 }
 const checkSet=set=>checkIds(makeSet(set));
+/* Each published mixed set has an immutable, deterministic question/order map.
+ * A valid-looking imported ID list must not impersonate another paper. */
+function matchesFixedPaper(set,ids){
+ if(!validSet(set)||!validIds(ids))return false;
+ const canonical=makeSet(set);
+ return canonical.length===80&&canonical.every((id,i)=>id===ids[i]);
+}
 function sanitizeSession(s){
- if(!s||!validSet(s.set)||!validIds(s.ids)||!['running','paused','submitted'].includes(s.status)||
+ if(!s||!matchesFixedPaper(s.set,s.ids)||!['running','paused','submitted'].includes(s.status)||
   !Array.isArray(s.answers)||s.answers.length!==80||s.answers.some(x=>x!==null&&!mark(x))||
   !Array.isArray(s.flags)||s.flags.length!==80||s.flags.some(x=>typeof x!=='boolean')||
   !Number.isSafeInteger(s.startedAt)||s.startedAt<=0||s.startedAt>Date.now()+86400000||
@@ -74,7 +81,7 @@ function cleanStore(x){
  return {schemaVersion:VERSION,revision:x.revision,active,history};
 }
 let loadedRaw=null,issue='',message='',state=empty(),root=null,expanded=false,selectedSet=1,
- showHistory=false,historyDetail=-1,loading=false,clock=null,scheduled=false;
+ showHistory=false,historyDetail=-1,resultFilter='all',loading=false,clock=null,scheduled=false;
 function read(){
  try{const raw=localStorage.getItem(KEY);
   if(raw===null){loadedRaw=null;issue='';return empty();}
@@ -109,7 +116,7 @@ function persist(candidate){
  }catch{message='브라우저 저장 권한/용량 오류입니다. 기존 기록은 보호됩니다.';return false;}
 }
 function grade(s,official=bank()){
- if(!s||!checkIds(s.ids,official).ready)return null;
+ if(!s||!matchesFixedPaper(s.set,s.ids)||!checkIds(s.ids,official).ready)return null;
  let estateCount=0,civilCount=0,answered=0;
  const wrong=[],blank=[],correct=[],allAccepted=[];
  for(let i=0;i<80;i++){
@@ -146,9 +153,17 @@ function start(set=selectedSet){
  if(active()&&active().status!=='submitted'&&
   !window.confirm?.('현재 혼합 실전의 미제출 답안을 새 시험으로 교체할까요?'))return false;
  const s=createAttempt(set);if(!s||!persist({...state,active:s}))return false;
- selectedSet=set;expanded=true;showHistory=false;historyDetail=-1;paint();focus();return true;
+ selectedSet=set;expanded=true;showHistory=false;historyDetail=-1;resultFilter='all';paint();focus();return true;
 }
-function saveSession(s){if(!s)return false;const ok=persist({...state,active:s});paint();return ok;}
+function saveSession(s){
+ if(!s)return false;
+ const ok=persist({...state,active:s});
+ paint();
+ // Repainting replaces the focused answer/OMR button. Restore keyboard focus
+ // to the stable workspace so numeric and arrow shortcuts remain usable.
+ if(ok&&expanded)focus();
+ return ok;
+}
 function answer(v){const s=active();if(s?.status!=='running')return false;
  if(remaining(s)===0){finish('time');return false;}
  if(v!==null&&!mark(v))return false;
@@ -157,7 +172,7 @@ function answer(v){const s=active();if(s?.status!=='running')return false;
 function goto(index){const s=active();if(!s||!Number.isInteger(index)||index<0||index>=80)return false;
  if(s.status==='running'&&remaining(s)===0){finish('time');return false;}
  return saveSession({...s,position:index});}
-function flag(){const s=active();if(!s||s.status==='submitted')return false;
+function flag(){const s=active();if(!s||s.status!=='running')return false;
  if(s.status==='running'&&remaining(s)===0){finish('time');return false;}
  const flags=s.flags.slice();flags[s.position]=!flags[s.position];return saveSession({...s,flags});}
 function pause(){const s=active();if(s?.status!=='running')return false;
@@ -171,7 +186,7 @@ function finish(reason='manual',now=Date.now()){
  const submitted={...s,status:'submitted',submittedAt:now,remainingMs:0,
   reason:reason==='time'||(s.status==='running'&&remaining(s,now)===0)?'time':'manual'};
  if(!persist({...state,active:submitted,history:[submitted,...state.history].slice(0,HISTORY_LIMIT)}))return false;
- expanded=true;historyDetail=-1;showHistory=false;paint();
+ expanded=true;historyDetail=-1;showHistory=false;resultFilter='all';paint();
  try{document.dispatchEvent(new Event('ck:mixed-exam-submitted',{detail:{set:s.set}}));}catch{}
  return true;
 }
@@ -193,7 +208,7 @@ function questionPanel(s){
   q.options.map((opt,k)=>'<button type="button" data-ck129-answer="'+(k+1)+'" aria-pressed="'+(s.answers[i]===k+1)+'"'+
   (can?'':' disabled')+'><b>'+'①②③④⑤'[k]+'</b><span>'+esc(opt)+'</span></button>').join('')+'</div>'+
   '<div class="ck129-actions"><button type="button" data-ck129-clear'+(can?'':' disabled')+'>미응답</button>'+
-  '<button type="button" data-ck129-flag'+(s.status==='submitted'?' disabled':'')+'>'+(s.flags[i]?'보류 해제':'보류 표시')+'</button>'+
+  '<button type="button" data-ck129-flag'+(can?'':' disabled')+'>'+(s.flags[i]?'보류 해제':'보류 표시')+'</button>'+
   '<button type="button" data-ck129-prev'+(i===0?' disabled':'')+'>이전</button>'+
   '<button type="button" data-ck129-next'+(i===79?' disabled':'')+'>다음</button></div>'+
   '<a href="'+esc(q.originalUrl)+'" target="_blank" rel="noopener noreferrer">공식 문제지 원문 대조</a>'+
@@ -223,12 +238,21 @@ function resultPanel(s,source='active'){
   '<p>응답 '+g.answered+'/80 · 오답 '+g.wrong.length+' · 미응답 '+g.blank.length+
   ' · 전원정답 처리 '+g.allAccepted.length+' · 중단 '+s.pauseCount+'회</p>'+
   '<p class="ck129-disclaimer">미응답은 정답으로 채점하지 않습니다. 정답 인정은 선지 진위와 다를 수 있습니다.</p>'+
-  '<button type="button" data-ck129-export="'+esc(source)+'">개인 결과 TXT</button><div class="ck129-result-list">'+
+  '<div class="ck130-result-filters" role="group" aria-label="제출 결과 필터">'+
+  [['all','전체 80문항'],['wrong','오답 '+g.wrong.length+'문항'],['blank','미응답 '+g.blank.length+'문항'],['flagged','보류 '+s.flags.filter(Boolean).length+'문항']].map(([key,label])=>
+   '<button type="button" data-ck130-filter="'+key+'" aria-pressed="'+(resultFilter===key)+'">'+label+'</button>').join('')+
+  '</div><button type="button" data-ck129-export="'+esc(source)+'">개인 결과 TXT</button>'+
+  (resultFilter==='wrong'&&!g.wrong.length?'<p role="status">이 세트에는 오답이 없습니다.</p>':'')+
+  (resultFilter==='blank'&&!g.blank.length?'<p role="status">이 세트에는 미응답 문항이 없습니다.</p>':'')+
+  (resultFilter==='flagged'&&!s.flags.some(Boolean)?'<p role="status">이 세트에는 보류 표시한 문항이 없습니다.</p>':'')+
+  '<div class="ck129-result-list">'+
   s.ids.map((id,i)=>{
    const q=bank()[id],answer=s.answers[i],ok=answer!==null&&q.correct.map(Number).includes(answer);
+   if(resultFilter==='wrong'&&(answer===null||ok)||resultFilter==='blank'&&answer!==null||resultFilter==='flagged'&&!s.flags[i])return '';
    return '<div class="ck129-result-row"><b>'+(i+1)+'번 '+id+'</b><span>'+(answer===null?'미응답':ok?'정답':'오답')+
     ' · 내 답 '+(answer===null?'—':answer)+' · 인정 '+esc(q.correct.join('/'))+'</span>'+
-    '<a href="'+esc(q.originalUrl)+'" target="_blank" rel="noopener noreferrer">원문</a></div>';
+    '<a href="'+esc(q.originalUrl)+'" target="_blank" rel="noopener noreferrer">원문</a>'+
+    '<button type="button" data-ck130-review="'+esc(id)+'">근거·개인 풀이</button></div>';
   }).join('')+'</div></div>';
 }
 function fromSource(source){if(source==='active')return active()?.status==='submitted'?active():null;
@@ -248,7 +272,18 @@ function resultText(s){const g=grade(s);if(!s||s.status!=='submitted'||!g)return
  }
  return lines.join('\n')+'\n';
 }
-function download(source){const s=fromSource(source),text=resultText(s);
+function download(source){
+ // Keep exported score rows consistent with the exact browser snapshot.
+ try{
+  if(issue||localStorage.getItem(KEY)!==loadedRaw){
+   message='다른 탭의 변경 또는 손상 기록이 감지되어 결과 TXT를 생성하지 않았습니다. 최신 기록을 확인하세요.';
+   paint();return false;
+  }
+ }catch{
+  message='시험 기록 저장소를 읽지 못해 결과 TXT를 생성하지 않았습니다.';
+  paint();return false;
+ }
+ const s=fromSource(source),text=resultText(s);
  if(!text){message='공식 기출을 불러온 제출 기록에서만 결과 TXT를 만들 수 있습니다.';paint();return false;}
  try{const file=new Blob(['\uFEFF',text],{type:'text/plain;charset=utf-8'}),url=URL.createObjectURL(file);
   const a=document.createElement('a');a.href=url;a.download='ConceptKnot_혼합_'+s.set+'세트_'+s.submittedAt+'.txt';
@@ -267,6 +302,10 @@ function backup(){try{const raw=localStorage.getItem(KEY);
 /* Restore is non-destructive: keep a running local exam; merge submitted
  * history by session identity and refuse overflow rather than dropping it. */
 function mergeRestore(current,incoming){
+ const invalid=pack=>!pack||!Array.isArray(pack.history)||pack.history.some(row=>!sanitizeSession(row))||
+  pack.active!==null&&pack.active!==undefined&&!sanitizeSession(pack.active);
+ if(invalid(current)||invalid(incoming))
+  throw Error('혼합 연습 병합 원본의 세트·답안·시간 형식이 유효하지 않습니다.');
  const seen=new Map(),history=[];
  const add=s=>{
   if(!s||s.status!=='submitted')return;
@@ -319,7 +358,7 @@ function paint(){
  if(!root?.isConnected)return;
  const s=active(),ready=checkSet(selectedSet).ready;
  root.innerHTML='<div class="ck129-heading"><div><strong>10개년 공식 기출 혼합 5세트</strong>'+
-  '<p>세트마다 학개론 40 + 민법 40 · 100분 · 세트 간 문항 중복 없이 재배열</p>'+
+  '<p>세트마다 학개론 40 + 민법 40 · 100분 · 5세트 고정 배정 400문항(세트 간 중복 없음)</p>'+
   '<small>법령 내용을 뒤집어 새로 만든 응용 문항이 아니라 공식 A형 기출 재배열입니다.</small></div>'+
   '<div class="ck129-controls"><label>연습 세트 <select data-ck129-set>'+Array.from({length:5},(_,i)=>
   '<option value="'+(i+1)+'"'+(selectedSet===i+1?' selected':'')+'>'+(i+1)+'세트</option>').join('')+'</select></label>'+
@@ -335,8 +374,14 @@ function paint(){
   '<div class="ck129-workspace" data-ck129-workspace tabindex="0"'+(expanded?'':' hidden')+'>'+
   (expanded?s?(s.status==='submitted'?resultPanel(s):questionPanel(s)):'<p>1~5세트에서 선택 후 시작하세요.</p>':'')+'</div>'+
   (showHistory?'<section class="ck129-history"><h4>혼합 실전 최근 10회</h4>'+
-  state.history.map((h,i)=>'<div><strong>'+h.set+'세트 · '+new Date(h.submittedAt).toLocaleDateString('ko-KR')+'</strong>'+
-   '<button type="button" data-ck129-detail="'+i+'">상세 보기</button></div>').join('')+
+  state.history.map((h,i)=>{
+   const outcome=grade(h);
+   return '<div><strong>'+h.set+'세트 · '+new Date(h.submittedAt).toLocaleDateString('ko-KR')+'</strong>'+
+    '<small>'+(outcome?'학개론 '+outcome.estate.toFixed(1)+' / 민법 '+outcome.civil.toFixed(1)+
+     ' · 평균 '+outcome.average.toFixed(1)+' · 오답 '+outcome.wrong.length+' · 미응답 '+outcome.blank.length+' · '+(outcome.passed?'연습 기준 충족':'연습 기준 미달'):
+     '공식 80문항 로딩 후 채점 결과 확인')+'</small>'+
+    '<button type="button" data-ck129-detail="'+i+'">상세 보기</button></div>';
+  }).join('')+
   (state.history[historyDetail]?resultPanel(state.history[historyDetail],'history:'+historyDetail):'')+'</section>':'');
  syncTimer();
 }
@@ -349,7 +394,7 @@ document.addEventListener('click',e=>{
  const btn=e.target.closest?.('[data-ck129-start],[data-ck129-toggle],[data-ck129-history],[data-ck129-backup],[data-ck129-import],'+
  '[data-ck129-answer],[data-ck129-clear],[data-ck129-goto],[data-ck129-next],[data-ck129-prev],'+
  '[data-ck129-flag],[data-ck129-pause],[data-ck129-resume],[data-ck129-submit],'+
- '[data-ck129-collapse],[data-ck129-export],[data-ck129-detail]');
+ '[data-ck129-collapse],[data-ck129-export],[data-ck129-detail],[data-ck130-filter],[data-ck130-review]');
  if(!btn||!root?.contains(btn))return;e.preventDefault();e.stopPropagation();
  if(btn.hasAttribute('data-ck129-start'))start();
  else if(btn.hasAttribute('data-ck129-toggle')){expanded=!expanded;paint();if(expanded)focus();}
@@ -367,6 +412,27 @@ document.addEventListener('click',e=>{
  else if(btn.hasAttribute('data-ck129-collapse')){expanded=false;paint();}
  else if(btn.hasAttribute('data-ck129-detail')){historyDetail=Number(btn.dataset.ck129Detail);paint();}
  else if(btn.hasAttribute('data-ck129-export'))download(btn.dataset.ck129Export);
+ else if(btn.hasAttribute('data-ck130-filter')){
+  const value=btn.dataset.ck130Filter;
+  if(['all','wrong','blank','flagged'].includes(value)){
+   resultFilter=value;paint();
+   // The pressed filter button is recreated by paint(). Preserve keyboard focus.
+   root?.querySelector('[data-ck130-filter="'+value+'"]')?.focus?.({preventScroll:true});
+  }
+ }else if(btn.hasAttribute('data-ck130-review')){
+  const id=btn.dataset.ck130Review;
+  if(!formId(id)||!validQuestion(id,bank()[id])){message='공식 문항을 먼저 읽어야 개인 근거 검토를 열 수 있습니다.';paint();return;}
+  const [year,number]=id.split('-').map(Number),q=bank()[id];
+  let opened=null;
+  if(year>=2021&&typeof window.CK78Analysis?.open==='function')
+   opened=window.CK78Analysis.open(year,number,btn);
+  else if(typeof window.CK76Study?.openQuestion==='function')
+   opened=window.CK76Study.openQuestion(year,number,q.subject);
+  else {message='문항 검토 화면을 열지 못했습니다. 해당 연도의 공식 원문을 확인하세요.';paint();return;}
+  if(opened&&typeof opened.catch==='function')opened.catch(error=>{
+   message='개인 근거 검토 연결 오류: '+String(error?.message||error);paint();
+  });
+ }
  else if(btn.hasAttribute('data-ck129-submit')){
   const s=active();if(!s||s.status==='submitted')return;
   if(s.status==='running'&&remaining(s)===0){finish('time');return;}
@@ -396,6 +462,8 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden){checkExpi
 window.addEventListener('pageshow',()=>{checkExpired();paint();syncTimer();});
 window.addEventListener('pagehide',()=>{if(clock!==null){clearInterval(clock);clock=null;}});
 window.addEventListener('storage',e=>{if(e.key!==KEY)return;state=read();historyDetail=-1;
+ // A detached/hidden tab cannot rely on paint() to stop its timer.
+ syncTimer();
  message=issue||'다른 탭의 혼합 실전 기록을 불러왔습니다.';paint();});
 window.addEventListener('ck:official-bank-ready',()=>{checkExpired();paint();});
 window.addEventListener('ck:scene-activity',syncTimer);
@@ -408,9 +476,9 @@ if(main&&window.MutationObserver)new MutationObserver(changes=>{
 if(document.body&&window.MutationObserver)new MutationObserver(syncTimer).observe(
  document.body,{attributes:true,attributeFilter:['data-ck-v8-tab']});
 checkExpired();
-window.CK129MixedMock=Object.freeze({makeSet,validIds,validQuestion,checkSet,checkIds,
+window.CK129MixedMock=Object.freeze({makeSet,validIds,matchesFixedPaper,validQuestion,checkSet,checkIds,
  sanitizeSession,cleanStore,grade,createAttempt,remaining,clockText,
- getState:()=>({active:active()?.status||'none',set:active()?.set||null,history:state.history.length,
+ getState:()=>({active:active()?.status||'none',set:active()?.set||null,history:state.history.length,resultFilter,
   revision:state.revision,remainingMs:remaining(active()),issue,message,loading,expanded}),
  getAttempts:()=>state.history.map(s=>JSON.parse(JSON.stringify(s))),
  start,answer,goto,flag,pause,resume,finish,resultText,backup,mergeRestore,importFile,

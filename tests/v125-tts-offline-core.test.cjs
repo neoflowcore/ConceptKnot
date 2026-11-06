@@ -172,8 +172,8 @@ test('CRITICAL in SW matches offline health scope; index and SW use identical v1
  assert.ok(idx>0&&end>idx);
  const paths=[...sw.slice(idx,end).matchAll(/'(\.\/[^']+)'/g)].map(m=>m[1]);
  assert.deepEqual(paths,[...api.OFFLINE_MINIMUM]);
- for(const suffix of ['ck-data-diagnostics-v88.js?v=129',
- 'ck-data-diagnostics-v88.css?v=125','ck-manual-qa-v115.js?v=129']){
+ for(const suffix of ['ck-data-diagnostics-v88.js?v=130',
+ 'ck-data-diagnostics-v88.css?v=125','ck-manual-qa-v115.js?v=130']){
   assert.equal(html.split(suffix).length-1,1);
   assert.equal(sw.split(suffix).length-1,3,'ASSETS, HOT, CRITICAL');
  }
