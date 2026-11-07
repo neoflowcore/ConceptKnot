@@ -261,6 +261,7 @@ window.RECALL_CONTENT = {
 <script src="./assets/ck-mock-judge-v21.js"></script>
 <script src="./assets/ck-gpu-guard-v21.js?v=128" defer></script>
 <script src="./assets/ck-mobile-board-v21.js?v=59" defer></script>
+<script src="./assets/ck-voice-controller-v138.js?v=138"></script>
 <script>
 /* RECALLGRAPH First-Exam Sprint. Browser-only, no analytics/server/API. */
 (() => {
@@ -1551,6 +1552,68 @@ neuralSpeak=async function(items,options={}){
  }
 };
 
+
+
+/* v138: single native/AI playback controller. Existing CK76Voice callers remain stable. */
+const ck138VoiceFactory=window.CKVoiceControllerFactory;
+const ck138Voice=ck138VoiceFactory?.create({
+ synthesis:()=>window.speechSynthesis,
+ newUtterance:text=>new window.SpeechSynthesisUtterance(text),
+ getVoices:()=>{try{ttsVoices=window.speechSynthesis.getVoices()||[]}catch{ttsVoices=[]}return ttsVoices;},
+ selectVoice:()=>ttsChosenVoice(),
+ aiReady:()=>Boolean(window.CKNeural?.ready),
+ speakAI:(text,rate,onAudioStart)=>window.CKNeural.speak(text,ttsSettings().neuralVoice,rate,onAudioStart),
+ stopAI:()=>window.CKNeural?.stop?.(),
+ pauseAI:()=>window.CKNeural?.pause?.(),
+ onState:state=>{
+  ck76Voice.engine=state.engine;ck76Voice.total=state.total;
+  ck76Voice.position=state.position;ck76Voice.paused=state.paused;
+  ck76VoiceState(state.status==='preparing'?'preparing':state.status,state.reason);
+ },
+ onStart:(i,text)=>{
+  ck76Voice.position=i+1;
+  ck108Progress(i);
+  ck76DisplayProgress(ck76Voice.label+' · '+(i+1)+' · '+text.slice(0,70));
+ },
+ onSplit:(i,parts)=>{
+  if(ck108Playlist?.continuous&&Array.isArray(ck108Playlist.segmentNumbers)){
+   const original=ck108Playlist.segmentNumbers[i];
+   ck108Playlist.segmentNumbers.splice(i,1,...parts.map(()=>original));
+  }
+ },
+ onDone:()=>ck108Finish()
+});
+if(ck138Voice){
+ ttsStop=function(announce=true){
+  ck76Voice.token++;ttsToken++;
+  ck138Voice.stop(announce);
+  ttsQueue=[];ttsPosition=0;ttsUtterance=null;ttsBatchActive=false;
+  ttsBatchLabel='';ttsErrors=0;ck76Voice.paused=false;
+  ck76Voice.position=0;ck76Voice.total=0;
+  const bar=document.getElementById('listen-bar');if(bar)bar.hidden=true;
+ };
+ voiceTogglePause=function(){
+  const done=ck138Voice.togglePause();
+  if(done){const b=document.querySelector('[data-tts-pause]');if(b)b.textContent=ck138Voice.getState().paused?'계속 재생':'일시정지';}
+ };
+ ttsPlay=function(items,options={}){
+  // The native OS path must execute synchronously on the original click.
+  if(!options.__ck107Official)ck108Playlist=null;
+  const mode=['qa','answer','all'].includes(options.mode)?options.mode:'qa';
+  const segments=ck76Segments(items,mode);
+  const requested=ttsSettings().engine;
+  const useAI=requested==='neural'&&Boolean(window.CKNeural?.ready);
+  if(requested==='neural'&&!useAI)neuralStatus('AI 모델 미준비 · 우선 기기 한국어 음성을 사용합니다. 고음질 모델 다운로드는 고급 설정에서 선택하세요.');
+  ttsStop(false);
+  ck76Voice.engine=useAI?'neural':'native';
+  ck76Voice.mode=mode;ck76Voice.label=options.label||'선택한 문항';
+  ck76Voice.loop=options.continuous===true;
+  const result=ck138Voice.play({
+   engine:ck76Voice.engine,segments,rate:ttsSettings().rate,label:ck76Voice.label
+  });
+  return result;
+ };
+}
 
 /* v108: only a year, question number and reading mode are saved in the
    existing local study state. Resuming is always initiated by user click. */

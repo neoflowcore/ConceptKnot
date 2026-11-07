@@ -242,7 +242,8 @@ function downloadRaw(){
 }
 /* v127: explicitly triggered, read-only inventory of the CURRENT SW cache.
  * A matching cache is a minimum offline prerequisite, not proof of full app operation. */
-const OFFLINE_CACHE='conceptknot-study-v137-native-voice-guard';
+/* previous: conceptknot-study-v137-native-voice-guard */
+const OFFLINE_CACHE='conceptknot-study-v138-unified-voice-queue';
 const OFFLINE_MINIMUM=Object.freeze([
  './index.html',
  './assets/ck-data-diagnostics-v88.js?v=137',
