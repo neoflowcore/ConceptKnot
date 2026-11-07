@@ -110,7 +110,7 @@ test('new QA items preserve previous storage schema',()=>{
 });
 test('offline cache handles old index query version, no Actions or auto deployment',()=>{
  const sw=src('sw.js'),config=JSON.parse(src('vercel.json'));
- assert.match(sw,/conceptknot-study-v134-exam-keyboard/);
+ assert.match(sw,/conceptknot-study-v135-typing-ime/);
  assert.match(sw,/ignoreSearch:true/);
  assert.match(sw,/ck-study-analytics-v83\.js\?v=117/);
  assert.match(sw,/ck-full-exam-v82\.js\?v=134/);

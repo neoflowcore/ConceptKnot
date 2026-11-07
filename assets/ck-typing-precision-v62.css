@@ -235,3 +235,75 @@ html body #main .ck-v7-typing .ck31-prompt-status{
 @media(max-width:520px){
  html body #main .ck-v7-typing .ck-v7-actions .ck31-prompt-status{max-width:150px;}
 }
+
+
+/* v135: subtle single-line stats directly under general/letters mode controls. */
+html body #main .ck-v7-content .ck-v7-typing .ck-v7-input .ck135-compact-stats{
+ display:flex!important;flex-wrap:wrap!important;justify-content:flex-end!important;
+ align-items:center!important;gap:3px 12px!important;overflow:visible!important;
+ width:100%!important;max-width:100%!important;min-height:0!important;
+ margin:0 0 5px!important;padding:2px 0 5px!important;
+ background:transparent!important;border:0!important;border-radius:0!important;
+ box-shadow:none!important;backdrop-filter:none!important;
+}
+html body #main .ck-v7-content .ck-v7-typing .ck-v7-input .ck135-compact-stats :is(.ck-v7-stat,.ck-v3-completion){
+ display:inline-flex!important;flex:0 0 auto!important;align-items:center!important;
+ width:auto!important;min-width:0!important;min-height:0!important;
+ gap:4px!important;margin:0!important;padding:0!important;
+ border:0!important;border-radius:0!important;background:transparent!important;
+ box-shadow:none!important;white-space:nowrap!important;
+ font-size:11px!important;line-height:1.45!important;font-variant-numeric:tabular-nums;
+}
+html body #main .ck-v7-typing .ck-v7-input .ck135-compact-stats .ck-v7-stat>div{
+ display:inline-flex!important;flex-direction:row!important;align-items:baseline!important;
+ gap:4px!important;margin:0!important;padding:0!important;
+}
+html body #main .ck-v7-typing .ck-v7-input .ck135-compact-stats :is(.ck-v7-stat-icon,.ck-v7-stat span,.ck-v3-completion-summary span){
+ font-size:10px!important;color:var(--ck62-ink)!important;opacity:.77!important;
+}
+html body #main .ck-v7-typing .ck-v7-input .ck135-compact-stats :is(.ck-v7-stat strong,.ck-v3-completion strong){
+ font-size:11px!important;font-weight:700!important;color:var(--ck62-ink)!important;
+}
+html body #main .ck-v7-typing .ck-v7-input .ck135-compact-stats .ck-v3-completion-summary{
+ display:inline-flex!important;align-items:baseline!important;gap:4px!important;padding:0!important;
+}
+html body #main .ck-v7-typing .ck-v7-input .ck135-compact-stats .ck-v3-dot-row{display:none!important}
+html body #main .ck-v7-typing .ck-v7-input .ck-v7-ihead>small{display:none!important}
+/* Display ㅂ → 버 → 법 as provisional ink rather than a completed typo. */
+html body #main .ck-v7-typing .ck-v7-input .ck62-live-char.ck62-composing,
+html body #main .ck-v7-typing .ck-v7-input .ck62-cell.ck62-composing .ck62-cell-input{
+ color:var(--ck62-ink)!important;-webkit-text-fill-color:var(--ck62-ink)!important;
+ text-decoration:none!important;opacity:1!important;
+}
+html body #main .ck-v7-typing .ck-v7-input .ck62-cell.ck62-composing .ck62-cell-source{
+ opacity:.22!important;
+}
+/* The native textarea still owns IME and selection; a single synthetic cursor
+   follows its selection offset without exposing duplicate composition text. */
+html body #main .ck-v7-typing .ck-v7-input .chalk-editor.ck62-editor textarea,
+html body #main .ck-v7-typing .ck-v7-input .chalk-editor.ck62-editor.ck31-composing textarea{
+ color:transparent!important;-webkit-text-fill-color:transparent!important;
+ caret-color:transparent!important;
+}
+html body #main .ck-v7-typing .ck-v7-input .chalk-mirror.ck62-normal .ck-v3-caret.ck62-follow-caret{
+ display:block!important;position:absolute!important;z-index:5!important;
+ left:var(--ck-v3-caret-x,0px)!important;top:var(--ck-v3-caret-y,0px)!important;
+ width:2px!important;height:var(--ck-v3-caret-height,27px)!important;
+ border:0!important;border-radius:1px!important;background:var(--ck62-caret)!important;
+ box-shadow:none!important;animation:none!important;transform:none!important;
+ transition:none!important;pointer-events:none!important;
+}
+html body #main .ck-v7-typing .ck-v7-input .chalk-mirror.ck62-letters .ck-v3-caret{
+ box-shadow:none!important;animation:none!important;transition:none!important;
+}
+html body #main .ck-v7-typing .ck-v7-input .chalk-editor.ck62-editor:not(:focus-within) .ck-v3-caret{
+ opacity:0!important;
+}
+@media(max-width:520px){
+ html body #main .ck-v7-content .ck-v7-typing .ck-v7-input .ck135-compact-stats{
+  justify-content:flex-start!important;gap:3px 9px!important;
+ }
+ html body #main .ck-v7-typing .ck-v7-input .ck135-compact-stats :is(.ck-v7-stat,.ck-v3-completion){
+  font-size:10px!important;
+ }
+}

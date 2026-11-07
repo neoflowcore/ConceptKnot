@@ -76,8 +76,8 @@ test('optional review CSS and JS are linked once and offline SW does not enable 
  for(const file of ['ck-mixed-review-v131.js?v=133','ck-mixed-review-v131.css?v=131']){
   assert.ok(html.includes('./assets/'+file));assert.ok(sw.includes('./assets/'+file));
  }
- assert.match(sw,/conceptknot-study-v134-exam-keyboard/);
- assert.match(diag,/conceptknot-study-v134-exam-keyboard/);
+ assert.match(sw,/conceptknot-study-v135-typing-ime/);
+ assert.match(diag,/conceptknot-study-v135-typing-ime/);
  assert.equal(config.git.deploymentEnabled,false);
  assert.equal(fs.existsSync(path.join(ROOT,'.github','workflows')),false);
 });

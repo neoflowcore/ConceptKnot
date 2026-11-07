@@ -64,6 +64,22 @@ function caretIndex(area,mode){
  const raw=area.value||'',offset=typeof area.selectionStart==='number'?area.selectionStart:raw.length;
  return mode==='letters'?letters(raw.slice(0,offset)).length:chars(raw.slice(0,offset)).length;
 }
+// Preview the native composition value without mutating the editor or its history.
+function composingRange(area,mode){
+ if(!area.__ck31Composing)return null;
+ const raw=area.value||'',from=Number.isInteger(area.__ck31CompositionStart)?area.__ck31CompositionStart:
+  Math.max(0,(area.selectionStart||0)-1);
+ const start=mode==='letters'?letters(raw.slice(0,from)).length:chars(raw.slice(0,from)).length;
+ return {start,end:Math.max(start+1,caretIndex(area,mode))};
+}
+function composingUnit(range,index){return !!range&&index>=range.start&&index<range.end;}
+function followNormalCaret(mirror){
+ const line=locateLine(mirror,'[data-ck62-anchor]');if(!line)return;
+ const {rect,base,height,top}=line;
+ mirror.style.setProperty('--ck-v3-caret-x',Math.max(0,rect.left-base.left).toFixed(1)+'px');
+ mirror.style.setProperty('--ck-v3-caret-y',top.toFixed(1)+'px');
+ mirror.style.setProperty('--ck-v3-caret-height',Math.max(18,height).toFixed(1)+'px');
+}
 function locateLine(mirror,selector){
  const el=mirror.querySelector(selector);
  if(!el?.getBoundingClientRect)return false;
@@ -75,33 +91,36 @@ function locateLine(mirror,selector){
  return {rect,base,height,top};
 }
 const mirrorCache=new WeakMap();
-function glyphClass(ch,ok){
- return 'ck62-live-char '+(ch==='\n'?'ck62-newline':ok?'ck62-right':'ck62-wrong');
+function glyphClass(ch,ok,composing=false){
+ return 'ck62-live-char '+(composing?'ck62-composing':ch==='\n'?'ck62-newline':ok?'ck62-right':'ck62-wrong');
 }
 function paintNormal(m,mirror,area,key){
  const target=m.target.join(''),typed=m.typed,position=Math.min(caretIndex(area,'normal'),typed.length);
+ const composition=composingRange(area,'normal'),compositionId=composition?composition.start+':'+composition.end:'';
  let cache=mirrorCache.get(mirror);
  if(!cache||cache.mode!=='normal'||cache.key!==key||cache.target!==target){
   const live=[];
   for(let i=0;i<=typed.length;i++){
    if(i===position)live.push('<span class="ck62-anchor" data-ck62-anchor="1" aria-hidden="true"></span>');
-   if(i<typed.length)live.push('<span class="'+glyphClass(typed[i],m.mapped.get(i)?.ok)+
+   if(i<typed.length)live.push('<span class="'+glyphClass(typed[i],m.mapped.get(i)?.ok,composingUnit(composition,i))+
     '" data-ck62-input="'+i+'">'+esc(typed[i])+'</span>');
   }
   // The immutable source is rebuilt only on a new question or mode, never on a keystroke.
-  mirror.innerHTML='<div class="ck62-guide">'+esc(target)+'</div><div class="ck62-live">'+live.join('')+'</div>';
+  mirror.innerHTML='<div class="ck62-guide">'+esc(target)+'</div><div class="ck62-live">'+live.join('')+'</div>'+ 
+   '<span class="ck-v3-caret ck62-follow-caret" aria-hidden="true"></span>';
   cache={mode:'normal',key,target,lastText:typed.join(''),lastPosition:position,
+   lastComposition:compositionId,lastCaretComposition:compositionId,
    nodes:Array.from(mirror.querySelectorAll?.('[data-ck62-input]')||[]),
    live:mirror.querySelector('.ck62-live'),anchor:mirror.querySelector('[data-ck62-anchor]'),
    layoutWidth:null};
   mirrorCache.set(mirror,cache);
-  locateLine(mirror,'[data-ck62-anchor]');
+  followNormalCaret(mirror);
   return;
  }
  const value=typed.join('');
- if(value!==cache.lastText&&cache.live){
+ if((value!==cache.lastText||cache.lastComposition!==compositionId)&&cache.live){
   for(let i=0;i<typed.length;i++){
-   const ch=typed[i],klass=glyphClass(ch,m.mapped.get(i)?.ok);
+   const ch=typed[i],klass=glyphClass(ch,m.mapped.get(i)?.ok,composingUnit(composition,i));
    let node=cache.nodes[i];
    if(!node){
     node=document.createElement('span');node.dataset.ck62Input=String(i);
@@ -113,55 +132,64 @@ function paintNormal(m,mirror,area,key){
    }
   }
   while(cache.nodes.length>typed.length)cache.nodes.pop().remove();
-  cache.lastText=value;
+  cache.lastText=value;cache.lastComposition=compositionId;
  }
  const resized=cache.layoutWidth!==null&&cache.layoutWidth!==(mirror.clientWidth||0);
- if(position!==cache.lastPosition||value!==cache.lastLaidOutText||resized){
+ if(position!==cache.lastPosition||value!==cache.lastLaidOutText||resized||cache.lastCaretComposition!==compositionId){
   if(cache.live&&cache.anchor)cache.live.insertBefore(cache.anchor,cache.nodes[position]||null);
-  locateLine(mirror,'[data-ck62-anchor]');
-  cache.lastPosition=position;cache.lastLaidOutText=value;
+  followNormalCaret(mirror);
+  cache.lastPosition=position;cache.lastLaidOutText=value;cache.lastCaretComposition=compositionId;
  }
 }
 function paintLetters(m,mirror,area,key){
  const target=m.target.join(''),position=Math.min(caretIndex(area,'letters'),m.positions.length);
+ const composition=composingRange(area,'letters'),compositionId=composition?composition.start+':'+composition.end:'';
+ const composingTargets=composition?new Set(m.positions.slice(composition.start,composition.end)):null;
  let cache=mirrorCache.get(mirror);
  if(!cache||cache.mode!=='letters'||cache.key!==key||cache.target!==target){
   mirror.innerHTML=m.target.map((ch,i)=>{
    if(ch==='\n')return '\n';
-   const match=m.mapped.get(i),status=match?(match.ok?'ck62-right':'ck62-wrong'):
+   const match=m.mapped.get(i),status=composingTargets?.has(i)?'ck62-composing':
+    match?(match.ok?'ck62-right':'ck62-wrong'):
     printable.test(ch)?'ck62-pending':'ck62-separator';
    return '<span class="ck62-cell '+status+'" data-ck62-reference="'+i+'">'+
     '<span class="ck62-cell-source">'+esc(ch)+'</span>'+
     (match?'<span class="ck62-cell-input">'+esc(match.typed)+'</span>':'')+'</span>';
   }).join('')+'<span class="ck-v3-caret" aria-hidden="true"></span>';
   cache={mode:'letters',key,target,lastText:null,lastPosition:null,layoutWidth:null,
+   lastComposition:null,lastCaretComposition:null,lastLaidOutText:null,
    cells:new Map(Array.from(mirror.querySelectorAll?.('[data-ck62-reference]')||[])
     .map(node=>[Number(node.dataset.ck62Reference),node]))};
   mirrorCache.set(mirror,cache);
  }
  const value=m.typed.join('');
- if(cache.lastText!==value){
+ if(cache.lastText!==value||cache.lastComposition!==compositionId){
   for(const at of m.positions){
    const cell=cache.cells.get(at);if(!cell)continue;
-   const match=m.mapped.get(at),klass='ck62-cell '+(match?(match.ok?'ck62-right':'ck62-wrong'):'ck62-pending');
+   const match=m.mapped.get(at),klass='ck62-cell '+(composingTargets?.has(at)?'ck62-composing':
+    match?(match.ok?'ck62-right':'ck62-wrong'):'ck62-pending');
    if(cell.className!==klass)cell.className=klass;
    let ink=cell.querySelector('.ck62-cell-input');
    if(match&&!ink){ink=document.createElement('span');ink.className='ck62-cell-input';cell.appendChild(ink);}
    if(ink&&ink.textContent!==(match?.typed||''))ink.textContent=match?.typed||'';
   }
-  cache.lastText=value;
+  cache.lastText=value;cache.lastComposition=compositionId;
  }
  const resized=cache.layoutWidth!==null&&cache.layoutWidth!==(mirror.clientWidth||0);
- if(cache.lastPosition!==position||resized){
+ if(cache.lastPosition!==position||resized||cache.lastLaidOutText!==value||cache.lastCaretComposition!==compositionId){
   const index=m.positions[position]??m.positions[m.positions.length-1];
   const line=locateLine(mirror,'[data-ck62-reference="'+index+'"]');
   if(line){
    const {rect,base,height,top}=line,atEnd=position>=m.positions.length;
-   mirror.style.setProperty('--ck-v3-caret-x',Math.max(0,(atEnd?rect.right:rect.left)-base.left).toFixed(1)+'px');
+   const activeIndex=m.positions[Math.max(0,position-1)];
+   const ink=composition&&activeIndex!==undefined?cache.cells.get(activeIndex)?.querySelector('.ck62-cell-input'):null;
+   const inkRect=ink?.getBoundingClientRect?.();
+   const x=inkRect?inkRect.right:(atEnd?rect.right:rect.left);
+   mirror.style.setProperty('--ck-v3-caret-x',Math.max(0,x-base.left).toFixed(1)+'px');
    mirror.style.setProperty('--ck-v3-caret-y',top.toFixed(1)+'px');
    mirror.style.setProperty('--ck-v3-caret-height',Math.max(18,height).toFixed(1)+'px');
   }
-  cache.lastPosition=position;
+  cache.lastPosition=position;cache.lastLaidOutText=value;cache.lastCaretComposition=compositionId;
  }
 }
 typingGhost=function(el){
@@ -173,12 +201,13 @@ typingGhost=function(el){
   if(mirror.dataset)mirror.dataset.ck31Empty='true';
   area.disabled=true;return;
  }
- if(area.__ck31Composing)return;
+ // IME never blocks visual preview; only scoring and persistence wait for commit.
  area.disabled=false;
  const m=mapText(c.fact,{text:area.value}),normal=m.mode==='normal',key=String(c.id);
  el.classList.toggle('ck61-normal-editor',normal);
  el.classList.toggle('ck61-letters-editor',!normal);
  el.classList.toggle('ck62-editor',true);
+ el.classList.toggle('ck62-focused',document.activeElement===area);
  mirror.classList.add('ck31-fixed-underlay','ck-v3-line-active','ck62-fixed');
  mirror.classList.toggle('ck61-normal',normal);
  mirror.classList.toggle('ck61-letters',!normal);
@@ -376,20 +405,51 @@ document.addEventListener('click',e=>{
 document.addEventListener('compositionstart',e=>{
  const field=e.target;if(state.view!=='typing'||field?.tagName!=='TEXTAREA'||
     !field.closest?.('.ck-v7-input .chalk-editor'))return;
+ field.__ck31CompositionStart=Number(field.selectionStart)||0;
  field.__ck31Composing=true;
  field.closest('.chalk-editor')?.classList.add('ck31-composing');
+ typingGhost(field.closest('.chalk-editor'));
+},true);
+let ck31CompositionFrame=0;
+function scheduleCompositionPreview(field){
+ if(ck31CompositionFrame||typeof requestAnimationFrame!=='function')return;
+ ck31CompositionFrame=requestAnimationFrame(()=>{
+  ck31CompositionFrame=0;
+  if(state.view!=='typing'||!field.__ck31Composing||!field.isConnected)return;
+  const editor=field.closest('.chalk-editor');if(editor)typingGhost(editor);
+ });
+}
+document.addEventListener('compositionupdate',e=>{
+ const field=e.target;
+ if(state.view!=='typing'||field?.tagName!=='TEXTAREA'||
+    !field.closest?.('.ck-v7-input .chalk-editor'))return;
+ const editor=field.closest('.chalk-editor');if(editor)typingGhost(editor);
+ scheduleCompositionPreview(field);
+},true);
+document.addEventListener('beforeinput',e=>{
+ if(state.view==='typing'&&(e.isComposing||e.inputType==='insertCompositionText')&&
+    e.target?.tagName==='TEXTAREA'&&e.target.closest?.('.ck-v7-input .chalk-editor'))
+  scheduleCompositionPreview(e.target);
 },true);
 document.addEventListener('compositionend',e=>{
  const field=e.target;if(state.view!=='typing'||field?.tagName!=='TEXTAREA'||
     !field.closest?.('.ck-v7-input .chalk-editor'))return;
  field.__ck31Composing=false;
  field.closest('.chalk-editor')?.classList.remove('ck31-composing');
+ field.__ck31CompositionStart=null;
+ // Some mobile IMEs dispatch no final input event after compositionend.
+ const record=chalkRecord('practice',typingConcept().id);
+ if(record.text!==field.value){
+  record.colors=chalkReconcile(record.text,field.value,record.colors,chalkState().color);
+  record.text=field.value;
+  typingFeedback();save();
+ }
  const editor=field.closest('.chalk-editor');if(editor)typingGhost(editor);
 });
 document.addEventListener('selectionchange',()=>{
  if(state.view!=='typing')return;
  const field=document.querySelector('.ck-v7-input .chalk-editor textarea');
- if(field&&document.activeElement===field&&!field.__ck31Composing){
+ if(field&&document.activeElement===field){
   const editor=field.closest('.chalk-editor');if(editor)typingGhost(editor);
  }
 });

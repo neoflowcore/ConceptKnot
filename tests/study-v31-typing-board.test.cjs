@@ -150,7 +150,7 @@ test('UI, IME handling, offline cache and source syntax stay consistent',()=>{
  assert.match(html,/const field=e\.target,raw=field\.value,clean=letters\(raw\)\.join\(''\)/);
  assert.match(html,/const field=e\.target,clean=letters\(field\.value\)\.join\(''\)/);
  assert.match(css,/ck61-typing-mode/);assert.match(read('assets/ck-typing-precision-v62.css'),/ck62-live/);
- assert.match(sw,/conceptknot-study-v76-p1-typing/);
+ assert.match(sw,/conceptknot-study-v135-typing-ime/);
  assert.match(sw,/ck-typing-modes-v61.css/);
  assert.equal(JSON.parse(read('vercel.json')).git.deploymentEnabled,false);
  for(const m of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))new vm.Script(m[1]);
@@ -201,12 +201,15 @@ test('P1 official AI question uses canonical answer, distinguishes exceptions an
 test('P1 mirror is diff-based and AI prompt never uploads personal data',()=>{
  const s=read('assets/ck-typing-layout-v31.js');
  assert.match(s,/const mirrorCache=new WeakMap/);
- assert.match(s,/if\(value!==cache\.lastText&&cache\.live\)/);
+ assert.match(s,/cache\.lastComposition!==compositionId/);
  assert.match(s,/if\(cache&&\(rebuild\|\|cache\.layoutWidth!==width\)\)/);
- assert.match(s,/if\(area\.__ck31Composing\)return/);
+ assert.doesNotMatch(s,/if\(area\.__ck31Composing\)return/);
  assert.match(s,/window\.RECALL_OFFICIAL\?\.\[key\]/);
  assert.doesNotMatch(s,/fetch\s*\(/);
  assert.doesNotMatch(s,/localStorage\.(?:clear|removeItem)/);
  assert.match(s,/data-ck31-explain-prompt/);
  assert.match(read('assets/ck-typing-precision-v62.css'),/ck31-composing textarea/);
+  assert.match(s,/compositionupdate/);
+  assert.match(s,/ck62-follow-caret/);
+  assert.match(s,/ck62-composing/);
 });

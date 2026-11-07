@@ -134,7 +134,7 @@ test('expanded direct human QA tasks and no auto deployment or workflows',()=>{
  assert.match(qa,/id:'evidence-packet'/);
  assert.match(qa,/personal-v115-manual-qa/);
  const sw=read('sw.js');
- assert.match(sw,/conceptknot-study-v134-exam-keyboard/);
+ assert.match(sw,/conceptknot-study-v135-typing-ime/);
  assert.equal((sw.match(/ck-data-diagnostics-v88\.js\?v=125/g)||[]).length,3);
  assert.equal((sw.match(/ck-data-diagnostics-v88\.css\?v=125/g)||[]).length,3);
  assert.match(sw,/ignoreSearch:true/);
@@ -228,7 +228,7 @@ test('pre-v125 manual QA PASS/FAIL notes load without reset or automatic writes'
 });
 test('entry HTML and service worker load the exact v125 JS/CSS and QA assets',()=>{
  const html=read('index.html'),sw=read('sw.js');
- for(const asset of ['ck-data-diagnostics-v88.js?v=134','ck-data-diagnostics-v88.css?v=125',
+ for(const asset of ['ck-data-diagnostics-v88.js?v=135','ck-data-diagnostics-v88.css?v=125',
    'ck-manual-qa-v115.js?v=130']){
   assert.ok(html.includes(asset),'HTML must include '+asset);
   assert.equal(sw.split(asset).length-1,3,'HOT, ASSETS and CRITICAL must include '+asset);
@@ -271,6 +271,6 @@ test('offline fallback uses current cache only, with explicit 503 on uncached fi
  assert.equal((await ask('assets/ck-data-diagnostics-v88.js?v=121')).marker,'v125-current-js');
  assert.equal((await ask('assets/ck-study-analytics-v83.js?v=117')).status,503);
  assert.equal((await ask('offline','navigate')).marker,'current-index');
- assert.ok(cacheNames.every(name=>name==='conceptknot-study-v134-exam-keyboard'));
+ assert.ok(cacheNames.every(name=>name==='conceptknot-study-v135-typing-ime'));
  assert.ok(matchCalls.some(x=>x.ignoreSearch));
 });

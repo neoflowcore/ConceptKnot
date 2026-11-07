@@ -15,9 +15,11 @@ function painters(){
   lookup.push(selector);return {rect:{left:30,right:60},base:{left:10},height:24,top:4};
  };
  const pure=new Function('mirrorCache','caretIndex','locateLine','esc','glyphClass','printable','document',
+  'composingRange','composingUnit','followNormalCaret',
   source.slice(start,end)+'return {paintNormal,paintLetters};');
  const fun=pure(cache,area=>area.selectionStart,locateLine,s=>String(s),()=>'ck62-char',
-  /^[\p{L}\p{M}\p{Nd}]$/u,{createElement:()=>({dataset:{}})});
+  /^[\p{L}\p{M}\p{Nd}]$/u,{createElement:()=>({dataset:{}})},
+  ()=>null,()=>false,mirror=>locateLine(mirror,'[data-ck62-anchor]'));
  return {cache,lookup,...fun};
 }
 test('standalone and embedded typing implementations stay byte-for-byte identical',()=>{
@@ -89,8 +91,8 @@ test('background landing animation does not restart when a blurred window become
 });
 test('v128 asset cache and service-worker runtime generation remain in sync',()=>{
  const sw=read('sw.js'),diag=read('assets/ck-data-diagnostics-v88.js');
- assert.match(sw,/conceptknot-study-v134-exam-keyboard/);
- assert.match(diag,/conceptknot-study-v134-exam-keyboard/);
+ assert.match(sw,/conceptknot-study-v135-typing-ime/);
+ assert.match(diag,/conceptknot-study-v135-typing-ime/);
  for(const name of ['ck-gpu-guard-v21.js?v=128','ck-manual-qa-v115.js?v=130',
   'ck-data-diagnostics-v88.js?v=134']){
   assert.ok(html.includes(name),'HTML missing '+name);
