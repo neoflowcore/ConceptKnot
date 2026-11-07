@@ -487,9 +487,27 @@
     if (!canRun) { cancelAnimationFrame(state.frame); state.frame = 0; state.last = 0; }
     else if (!state.frame) { layout(); state.frame = requestAnimationFrame(tick); }
   }
+  // v132: initial navigation may restore a STUDY tab; the previous renderer
+  // never created #ck-v8-ambient until the user clicked the logo. Since the
+  // dynamic import boots once after DOMContentLoaded, returning when absent
+  // permanently left the landing blank. Create the *idle* host up front.
+  let booted = false;
+  function ensureHost() {
+    let host = document.getElementById('ck-v8-ambient');
+    if (!host && document.body) {
+      host = document.createElement('div');
+      host.id = 'ck-v8-ambient';
+      host.className = 'ck-v8-ambient';
+      host.setAttribute('aria-hidden', 'true');
+      document.body.prepend(host);
+    }
+    return host;
+  }
   function boot() {
-    state.host = document.getElementById('ck-v8-ambient');
+    if (booted) return;
+    state.host = ensureHost();
     if (!state.host) return;
+    booted = true;
     addStyle(); scene(); layout(); paint(0);
     new ResizeObserver(layout).observe(state.host);
     window.addEventListener('resize', layout, { passive: true });

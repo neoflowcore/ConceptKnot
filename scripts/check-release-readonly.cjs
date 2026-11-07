@@ -18,7 +18,7 @@ function run(){
  const html=read('index.html'),service=read('sw.js'),vc=JSON.parse(read('vercel.json'));
  check(vc.git?.deploymentEnabled===false,'Vercel Git 자동배포가 비활성이 아닙니다.');
  check(!fs.existsSync(path.join(ROOT,'.github/workflows')),'GitHub Actions workflow 디렉터리가 존재합니다.');
- check(service.includes('conceptknot-study-v131-mixed-review-queue'),'서비스 워커 v131 캐시 버전 불일치');
+ check(service.includes('conceptknot-study-v132-landing-first-boot'),'서비스 워커 v132 캐시 버전 불일치');
  const {scripts,css}=pathsFromHtml(html);
  for(const src of [...scripts,...css]){
   if(!isLocal(src))continue;
@@ -83,6 +83,19 @@ function run(){
  check(review.includes('ck:mixed-exam-submitted'),'제출 직후 복습 갱신 누락');
  check(review.includes('data-ck131-reveal'),'복습 정답 확인 버튼 누락');
  check(review.includes('if(localStorage.getItem(KEY)!==src.raw)'),'다른 탭 내보내기 보호 누락');
+ const dot=read('assets/ck-dot-landing-v57.js');
+ const garden=read('assets/ck-garden-25d-v36.js');
+ check(dot.includes('let booted = false;')&&dot.includes('function ensureHost()'),
+  '초기 학습 탭에서 Dot 랜딩 host 복구 경로 없음');
+ check(dot.includes("document.body.prepend(host);"),'Dot 랜딩 host 선제 생성 누락');
+ check(garden.includes("import('./ck-dot-landing-v57.js?v=132')"),
+  'Dot 랜딩 동적 import 버전 불일치');
+ check(html.includes('ck-garden-25d-v36.js?v=132'),
+  '최신 Dot 런처를 HTML이 불러오지 않음');
+ check(service.includes('ck-dot-landing-v57.js?v=132'),
+  '최신 Dot 모듈 SW 캐시 누락');
+ check(service.includes('ck-garden-25d-v36.js?v=132'),
+  '최신 Dot 런처 SW 캐시 누락');
  const mixed=read('assets/ck-mixed-mock-v129.js');
  check(mixed.includes('ck129-mixed-sessions-v1'),'혼합 세트 별도 기록 키 누락');
  check(mixed.includes('DURATION=6000000'),'혼합 세트 100분 타이머 규칙 누락');

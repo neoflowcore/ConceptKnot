@@ -7,7 +7,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const root=path.resolve(__dirname,'..'),read=name=>fs.readFileSync(path.join(root,name),'utf8');
 const SW=read('sw.js'),DIAG=read('assets/ck-data-diagnostics-v88.js');
-const GEN='conceptknot-study-v131-mixed-review-queue';
+const GEN='conceptknot-study-v132-landing-first-boot';
 const ORIGIN='https://conceptknot.test';
 function mime(path){
  const u=new URL(path,ORIGIN+'/sw.js');
@@ -175,7 +175,7 @@ test('release remains read-only and cannot run GitHub Actions or Vercel auto-bui
  const script=read('scripts/check-release-readonly.cjs'),vc=JSON.parse(read('vercel.json'));
  assert.equal(vc.git.deploymentEnabled,false);
  assert.equal(fs.existsSync(path.join(root,'.github/workflows')),false);
- assert.match(script,/conceptknot-study-v131-mixed-review-queue/);
+ assert.match(script,/conceptknot-study-v132-landing-first-boot/);
  assert.match(script,/invalidCoreResponse/);
  assert.match(script,/if\(url.search\)return null/);
  new vm.Script(SW);new vm.Script(DIAG);
