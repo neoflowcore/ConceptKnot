@@ -1,0 +1,69 @@
+{
+  "schema": 1,
+  "kind": "conceptknot-managed-tts",
+  "model": "supertone-oss-archive/supertonic-3",
+  "revision": "aafc6e32416a594460b32413efc49d7fe4ce6d46",
+  "license": "OpenRAIL-M",
+  "codeLicense": "MIT",
+  "upstream": "https://huggingface.co/supertone-oss-archive/supertonic-3/tree/aafc6e32416a594460b32413efc49d7fe4ce6d46",
+  "distributionReady": false,
+  "basePath": "/models/tts/supertonic-3/aafc6e32416a594460b32413efc49d7fe4ce6d46/",
+  "statusMessage": "모델 파일 및 SHA-256 확인/호스팅이 완료되지 않았습니다. 기본 기기 한국어 음성을 사용해 주세요.",
+  "files": [
+    {
+      "path": "onnx/duration_predictor.onnx",
+      "bytes": null,
+      "sha256": null
+    },
+    {
+      "path": "onnx/text_encoder.onnx",
+      "bytes": null,
+      "sha256": null
+    },
+    {
+      "path": "onnx/vector_estimator.onnx",
+      "bytes": null,
+      "sha256": null
+    },
+    {
+      "path": "onnx/vocoder.onnx",
+      "bytes": null,
+      "sha256": null
+    },
+    {
+      "path": "onnx/tts.json",
+      "bytes": null,
+      "sha256": null
+    },
+    {
+      "path": "onnx/unicode_indexer.json",
+      "bytes": null,
+      "sha256": null
+    },
+    {
+      "path": "voice_styles/F1.json",
+      "bytes": null,
+      "sha256": null
+    },
+    {
+      "path": "voice_styles/F2.json",
+      "bytes": null,
+      "sha256": null
+    },
+    {
+      "path": "voice_styles/F3.json",
+      "bytes": null,
+      "sha256": null
+    },
+    {
+      "path": "voice_styles/F4.json",
+      "bytes": null,
+      "sha256": null
+    },
+    {
+      "path": "voice_styles/F5.json",
+      "bytes": null,
+      "sha256": null
+    }
+  ]
+}

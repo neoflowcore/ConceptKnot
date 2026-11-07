@@ -9,6 +9,7 @@
   let utterance = null, beginWatch = null, endWatch = null, isPaused = false;
   let deferredNext = false, finished = false, splitAttempts = 0, activeRate = 1.5;
   let status = 'idle', reason = '', chosenLabel = '';
+  let suspendEndWatch = null, resumeEndWatch = null;
   function snapshot() {
    return {status, reason, engine, label: chosenLabel, generation, position: index,
     completed, total: items.length, paused: isPaused, failedIndex: status === 'error' ? index : null};
@@ -20,6 +21,7 @@
   function clearTimers() {
    if (beginWatch !== null) {clock.clear(beginWatch); beginWatch = null;}
    if (endWatch !== null) {clock.clear(endWatch); endWatch = null;}
+   suspendEndWatch = null; resumeEndWatch = null;
   }
   function stop(announce = false) {
    generation += 1;
@@ -91,12 +93,22 @@
     report(isPaused ? 'paused' : 'speaking', '기기 음성 시작 이벤트 · '+(index+1)+'/'+items.length);
     try {options.onStart?.(index, phrase, snapshot());} catch (ignored) {}
     // onstart indicates OS acceptance, not audible sound. Real speaker test is separate.
-    const ms = Math.min(90000, Math.max(25000, Math.ceil(phrase.length * 230 / activeRate)));
-    endWatch = clock.set(() => {
-     if (own !== generation || settled || finished) return;
-     settled = true;
-     fail('end-timeout', '음성 종료 신호가 없어 멈췄습니다. 이 문장은 완료 처리하지 않았습니다.');
-    }, ms);
+    let remainingMs = Math.min(90000, Math.max(25000, Math.ceil(phrase.length * 230 / activeRate)));
+    let endDeadline = 0;
+    const now = () => typeof clock.now === 'function' ? clock.now() : Date.now();
+    suspendEndWatch = () => {
+     if(endWatch !== null){clock.clear(endWatch);endWatch=null;remainingMs=Math.max(1000,endDeadline-now());}
+    };
+    resumeEndWatch = () => {
+     if (own !== generation || settled || finished || endWatch !== null) return;
+     endDeadline=now()+remainingMs;
+     endWatch = clock.set(() => {
+      if (own !== generation || settled || finished || isPaused) return;
+      settled = true;
+      fail('end-timeout', '음성 종료 신호가 없어 멈췄습니다. 이 문장은 완료 처리하지 않았습니다.');
+     }, remainingMs);
+    };
+    if(!isPaused)resumeEndWatch();
    };
    line.onend = () => {
     if (own !== generation || settled || finished) return;
@@ -176,6 +188,7 @@
     else options.synthesis?.()?.pause?.();
    } catch (err) {fail('pause-error','음성 일시정지 오류: '+(err?.message||'원인 미확인'));return false;}
    isPaused = !isPaused;
+   if(isPaused)suspendEndWatch?.();else resumeEndWatch?.();
    report(isPaused?'paused':'speaking', isPaused?'음성 일시정지':'음성 재생 중');
    if (!isPaused && deferredNext) {
     deferredNext = false;

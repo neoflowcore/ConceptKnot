@@ -261,6 +261,7 @@ window.RECALL_CONTENT = {
 <script src="./assets/ck-mock-judge-v21.js"></script>
 <script src="./assets/ck-gpu-guard-v21.js?v=128" defer></script>
 <script src="./assets/ck-mobile-board-v21.js?v=59" defer></script>
+<script src="./assets/ck-tts-model-manager-v139.js?v=139"></script>
 <script src="./assets/ck-voice-controller-v138.js?v=138"></script>
 <script>
 /* RECALLGRAPH First-Exam Sprint. Browser-only, no analytics/server/API. */
@@ -1278,6 +1279,7 @@ function ttsMount(){
  try{ttsVoices=window.speechSynthesis.getVoices()||[]}catch{ttsVoices=[];}
  const select=document.getElementById('tts-voice');
  if(select)select.innerHTML=ttsVoiceOptions();
+ ck139ModelStatus();
 }
 if('speechSynthesis' in window&&typeof window.speechSynthesis.addEventListener==='function')window.speechSynthesis.addEventListener('voiceschanged',ttsMount);
 document.addEventListener('input',e=>{if(e.target.id==='tts-rate'){ttsSettings().rate=Number(e.target.value);document.querySelectorAll('[data-rate-preset]').forEach(b=>b.setAttribute('aria-pressed',String(Number(b.dataset.ratePreset)===Number(e.target.value))));document.getElementById('tts-rate-label').textContent=e.target.value+'배';save();}if(e.target.closest('#tts-question,[id^="tts-option-"]')){const check=document.getElementById('tts-verified');if(check)check.checked=false;}});
@@ -1314,9 +1316,35 @@ if(location.protocol==='https:'&&'serviceWorker' in navigator)navigator.serviceW
 
 
 function ttsRateButtons(){return `<div class="rate-presets" role="group" aria-label="읽기 배속">${[.75,1,1.25,1.5,1.75,2].map(v=>`<button data-rate-preset="${v}" aria-pressed="${ttsSettings().rate===v}">${v}×</button>`).join('')}</div>`;}
-function neuralPanel(){return `<div class="neural-box"><strong>읽는 목소리</strong><label for="tts-engine">음성 방식</label><select id="tts-engine" class="field" aria-label="음성 방식"><option value="native" ${ttsSettings().engine==='native'?'selected':''}>기기 기본 음성</option><option value="neural" ${ttsSettings().engine==='neural'?'selected':''}>AI 여성 음성 · Supertonic 3</option></select><p>한국어를 기기 안에서 합성합니다. 처음 준비할 때 약 380MB 다운로드가 필요합니다. Wi-Fi 사용을 권장합니다.</p><select class="field" id="neural-voice" aria-label="AI 여성 음성">${['F1','F2','F3','F4','F5'].map((v,i)=>`<option value="${v}" ${ttsSettings().neuralVoice===v?'selected':''}>여성 ${i+1} · ${v}</option>`).join('')}</select><div class="listen-controls"><button class="btn" data-neural-load>AI 여성 음성 준비</button><button class="btn secondary" data-native-engine>기기 기본 음성 사용</button></div><div class="neural-status" id="neural-status" role="status">${ttsSettings().engine==='neural'?'AI 음성 선택됨 · 재생 시 모델을 활성화합니다.':'현재: 기기 기본 음성'}</div><p><a href="https://github.com/supertone-oss-archive/supertonic" target="_blank" rel="noopener noreferrer">엔진 소스</a> · <a href="https://huggingface.co/supertone-oss-archive/supertonic-3" target="_blank" rel="noopener noreferrer">모델·라이선스</a></p></div>`;}
+const ck139ModelHost=window.CK139ModelManager?.create?.()||null;
+let ck139ModelProbe=null;
+function ck139ModelStatus(){
+ const element=document.getElementById('ck139-model-status');
+ if(!element||!ck139ModelHost)return;
+ const current=ck139ModelProbe||(ck139ModelProbe=ck139ModelHost.status().finally(()=>{ck139ModelProbe=null;}));
+ current.then(s=>{if(document.getElementById('ck139-model-status')===element)
+  element.textContent=s.ready?'검증된 모델 캐시 확인 · 다시 다운로드하지 않습니다.':
+  '모델 상태: '+s.issue;
+ }).catch(()=>{if(element.isConnected)element.textContent='모델 캐시 상태를 확인할 수 없습니다.';});
+}
+async function ck139PrepareManaged(){
+ const originalSession=ttsToken;
+ const box=document.getElementById('ck139-model-consent');
+ const output=document.getElementById('ck139-model-status');
+ try{
+  if(!ck139ModelHost)throw Error('모델 관리 기능을 불러오지 못했습니다.');
+  const result=await ck139ModelHost.prepare({
+   consent:box?.checked===true,
+   onProgress:r=>{if(output?.isConnected)output.textContent='모델 검증 '+r.completed+'/'+r.total+' · '+(r.path||'완료');}
+  });
+  if(originalSession!==ttsToken)return;
+  if(output?.isConnected)output.textContent='모델 SHA-256 검증 및 별도 캐시 완료';
+  await loadNeural(result.basePath);
+ }catch(error){if(output?.isConnected)output.textContent='고음질 모델 준비 불가: '+(error?.message||'원인 미확인');}
+}
+function neuralPanel(){return `<div class="neural-box"><strong>읽는 목소리</strong><label for="tts-engine">음성 방식</label><select id="tts-engine" class="field" aria-label="음성 방식"><option value="native" ${ttsSettings().engine==='native'?'selected':''}>기기 기본 음성</option><option value="neural" ${ttsSettings().engine==='neural'?'selected':''}>AI 여성 음성 · Supertonic 3</option></select><p>한국어 고음질 음성은 모델 약 398MB의 최초 수신과 기기 메모리가 필요합니다. 기본 듣기는 기기 한국어 음성을 바로 사용합니다.</p><select class="field" id="neural-voice" aria-label="AI 여성 음성">${['F1','F2','F3','F4','F5'].map((v,i)=>`<option value="${v}" ${ttsSettings().neuralVoice===v?'selected':''}>여성 ${i+1} · ${v}</option>`).join('')}</select><details class="ck139-model-options"><summary>고음질 음성 설정 · 대용량 다운로드</summary><label><input type="checkbox" id="ck139-model-consent"> 약 398MB 모델 다운로드·저장에 동의합니다 (Wi-Fi 권장)</label><div class="listen-controls"><button type="button" class="btn" data-ck139-model-prepare>검증 모델 1회 캐시</button><button type="button" class="btn secondary" data-neural-load>기존 외부 모델 직접 준비</button><button type="button" class="btn secondary" data-native-engine>기기 음성 전환</button></div><div id="ck139-model-status" class="neural-status" role="status">모델 상태 확인 대기</div></details><div class="neural-status" id="neural-status" role="status">${ttsSettings().engine==='neural'?'AI 음성 선택됨 · 재생 시 모델을 활성화합니다.':'현재: 기기 기본 음성'}</div><p><a href="https://github.com/supertone-oss-archive/supertonic" target="_blank" rel="noopener noreferrer">엔진 소스</a> · <a href="https://huggingface.co/supertone-oss-archive/supertonic-3" target="_blank" rel="noopener noreferrer">모델·라이선스</a></p></div>`;}
 function neuralStatus(text){const el=document.getElementById('neural-status');if(el)el.textContent=text;}
-async function loadNeural(){try{neuralStatus('음성 엔진 준비 중…');if(!window.CKNeural)await import('./neural-tts.mjs');await window.CKNeural.load(neuralStatus);ttsSettings().engine='neural';save();const select=document.getElementById('tts-engine');if(select)select.value='neural';neuralStatus('AI 여성 음성 준비 완료 · 공식 기출에도 적용됩니다.');return true;}catch(e){neuralStatus('AI 음성 준비 실패: '+e.message);toast('AI 음성 준비 실패 · 연결 상태와 기기 메모리를 확인하세요.');return false;}}
+async function loadNeural(modelBase=""){const requestToken=ttsToken;try{neuralStatus('음성 엔진 준비 중…');if(!window.CKNeural)await import('./neural-tts.mjs');await window.CKNeural.load(neuralStatus,modelBase);if(requestToken!==ttsToken)return false;ttsSettings().engine='neural';save();const select=document.getElementById('tts-engine');if(select)select.value='neural';neuralStatus('AI 여성 음성 준비 완료 · 공식 기출에도 적용됩니다.');return true;}catch(e){neuralStatus('AI 음성 준비 실패: '+e.message);toast('AI 음성 준비 실패 · 연결 상태와 기기 메모리를 확인하세요.');return false;}}
 async function neuralSpeak(items,options={}){
  ttsStop(false);
  const token=ttsToken,continuous=options.continuous===true;
@@ -1344,7 +1372,8 @@ async function neuralSpeak(items,options={}){
   const batch=document.getElementById('ck20-marathon-status');if(batch)batch.textContent=status;
  }catch(e){if(token!==ttsToken)return;ttsStop(false);neuralStatus('AI 음성 재생 실패: '+e.message);toast('AI 음성 재생 실패 · '+e.message);}
 }
-document.addEventListener('click',e=>{const rate=e.target.closest('[data-rate-preset]');if(rate){ttsSettings().rate=Number(rate.dataset.ratePreset);document.querySelectorAll('[data-rate-preset]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.ratePreset===rate.dataset.ratePreset)));const range=document.getElementById('tts-rate');if(range)range.value=rate.dataset.ratePreset;const out=document.getElementById('tts-rate-label');if(out)out.textContent=rate.dataset.ratePreset+'배';window.CKNeural?.setRate(ttsSettings().rate);save();}if(e.target.closest('[data-neural-load]'))loadNeural();if(e.target.closest('[data-native-engine]')){ttsStop(false);ttsSettings().engine='native';save();const select=document.getElementById('tts-engine');if(select)select.value='native';neuralStatus('기기 기본 음성 선택됨');}});
+document.addEventListener('click',e=>{const rate=e.target.closest('[data-rate-preset]');if(rate){ttsSettings().rate=Number(rate.dataset.ratePreset);document.querySelectorAll('[data-rate-preset]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.ratePreset===rate.dataset.ratePreset)));const range=document.getElementById('tts-rate');if(range)range.value=rate.dataset.ratePreset;const out=document.getElementById('tts-rate-label');if(out)out.textContent=rate.dataset.ratePreset+'배';window.CKNeural?.setRate(ttsSettings().rate);save();}if(e.target.closest('[data-neural-load]'))loadNeural();
+ if(e.target.closest('[data-ck139-model-prepare]'))ck139PrepareManaged();if(e.target.closest('[data-native-engine]')){ttsStop(false);ttsSettings().engine='native';save();const select=document.getElementById('tts-engine');if(select)select.value='native';neuralStatus('기기 기본 음성 선택됨');}});
 document.addEventListener('change',e=>{if(e.target.id==='neural-voice'){ttsSettings().neuralVoice=e.target.value;save();}});
 
 document.addEventListener('click',e=>{const b=e.target.closest('[data-typing-year]');if(b){state.typingYear=b.dataset.typingYear;state.typingPick=0;save();render();}});
@@ -4248,7 +4277,7 @@ render();setInterval(timerTick,500);
 <script src="./assets/ck-data-integrity-v86.js?v=120" defer></script>
 <script src="./assets/ck-exam-bridge-v86.js?v=86" defer></script>
 <link rel="stylesheet" href="./assets/ck-data-diagnostics-v88.css?v=125">
-<script src="./assets/ck-data-diagnostics-v88.js?v=137" defer></script>
+<script src="./assets/ck-data-diagnostics-v88.js?v=139" defer></script>
 <script src="./assets/ck-experience-v14.js" defer></script>
 <script src="./assets/ck-pdf-workspace-v15.js?v=118" defer></script>
 <link rel="stylesheet" href="./assets/ck-ocr-v118.css?v=120">
