@@ -214,7 +214,9 @@ function mount(){
  const host=document.getElementById('ck129-mixed-mocks');
  if(!host||!host.parentElement)return false;
  root=document.createElement('section');root.id='ck131-mixed-review';root.className='ck131-mixed-review';
- host.insertAdjacentElement('afterend',root);paint();return true;
+ const anchor=document.getElementById('ck133-review-anchor');
+ if(anchor)anchor.before(root);else host.insertAdjacentElement('afterend',root);
+ paint();return true;
 }
 function schedule(){
  if(scheduled)return;scheduled=true;

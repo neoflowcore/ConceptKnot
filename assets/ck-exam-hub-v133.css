@@ -1,0 +1,73 @@
+/* ConceptKnot v133: original quiz layout + three clear exam categories.
+ * The active engine alone is visible; all original exam records stay intact. */
+#ck133-exam-unified{min-width:0;max-width:100%;color:inherit}
+#ck133-exam-unified [hidden]{display:none!important}
+#ck133-exam-unified[data-ck133-mode="mock"] :is(#ck82-full-exam,#ck129-mixed-mocks){display:none!important}
+#ck133-exam-unified[data-ck133-mode="mixed"] :is(#ck82-full-exam,#ck133-original-practice){display:none!important}
+#ck133-exam-unified[data-ck133-mode="official"] :is(#ck129-mixed-mocks,#ck133-original-practice){display:none!important}
+#ck133-exam-hub{border:1px solid color-mix(in srgb,currentColor 13%,transparent);border-radius:17px;padding:clamp(12px,1.4vw,19px);background:rgba(151,139,111,.065);margin:12px 0 15px}
+#ck133-exam-hub h3{font-size:clamp(17px,1.5vw,22px);line-height:1.3;margin:0;font-weight:800;color:inherit}
+#ck133-exam-hub p{line-height:1.5;margin:5px 0 0}
+.ck133-intro p{font-size:12px;opacity:.8}
+.ck133-categories{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:15px}
+#ck133-exam-hub button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}
+#ck133-exam-hub button:focus-visible{outline:3px solid #5f967c;outline-offset:2px}
+#ck133-exam-hub button[disabled]{opacity:.45;cursor:not-allowed}
+#ck133-exam-hub .ck133-category{display:flex;align-items:center;justify-content:center;gap:10px;padding:13px 9px;min-height:62px;border:1px solid rgba(113,109,89,.24);border-radius:13px;background:rgba(255,255,255,.45);box-shadow:0 3px 8px rgba(19,41,33,.04);text-align:center;font-weight:750;font-size:clamp(12px,1vw,15px);transition:border-color .15s,background .15s}
+#ck133-exam-hub .ck133-category svg{width:24px;height:24px;flex:none;fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.75}
+#ck133-exam-hub .ck133-category[aria-pressed=true]{background:#21584e;color:#fff;border-color:#21584e;box-shadow:0 4px 14px rgba(21,70,58,.16)}
+#ck133-exam-hub .ck133-category:hover:not([aria-pressed=true]){border-color:#568a75}
+.ck133-select-panel{margin-top:14px;padding:15px;border:1px solid rgba(111,106,85,.22);border-radius:13px;background:rgba(255,255,255,.23)}
+.ck133-select-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.ck133-select-top>div:first-child{min-width:0;flex:1 1 270px}
+.ck133-select-top strong{font-size:17px;font-weight:800}
+.ck133-select-top p{font-size:12px;opacity:.82;overflow-wrap:anywhere}
+.ck133-timer{display:grid;justify-items:end;gap:2px;white-space:nowrap;min-width:136px}
+.ck133-timer small,.ck133-timer span{font-size:11px;opacity:.79}
+.ck133-timer strong{font-size:clamp(26px,2.7vw,37px);line-height:1.1;letter-spacing:-.03em;font-weight:850;font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+.ck133-set-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+#ck133-exam-hub .ck133-set-grid button{border:1px solid rgba(111,106,85,.28);border-radius:10px;min-height:40px;padding:8px 12px;background:rgba(255,255,255,.58);font-size:12px;font-weight:650;white-space:nowrap}
+#ck133-exam-hub .ck133-set-grid button[aria-pressed=true]{border-color:#246655;background:rgba(49,117,90,.17);box-shadow:inset 0 0 0 1px #246655}
+.ck133-commands{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:13px}
+#ck133-exam-hub .ck133-commands button{border:1px solid rgba(111,106,85,.26);border-radius:9px;min-height:38px;padding:7px 13px;background:rgba(255,255,255,.75);font-size:12px;font-weight:700}
+#ck133-exam-hub .ck133-commands .ck133-primary{background:#255d50;color:white;border-color:#255d50}
+.ck133-notice{color:#8e5932;font-weight:650;font-size:12px}
+.ck133-guide{font-size:11px;opacity:.72}
+#ck133-original-practice>.ck20-quiz-sets{display:none!important}
+#ck133-original-practice{min-width:0;margin-top:12px}
+#ck133-exam-unified :is(#ck82-full-exam,#ck129-mixed-mocks){padding:0!important;margin:9px 0 16px;background:transparent!important;border:0!important;box-shadow:none!important}
+#ck133-exam-unified .ck82-launch>div:first-child,#ck133-exam-unified .ck129-heading>div:first-child{display:none!important}
+#ck133-exam-unified .ck82-launch-actions>label,#ck133-exam-unified .ck82-launch-actions>[data-ck82-start],#ck133-exam-unified .ck129-controls>label,#ck133-exam-unified .ck129-controls>[data-ck129-start]{display:none!important}
+#ck133-exam-unified :is(.ck82-launch-actions,.ck129-controls){justify-content:flex-start;gap:7px;flex-wrap:wrap}
+#ck133-exam-unified .ck82-launch,#ck133-exam-unified .ck129-heading{justify-content:flex-start;gap:7px}
+#ck133-exam-unified :is(.ck82-question,.ck129-question){background:rgba(251,255,254,.68);box-shadow:0 9px 22px rgba(23,55,41,.06);padding:clamp(11px,1.6vw,20px);border-radius:16px}
+#ck133-exam-unified :is(.ck82-omr,.ck129-omr){background:rgba(251,255,254,.58);border-radius:15px;padding:12px;min-width:0}
+#ck133-exam-unified :is(.ck82-exam-layout,.ck129-layout){display:grid;grid-template-columns:minmax(0,1fr) minmax(205px,26%);gap:12px;align-items:start}
+#ck133-exam-unified :is(.ck82-stem,.ck129-stem){font-size:clamp(15px,1.42vw,20px);line-height:1.7}
+#ck133-exam-unified .ck82-clock,#ck133-exam-unified .ck129-clock{font-variant-numeric:tabular-nums}
+#ck133-exam-unified .ck129-workspace,#ck133-exam-unified .ck82-workspace{margin-top:12px}
+#ck133-exam-unified .ck131-mixed-review{margin-top:18px;margin-bottom:16px}
+#ck133-exam-unified .ck131-heading strong{font-size:18px}
+#ck133-exam-unified .ck20-quiz-layout{grid-template-columns:minmax(0,1fr) minmax(205px,26%);gap:13px}
+#ck133-exam-unified .ck20-quiz-main,#ck133-exam-unified .ck20-quiz-picker{border-radius:16px;min-width:0}
+#ck133-exam-unified .ck129-omr .ck129-grid button,#ck133-exam-unified .ck82-omr .ck82-omr-grid button{min-width:0}
+html[data-ck-theme="dark"] #ck133-exam-hub .ck133-category:not([aria-pressed=true]),html[data-ck-theme="dark"] #ck133-exam-hub .ck133-set-grid button,html[data-ck-theme="dark"] #ck133-exam-hub .ck133-commands button:not(.ck133-primary){background:rgba(23,31,28,.68);color:inherit}
+html[data-ck-theme="dark"] #ck133-exam-unified :is(.ck82-question,.ck129-question,.ck82-omr,.ck129-omr){background:rgba(20,33,28,.6)}
+@media(max-width:800px){
+ #ck133-exam-unified :is(.ck82-exam-layout,.ck129-layout,#ck133-original-practice .ck20-quiz-layout){grid-template-columns:minmax(0,1fr)}
+ .ck133-categories{gap:6px}
+ #ck133-exam-hub .ck133-category{flex-direction:column;gap:5px;min-height:73px;padding:9px 5px}
+ #ck133-exam-hub .ck133-category svg{width:22px;height:22px}
+ .ck133-select-panel{padding:11px}
+ #ck133-exam-hub .ck133-set-grid button{font-size:11px;min-height:36px;padding:6px 9px}
+ .ck133-timer{min-width:0}
+}
+@media(max-width:440px){
+ #ck133-exam-hub{padding:9px}
+ #ck133-exam-hub .ck133-category{font-size:11px}
+ .ck133-select-top>div:first-child{flex-basis:160px}
+ .ck133-timer strong{font-size:25px}
+ #ck133-exam-hub .ck133-set-grid{gap:5px}
+ #ck133-exam-hub .ck133-set-grid button{padding:6px 7px}
+}
+@media(prefers-reduced-motion:reduce){#ck133-exam-unified *{transition:none!important;scroll-behavior:auto!important}}

@@ -68,7 +68,7 @@ function readStore(){
   storageIssue='';loadedRaw=raw;return value;
  }catch{storageIssue='시험 기록을 읽지 못했습니다. 원본을 보호하기 위해 저장을 차단합니다.';return empty();}
 }
-let state=readStore(),root=null,expanded=false,selectedYear=2025,error='',showHistory=false,historySelection=-1,scheduled=false;
+let state=readStore(),root=null,expanded=false,selectedYear=state.active?.year||2025,error='',showHistory=false,historySelection=-1,scheduled=false;
 let clockTimer=null;
 /* v123: 1Hz clock only while exam runs visibly. Time uses deadlines, not ticks. */
 function syncClockTimer(){
@@ -439,7 +439,8 @@ function paint(){
 function mount(){
  const old=document.getElementById('ck82-full-exam');
  if(old){root=old;return;}
- const target=document.querySelector('#main .ck20-quiz-sets');
+ const target=document.querySelector('#main #ck133-exam-engine')||
+   document.querySelector('#main .ck20-quiz-sets');
  if(!target){root=null;document.body.classList.remove('ck82-exam-focused');return;}
  root=document.createElement('section');root.id='ck82-full-exam';root.className='ck82-full-exam';
  target.before(root);

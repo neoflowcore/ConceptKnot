@@ -90,7 +90,7 @@ function read(){
   loadedRaw=raw;issue='';return cleaned;
  }catch{issue='기존 혼합 실전 기록이 손상됐거나 읽을 수 없습니다. 원본 덮어쓰기를 차단합니다.';return empty();}
 }
-state=read();
+state=read();selectedSet=state.active?.set||selectedSet;
 const active=()=>state.active;
 const remaining=(s,now=Date.now())=>s?.status==='running'?Math.max(0,s.deadlineAt-now):
  s?.status==='paused'?Math.max(0,s.remainingMs):0;
@@ -386,7 +386,8 @@ function paint(){
  syncTimer();
 }
 function mount(){const found=document.getElementById('ck129-mixed-mocks');if(found){root=found;return;}
- const target=document.querySelector('#main .ck20-quiz-sets');if(!target)return;
+ const target=document.querySelector('#main #ck133-exam-engine')||
+   document.querySelector('#main .ck20-quiz-sets');if(!target)return;
  root=document.createElement('section');root.id='ck129-mixed-mocks';root.className='ck129-mixed-mocks';
  target.before(root);paint();try{document.dispatchEvent(new Event('ck:mixed-mounted'));}catch{}}
 function schedule(){if(scheduled)return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;mount();syncTimer();});}

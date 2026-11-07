@@ -242,30 +242,31 @@ function downloadRaw(){
 }
 /* v127: explicitly triggered, read-only inventory of the CURRENT SW cache.
  * A matching cache is a minimum offline prerequisite, not proof of full app operation. */
-const OFFLINE_CACHE='conceptknot-study-v132-landing-first-boot';
+const OFFLINE_CACHE='conceptknot-study-v133-exam-unified';
 const OFFLINE_MINIMUM=Object.freeze([
  './index.html',
- './assets/ck-data-diagnostics-v88.js?v=130',
+ './assets/ck-data-diagnostics-v88.js?v=133',
  './assets/ck-data-diagnostics-v88.css?v=125',
  './assets/ck-manual-qa-v115.js?v=130',
  './assets/ck-study-links-v83.js?v=115',
  './assets/ck-study-editor-v80.js?v=127',
  './assets/ck-data-integrity-v86.js?v=120',
  './assets/ck-official-bank-v89.js?v=89',
- './assets/ck-full-exam-v82.js?v=115',
+ './assets/ck-full-exam-v82.js?v=133',
  './data/official-2016-2020.json',
  './data/official-2021-2025.json'
 ]);
-const MIXED_OFFLINE=Object.freeze(['./assets/ck-mixed-mock-v129.js?v=130','./assets/ck-mixed-mock-v129.css?v=130']);
-const REVIEW_OFFLINE=Object.freeze(['./assets/ck-mixed-review-v131.js?v=131','./assets/ck-mixed-review-v131.css?v=131']);
+const MIXED_OFFLINE=Object.freeze(['./assets/ck-mixed-mock-v129.js?v=133','./assets/ck-mixed-mock-v129.css?v=130']);
+const REVIEW_OFFLINE=Object.freeze(['./assets/ck-mixed-review-v131.js?v=133','./assets/ck-mixed-review-v131.css?v=131']);
+const HUB_OFFLINE=Object.freeze(['./assets/ck-exam-hub-v133.js?v=133','./assets/ck-exam-hub-v133.css?v=133']);
 async function offlineHealth(cacheStorage,controlled=false){
  if(!cacheStorage?.keys||!cacheStorage?.open)
   return {supported:false,installed:false,controlled:Boolean(controlled),cached:0,
-   required:OFFLINE_MINIMUM.length,missing:OFFLINE_MINIMUM.slice(),ready:false,mixedCached:0,mixedRequired:MIXED_OFFLINE.length,mixedReady:false,reviewCached:0,reviewRequired:REVIEW_OFFLINE.length,reviewReady:false};
+   required:OFFLINE_MINIMUM.length,missing:OFFLINE_MINIMUM.slice(),ready:false,mixedCached:0,mixedRequired:MIXED_OFFLINE.length,mixedReady:false,reviewCached:0,reviewRequired:REVIEW_OFFLINE.length,reviewReady:false,hubCached:0,hubRequired:HUB_OFFLINE.length,hubReady:false};
  const keys=await cacheStorage.keys();
  if(!keys.includes(OFFLINE_CACHE))
   return {supported:true,installed:false,controlled:Boolean(controlled),cached:0,
-   required:OFFLINE_MINIMUM.length,missing:OFFLINE_MINIMUM.slice(),ready:false,mixedCached:0,mixedRequired:MIXED_OFFLINE.length,mixedReady:false,reviewCached:0,reviewRequired:REVIEW_OFFLINE.length,reviewReady:false};
+   required:OFFLINE_MINIMUM.length,missing:OFFLINE_MINIMUM.slice(),ready:false,mixedCached:0,mixedRequired:MIXED_OFFLINE.length,mixedReady:false,reviewCached:0,reviewRequired:REVIEW_OFFLINE.length,reviewReady:false,hubCached:0,hubRequired:HUB_OFFLINE.length,hubReady:false};
  // Opening only after keys confirms its existence avoids creating a misleading empty cache.
  const current=await cacheStorage.open(OFFLINE_CACHE);
  const matches=await Promise.all(OFFLINE_MINIMUM.map(async path=>{
@@ -289,11 +290,18 @@ async function offlineHealth(cacheStorage,controlled=false){
   return !/text\/html/i.test(String(response.headers?.get?.('content-type')||''));
  }));
  const reviewCached=reviewChecks.filter(Boolean).length;
+ const hubChecks=await Promise.all(HUB_OFFLINE.map(async path=>{
+  const response=await current.match(path);
+  if(!response?.ok)return false;
+  return !/text\/html/i.test(String(response.headers?.get?.('content-type')||''));
+ }));
+ const hubCached=hubChecks.filter(Boolean).length;
  return {supported:true,installed:true,controlled:Boolean(controlled),
   cached:OFFLINE_MINIMUM.length-missing.length,required:OFFLINE_MINIMUM.length,
   missing,ready:missing.length===0&&Boolean(controlled),mixedCached,
   mixedRequired:MIXED_OFFLINE.length,mixedReady:mixedCached===MIXED_OFFLINE.length&&Boolean(controlled),
-  reviewCached,reviewRequired:REVIEW_OFFLINE.length,reviewReady:reviewCached===REVIEW_OFFLINE.length&&Boolean(controlled)};
+  reviewCached,reviewRequired:REVIEW_OFFLINE.length,reviewReady:reviewCached===REVIEW_OFFLINE.length&&Boolean(controlled),
+  hubCached,hubRequired:HUB_OFFLINE.length,hubReady:hubCached===HUB_OFFLINE.length&&Boolean(controlled)};
 }
 /* Ask the currently controlling SW which generation it actually runs.
  * No caches are modified, no page navigation, and no network requests.
@@ -330,9 +338,9 @@ async function runOfflineHealth(){
   const activeCurrent=controller.cache===OFFLINE_CACHE;
   const result=await offlineHealth(window.caches,activeCurrent);
   message.textContent=!result.supported?'브라우저에서 캐시 읽기를 지원하지 않습니다.':
-   !result.installed?'v131 오프라인 캐시 없음 · 아직 미배포 또는 설치 미완료입니다.':
+   !result.installed?'v133 오프라인 캐시 없음 · 아직 미배포 또는 설치 미완료입니다.':
    '현재 캐시의 필수 파일 '+result.cached+'/'+result.required+'개 · '+
-   (activeCurrent?'현재 v131 서비스워커가 이 탭을 제어함':controller.controlled?
+   (activeCurrent?'현재 v133 서비스워커가 이 탭을 제어함':controller.controlled?
     '구형 또는 응답 없는 서비스워커가 제어 중 · 현재 세대 확인 불가':'서비스워커가 이 탭을 제어하지 않음')+
    (result.missing.length?' · 미저장: '+result.missing.slice(0,3).map(x=>x.split('/').pop()).join(', ')+
     (result.missing.length>3?' 외 '+(result.missing.length-3)+'개':''):
@@ -341,6 +349,8 @@ async function runOfflineHealth(){
     (result.mixedReady?'혼합 세트 JS/CSS 확보(문항 데이터·기기 동작은 별도 확인)':'혼합 세트 오프라인 준비 미확인')+
     ' · 약점 복습 JS/CSS '+result.reviewCached+'/'+result.reviewRequired+'개 · '+
     (result.reviewReady?'복습 자산 준비':'복습 자산 준비 미확인')+
+    ' · 통합 모의고사 UI '+result.hubCached+'/'+result.hubRequired+'개 · '+
+    (result.hubReady?'선택 UI 준비':'선택 UI 오프라인 준비 미확인')+
     ' · 실제 기기 동작은 별도 검사');
   return result.ready;
  }catch(error){

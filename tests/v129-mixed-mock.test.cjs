@@ -113,11 +113,11 @@ test('real 10-year A-form data fits all 5 sets and unchanged source answers',()=
 });
 test('new feature is linked, optional-cached, and does not enable automatic deployment',()=>{
  const html=read('index.html'),sw=read('sw.js'),vc=JSON.parse(read('vercel.json'));
- assert.match(html,/ck-mixed-mock-v129\.js\?v=130/);
+ assert.match(html,/ck-mixed-mock-v129\.js\?v=133/);
  assert.match(html,/ck-mixed-mock-v129\.css\?v=130/);
- assert.match(sw,/ck-mixed-mock-v129\.js\?v=130/);
+ assert.match(sw,/ck-mixed-mock-v129\.js\?v=133/);
  assert.match(sw,/ck-mixed-mock-v129\.css\?v=130/);
- assert.match(sw,/conceptknot-study-v132-landing-first-boot/);
+ assert.match(sw,/conceptknot-study-v133-exam-unified/);
  assert.equal(vc.git.deploymentEnabled,false);
  assert.equal(fs.existsSync(path.join(root,'.github','workflows')),false);
 });
