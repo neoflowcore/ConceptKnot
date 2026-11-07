@@ -181,8 +181,8 @@ function navigate(position){
  return saveActive({...s,position:i});
 }
 function setFlag(){
- const s=active();if(!s||s.status==='submitted')return false;
- if(s.status==='running'&&remaining(s)===0){finish('time');return false;}
+ const s=active();if(!s||s.status!=='running')return false;
+ if(remaining(s)===0){finish('time');return false;}
  const flags=s.flags.slice();flags[s.position]=!flags[s.position];
  return saveActive({...s,flags});
 }
@@ -284,7 +284,7 @@ function renderSession(s){
   '<p class="ck82-stem">'+esc(q.question)+'</p>'+choicesHtml(q,s)+
   '<div class="ck82-question-actions">'+
   '<button type="button" data-ck82-clear'+(!canAnswer?' disabled':'')+'>이 문항 미응답으로</button>'+
-  '<button type="button" data-ck82-flag'+(s.status==='submitted'?' disabled':'')+'>'+
+  '<button type="button" data-ck82-flag'+(!canAnswer?' disabled':'')+'>'+
     (s.flags[i]?'보류 표시 해제':'검토 보류 표시')+'</button>'+
   '<button type="button" data-ck82-prev'+(i===0?' disabled':'')+'>이전</button>'+
   '<button type="button" data-ck82-next'+(i===79?' disabled':'')+'>다음</button></div>'+

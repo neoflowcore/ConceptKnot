@@ -18,7 +18,7 @@ function run(){
  const html=read('index.html'),service=read('sw.js'),vc=JSON.parse(read('vercel.json'));
  check(vc.git?.deploymentEnabled===false,'Vercel Git 자동배포가 비활성이 아닙니다.');
  check(!fs.existsSync(path.join(ROOT,'.github/workflows')),'GitHub Actions workflow 디렉터리가 존재합니다.');
- check(service.includes('conceptknot-study-v137-native-voice-guard'),'서비스 워커 v135 캐시 버전 불일치');
+ check(service.includes('conceptknot-study-v140-exam-review-p0'),'서비스 워커 v140 캐시 버전 불일치');
  const {scripts,css}=pathsFromHtml(html);
  for(const src of [...scripts,...css]){
   if(!isLocal(src))continue;
@@ -65,7 +65,7 @@ function run(){
  check(diag.includes('controllerCacheInfo()'),'실제 활성 SW 세대 확인 로직이 없습니다.');
  check(diag.includes('await current.match(path)'),'오프라인 자산 쿼리 버전 정확 비교 누락');
  check(!diag.includes("current.match(path,{ignoreSearch:true})"),'오프라인 진단이 버전 쿼리를 무시합니다.');
- for(const suffix of ['ck-data-diagnostics-v88.js?v=134','ck-data-diagnostics-v88.css?v=125','ck-manual-qa-v115.js?v=130']){
+ for(const suffix of ['ck-data-diagnostics-v88.js?v=140','ck-data-diagnostics-v88.css?v=125','ck-manual-qa-v115.js?v=130']){
   check(html.includes(suffix),'HTML 진단 자산 누락: '+suffix);
   check(service.includes('./assets/'+suffix),'SW 진단 자산 누락: '+suffix);
  }
@@ -73,16 +73,16 @@ function run(){
   check(html.includes('./assets/'+filename),'혼합 5세트 HTML 자산 누락: '+filename);
   check(service.includes('./assets/'+filename),'혼합 5세트 오프라인 목록 누락: '+filename);
  }
- for(const filename of ['ck-mixed-review-v131.js?v=133','ck-mixed-review-v131.css?v=131']){
+ for(const filename of ['ck-mixed-review-v131.js?v=140','ck-mixed-review-v131.css?v=131']){
   check(html.includes('./assets/'+filename),'개인 혼합 약점복습 HTML 자산 누락: '+filename);
   check(service.includes('./assets/'+filename),'개인 혼합 약점복습 SW 자산 누락: '+filename);
  }
  const review=read('assets/ck-mixed-review-v131.js');
  check(review.includes('ck129-mixed-sessions-v1'),'개인 혼합 제출 기록 연동 누락');
  check(review.includes('api.sanitizeSession(item)'),'원본 세트 정체성 검증 누락');
- check(review.includes('ck:mixed-exam-submitted'),'제출 직후 복습 갱신 누락');
+ check(review.includes('ck:mixed-exam-submitted')&&review.includes('ck:exam-submitted'),'두 시험 제출 후 복습 갱신 누락');
  check(review.includes('data-ck131-reveal'),'복습 정답 확인 버튼 누락');
- check(review.includes('if(localStorage.getItem(KEY)!==src.raw)'),'다른 탭 내보내기 보호 누락');
+ check(review.includes('if(localStorage.getItem(KEY)!==src.raw||localStorage.getItem(OFFICIAL_KEY)!==src.officialRaw)'),'두 저장소 동시 변경 내보내기 보호 누락');
  const dot=read('assets/ck-dot-landing-v57.js');
  const garden=read('assets/ck-garden-25d-v36.js');
  check(dot.includes('let booted = false;')&&dot.includes('function ensureHost()'),

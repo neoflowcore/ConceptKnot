@@ -73,7 +73,7 @@ test('official records must be loaded and validated; no guessed score',()=>{
 test('optional review CSS and JS are linked once and offline SW does not enable Git auto deploy',()=>{
  const html=read('index.html'),sw=read('sw.js'),diag=read('assets/ck-data-diagnostics-v88.js');
  const config=JSON.parse(read('vercel.json'));
- for(const file of ['ck-mixed-review-v131.js?v=133','ck-mixed-review-v131.css?v=131']){
+ for(const file of ['ck-mixed-review-v131.js?v=140','ck-mixed-review-v131.css?v=131']){
   assert.ok(html.includes('./assets/'+file));assert.ok(sw.includes('./assets/'+file));
  }
  assert.match(sw,/conceptknot-study-v137-native-voice-guard/);

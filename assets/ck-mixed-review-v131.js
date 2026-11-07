@@ -10,6 +10,27 @@ const official=()=>window.RECALL_OFFICIAL||{};
 const validId=id=>typeof id==='string'&&/^20(?:1[6-9]|2[0-5])-(?:[1-9]|[1-7]\d|80)$/.test(id);
 let root=null,expanded=false,filter='all',selectedId='',guess=null,revealed=false;
 let notice='',loading=false,scheduled=false;
+/* v140: read-only union of submitted CK82 and CK129 attempts. */
+const OFFICIAL_KEY='ck82-exam-sessions-v1';
+function attachOfficial(base){
+ const api=window.CK82FullExam;
+ // Backwards compatible with older CK131 test fixtures where CK82 is absent.
+ if(!api)return {...base,officialRaw:null,officialSessions:[],officialActive:'none'};
+ if(typeof api.cleanStore!=='function'||typeof api.getState!=='function')
+  return {error:'공식 통합 실전 모듈에 접근할 수 없습니다.'};
+ const state=api.getState();
+ if(state.storageIssue)return {error:'공식 실전 개인 기록에 오류가 있습니다. 백업 후 점검해 주세요.'};
+ try{
+  const raw=localStorage.getItem(OFFICIAL_KEY);
+  if(raw===null)return {...base,officialRaw:null,officialSessions:[],officialActive:state.active};
+  if(raw.length>MAX_BYTES)return {error:'공식 시험 개인 기록의 크기가 검증 한도를 넘었습니다.'};
+  const data=api.cleanStore(JSON.parse(raw));
+  if(!data||data.revision!==state.revision)
+   return {error:'공식 실전 기록이 다른 탭에서 변경됐거나 손상됐습니다. 복습 분석은 중단합니다.'};
+  return {...base,officialRaw:raw,officialSessions:data.history,officialActive:data.active?.status||'none'};
+ }catch{return {error:'공식 실전 개인 기록을 읽을 수 없습니다. 원본은 보존했습니다.'};}
+}
+
 function snapshot(){
  const api=mixed();
  if(!api||typeof api.cleanStore!=='function'||typeof api.getState!=='function')
@@ -18,21 +39,22 @@ function snapshot(){
  if(status.issue)return {error:'저장된 혼합 실전 기록에 오류가 있습니다. 먼저 원본 JSON을 백업하세요.'};
  try{
   const raw=localStorage.getItem(KEY);
-  if(raw===null)return {raw:null,sessions:[],active:status.active,revision:0};
+  if(raw===null)return attachOfficial({raw:null,sessions:[],active:status.active,revision:0});
   if(raw.length>MAX_BYTES)return {error:'기록 용량이 허용 범위를 초과했습니다. 원본을 보존하세요.'};
   const data=api.cleanStore(JSON.parse(raw));
   if(!data||data.revision!==status.revision)
    return {error:'혼합 실전 기록이 다른 탭에서 변경됐거나 형식이 올바르지 않습니다. 최신 탭을 확인하세요.'};
-  return {raw,sessions:data.history,active:data.active?.status||'none',revision:data.revision};
+  return attachOfficial({raw,sessions:data.history,active:data.active?.status||'none',revision:data.revision});
  }catch{return {error:'개인 저장소에 접근할 수 없어 복습 분석을 중단했습니다.'};}
 }
 function summarize(source,records=official()){
  if(!source||source.error)return {ready:false,error:source?.error||'기록을 읽을 수 없습니다.'};
- if(source.active==='running'||source.active==='paused')return {ready:false,error:'미제출 시험 진행 중에는 정답 복습 분석을 제공하지 않습니다.'};
+ if(['running','paused'].includes(source.active)||['running','paused'].includes(source.officialActive))return {ready:false,error:'미제출 시험 진행 중에는 정답 복습 분석을 제공하지 않습니다.'};
  const api=mixed();
- if(!api||!Array.isArray(source.sessions)||source.sessions.length>10)
+ if(!api||!Array.isArray(source.sessions)||source.sessions.length>10||
+  !Array.isArray(source.officialSessions||[])||(source.officialSessions||[]).length>20)
   return {ready:false,error:'지원하지 않는 제출 기록 형식입니다.'};
- const unique=new Map(),rows=new Map(),trend=[],subjects=[
+ const unique=new Map(),rows=new Map(),trend=[],sources={mixed:0,official:0},subjects=[
   {name:'학개론',total:0,correct:0,wrong:0,blank:0,flagged:0},
   {name:'민법 및 민사특별법',total:0,correct:0,wrong:0,blank:0,flagged:0}
  ];
@@ -47,7 +69,8 @@ function summarize(source,records=official()){
   unique.set(key,signature);
   const g=api.grade(s,records);
   if(!g)return {ready:false,needBank:true,error:'공식 A형 80문항과 인정 정답을 모두 확인한 뒤 약점을 계산합니다.'};
-  trend.push({set:s.set,time:s.submittedAt,estate:g.estate,civil:g.civil,average:g.average,wrong:g.wrong.length,blank:g.blank.length});
+  sources.mixed++;
+  trend.push({type:'mixed',set:s.set,time:s.submittedAt,estate:g.estate,civil:g.civil,average:g.average,wrong:g.wrong.length,blank:g.blank.length});
   for(let i=0;i<80;i++){
    const id=s.ids[i],q=records[id],choice=s.answers[i],part=subjects[i<40?0:1];
    const blank=choice===null,correct=!blank&&q.correct.map(Number).includes(choice);
@@ -60,11 +83,45 @@ function summarize(source,records=official()){
    row.flagged+=Number(flagged);row.lastAt=Math.max(row.lastAt,s.submittedAt);
   }
  }
+ // Recalculate official-year results using the canonical bank; never trust saved score.
+ const yearApi=window.CK82FullExam;
+ for(const row of (source.officialSessions||[])){
+  if(!yearApi)return {ready:false,error:'공식 실전 기록 모듈을 먼저 불러와 주세요.'};
+  const attempt=yearApi.sanitizeAttempt(row);
+  if(!attempt||attempt.status!=='submitted')return {ready:false,error:'공식 실전 제출 기록이 유효하지 않습니다.'};
+  const key='official:'+attempt.year+':'+attempt.startedAt+':'+attempt.submittedAt,
+   signature=JSON.stringify(attempt);
+  if(unique.has(key)){
+   if(unique.get(key)!==signature)return {ready:false,error:'동일 공식 제출 회차의 답안이 불일치합니다.'};
+   continue;
+  }
+  unique.set(key,signature);
+  if(!yearApi.checkBank(attempt.year).ok)
+   return {ready:false,needBank:true,error:'공식 기출 80문항 원문과 채점 인정 정답을 모두 불러와 주세요.'};
+  const grade=yearApi.gradeAttempt(attempt,records);
+  if(!grade)return {ready:false,error:'공식 실전 점수 재검산에 실패했습니다.'};
+  sources.official++;
+  trend.push({type:'official',year:attempt.year,time:attempt.submittedAt,
+   estate:grade.estate,civil:grade.civil,average:grade.average,
+   wrong:grade.wrong.length,blank:grade.unanswered.length});
+  for(let i=0;i<80;i++){
+   const id=attempt.year+'-'+(i+1),q=records[id],choice=attempt.answers[i];
+   if(!api.validQuestion(id,q))return {ready:false,needBank:true,error:'공식 문제 '+id+'의 원문 검증이 필요합니다.'};
+   const part=subjects[i<40?0:1],blank=choice===null,correct=!blank&&q.correct.map(Number).includes(choice),
+    wrong=!blank&&!correct,flagged=attempt.flags[i];
+   part.total++;part.correct+=Number(correct);part.wrong+=Number(wrong);
+   part.blank+=Number(blank);part.flagged+=Number(flagged);
+   let item=rows.get(id);
+   if(!item){item={id,seen:0,wrong:0,blank:0,flagged:0,lastAt:0,subject:q.subject};rows.set(id,item);}
+   item.seen++;item.wrong+=Number(wrong);item.blank+=Number(blank);
+   item.flagged+=Number(flagged);item.lastAt=Math.max(item.lastAt,attempt.submittedAt);
+  }
+ }
  const queue=[...rows.values()].filter(r=>r.wrong||r.blank||r.flagged).map(r=>({
   ...r,priority:r.wrong*5+r.blank*3+r.flagged
  })).sort((a,b)=>b.priority-a.priority||b.lastAt-a.lastAt||a.id.localeCompare(b.id));
  trend.sort((a,b)=>a.time-b.time||a.set-b.set);
- return {ready:true,attempts:unique.size,queue,subjects,trend,distinct:rows.size,
+ return {ready:true,attempts:unique.size,queue,subjects,trend,distinct:rows.size,sources,
   counts:{all:queue.length,wrong:queue.filter(x=>x.wrong).length,
    blank:queue.filter(x=>x.blank).length,flagged:queue.filter(x=>x.flagged).length}};
 }
@@ -78,9 +135,9 @@ function queueText(report,kind=filter,records=official()){
  if(!report?.ready)return '';
  const list=filtered(report,kind),labels={all:'전체',wrong:'오답',blank:'미응답',flagged:'보류'};
  const lines=[
-  'ConceptKnot 개인 혼합 실전 약점 복습 대기열 · '+(labels[kind]||labels.all),
-  '공식 A형 원문 재배열 시험에서 사용자가 제출한 기록만 집계. 공식 해설 감수/합격 예측 아님.',
-  '제출 이력 '+report.attempts+'회 · 고유 문항 '+report.distinct+'개 · 해당 약점 '+report.counts[kind]+'개 · 최대 '+LIMIT+'개 표시',
+  'ConceptKnot 개인 통합 실전 약점 복습 대기열 · '+(labels[kind]||labels.all),
+  '공식 A형 혼합·연도별 통합 실전에서 제출한 기록만 집계. 공식 해설 감수/합격 예측 아님.',
+  '제출 이력 '+report.attempts+'회 (혼합 '+report.sources.mixed+'·공식 '+report.sources.official+') · 고유 문항 '+report.distinct+'개 · 해당 약점 '+report.counts[kind]+'개 · 최대 '+LIMIT+'개 표시',
   '우선순위 = 오답×5 + 미응답×3 + 보류×1. 동일 문항 재응시 기록은 회차별로 계산.',''
  ];
  for(let i=0;i<list.length;i++){
@@ -99,13 +156,13 @@ function statBox(title,part){
 function reviewPanel(){
  const src=snapshot();
  if(src.error)return '<p class="ck131-warning" role="alert">'+esc(src.error)+'</p>';
- if(src.active==='running'||src.active==='paused')
-  return '<p class="ck131-note">진행 중인 혼합 실전이 있습니다. 정답 노출 방지를 위해 약점 복습은 제출 후에 열립니다.</p>';
+ if(['running','paused'].includes(src.active)||['running','paused'].includes(src.officialActive))
+  return '<p class="ck131-note">기출혼합 또는 공식 통합 실전이 진행 중입니다. 제출 후에만 개인 약점과 정답이 표시됩니다.</p>';
  const report=summarize(src);
  if(!report.ready)
   return '<p role="status">'+esc(report.error)+'</p>'+
    (report.needBank?'<button type="button" data-ck131-load'+(loading?' disabled':'')+'>공식 10개년 원문 불러오기</button>':'');
- if(!report.attempts)return '<p class="ck131-note">혼합 실전 1회 이상 제출하면 개인 약점 대기열이 계산됩니다.</p>';
+ if(!report.attempts)return '<p class="ck131-note">기출혼합 또는 공식 통합 실전을 제출하면 개인 약점 대기열을 계산합니다.</p>';
  const selected=filtered(report);
  if(!selected.some(r=>r.id===selectedId)){selectedId=selected[0]?.id||'';guess=null;revealed=false;}
  const current=selected.find(r=>r.id===selectedId);
@@ -131,14 +188,14 @@ function reviewPanel(){
    '<a href="'+esc(q.originalUrl)+'" target="_blank" rel="noopener noreferrer">공식 PDF 원문</a></div></article>';
  }
  const trend=report.trend.slice(-10).map((t,i)=>
-  '<div><small>'+(i+1)+'회 · '+t.set+'세트</small>'+
+  '<div><small>'+(i+1)+'회 · '+(t.type==='official'?t.year+'년 공식 실전':t.set+'세트 혼합')+'</small>'+
   '<div class="ck131-trend-track" role="img" aria-label="평균 '+t.average.toFixed(1)+'점">'+
   '<span style="width:'+Math.max(0,Math.min(100,t.average))+'%"></span></div>'+
   '<b>'+t.average.toFixed(1)+'점</b></div>').join('');
  return '<div class="ck131-stats" aria-label="제출 회차별 문항 집계">'+
   statBox('학개론',report.subjects[0])+statBox('민법',report.subjects[1])+
   '<div><small>약점 고유 문항</small><strong>'+report.queue.length+'개</strong>'+
-  '<span>제출 '+report.attempts+'회 · 최대 10회 보관</span></div></div>'+
+  '<span>제출 '+report.attempts+'회 · 혼합 최대 10회 · 공식 최대 20회</span></div></div>'+
   '<details class="ck131-trend"><summary>실전 평균 점수 흐름 보기 ('+report.trend.length+'회)</summary>'+
    '<div>'+trend+'</div><p>제출 회차의 채점 인정 정답 기준. 미래 성적 예측이 아닙니다.</p></details>'+
   '<div class="ck131-filter" role="group" aria-label="약점 유형 필터">'+
@@ -156,9 +213,9 @@ function reviewPanel(){
 }
 function paint(){
  if(!root?.isConnected)return;
- const src=snapshot(),count=src.error?'기록 확인 필요':src.sessions.length+'회 제출';
+ const src=snapshot(),count=src.error?'기록 확인 필요':(src.sessions.length+(src.officialSessions?.length||0))+'회 제출';
  root.innerHTML='<div class="ck131-heading"><div><strong>개인 약점 분석 · 다시 풀기</strong>'+
-  '<p>혼합 5세트 제출 기록 · '+esc(count)+' · 개인 학습용, 공식 해설 검수 아님</p></div>'+
+  '<p>기출혼합 + 공식 통합 실전 제출 기록 · '+esc(count)+' · 개인 학습용, 공식 해설 검수 아님</p></div>'+
   '<button type="button" data-ck131-toggle aria-expanded="'+expanded+'">'+(expanded?'복습 접기':'복습 열기')+'</button></div>'+
   (notice?'<p class="ck131-notice" role="status">'+esc(notice)+'</p>':'')+
   (expanded?'<div class="ck131-body">'+reviewPanel()+'</div>':'');
@@ -187,9 +244,9 @@ function download(){
  const text=queueText(report);
  if(!text){notice='대기열 원문 확인이 부족해 내보내지 않았습니다.';paint();return false;}
  try{
-  if(localStorage.getItem(KEY)!==src.raw){notice='다른 탭에서 기록이 변경되어 TXT 생성을 중단했습니다.';paint();return false;}
+  if(localStorage.getItem(KEY)!==src.raw||localStorage.getItem(OFFICIAL_KEY)!==src.officialRaw){notice='다른 탭에서 기록이 변경되어 TXT 생성을 중단했습니다.';paint();return false;}
   const file=new Blob(['\uFEFF',text],{type:'text/plain;charset=utf-8'}),url=URL.createObjectURL(file);
-  const a=document.createElement('a');a.href=url;a.download='ConceptKnot_혼합약점복습_'+new Date().toISOString().slice(0,10)+'.txt';
+  const a=document.createElement('a');a.href=url;a.download='ConceptKnot_통합약점복습_'+new Date().toISOString().slice(0,10)+'.txt';
   document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000);
   notice='TXT 다운로드를 요청했습니다. 실제 저장된 파일을 확인하세요.';paint();return true;
  }catch{notice='TXT 다운로드 실패. 원본 시험 기록은 변경되지 않았습니다.';paint();return false;}
@@ -254,7 +311,8 @@ document.addEventListener('click',e=>{
 });
 document.addEventListener('ck:mixed-mounted',schedule);
 document.addEventListener('ck:mixed-exam-submitted',()=>{expanded=true;filter='all';selectedId='';guess=null;revealed=false;paint();});
-window.addEventListener('storage',e=>{if(e.key!==KEY)return;selectedId='';guess=null;revealed=false;paint();});
+document.addEventListener('ck:exam-submitted',()=>{expanded=true;filter='all';selectedId='';guess=null;revealed=false;paint();});
+window.addEventListener('storage',e=>{if(e.key!==KEY&&e.key!==OFFICIAL_KEY)return;selectedId='';guess=null;revealed=false;paint();});
 window.addEventListener('ck:official-bank-ready',paint);
 window.addEventListener('pageshow',()=>{schedule();paint();});
 window.addEventListener('ck:scene-activity',schedule);

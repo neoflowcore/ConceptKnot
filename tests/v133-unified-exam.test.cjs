@@ -105,8 +105,8 @@ test('offline generation and changed native JS URLs are aligned, without automat
  const html=read('index.html'),sw=read('sw.js'),diag=read('assets/ck-data-diagnostics-v88.js');
  const config=JSON.parse(read('vercel.json'));
  for(const suffix of ['ck-exam-hub-v133.js?v=134','ck-exam-hub-v133.css?v=133',
-  'ck-mixed-mock-v129.js?v=134','ck-full-exam-v82.js?v=134','ck-mixed-review-v131.js?v=133',
-  'ck-data-diagnostics-v88.js?v=137']){
+  'ck-mixed-mock-v129.js?v=134','ck-full-exam-v82.js?v=140','ck-mixed-review-v131.js?v=140',
+  'ck-data-diagnostics-v88.js?v=140']){
   assert.ok(html.includes('./assets/'+suffix),'HTML '+suffix);
   assert.ok(sw.includes('./assets/'+suffix),'SW '+suffix);
  }
