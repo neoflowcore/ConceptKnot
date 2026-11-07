@@ -50,7 +50,7 @@ test('stats move beneath mode buttons while IDs, progress, per-mode drafts and l
 });
 test('cache URLs advance atomically without enabling Git automation or deployment',()=>{
  const sw=read('sw.js'),diag=read('assets/ck-data-diagnostics-v88.js');
- for(const name of ['conceptknot-study-v135-typing-ime','ck-data-diagnostics-v88.js?v=135'])
+ for(const name of ['conceptknot-study-v136-nav-voice-plan','ck-data-diagnostics-v88.js?v=136'])
   assert.ok(sw.includes(name)&&diag.includes(name),name);
  for(const name of ['ck-typing-layout-v31.js?v=135','ck-typing-precision-v62.css?v=135'])
   assert.ok(sw.includes(name)&&html.includes(name),name);

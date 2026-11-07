@@ -73,8 +73,8 @@ test('HTML/SW/cache use the same v132 import and no auto CI',()=>{
  assert.match(html,/ck-garden-25d-v36\.js\?v=132/);
  assert.match(sw,/ck-garden-25d-v36\.js\?v=132/);
  assert.match(sw,/ck-dot-landing-v57\.js\?v=132/);
- assert.match(sw,/conceptknot-study-v135-typing-ime/);
- assert.match(diag,/conceptknot-study-v135-typing-ime/);
+ assert.match(sw,/conceptknot-study-v136-nav-voice-plan/);
+ assert.match(diag,/conceptknot-study-v136-nav-voice-plan/);
  assert.equal(vc.git.deploymentEnabled,false);
  assert.equal(fs.existsSync(path.join(ROOT,'.github/workflows')),false);
 });

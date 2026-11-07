@@ -108,7 +108,7 @@ test('OCR page archive is added to guarded global JSON backup and restore',()=>{
 });
 test('v120 assets are cached and release still requires manual deployment',()=>{
  const sw=read('sw.js'),html=read('index.html'),config=JSON.parse(read('vercel.json'));
- assert.match(sw,/conceptknot-study-v135-typing-ime/);
+ assert.match(sw,/conceptknot-study-v136-nav-voice-plan/);
  for(const file of ['ck-ocr-v118.js?v=127','ck-ocr-v118.css?v=120','ck-data-integrity-v86.js?v=120']){
   assert.ok(html.includes(file),'HTML missing '+file);
   assert.equal(sw.split(file).length-1,file.startsWith('ck-data-integrity')?3:2,

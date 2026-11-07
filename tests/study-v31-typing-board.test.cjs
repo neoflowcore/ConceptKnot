@@ -150,7 +150,7 @@ test('UI, IME handling, offline cache and source syntax stay consistent',()=>{
  assert.match(html,/const field=e\.target,raw=field\.value,clean=letters\(raw\)\.join\(''\)/);
  assert.match(html,/const field=e\.target,clean=letters\(field\.value\)\.join\(''\)/);
  assert.match(css,/ck61-typing-mode/);assert.match(read('assets/ck-typing-precision-v62.css'),/ck62-live/);
- assert.match(sw,/conceptknot-study-v135-typing-ime/);
+ assert.match(sw,/conceptknot-study-v136-nav-voice-plan/);
  assert.match(sw,/ck-typing-modes-v61.css/);
  assert.equal(JSON.parse(read('vercel.json')).git.deploymentEnabled,false);
  for(const m of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))new vm.Script(m[1]);

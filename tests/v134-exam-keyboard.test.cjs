@@ -134,10 +134,10 @@ test('native engines export position read-only, without changing session schemas
 test('current cache query and manual deployment safety are aligned',()=>{
  const sw=read('sw.js'),diag=read('assets/ck-data-diagnostics-v88.js');
  const config=JSON.parse(read('vercel.json'));
- assert.ok(sw.includes('conceptknot-study-v135-typing-ime'));
- assert.ok(diag.includes('conceptknot-study-v135-typing-ime'));
+ assert.ok(sw.includes('conceptknot-study-v136-nav-voice-plan'));
+ assert.ok(diag.includes('conceptknot-study-v136-nav-voice-plan'));
  for(const name of ['ck-mixed-mock-v129.js?v=134','ck-full-exam-v82.js?v=134',
-  'ck-exam-hub-v133.js?v=134','ck-data-diagnostics-v88.js?v=135']){
+  'ck-exam-hub-v133.js?v=134','ck-data-diagnostics-v88.js?v=136']){
   assert.ok(index.includes('./assets/'+name),name+' index');
   assert.ok(sw.includes('./assets/'+name),name+' SW');
  }

@@ -106,12 +106,12 @@ test('offline generation and changed native JS URLs are aligned, without automat
  const config=JSON.parse(read('vercel.json'));
  for(const suffix of ['ck-exam-hub-v133.js?v=134','ck-exam-hub-v133.css?v=133',
   'ck-mixed-mock-v129.js?v=134','ck-full-exam-v82.js?v=134','ck-mixed-review-v131.js?v=133',
-  'ck-data-diagnostics-v88.js?v=135']){
+  'ck-data-diagnostics-v88.js?v=136']){
   assert.ok(html.includes('./assets/'+suffix),'HTML '+suffix);
   assert.ok(sw.includes('./assets/'+suffix),'SW '+suffix);
  }
- assert.match(sw,/conceptknot-study-v135-typing-ime/);
- assert.match(diag,/conceptknot-study-v135-typing-ime/);
+ assert.match(sw,/conceptknot-study-v136-nav-voice-plan/);
+ assert.match(diag,/conceptknot-study-v136-nav-voice-plan/);
  assert.equal(config.git.deploymentEnabled,false);
  assert.equal(fs.existsSync(path.join(ROOT,'.github','workflows')),false);
  new vm.Script(JS);
