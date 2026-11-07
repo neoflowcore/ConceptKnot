@@ -200,9 +200,9 @@ test('cross-tab pause stops the visible-only timer even if the workspace is deta
 
 test('modified mixed JS/CSS use current cache query and auto-deploy stays disabled',()=>{
  const html=read('index.html'),sw=read('sw.js'),vc=JSON.parse(read('vercel.json'));
- assert.match(html,/ck-mixed-mock-v129\.js\?v=133/);
+ assert.match(html,/ck-mixed-mock-v129\.js\?v=134/);
  assert.match(html,/ck-mixed-mock-v129\.css\?v=130/);
- assert.match(sw,/conceptknot-study-v133-exam-unified/);
+ assert.match(sw,/conceptknot-study-v134-exam-keyboard/);
  assert.equal(vc.git.deploymentEnabled,false);
  assert.equal(fs.existsSync(path.join(ROOT,'.github/workflows')),false);
  new vm.Script(SOURCE);

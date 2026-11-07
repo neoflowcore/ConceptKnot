@@ -479,7 +479,7 @@ if(document.body&&window.MutationObserver)new MutationObserver(syncTimer).observ
 checkExpired();
 window.CK129MixedMock=Object.freeze({makeSet,validIds,matchesFixedPaper,validQuestion,checkSet,checkIds,
  sanitizeSession,cleanStore,grade,createAttempt,remaining,clockText,
- getState:()=>({active:active()?.status||'none',set:active()?.set||null,history:state.history.length,resultFilter,
+ getState:()=>({active:active()?.status||'none',set:active()?.set||null,position:active()?.position??null,history:state.history.length,resultFilter,
   revision:state.revision,remainingMs:remaining(active()),issue,message,loading,expanded}),
  getAttempts:()=>state.history.map(s=>JSON.parse(JSON.stringify(s))),
  start,answer,goto,flag,pause,resume,finish,resultText,backup,mergeRestore,importFile,

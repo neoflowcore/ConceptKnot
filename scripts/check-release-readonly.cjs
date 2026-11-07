@@ -18,7 +18,7 @@ function run(){
  const html=read('index.html'),service=read('sw.js'),vc=JSON.parse(read('vercel.json'));
  check(vc.git?.deploymentEnabled===false,'Vercel Git 자동배포가 비활성이 아닙니다.');
  check(!fs.existsSync(path.join(ROOT,'.github/workflows')),'GitHub Actions workflow 디렉터리가 존재합니다.');
- check(service.includes('conceptknot-study-v133-exam-unified'),'서비스 워커 v133 캐시 버전 불일치');
+ check(service.includes('conceptknot-study-v134-exam-keyboard'),'서비스 워커 v134 캐시 버전 불일치');
  const {scripts,css}=pathsFromHtml(html);
  for(const src of [...scripts,...css]){
   if(!isLocal(src))continue;
@@ -65,11 +65,11 @@ function run(){
  check(diag.includes('controllerCacheInfo()'),'실제 활성 SW 세대 확인 로직이 없습니다.');
  check(diag.includes('await current.match(path)'),'오프라인 자산 쿼리 버전 정확 비교 누락');
  check(!diag.includes("current.match(path,{ignoreSearch:true})"),'오프라인 진단이 버전 쿼리를 무시합니다.');
- for(const suffix of ['ck-data-diagnostics-v88.js?v=133','ck-data-diagnostics-v88.css?v=125','ck-manual-qa-v115.js?v=130']){
+ for(const suffix of ['ck-data-diagnostics-v88.js?v=134','ck-data-diagnostics-v88.css?v=125','ck-manual-qa-v115.js?v=130']){
   check(html.includes(suffix),'HTML 진단 자산 누락: '+suffix);
   check(service.includes('./assets/'+suffix),'SW 진단 자산 누락: '+suffix);
  }
- for(const filename of ['ck-mixed-mock-v129.js?v=133','ck-mixed-mock-v129.css?v=130']){
+ for(const filename of ['ck-mixed-mock-v129.js?v=134','ck-mixed-mock-v129.css?v=130']){
   check(html.includes('./assets/'+filename),'혼합 5세트 HTML 자산 누락: '+filename);
   check(service.includes('./assets/'+filename),'혼합 5세트 오프라인 목록 누락: '+filename);
  }
@@ -96,7 +96,7 @@ function run(){
   '최신 Dot 모듈 SW 캐시 누락');
  check(service.includes('ck-garden-25d-v36.js?v=132'),
   '최신 Dot 런처 SW 캐시 누락');
- for(const name of ['ck-exam-hub-v133.js?v=133','ck-exam-hub-v133.css?v=133']){
+ for(const name of ['ck-exam-hub-v133.js?v=134','ck-exam-hub-v133.css?v=133']){
   check(html.includes('./assets/'+name),'통합 모의고사 UI HTML 참조 누락: '+name);
   check(service.includes('./assets/'+name),'통합 모의고사 오프라인 경로 누락: '+name);
  }
@@ -109,6 +109,14 @@ function run(){
  check(hub.includes("remainingMs"),'기존 공식 실전 타이머 연동 누락');
  check(read('assets/ck-mixed-review-v131.js').includes("document.getElementById('ck133-review-anchor')"),
   '약점 복습 후순위 마운트가 연결되지 않음');
+ const keyboardMarker='/* v134: consistent 1-5 answers and Ctrl+Left/Right';
+ check(html.includes(keyboardMarker),'모의고사·10개년 기출 키보드 통합 핸들러 누락');
+ check(html.includes("state.view==='quiz'")&&html.includes("state.view==='exam'"),'두 시험 탭 단축키 구분 누락');
+ check(html.includes("e.ctrlKey")&&html.includes("e.stopImmediatePropagation()"),'Ctrl+방향키 충돌 방지 누락');
+ check(read('assets/ck-full-exam-v82.js').includes('position:active()?.position??null'),
+  '공식 실전 현재 문항 번호 API 누락');
+ check(read('assets/ck-mixed-mock-v129.js').includes('position:active()?.position??null'),
+  '혼합 실전 현재 문항 번호 API 누락');
  const mixed=read('assets/ck-mixed-mock-v129.js');
  check(mixed.includes('ck129-mixed-sessions-v1'),'혼합 세트 별도 기록 키 누락');
  check(mixed.includes('DURATION=6000000'),'혼합 세트 100분 타이머 규칙 누락');

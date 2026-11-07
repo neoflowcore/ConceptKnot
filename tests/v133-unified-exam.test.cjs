@@ -104,14 +104,14 @@ test('original CK20 / CK82 / CK129 sections mount separately and review follows 
 test('offline generation and changed native JS URLs are aligned, without automatic builds',()=>{
  const html=read('index.html'),sw=read('sw.js'),diag=read('assets/ck-data-diagnostics-v88.js');
  const config=JSON.parse(read('vercel.json'));
- for(const suffix of ['ck-exam-hub-v133.js?v=133','ck-exam-hub-v133.css?v=133',
-  'ck-mixed-mock-v129.js?v=133','ck-full-exam-v82.js?v=133','ck-mixed-review-v131.js?v=133',
-  'ck-data-diagnostics-v88.js?v=133']){
+ for(const suffix of ['ck-exam-hub-v133.js?v=134','ck-exam-hub-v133.css?v=133',
+  'ck-mixed-mock-v129.js?v=134','ck-full-exam-v82.js?v=134','ck-mixed-review-v131.js?v=133',
+  'ck-data-diagnostics-v88.js?v=134']){
   assert.ok(html.includes('./assets/'+suffix),'HTML '+suffix);
   assert.ok(sw.includes('./assets/'+suffix),'SW '+suffix);
  }
- assert.match(sw,/conceptknot-study-v133-exam-unified/);
- assert.match(diag,/conceptknot-study-v133-exam-unified/);
+ assert.match(sw,/conceptknot-study-v134-exam-keyboard/);
+ assert.match(diag,/conceptknot-study-v134-exam-keyboard/);
  assert.equal(config.git.deploymentEnabled,false);
  assert.equal(fs.existsSync(path.join(ROOT,'.github','workflows')),false);
  new vm.Script(JS);

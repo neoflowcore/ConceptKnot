@@ -115,7 +115,7 @@ function render(){
   choices.map(o=>'<button type="button" data-ck133-choice="'+o.id+'" aria-pressed="'+(choice===o.id)+'">'+o.name+'</button>').join('')+
   '</div><div class="ck133-commands">'+controls()+'</div>'+
   (note?'<p class="ck133-notice" role="status">'+note+'</p>':'')+
-  '<p class="ck133-guide">진행 중인 100분 실전 시험은 유형을 전환해도 시간이 계속 흐릅니다. 모의고사 연습 타이머는 별도이며 실제 채점·제출을 변경하지 않습니다.</p></div>';
+  '<p class="ck133-guide">단축키: 1~5 선지 선택 · Ctrl+← 이전 문제 · Ctrl+→ 다음 문제. 입력창·PDF 필기 중에는 작동하지 않습니다. 진행 중인 공식 시험 시간은 유형을 바꿔도 계속 흐릅니다.</p></div>';
  syncTicker();
 }
 function refreshClock(){

@@ -566,7 +566,7 @@ syncClockTimer();
 window.CK82FullExam=Object.freeze({
  checkBank,cleanStore,sanitizeAttempt,newAttempt,gradeAttempt,remaining,fmtClock,
  getAttempts:()=>state.history.map(x=>JSON.parse(JSON.stringify(x))),
- getState:()=>({active:active()?.status||'none',year:active()?.year||null,history:state.history.length,
+ getState:()=>({active:active()?.status||'none',year:active()?.year||null,position:active()?.position??null,history:state.history.length,
   remainingMs:remaining(active()),revision:state.revision,storageIssue,loadingYear,expiryLoadingYear,expanded,historySelection,error,clockTicking:clockTimer!==null}),
  start,setAnswer,navigate,pause,resume,finish,historyAt,resultSource,makeResultText,exportResult,
  open:()=>{checkExpiry();syncClockTimer();mount();if(root&&!expanded){expanded=true;paint();focusRegion();}}
