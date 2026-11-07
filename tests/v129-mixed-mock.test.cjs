@@ -117,7 +117,7 @@ test('new feature is linked, optional-cached, and does not enable automatic depl
  assert.match(html,/ck-mixed-mock-v129\.css\?v=130/);
  assert.match(sw,/ck-mixed-mock-v129\.js\?v=134/);
  assert.match(sw,/ck-mixed-mock-v129\.css\?v=130/);
- assert.match(sw,/conceptknot-study-v136-nav-voice-plan/);
+ assert.match(sw,/conceptknot-study-v137-native-voice-guard/);
  assert.equal(vc.git.deploymentEnabled,false);
  assert.equal(fs.existsSync(path.join(root,'.github','workflows')),false);
 });

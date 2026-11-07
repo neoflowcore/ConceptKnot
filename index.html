@@ -1447,12 +1447,14 @@ ttsPlay=function(items,options={}){
   ck76VoiceState('error','브라우저 한국어 음성 재생 기능이 없습니다.');return;
  }
  const synth=window.speechSynthesis;
+ // T1: Some mobile/Brave voice lists are initially empty. While the click
+ // still has user activation, ask the OS for a ko-KR utterance directly.
  try{ttsVoices=synth.getVoices()||[]}catch(e){ttsVoices=[]}
  const voice=ttsChosenVoice();
- if(!voice){
-  ck76VoiceState('error','한국어 음성이 준비되지 않았습니다. 기기 언어 설정 후 다시 눌러 주세요.');return;
+ if(!voice&&ttsVoices.length){
+  ck76VoiceState('error','기기에 한국어 음성이 등록되지 않았습니다. OS의 한국어 음성 설정을 확인하세요.');return;
  }
- ck76VoiceState('ready');
+ ck76VoiceState('ready',voice?'한국어 기기 음성 선택됨':'음성 목록이 비어 있습니다. 기기 기본 한국어 음성으로 재생을 시도합니다.');
  let index=0,errors=0;
  function next(){
   if(token!==ck76Voice.token)return;
@@ -1462,17 +1464,24 @@ ttsPlay=function(items,options={}){
    return;
   }
   const phrase=segments[index++],utt=new window.SpeechSynthesisUtterance(phrase);
-  ttsUtterance=utt;utt.lang='ko-KR';utt.voice=voice;utt.rate=ttsSettings().rate;utt.pitch=1;
-  let settled=false;
+  ttsUtterance=utt;utt.lang='ko-KR';utt.voice=ttsChosenVoice()||voice||null;utt.rate=ttsSettings().rate;utt.pitch=1;
+  let settled=false,started=false,startWatchdog=null;
+  const clearWatchdog=()=>{if(startWatchdog!==null){clearTimeout(startWatchdog);startWatchdog=null;}};
   utt.onstart=()=>{
    if(token!==ck76Voice.token||settled)return;
+   started=true;clearWatchdog();
    ck108Progress(index-1);
-   ck76VoiceState('speaking','재생 중 · '+index+'/'+segments.length);
+   ck76VoiceState('speaking','기기 음성 시작 이벤트 수신 · '+index+'/'+segments.length);
   };
-  utt.onend=()=>{if(token!==ck76Voice.token||settled)return;settled=true;errors=0;next();};
+  utt.onend=()=>{
+   if(token!==ck76Voice.token||settled)return;
+   settled=true;clearWatchdog();
+   if(!started){ck76VoiceState('error','기기 음성이 시작되지 않은 채 종료되었습니다. 실제 소리를 확인할 수 없습니다.');return;}
+   errors=0;next();
+  };
   utt.onerror=event=>{
    if(token!==ck76Voice.token||settled)return;
-   settled=true;
+   settled=true;clearWatchdog();
    if(['canceled','interrupted'].includes(event?.error)){
    ck76VoiceState('error','음성 출력이 중단되었습니다. 다시 재생해 주세요.');return;
   }
@@ -1498,7 +1507,17 @@ ttsPlay=function(items,options={}){
   };
   ck76Voice.position=index;
   ck76DisplayProgress(ck76Voice.label+' · '+index+'/'+segments.length+' · '+phrase.slice(0,70));
-  try{synth.speak(utt)}catch(e){ck76VoiceState('error','음성 출력 오류: '+e.message);}
+  try{
+   synth.speak(utt);
+   // A blocked OS voice may fire neither onstart nor onerror.
+   // Never skip this phrase or silently mark it completed.
+   if(!settled&&!started)startWatchdog=setTimeout(()=>{
+    if(token!==ck76Voice.token||started||settled)return;
+    settled=true;startWatchdog=null;
+    try{synth.cancel()}catch{}
+    ck76VoiceState('error','7초 동안 음성 시작 신호가 없습니다. 기기 미디어 볼륨·한국어 음성·브라우저 재생 허용을 확인하세요.');
+   },7000);
+  }catch(e){settled=true;clearWatchdog();ck76VoiceState('error','음성 출력 오류: '+e.message);}
  }
  next();
 };
@@ -4166,7 +4185,7 @@ render();setInterval(timerTick,500);
 <script src="./assets/ck-data-integrity-v86.js?v=120" defer></script>
 <script src="./assets/ck-exam-bridge-v86.js?v=86" defer></script>
 <link rel="stylesheet" href="./assets/ck-data-diagnostics-v88.css?v=125">
-<script src="./assets/ck-data-diagnostics-v88.js?v=136" defer></script>
+<script src="./assets/ck-data-diagnostics-v88.js?v=137" defer></script>
 <script src="./assets/ck-experience-v14.js" defer></script>
 <script src="./assets/ck-pdf-workspace-v15.js?v=118" defer></script>
 <link rel="stylesheet" href="./assets/ck-ocr-v118.css?v=120">

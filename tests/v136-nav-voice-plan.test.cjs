@@ -34,12 +34,12 @@ test('mobile pager and Ctrl KeyTips use the same order as displayed tabs',()=>{
 });
 test('rendered JS links match v136 source and fresh service worker generation',()=>{
  const html=read('index.html'),sw=read('sw.js'),diag=read('assets/ck-data-diagnostics-v88.js');
- for(const asset of ['ck-navigation-v5.js?v=136','ck-shortcuts-v19.js?v=136','ck-data-diagnostics-v88.js?v=136']){
+ for(const asset of ['ck-navigation-v5.js?v=136','ck-shortcuts-v19.js?v=136','ck-data-diagnostics-v88.js?v=137']){
   assert.ok(html.includes(asset),'HTML missing '+asset);
   assert.ok(sw.includes(asset),'SW missing '+asset);
  }
- assert.match(sw,/conceptknot-study-v136-nav-voice-plan/);
- assert.match(diag,/conceptknot-study-v136-nav-voice-plan/);
+ assert.match(sw,/conceptknot-study-v137-native-voice-guard/);
+ assert.match(diag,/conceptknot-study-v137-native-voice-guard/);
  for(const m of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))new vm.Script(m[1]);
 });
 test('written TTS redesign respects original data and states what is NOT yet implemented',()=>{
