@@ -17,7 +17,7 @@ test('header is anchored from first paint and drag script is loaded, not merely 
  assert.match(html,/<\/nav>\s*<\/div><div class="ck-v7-date-pill">/);
  assert.match(html,/<script src="\.\/assets\/ck-nav-drag-v56\.js\?v=115" defer><\/script>/);
  assert.match(html,/data-ck56-nav-style="1"/);
- assert.match(html,/ck-manual-qa-v115\.js\?v=129/);
+ assert.match(html,/ck-manual-qa-v115\.js\?v=130/);
  assert.match(html,/ck-manual-qa-v115\.css\?v=115/);
  assert.match(html,/ck-full-exam-v82\.js\?v=115/);
  assert.match(html,/ck-data-integrity-v86\.js\?v=120/);

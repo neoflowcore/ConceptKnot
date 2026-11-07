@@ -388,7 +388,7 @@ function paint(){
 function mount(){const found=document.getElementById('ck129-mixed-mocks');if(found){root=found;return;}
  const target=document.querySelector('#main .ck20-quiz-sets');if(!target)return;
  root=document.createElement('section');root.id='ck129-mixed-mocks';root.className='ck129-mixed-mocks';
- target.before(root);paint();}
+ target.before(root);paint();try{document.dispatchEvent(new Event('ck:mixed-mounted'));}catch{}}
 function schedule(){if(scheduled)return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;mount();syncTimer();});}
 document.addEventListener('click',e=>{
  const btn=e.target.closest?.('[data-ck129-start],[data-ck129-toggle],[data-ck129-history],[data-ck129-backup],[data-ck129-import],'+

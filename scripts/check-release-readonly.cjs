@@ -18,7 +18,7 @@ function run(){
  const html=read('index.html'),service=read('sw.js'),vc=JSON.parse(read('vercel.json'));
  check(vc.git?.deploymentEnabled===false,'Vercel Git 자동배포가 비활성이 아닙니다.');
  check(!fs.existsSync(path.join(ROOT,'.github/workflows')),'GitHub Actions workflow 디렉터리가 존재합니다.');
- check(service.includes('conceptknot-study-v130-fixed-paper-integrity'),'서비스 워커 v129 캐시 버전 불일치');
+ check(service.includes('conceptknot-study-v131-mixed-review-queue'),'서비스 워커 v131 캐시 버전 불일치');
  const {scripts,css}=pathsFromHtml(html);
  for(const src of [...scripts,...css]){
   if(!isLocal(src))continue;
@@ -73,6 +73,16 @@ function run(){
   check(html.includes('./assets/'+filename),'혼합 5세트 HTML 자산 누락: '+filename);
   check(service.includes('./assets/'+filename),'혼합 5세트 오프라인 목록 누락: '+filename);
  }
+ for(const filename of ['ck-mixed-review-v131.js?v=131','ck-mixed-review-v131.css?v=131']){
+  check(html.includes('./assets/'+filename),'개인 혼합 약점복습 HTML 자산 누락: '+filename);
+  check(service.includes('./assets/'+filename),'개인 혼합 약점복습 SW 자산 누락: '+filename);
+ }
+ const review=read('assets/ck-mixed-review-v131.js');
+ check(review.includes('ck129-mixed-sessions-v1'),'개인 혼합 제출 기록 연동 누락');
+ check(review.includes('api.sanitizeSession(item)'),'원본 세트 정체성 검증 누락');
+ check(review.includes('ck:mixed-exam-submitted'),'제출 직후 복습 갱신 누락');
+ check(review.includes('data-ck131-reveal'),'복습 정답 확인 버튼 누락');
+ check(review.includes('if(localStorage.getItem(KEY)!==src.raw)'),'다른 탭 내보내기 보호 누락');
  const mixed=read('assets/ck-mixed-mock-v129.js');
  check(mixed.includes('ck129-mixed-sessions-v1'),'혼합 세트 별도 기록 키 누락');
  check(mixed.includes('DURATION=6000000'),'혼합 세트 100분 타이머 규칙 누락');

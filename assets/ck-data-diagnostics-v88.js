@@ -242,7 +242,7 @@ function downloadRaw(){
 }
 /* v127: explicitly triggered, read-only inventory of the CURRENT SW cache.
  * A matching cache is a minimum offline prerequisite, not proof of full app operation. */
-const OFFLINE_CACHE='conceptknot-study-v130-fixed-paper-integrity';
+const OFFLINE_CACHE='conceptknot-study-v131-mixed-review-queue';
 const OFFLINE_MINIMUM=Object.freeze([
  './index.html',
  './assets/ck-data-diagnostics-v88.js?v=130',
@@ -257,14 +257,15 @@ const OFFLINE_MINIMUM=Object.freeze([
  './data/official-2021-2025.json'
 ]);
 const MIXED_OFFLINE=Object.freeze(['./assets/ck-mixed-mock-v129.js?v=130','./assets/ck-mixed-mock-v129.css?v=130']);
+const REVIEW_OFFLINE=Object.freeze(['./assets/ck-mixed-review-v131.js?v=131','./assets/ck-mixed-review-v131.css?v=131']);
 async function offlineHealth(cacheStorage,controlled=false){
  if(!cacheStorage?.keys||!cacheStorage?.open)
   return {supported:false,installed:false,controlled:Boolean(controlled),cached:0,
-   required:OFFLINE_MINIMUM.length,missing:OFFLINE_MINIMUM.slice(),ready:false,mixedCached:0,mixedRequired:MIXED_OFFLINE.length,mixedReady:false};
+   required:OFFLINE_MINIMUM.length,missing:OFFLINE_MINIMUM.slice(),ready:false,mixedCached:0,mixedRequired:MIXED_OFFLINE.length,mixedReady:false,reviewCached:0,reviewRequired:REVIEW_OFFLINE.length,reviewReady:false};
  const keys=await cacheStorage.keys();
  if(!keys.includes(OFFLINE_CACHE))
   return {supported:true,installed:false,controlled:Boolean(controlled),cached:0,
-   required:OFFLINE_MINIMUM.length,missing:OFFLINE_MINIMUM.slice(),ready:false,mixedCached:0,mixedRequired:MIXED_OFFLINE.length,mixedReady:false};
+   required:OFFLINE_MINIMUM.length,missing:OFFLINE_MINIMUM.slice(),ready:false,mixedCached:0,mixedRequired:MIXED_OFFLINE.length,mixedReady:false,reviewCached:0,reviewRequired:REVIEW_OFFLINE.length,reviewReady:false};
  // Opening only after keys confirms its existence avoids creating a misleading empty cache.
  const current=await cacheStorage.open(OFFLINE_CACHE);
  const matches=await Promise.all(OFFLINE_MINIMUM.map(async path=>{
@@ -282,10 +283,17 @@ async function offlineHealth(cacheStorage,controlled=false){
   return !/text\/html/i.test(String(response.headers?.get?.('content-type')||''));
  }));
  const mixedCached=mixedMatches.filter(Boolean).length;
+ const reviewChecks=await Promise.all(REVIEW_OFFLINE.map(async path=>{
+  const response=await current.match(path);
+  if(!response?.ok)return false;
+  return !/text\/html/i.test(String(response.headers?.get?.('content-type')||''));
+ }));
+ const reviewCached=reviewChecks.filter(Boolean).length;
  return {supported:true,installed:true,controlled:Boolean(controlled),
   cached:OFFLINE_MINIMUM.length-missing.length,required:OFFLINE_MINIMUM.length,
   missing,ready:missing.length===0&&Boolean(controlled),mixedCached,
-  mixedRequired:MIXED_OFFLINE.length,mixedReady:mixedCached===MIXED_OFFLINE.length&&Boolean(controlled)};
+  mixedRequired:MIXED_OFFLINE.length,mixedReady:mixedCached===MIXED_OFFLINE.length&&Boolean(controlled),
+  reviewCached,reviewRequired:REVIEW_OFFLINE.length,reviewReady:reviewCached===REVIEW_OFFLINE.length&&Boolean(controlled)};
 }
 /* Ask the currently controlling SW which generation it actually runs.
  * No caches are modified, no page navigation, and no network requests.
@@ -322,15 +330,17 @@ async function runOfflineHealth(){
   const activeCurrent=controller.cache===OFFLINE_CACHE;
   const result=await offlineHealth(window.caches,activeCurrent);
   message.textContent=!result.supported?'브라우저에서 캐시 읽기를 지원하지 않습니다.':
-   !result.installed?'v129 오프라인 캐시 없음 · 아직 미배포 또는 설치 미완료입니다.':
+   !result.installed?'v131 오프라인 캐시 없음 · 아직 미배포 또는 설치 미완료입니다.':
    '현재 캐시의 필수 파일 '+result.cached+'/'+result.required+'개 · '+
-   (activeCurrent?'현재 v129 서비스워커가 이 탭을 제어함':controller.controlled?
+   (activeCurrent?'현재 v131 서비스워커가 이 탭을 제어함':controller.controlled?
     '구형 또는 응답 없는 서비스워커가 제어 중 · 현재 세대 확인 불가':'서비스워커가 이 탭을 제어하지 않음')+
    (result.missing.length?' · 미저장: '+result.missing.slice(0,3).map(x=>x.split('/').pop()).join(', ')+
     (result.missing.length>3?' 외 '+(result.missing.length-3)+'개':''):
     ' · 최소 파일 목록 충족. '+(activeCurrent?'현재 SW 세대도 일치. ':'SW 세대 미확인. ')+
     '혼합 5세트 자산 '+result.mixedCached+'/'+result.mixedRequired+'개 · '+
     (result.mixedReady?'혼합 세트 JS/CSS 확보(문항 데이터·기기 동작은 별도 확인)':'혼합 세트 오프라인 준비 미확인')+
+    ' · 약점 복습 JS/CSS '+result.reviewCached+'/'+result.reviewRequired+'개 · '+
+    (result.reviewReady?'복습 자산 준비':'복습 자산 준비 미확인')+
     ' · 실제 기기 동작은 별도 검사');
   return result.ready;
  }catch(error){

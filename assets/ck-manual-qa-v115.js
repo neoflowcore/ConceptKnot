@@ -16,7 +16,7 @@ const TASKS=Object.freeze([
  {id:'sources',group:'해설',name:'800문항 검색·1~5문항 TXT·①~⑤ 근거 출처가 정확히 대응됨'},
  {id:'notes',group:'해설',name:'내 풀이 메모 자동저장·탭 이동·새로고침 후 다시 읽기'},
  {id:'mock',group:'모의고사',name:'80문항 100분 OMR·과목별 채점·40점 과락·평균 60점 기준 확인'},
- {id:'mixed-sets',group:'모의고사',name:'10개년 혼합 5세트(각 학개론 40·민법 40)·세트 간 중복 없음·고정 문항 순서·100분·오답/미응답 필터·개인 풀이 진입·채점·TXT/JSON 백업·기록 병합 복원 확인'},
+ {id:'mixed-sets',group:'모의고사',name:'10개년 혼합 5세트(각 40+40)·100분·정답 보호·고정 순서·채점·백업 병합, 제출 후 약점 우선순위/다시 풀기/근거 이동/TXT 및 진행 중 정답 비노출 확인'},
  {id:'multi-tab',group:'모의고사',name:'다중 브라우저 탭에서 답안 변경 충돌이 기존 답안을 덮지 않음'},
  {id:'tts',group:'음성',name:'한국어 TTS 1.5배속·3모드·40문항·정지/재개 실제 소리 확인'},
  {id:'pen',group:'S Pen',name:'물리 버튼 지우개·탭 이동 자동 해제·손가락 터치 정상 복귀'},
@@ -35,7 +35,7 @@ const TASKS=Object.freeze([
  {id:'exam-idle-clock',group:'성능',name:'시험 미시작·일시중지·브라우저 숨김에서 시험 1초 시계 중지, 복귀 후 남은 시간/답안 유지 확인'},
  {id:'evidence-packet',group:'근거',name:'선지 교차보고 카드에서 ①~⑤ 상세 비교·선택 최대 5문항·TXT 근거 패킷·원본 PDF·미저장 내보내기 차단 직접 확인'},
  {id:'tts-canonical',group:'음성',name:'개인 대조문장과 공식 원문이 다른 경우 공식 TTS는 A형 원문만 낭독하며 긴 문장 오류는 누락 없이 나눠 읽는지 직접 확인'},
- {id:'offline-core',group:'오프라인',name:'v130 필수 캐시 11개·실제 활성 서비스워커 버전 확인·업데이트 중 연결 끊김 시 구버전 보존·오프라인/온라인 복귀 확인'}
+ {id:'offline-core',group:'오프라인',name:'v131 필수 캐시 11개·실제 활성 서비스워커 버전 확인·업데이트 중 연결 끊김 시 구버전 보존·오프라인/온라인 복귀 확인'}
 ]);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const plain=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
@@ -162,7 +162,7 @@ function diagnose(){
 }
 function exportText(){
  const snap=gather(),c=summary(snap);
- const lines=['ConceptKnot v130 사용자 수기 실기검증표','개인 기기에서 수동으로 표시한 결과; 공식 검증 아님',
+ const lines=['ConceptKnot v131 사용자 수기 실기검증표','개인 기기에서 수동으로 표시한 결과; 공식 검증 아님',
   '작성일: '+new Date().toISOString(),'PASS '+c.pass+'/'+c.total+' · FAIL '+c.fail+
   ' · 미확인 '+c.pending+' · 해당 없음 '+c.skip,''];
  TASKS.forEach((task,i)=>{
@@ -173,7 +173,7 @@ function exportText(){
  try{
   const blob=new Blob(['\uFEFF',lines.join('\n')],{type:'text/plain;charset=utf-8'});
   const url=URL.createObjectURL(blob),a=document.createElement('a');
-  a.href=url;a.download='ConceptKnot_v130_수기실기검증_'+new Date().toISOString().slice(0,10)+'.txt';
+  a.href=url;a.download='ConceptKnot_v131_수기실기검증_'+new Date().toISOString().slice(0,10)+'.txt';
   document.body.appendChild(a);a.click();a.remove();
   setTimeout(()=>URL.revokeObjectURL(url),3000);
   announce('TXT 다운로드를 요청했습니다. 현재 입력을 포함하며 실제 파일 저장 여부는 다운로드 목록에서 확인하세요.');

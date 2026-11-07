@@ -13,7 +13,7 @@ function worker(){
   match:async request=>entries.get(typeof request==='string'?request:request.url)||null,
   put:async(k,v)=>{writes.push([k,v]);entries.set(typeof k==='string'?k:k.url,v)}
  };
- const caches={open:async()=>cache,keys:async()=>['conceptknot-study-v130-fixed-paper-integrity'],delete:async()=>true};
+ const caches={open:async()=>cache,keys:async()=>['conceptknot-study-v131-mixed-review-queue'],delete:async()=>true};
  const self={location:{href:'https://app.test/sw.js',origin:'https://app.test'},
   addEventListener:(n,fn)=>{events[n]=fn},skipWaiting:async()=>{},clients:{claim:async()=>{}}};
  const ctx={self,caches,URL,console:{warn(){}},Response,
@@ -31,7 +31,7 @@ function worker(){
 test('current generation is explicitly discoverable by read-only MessageChannel',()=>{
  const {events}=worker();let response;
  events.message({data:{type:'CK_SW_VERSION_PING'},ports:[{postMessage:p=>{response=p}}]});
- assert.equal(response.cache,'conceptknot-study-v130-fixed-paper-integrity');
+ assert.equal(response.cache,'conceptknot-study-v131-mixed-review-queue');
  assert.equal(response.required,11);
  response=null;events.message({data:{type:'unrelated'},ports:[{postMessage:p=>{response=p}}]});
  assert.equal(response,null);
@@ -70,7 +70,7 @@ test('precise asset query match, controller version identity, and lack of guesse
 });
 test('read-only release preflight references v126 and rejects stale preflight markers',()=>{
  const pre=read('scripts/check-release-readonly.cjs');
- assert.match(pre,/conceptknot-study-v130-fixed-paper-integrity/);
+ assert.match(pre,/conceptknot-study-v131-mixed-review-queue/);
  assert.doesNotMatch(pre,/conceptknot-study-v102-nondestructive-restore/);
  assert.match(pre,/controllerCacheInfo/);
  assert.match(sw,/invalidCoreResponse\(path,response\)/);

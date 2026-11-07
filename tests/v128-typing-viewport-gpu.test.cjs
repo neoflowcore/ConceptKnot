@@ -89,8 +89,8 @@ test('background landing animation does not restart when a blurred window become
 });
 test('v128 asset cache and service-worker runtime generation remain in sync',()=>{
  const sw=read('sw.js'),diag=read('assets/ck-data-diagnostics-v88.js');
- assert.match(sw,/conceptknot-study-v130-fixed-paper-integrity/);
- assert.match(diag,/conceptknot-study-v130-fixed-paper-integrity/);
+ assert.match(sw,/conceptknot-study-v131-mixed-review-queue/);
+ assert.match(diag,/conceptknot-study-v131-mixed-review-queue/);
  for(const name of ['ck-gpu-guard-v21.js?v=128','ck-manual-qa-v115.js?v=130',
   'ck-data-diagnostics-v88.js?v=130']){
   assert.ok(html.includes(name),'HTML missing '+name);

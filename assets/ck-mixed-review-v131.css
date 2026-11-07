@@ -1,0 +1,41 @@
+/* ConceptKnot v131: source-locked personal review, zero ambient animation. */
+.ck131-mixed-review{margin:12px 0 18px;padding:14px;border:1px solid rgba(140,129,109,.34);border-radius:14px;background:rgba(148,134,101,.045);color:inherit;min-width:0;max-width:100%}
+.ck131-mixed-review [hidden]{display:none!important}
+.ck131-mixed-review button{font:inherit;color:inherit;cursor:pointer;min-height:36px;padding:7px 11px;border:1px solid rgba(140,129,109,.38);border-radius:9px;background:rgba(140,129,109,.085)}
+.ck131-mixed-review button[disabled]{opacity:.48;cursor:not-allowed}
+.ck131-mixed-review button:focus-visible,.ck131-mixed-review a:focus-visible,.ck131-mixed-review summary:focus-visible{outline:2px solid #9e865a;outline-offset:2px}
+.ck131-heading,.ck131-card-head,.ck131-actions{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.ck131-heading strong{font-size:17px}.ck131-heading p{font-size:12px;line-height:1.5;opacity:.8;margin:5px 0 0}
+.ck131-body{display:grid;gap:10px;margin-top:13px;min-width:0}
+.ck131-note,.ck131-warning,.ck131-notice{font-size:12px;line-height:1.6;margin:5px 0;overflow-wrap:anywhere}
+.ck131-warning{color:#a15b35}
+.ck131-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.ck131-stats>div{display:grid;gap:5px;min-width:0;border:1px solid rgba(140,129,109,.24);padding:11px;border-radius:11px}
+.ck131-stats small,.ck131-stats span{font-size:12px;opacity:.82}.ck131-stats strong{font-size:19px;font-variant-numeric:tabular-nums}
+.ck131-trend{border:1px solid rgba(140,129,109,.24);border-radius:10px;padding:9px 11px;font-size:12px}
+.ck131-trend summary{cursor:pointer;font-weight:600}.ck131-trend>div{display:grid;gap:6px;margin-top:10px}
+.ck131-trend>div>div{display:grid;grid-template-columns:94px 1fr 64px;gap:8px;align-items:center}
+.ck131-trend b{text-align:right;font-variant-numeric:tabular-nums}
+.ck131-trend-track{height:9px;border-radius:100px;overflow:hidden;background:rgba(135,119,95,.19)}
+.ck131-trend-track>span{display:block;height:100%;border-radius:100px;background:currentColor;opacity:.52}
+.ck131-trend p{opacity:.8;margin:10px 0 0}
+.ck131-filter,.ck131-actions{display:flex;justify-content:flex-start;gap:7px;flex-wrap:wrap}
+.ck131-mixed-review .ck131-filter button{font-size:12px;min-height:32px;padding:5px 9px}
+.ck131-mixed-review button[aria-pressed=true]{border-color:#a28554;box-shadow:inset 0 0 0 1px #a28554;background:rgba(162,133,84,.17)}
+.ck131-queue{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.ck131-mixed-review .ck131-queue button{text-align:left;min-width:0;min-height:46px;padding:7px 8px;font-variant-numeric:tabular-nums;font-size:12px}
+.ck131-queue button small{display:block;font-size:10px;opacity:.82;overflow-wrap:anywhere}
+.ck131-queue p{grid-column:1/-1;font-size:12px}
+.ck131-card{min-width:0;padding:13px;border:1px solid rgba(140,129,109,.3);border-radius:12px}
+.ck131-card-head{font-size:13px}.ck131-card-head span{font-size:11px;opacity:.82}
+.ck131-stem{font-size:15px;line-height:1.75;white-space:pre-wrap;overflow-wrap:anywhere}
+.ck131-choices{display:grid;gap:6px}
+.ck131-mixed-review .ck131-choices button{display:flex;text-align:left;gap:10px;align-items:flex-start;font-size:13px;line-height:1.55;white-space:normal}
+.ck131-choices button b{font-size:16px}.ck131-choices button span{min-width:0;overflow-wrap:anywhere}
+.ck131-feedback{border-left:2px solid currentColor;padding:5px 9px;font-size:12px;line-height:1.6}
+.ck131-card .ck131-actions{margin-top:12px}
+.ck131-actions a{font-size:12px;color:inherit;text-decoration:underline;align-self:center}
+.ck131-actions small{opacity:.82;font-size:11px;align-self:center}
+@media(max-width:760px){.ck131-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.ck131-queue{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:450px){.ck131-mixed-review{padding:10px}.ck131-stats{grid-template-columns:1fr}.ck131-queue{grid-template-columns:repeat(3,minmax(0,1fr))}.ck131-trend>div>div{grid-template-columns:70px 1fr 50px;gap:5px}.ck131-trend-track{height:8px}}
+@media(prefers-reduced-motion:reduce){.ck131-mixed-review *{animation:none!important;transition:none!important;scroll-behavior:auto!important}}

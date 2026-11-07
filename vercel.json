@@ -8,8 +8,42 @@
     "deploymentEnabled": false
   },
   "headers": [
-    {"source": "/assets/ck-mixed-mock-v129.js", "headers": [{"key": "Cache-Control", "value": "no-cache, max-age=0, must-revalidate"}]},
-    {"source": "/assets/ck-mixed-mock-v129.css", "headers": [{"key": "Cache-Control", "value": "no-cache, max-age=0, must-revalidate"}]},
+    {
+      "source": "/assets/ck-mixed-review-v131.js",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, max-age=0, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/assets/ck-mixed-review-v131.css",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, max-age=0, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/assets/ck-mixed-mock-v129.js",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, max-age=0, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/assets/ck-mixed-mock-v129.css",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, max-age=0, must-revalidate"
+        }
+      ]
+    },
     {
       "source": "/assets/ck-study-plan-v84.js",
       "headers": [
