@@ -104,14 +104,14 @@ test('UI code mounts both laboratories and contains no literal template leak',()
 test('loader, offline cache and version metadata have the same v143 generation',()=>{
  const glue=read('assets/ck-study-charts-v79.js');
  const index=read('index.html'),sw=read('sw.js');
- A.match(index,/ck-release" content="v143-p6b-intuition-first"/);
- A.match(index,/ck-study-charts-v79.js\?v=143/);
- for(const asset of ['ck-concept-coach-v143.js?v=143','ck-concept-lab-v141.js?v=143',
-  'ck-theory-v142.js?v=143','ck-concept-intuition-v143.css?v=143']){
+ A.match(index,/ck-release" content="v144-p6b-before-after-explanations"/);
+ A.match(index,/ck-study-charts-v79.js\?v=144/);
+ for(const asset of ['ck-concept-coach-v143.js?v=143','ck-concept-lab-v141.js?v=144',
+  'ck-theory-v142.js?v=144','ck-concept-intuition-v143.css?v=143','ck-concept-transition-v144.js?v=144','ck-concept-transition-view-v144.js?v=144','ck-concept-transition-v144.css?v=144']){
   A.ok(glue.includes(asset)||asset.includes('css'),asset);
   A.ok(sw.includes(asset),asset+' offline list');
  }
- A.match(sw,/conceptknot-study-v143-intuition-first-p6b/);
+ A.match(sw,/conceptknot-study-v144-before-after-graphs-p6b/);
  const core=sw.match(/const CRITICAL=\[([\s\S]*?)\];/);A.ok(core);
  A.equal([...core[1].matchAll(/'\.\/[^']+'/g)].length,11);
  A.doesNotMatch(core[1],/ck-concept-coach|ck-theory|models\/tts\/supertonic/);

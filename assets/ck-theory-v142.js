@@ -69,13 +69,14 @@
   s.current=next;record(before);return true;
  }
  function finishDraft(){
-  if(drag){try{drag.svg.releasePointerCapture(drag.id);}catch{}
-   const previous=drag.before;drag=null;record(previous);}
+  if(drag){const item=drag;drag=null;try{item.svg.releasePointerCapture(item.id);}catch{}
+   record(item.before);}
   if(rangeDraft){record(rangeDraft);rangeDraft=null;}
  }
  function cancelDraft(){
-  if(drag){sessions[selected].current=drag.before;sessions[selected].previous=drag.previous;
-   try{drag.svg.releasePointerCapture(drag.id);}catch{}drag=null;}
+  if(drag){const item=drag;drag=null;
+   sessions[selected].current=item.before;sessions[selected].previous=item.previous;
+   try{item.svg.releasePointerCapture(item.id);}catch{}}
   if(rangeDraft){sessions[selected].current=rangeDraft;rangeDraft=null;}
  }
  function undo(){
@@ -223,6 +224,12 @@
    draw.paths.map(p=>'<span class="ck142-key ck142-key-'+esc(p.tone)+'">'+esc(p.label)+'</span>').join('')+
    '<span class="ck142-key ck142-key-old">직전 상태(점선)</span></div>';
  }
+ function transitionHtml(){
+  const model=window.CK144ChangeExplain,view=window.CK144ChangeView;
+  if(!model||!view)return '';
+  const session=sessions[selected],old=baseline?models.initial(selected):session.previous;
+  return view.render(model.theory(selected,old,session.current,models));
+ }
  function panel(){
   const {current,previous,result}=selectedValues();
   if(!result)return '';
@@ -279,7 +286,8 @@
    '<button type="button" data-ck142-action="redo" '+(sessions[selected].future.length?'':'disabled')+'>다시</button>'+
    '<button type="button" data-ck142-action="reset">초기화</button>'+
    '<label><input type="checkbox" data-ck142-baseline '+(baseline?'checked':'')+'/> 초기 기준선 비교</label></div></div>'+
-   '<div class="ck142-right"><div data-ck142-explain aria-live="polite">'+panel()+'</div>'+
+   '<div class="ck142-right">'+transitionHtml()+
+    '<div data-ck142-explain aria-live="polite">'+panel()+'</div>'+
    '<h4>이론·공식 기출 연결</h4><p>'+esc(cfg().theory)+'</p>'+
    '<p>공식기출 연결은 전문가 감수된 개념 태그와 문항 근거가 확보될 때만 활성화합니다. 현재는 검토 중이며 공식 문항 ID를 임의 생성하지 않습니다.</p>'+
    '<button type="button" data-ck142-action="search">원문 800문항 검색으로 이동</button>'+
@@ -293,6 +301,7 @@
   if(existing&&markup){existing.innerHTML=markup.slice(markup.indexOf('>')+1,markup.lastIndexOf('</svg>'));}
   else if(graph)graph.innerHTML=markup;
   const explanation=root.querySelector('[data-ck142-explain]');if(explanation)explanation.innerHTML=panel();
+  const board=root.querySelector('.ck144-change-board');if(board)board.outerHTML=transitionHtml();
   const bar=root.querySelector('.ck143-insight');if(bar)bar.outerHTML=insightHtml();
   const legend=root.querySelector('.ck142-legend');if(legend)legend.outerHTML=legendHtml();
   for(const [k,v] of Object.entries(sessions[selected].current)){
@@ -484,7 +493,9 @@
   root.querySelector('[data-ck142-handle="'+k+'"]')?.focus();
  });
  window.CK142Theory=Object.freeze({
-  mount,getState:()=>({selected,mode,storage,baseline,session:deep(sessions),note}),
+  mount,getState:()=>({selected,mode,storage,baseline,session:deep(sessions),note,
+   comparison:window.CK144ChangeExplain?.theory(selected,
+    baseline?models.initial(selected):sessions[selected].previous,sessions[selected].current,models)}),
   models
  });
 })();

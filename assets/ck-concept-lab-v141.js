@@ -11,7 +11,7 @@
  const clamp=(n,l,h)=>Math.max(l,Math.min(h,n));
  let history=math.createHistory(),storeEnabled=false,saveMessage='저장하지 않음 (이 화면의 메모리에서만 유지)';
  let relation={x:1,k:2},relationPrevious={x:1,k:2},relationDrag=null,relPast=[],relFuture=[];
- let drag=null,sliderOpen=false,framePending=false,frameRoot=null,compareBase=false,level='beginner';
+ let drag=null,sliderOpen=false,framePending=false,frameRoot=null,compareBase=false,level='beginner',gestureMode='shift';
  function restore(){
   try{
    const s=localStorage.getItem(KEY);
@@ -24,6 +24,7 @@
     relation={...obj.relation};relationPrevious={...obj.relation};
    }
    level=obj.level==='advanced'?'advanced':'beginner';
+   gestureMode=obj.gestureMode==='rotate'?'rotate':'shift';
    storeEnabled=true;saveMessage='이 기기에만 저장 중 · 별도 학습 키';
   }catch{saveMessage='저장된 그래프 기록을 읽을 수 없어 기본값으로 시작했습니다.';}
  }
@@ -31,7 +32,7 @@
  function persist(){
   if(!storeEnabled)return;
   try{
-   const text=JSON.stringify({version:1,optIn:true,session:history.export(),relation,level});
+   const text=JSON.stringify({version:1,optIn:true,session:history.export(),relation,level,gestureMode});
    if(text.length>90000)throw Error('size');
    localStorage.setItem(KEY,text);
    saveMessage='이 기기에만 저장됨 · 공식기출·답안·칠판과 별도';
@@ -81,13 +82,18 @@
     '<path class="ck141-demand" d="'+linePath(s,'demand')+'"/>'+
     '<path class="ck141-supply" d="'+linePath(s,'supply')+'"/></g>'+
    '<g clip-path="url(#ck141-clip)" class="ck141-line-hit">'+
-    '<path data-ck141-drag="demand" tabindex="0" role="slider" aria-label="수요곡선 직접 이동" aria-valuemin="-80" aria-valuemax="80" aria-valuenow="'+fmt(s.u)+'" d="'+linePath(s,'demand')+'"/>'+
-    '<path data-ck141-drag="supply" tabindex="0" role="slider" aria-label="공급곡선 직접 이동" aria-valuemin="-80" aria-valuemax="80" aria-valuenow="'+fmt(s.v)+'" d="'+linePath(s,'supply')+'"/></g>'+
+    '<path data-ck141-drag="demand" tabindex="0" role="slider" aria-label="'+(gestureMode==='shift'?'수요곡선 평행이동':'수요곡선 기울기 회전')+
+     '" aria-valuemin="'+(gestureMode==='shift'?-80:.5)+'" aria-valuemax="'+(gestureMode==='shift'?80:5)+'" aria-valuenow="'+fmt(gestureMode==='shift'?s.u:s.b)+'" d="'+linePath(s,'demand')+'"/>'+
+    '<path data-ck141-drag="supply" tabindex="0" role="slider" aria-label="'+(gestureMode==='shift'?'공급곡선 평행이동':'공급곡선 기울기 회전')+
+     '" aria-valuemin="'+(gestureMode==='shift'?-80:.5)+'" aria-valuemax="'+(gestureMode==='shift'?80:5)+'" aria-valuenow="'+fmt(gestureMode==='shift'?s.v:s.d)+'" d="'+linePath(s,'supply')+'"/></g>'+
    guides(old,'ck141-eq-old','E₀')+guides(eq,'ck141-eq-new','E₁')+
+   (gestureMode==='rotate'?'<g class="ck144-pivot" aria-hidden="true"><circle cx="'+num(nx(s.a+s.u-s.b*25))+'" cy="'+num(py(25))+'" r="5"/>'+
+    '<circle cx="'+num(nx(s.c+s.v+s.d*25))+'" cy="'+num(py(25))+'" r="5"/>'+
+    '<text x="75" y="'+num(py(25)-8)+'">기준가격 25 · 수량 고정</text></g>':'')+
    '<g class="ck141-price-guide"><path d="M 70 '+num(py(s.price))+' H 610"/>'+
     '<text x="575" y="'+num(py(s.price)-8)+'">P='+fmt(s.price)+'</text></g>'+
-   handle('demand',s.a+s.u-s.b*20,20,'ck141-demand','D 이동',s.u,-80,80)+
-   handle('supply',s.c+s.v+s.d*20,20,'ck141-supply','S 이동',s.v,-80,80)+
+   (gestureMode==='shift'?(handle('demand',s.a+s.u-s.b*20,20,'ck141-demand','D 이동',s.u,-80,80)+
+    handle('supply',s.c+s.v+s.d*20,20,'ck141-supply','S 이동',s.v,-80,80)):'')+
    handle('demand-slope',s.a+s.u-s.b*45,45,'ck141-demand','D 기울기',s.b,.5,5)+
    handle('supply-slope',s.c+s.v+s.d*45,45,'ck141-supply','S 기울기',s.d,.5,5)+
    handle('price',Math.max(10,Math.min(150,pt.qd)),s.price,'ck141-price','가격점',s.price,0,60);
@@ -144,6 +150,14 @@
     '<strong class="ck143-insight-tag">'+esc(v.tag)+'</strong>'+
     '<span class="ck143-insight-short">'+esc(v.summary)+'</span></div>';
  }
+ function transitionHtml(){
+  const model=window.CK144ChangeExplain,view=window.CK144ChangeView;
+  if(!model||!view)return '';
+  const prior=compareBase?math.BASE:history.previous;
+  const r=history.topic==='relation'?model.market(null,null,math,'relation',relationPrevious,relation):
+   model.market(prior,history.state,math,history.topic);
+  return view.render(r);
+ }
  function narrativeHtml(){
   if(level==='beginner'){
    const v=coachView();
@@ -179,7 +193,11 @@
    '<span role="status">'+(history.missionComplete()?' · 목표 달성! 균형가격과 거래량을 비교해 보세요.':' · 목표 확인 전')+'</span></div>';
   if(history.mode==='exam')return '<div class="ck141-task"><strong>기출 재현</strong> 검증된 원문·개념 태그와 연결되는 경우에만 실제 기출 미션을 활성화합니다. 현재는 원문 연결 검토 중입니다.</div>';
   if(history.mode==='compare')return '<div class="ck141-task"><strong>전후 비교</strong> 점선이 직전 상태 E₀, 실선이 현재 상태 E₁입니다. 되돌리기·다시 실행으로 차이를 확인하세요.</div>';
-  return '<div class="ck141-task">곡선의 핸들을 가로로 드래그하세요. 가격점은 세로로 이동합니다. 손가락 스크롤은 핸들 밖에서 유지됩니다.</div>';
+  return '<div class="ck141-task">'+(history.topic==='relation'?
+  '관측점 x와 계수 k를 움직여 정비례·반비례의 변화 전과 후를 비교하세요.':
+  gestureMode==='shift'?'D/S 선을 직접 잡고 좌우로 끌어 <strong>평행이동</strong>하세요.':
+  'D/S 선의 위쪽이나 아래쪽을 잡고 좌우로 끌어 <strong>기준가격 25의 점을 중심으로 회전</strong>시키세요.')+
+  ' 가격점을 움직이면 수요량·공급량 변화를 관찰합니다.</div>';
  }
  function render(root){
   if(!root)return;
@@ -197,7 +215,12 @@
     '<button type="button" data-ck141-level="beginner" aria-pressed="'+(level==='beginner')+'">초급 · 쉽게 이해</button>'+
     '<button type="button" data-ck141-level="advanced" aria-pressed="'+(level==='advanced')+'">심화 · 수식/수치</button></div>'+
    '<div class="ck141-task-holder">'+taskHtml()+'</div>'+insightHtml()+
-   '<div class="ck141-columns"><div class="ck141-stage-col"><div class="ck141-stage"><svg class="ck141-live-svg" viewBox="0 0 660 400" aria-label="조작 가능한 학습용 개념 그래프" role="img">'+
+   '<div class="ck141-columns"><div class="ck141-stage-col">'+
+   (history.topic==='relation'?'':('<div class="ck144-gesture-controls" role="group" aria-label="곡선 직접 조작">'+
+    '<button type="button" data-ck144-gesture="shift" aria-pressed="'+(gestureMode==='shift')+'">⇄ 선 평행이동</button>'+
+    '<button type="button" data-ck144-gesture="rotate" aria-pressed="'+(gestureMode==='rotate')+'">↷ 선 기울기 변경</button>'+
+    '<span>변화 전=점선 · 변화 후=실선</span></div>'))+
+   '<div class="ck141-stage"><svg class="ck141-live-svg" viewBox="0 0 660 400" aria-label="조작 가능한 학습용 개념 그래프" role="img">'+
    (history.topic==='relation'?relationSvg():marketSvg())+'</svg></div>'+
    '<p class="ck141-axis-note">가격 P: 가상 단위 · 수량 Q: 가상 단위 / 일반 시장 통계·공식 기출 수치 아님</p>'+
    '<details class="ck143-numeric" '+(level==='advanced'?'open':'')+'><summary>숫자·기울기 정밀 조절 (선택)</summary>'+
@@ -206,7 +229,8 @@
    '<button type="button" data-ck141-act="redo" '+(!(history.topic==='relation'?relFuture.length:history.canRedo)?'disabled':'')+'>↷ 다시</button>'+ 
    '<button type="button" data-ck141-act="reset">초기화</button>'+
    '<label class="ck141-compare-base"><input type="checkbox" data-ck141-compare '+(compareBase?'checked':'')+'/> 초기 E₀ 비교</label></div></div>'+ 
-   '<div class="ck141-explain"><h4>변화 원인과 결과</h4><div class="ck141-narrative" aria-live="polite">'+narrativeHtml()+'</div>'+
+   '<div class="ck141-explain"><h4>변화 전 · 변화 후</h4>'+transitionHtml()+
+   '<h4>개념 요약</h4><div class="ck141-narrative" aria-live="polite">'+narrativeHtml()+'</div>'+
    '<h4>기본이론·공식 기출</h4>'+
    '<p>부동산학개론 · 수요/공급의 이동과 곡선 위 이동, 균형의 비교정태. 모형은 다른 조건 일정인 경우만 해석합니다.</p>'+
    '<p class="ck141-source">공식 문항-개념 연결은 검수된 출처·태그가 0건이므로 개별 문항을 추측해 연결하지 않습니다.</p>'+
@@ -220,6 +244,7 @@
   if(svg)svg.innerHTML=history.topic==='relation'?relationSvg():marketSvg();
   const n=root.querySelector('.ck141-narrative');if(n)n.innerHTML=narrativeHtml();
   const bar=root.querySelector('.ck143-insight');if(bar)bar.outerHTML=insightHtml();
+  const board=root.querySelector('.ck144-change-board');if(board)board.outerHTML=transitionHtml();
   const undo=root.querySelector('[data-ck141-act="undo"]'),redo=root.querySelector('[data-ck141-act="redo"]');
   if(undo)undo.disabled=!(history.topic==='relation'?relPast.length:history.canUndo);
   if(redo)redo.disabled=!(history.topic==='relation'?relFuture.length:history.canRedo);
@@ -293,6 +318,8 @@
  }
  document.addEventListener('click',e=>{
   const root=e.target.closest?.('#ck141-concept-lab');if(!root)return;
+  const gestureBtn=e.target.closest('[data-ck144-gesture]');
+  if(gestureBtn){finishSlider(root);gestureMode=gestureBtn.dataset.ck144Gesture==='rotate'?'rotate':'shift';persist();render(root);return;}
   const levelBtn=e.target.closest('[data-ck141-level]');
   if(levelBtn){
    finishSlider(root);level=levelBtn.dataset.ck141Level==='advanced'?'advanced':'beginner';
@@ -326,21 +353,28 @@
   if(!drag||e.pointerId!==drag.id)return;
   const stage=drag.stage,rect=stage.getBoundingClientRect();
   if(!rect.width||!rect.height)return;
-  const dq=(e.clientX-drag.x)*160*660/(540*rect.width);
-  const dp=-(e.clientY-drag.y)*60*400/(300*rect.height);
+  const scale=Math.min(rect.width/660,rect.height/400);
+  if(!Number.isFinite(scale)||scale<=0)return;
+  const dq=(e.clientX-drag.x)/scale*160/540;
+  const dp=-(e.clientY-drag.y)/scale*60/300;
   const s=drag.start,kind=drag.kind;
   if(kind==='relation-x'||kind==='relation-k'){
    if(kind==='relation-x')relation.x=clamp(Math.round((drag.startRelation.x+
-     (e.clientX-drag.x)*5*660/(540*rect.width))*10)/10,.5,3);
+     (e.clientX-drag.x)/scale*5/540)*10)/10,.5,3);
    else relation.k=clamp(Math.round((drag.startRelation.k-
-     (e.clientY-drag.y)*8*400/(300*rect.height)*drag.startRelation.x)*10)/10,1,3);
+     (e.clientY-drag.y)/scale*8/300*drag.startRelation.x)*10)/10,1,3);
    queueLive(drag.root);return;
   }
   let type='',value=0;
   if(kind==='demand'){type='set-demand';value=s.u+dq;}
   else if(kind==='supply'){type='set-supply';value=s.v+dq;}
-  else if(kind==='demand-slope'){type='adjust-demand-slope';value=s.b-dq/20;}
-  else if(kind==='supply-slope'){type='adjust-supply-slope';value=s.d+dq/20;}
+  else if(kind==='demand-slope'){
+   type='adjust-demand-slope';const d=25-drag.grabPrice;
+   value=s.b+dq/(Math.abs(d)<8?(d>=0?8:-8):d);
+  }else if(kind==='supply-slope'){
+   type='adjust-supply-slope';const d=drag.grabPrice-25;
+   value=s.d+dq/(Math.abs(d)<8?(d>=0?8:-8):d);
+  }
   else if(kind==='price'){type='change-price-point';value=s.price+dp;}
   if(type&&history.preview(type,value))queueLive(drag.root);
  }
@@ -354,8 +388,15 @@
    if(history.topic!=='relation')return;
    if(!relationDrag)relationDrag={...relation};
   }else if(history.topic==='relation'||!history.begin())return;
-  drag={id:e.pointerId,stage,root,kind:relKind?'relation-'+relKind:handle.dataset.ck141Drag,
-    x:e.clientX,y:e.clientY,start:history.state,startRelation:{...relation}};
+  const inLine=Boolean(handle.closest?.('.ck141-line-hit'));
+  const selectedKind=relKind?'relation-'+relKind:
+   inLine&&gestureMode==='rotate'?handle.dataset.ck141Drag+'-slope':handle.dataset.ck141Drag;
+  const bounds=stage.getBoundingClientRect(),unit=Math.min(bounds.width/660,bounds.height/400);
+  const pad=(bounds.height-400*unit)/2;
+  const initialPrice=unit>0?clamp((340-(e.clientY-bounds.top-pad)/unit)/5,0,60):45;
+  drag={id:e.pointerId,stage,root,kind:selectedKind,
+   grabPrice:!inLine&&selectedKind.includes('slope')?45:initialPrice,
+   x:e.clientX,y:e.clientY,start:history.state,startRelation:{...relation}};
   stage.classList.add('ck141-grabbing');
   try{stage.setPointerCapture(e.pointerId);}catch{}
   e.preventDefault();
@@ -374,8 +415,9 @@
   }else if(commit){dragChange(e);history.finish();persist();}
   else history.cancel();
   item.stage.classList.remove('ck141-grabbing');
+  drag=null;
   try{item.stage.releasePointerCapture(e.pointerId);}catch{}
-  drag=null;render(item.root);
+  render(item.root);
  }
  document.addEventListener('pointerup',e=>finishDrag(e,true));
  document.addEventListener('pointercancel',e=>finishDrag(e,false));
@@ -388,6 +430,7 @@
   if(item.kind.startsWith('relation-')){relation={...item.startRelation};relationDrag=null;}
   else history.cancel();
   item.stage.classList.remove('ck141-grabbing');drag=null;
+  try{item.stage.releasePointerCapture(item.id);}catch{}
   if(item.root.isConnected)render(item.root);
  }
  window.addEventListener('ck:pen-deactivate',cancelActive);
@@ -397,7 +440,8 @@
  document.addEventListener('keydown',e=>{
   const h=e.target.closest?.('#ck141-concept-lab [data-ck141-drag],#ck141-concept-lab [data-ck141-rel-drag]');
   if(!h||!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End'].includes(e.key))return;
-  const root=h.closest('#ck141-concept-lab'),kind=h.dataset.ck141Drag,s=history.state;
+  const root=h.closest('#ck141-concept-lab'),kind=h.closest?.('.ck141-line-hit')&&gestureMode==='rotate'?
+   h.dataset.ck141Drag+'-slope':h.dataset.ck141Drag,s=history.state;
   if(h.dataset.ck141RelDrag){
    e.preventDefault();
    const k=h.dataset.ck141RelDrag,base=relation[k];
@@ -420,5 +464,7 @@
   if(type){e.preventDefault();history.apply(type,val);persist();updateLive(root);}
  });
  window.CK141ConceptLab=Object.freeze({mount,getState:()=>({
-  session:history.export(),storeEnabled,relation:{...relation},saveMessage}),math});
+  session:history.export(),storeEnabled,relation:{...relation},saveMessage,gestureMode,
+   comparison:window.CK144ChangeExplain?.market(
+    compareBase?math.BASE:history.previous,history.state,math,history.topic,relationPrevious,relation)}),math});
 })();
