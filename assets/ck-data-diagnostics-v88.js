@@ -245,7 +245,7 @@ function downloadRaw(){
 /* previous: conceptknot-study-v137-native-voice-guard */
 /* prior offline generation: conceptknot-study-v138-unified-voice-queue */
 /* previous core: conceptknot-study-v139-managed-model-guard */
-const OFFLINE_CACHE='conceptknot-study-v140-exam-review-p0';
+const OFFLINE_CACHE='conceptknot-study-v142-theory-scenes-p6b';
 const OFFLINE_MINIMUM=Object.freeze([
  './index.html',
  './assets/ck-data-diagnostics-v88.js?v=140',

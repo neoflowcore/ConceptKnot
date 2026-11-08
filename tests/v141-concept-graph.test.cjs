@@ -85,7 +85,7 @@ test('v141 P6-B preserves official bank, weak session keys, legacy charts and no
  assert.match(lab,/role="slider"/);
  assert.match(css,/@media\(max-width:780px\)/);
  assert.match(old,/const charts=\[/);assert.match(old,/equilibriumPoint/);
- assert.match(sw,/conceptknot-study-v141/);
+ assert.match(sw,/conceptknot-study-v142/);
  assert.doesNotMatch(lab,/localStorage\.(clear|removeItem)\('(?!ck141)/);
  const raw=JSON.parse(fs.readFileSync('data/official-2021-2025.json','utf8'));
  assert.equal(raw.length,400);

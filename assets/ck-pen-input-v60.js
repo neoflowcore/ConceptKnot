@@ -6,6 +6,11 @@
   if(e.pointerType!=='pen')return;
   const id=e.pointerId??'pen',bits=Number(e.buttons)||0;
   if(e.type==='pointercancel'||e.type==='lostpointercapture'){buttons.delete(id);hoverHeld.delete(id);return;}
+  // Some Android pens send pointerup for the barrel button while the nib is still down.
+  // Never latch eraser status after that button release.
+  if(e.type==='pointerup'&&(e.button===2||e.button===5)){
+   buttons.set(id,false);hoverHeld.delete(id);return;
+  }
   if(bits&34){buttons.set(id,true);if(e.pressure>0||bits&1)hoverHeld.delete(id);else hoverHeld.add(id);}
   else if(e.button===2||e.button===5){
    const pressed=e.type==='pointerdown'||e.type==='mousedown'||e.type==='contextmenu';

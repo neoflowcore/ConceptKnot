@@ -1,0 +1,57 @@
+/* ConceptKnot P6-B v142: six theory scenes, independent of existing 17 charts. */
+#main #ck142-theory-studio{color:inherit;margin:18px 0 12px;padding:clamp(12px,2vw,20px);border-radius:17px;border:1px solid rgba(116,143,128,.35);background:color-mix(in srgb,currentColor 3%,transparent);box-shadow:0 14px 35px rgba(25,39,35,.08);isolation:isolate}
+#main #ck142-theory-studio *{box-sizing:border-box}
+#main #ck142-theory-studio header h3{margin:0 0 4px;font-size:clamp(17px,2vw,22px);line-height:1.4}
+#main #ck142-theory-studio header h3 small{font-size:11px;opacity:.75}
+#main #ck142-theory-studio header p{margin:0 0 14px;font-size:12px;line-height:1.6;opacity:.78}
+#main .ck142-topics,#main .ck142-modes{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:9px}
+#main #ck142-theory-studio button{font:inherit;font-size:12px;min-height:41px;min-width:44px;padding:8px 12px;border:1px solid rgba(115,143,128,.43);border-radius:9px;color:inherit;background:transparent;cursor:pointer}
+#main #ck142-theory-studio button[aria-pressed=true]{border-width:2px;border-color:#80ab8e;background:rgba(110,165,124,.14);font-weight:700}
+#main #ck142-theory-studio button:disabled{cursor:not-allowed;opacity:.44}
+#main #ck142-theory-studio :focus-visible{outline:3px solid #80ab8e;outline-offset:2px}
+#main .ck142-tip{font-size:12px;padding:9px 12px;margin:10px 0;background:rgba(117,154,128,.09);border-left:3px solid #819e7b}
+#main .ck142-layout{display:grid;grid-template-columns:minmax(0,2fr) minmax(240px,1fr);gap:clamp(12px,2vw,24px)}
+#main .ck142-graph{width:100%;aspect-ratio:630/395;min-width:0}
+#main .ck142-svg{width:100%;height:100%;display:block;overflow:visible;user-select:none;font:12px system-ui,'Malgun Gothic',sans-serif}
+#main .ck142-grid path{fill:none;stroke:currentColor;stroke-width:1;opacity:.12}
+#main .ck142-axis{fill:none;stroke:currentColor;stroke-width:2;opacity:.7}
+#main .ck142-ticks{fill:currentColor;opacity:.7;font-size:11px}
+#main .ck142-line{fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+#main .ck142-line.ck142-blue{stroke:#438da4}
+#main .ck142-line.ck142-orange{stroke:#cb8658}
+#main .ck142-line.ck142-prev{stroke:currentColor;opacity:.4;stroke-dasharray:5 5;stroke-width:2}
+#main .ck142-ghost-point circle{fill:none;stroke:currentColor;stroke-dasharray:2 3;stroke-width:1.5;opacity:.7}
+#main .ck142-ghost-point text{fill:currentColor;opacity:.58;font-size:11px}
+#main .ck142-current-point circle{fill:#75a083;stroke:white;stroke-width:1}
+#main .ck142-current-point text{fill:currentColor;paint-order:stroke;stroke:rgba(255,255,255,.7);stroke-width:2;font-weight:600}
+#main [data-ck142-handle]{cursor:grab;touch-action:none}
+#main [data-ck142-handle] .ck142-touch{fill:transparent;stroke:transparent}
+#main [data-ck142-handle] .ck142-dot{fill:#9ccf9c;stroke:#263e2a;stroke-width:2}
+#main [data-ck142-handle] text{fill:currentColor;font-size:10px;paint-order:stroke;stroke:rgba(255,255,255,.7);stroke-width:2;pointer-events:none}
+#main .ck142-controls{display:grid;grid-template-columns:repeat(auto-fill,minmax(156px,1fr));gap:9px;margin:12px 0}
+#main .ck142-control{display:grid;grid-template-columns:minmax(0,1fr) 74px;align-items:center;column-gap:9px;row-gap:4px;padding:9px;border-radius:11px;border:1px solid rgba(129,155,137,.26);font-size:12px}
+#main .ck142-control span{grid-column:1/-1;display:flex;justify-content:space-between;gap:8px;min-width:0}
+#main .ck142-control output{font-weight:700;font-variant-numeric:tabular-nums}
+#main .ck142-control input[type=range]{width:100%;min-width:0;accent-color:#719e84;touch-action:pan-y}
+#main .ck142-control input[type=number]{width:100%;min-width:0;padding:5px 4px;border-radius:7px;border:1px solid rgba(117,146,127,.44);background:transparent;color:inherit;font:inherit;font-variant-numeric:tabular-nums}
+#main .ck142-actions{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:12px 0}
+#main .ck142-actions label{display:flex;gap:6px;align-items:center;font-size:12px;cursor:pointer}
+#main .ck142-right{background:rgba(120,145,130,.07);border-radius:12px;padding:13px;font-size:13px;line-height:1.7;min-width:0}
+#main .ck142-right h4{font-size:14px;margin:0 0 7px}
+#main .ck142-right h4:not(:first-child){margin-top:15px}
+#main .ck142-right p{margin:6px 0;overflow-wrap:anywhere}
+#main .ck142-assumptions{font-size:12px;opacity:.83}
+#main .ck142-mission{padding:7px 9px;border:1px dashed rgba(120,155,133,.6);border-radius:8px}
+#main .ck142-opt-in{display:flex;align-items:flex-start;gap:7px;margin-top:16px;font-size:12px}
+#main .ck142-opt-in input{accent-color:#6f9a78;flex:none;width:18px;height:18px}
+#main #ck142-theory-studio small[data-ck142-status]{display:block;margin-top:7px;opacity:.75}
+@media(max-width:800px){#main .ck142-layout{grid-template-columns:minmax(0,1fr)}#main .ck142-graph{max-height:65vh}#main .ck142-right{padding:10px}#main .ck142-topics button{min-height:44px}}
+@media(max-width:430px){#main #ck142-theory-studio{padding:10px}#main .ck142-control{grid-template-columns:minmax(0,1fr) 70px}#main .ck142-graph{aspect-ratio:630/420}}
+@media(prefers-reduced-motion:reduce){#main #ck142-theory-studio *,#main #ck142-theory-studio *::before,#main #ck142-theory-studio *::after{animation:none!important;transition:none!important}}
+
+#main .ck142-legend{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin:4px 0 11px;font-size:11px}
+#main .ck142-key{display:inline-flex;align-items:center;gap:5px}
+#main .ck142-key::before{content:"";display:inline-block;width:17px;border-top:3px solid currentColor}
+#main .ck142-key-blue::before{border-color:#438da4}
+#main .ck142-key-orange::before{border-color:#cb8658}
+#main .ck142-key-old::before{border-color:currentColor;border-top-style:dashed;opacity:.5}

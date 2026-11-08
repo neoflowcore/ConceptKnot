@@ -63,3 +63,6 @@
 @media(max-width:780px){#main .ck141-columns{grid-template-columns:minmax(0,1fr)}#main .ck141-explain{padding:12px}#main .ck141-tabs button{min-height:44px}}
 @media(max-width:410px){#main #ck141-concept-lab{padding:10px}#main .ck141-controls{grid-template-columns:minmax(0,1fr)}#main .ck141-live-svg{font-size:12px}#main .ck141-stage{aspect-ratio:660/420}}
 @media(prefers-reduced-motion:reduce){#main #ck141-concept-lab *,#main #ck141-concept-lab *::before,#main #ck141-concept-lab *::after{transition:none!important;animation:none!important}}
+
+#main .ck141-compare-base{display:inline-flex;align-items:center;gap:6px;font-size:12px}
+#main .ck141-compare-base input{accent-color:#719b80}

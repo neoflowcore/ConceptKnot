@@ -11,7 +11,7 @@
  const clamp=(n,l,h)=>Math.max(l,Math.min(h,n));
  let history=math.createHistory(),storeEnabled=false,saveMessage='저장하지 않음 (이 화면의 메모리에서만 유지)';
  let relation={x:1,k:2},relationPrevious={x:1,k:2},relationDrag=null,relPast=[],relFuture=[];
- let drag=null,sliderOpen=false,framePending=false,frameRoot=null;
+ let drag=null,sliderOpen=false,framePending=false,frameRoot=null,compareBase=false;
  function restore(){
   try{
    const s=localStorage.getItem(KEY);
@@ -59,7 +59,7 @@
    '" cx="'+x+'" cy="'+y+'" r="9" stroke-width="3"/><text x="'+x+'" y="'+(Number(y)-18)+'" text-anchor="middle">'+esc(label)+'</text></g>';
  }
  function marketSvg(){
-  const s=history.state,b=history.previous,eq=math.solve(s),old=math.solve(b),pt=math.point(s);
+  const s=history.state,b=compareBase?math.BASE:history.previous,eq=math.solve(s),old=math.solve(b),pt=math.point(s);
   const guides=(e,cls,label)=>{
    if(!e.ok||e.price>60||e.quantity>160)return '';
    const x=num(nx(e.quantity)),y=num(py(e.price));
@@ -133,7 +133,7 @@
     '. 같은 k에서 x가 커지면 정비례 값은 증가하고 반비례 값은 감소합니다.</p>'+
     '<small>그래프 수치는 학습용 예시이며 공식 기출 원문이 아닙니다.</small>';
   }
-  const s=history.state,prev=history.previous,eq=math.solve(s),old=math.solve(prev),pt=math.point(s),e=history.explanation();
+  const s=history.state,prev=compareBase?math.BASE:history.previous,eq=math.solve(s),old=math.solve(prev),pt=math.point(s),e=compareBase?math.describe(prev,s,history.action):history.explanation();
   let extra='';
   if(history.topic==='elasticity')
    extra='<p><strong>현재 P='+fmt(pt.price)+'의 점탄력성</strong> 수요 Ed='+
@@ -170,9 +170,10 @@
    (history.topic==='relation'?relationSvg():marketSvg())+'</svg></div>'+
    '<p class="ck141-axis-note">가격 P: 가상 단위 · 수량 Q: 가상 단위 / 일반 시장 통계·공식 기출 수치 아님</p>'+
    '<div class="ck141-controls">'+controlHtml()+'</div>'+
-   '<div class="ck141-actions"><button type="button" data-ck141-act="undo" '+(!history.canUndo?'disabled':'')+'>↶ 이전</button>'+
-   '<button type="button" data-ck141-act="redo" '+(!history.canRedo?'disabled':'')+'>↷ 다시</button>'+
-   '<button type="button" data-ck141-act="reset">초기화</button></div></div>'+
+   '<div class="ck141-actions"><button type="button" data-ck141-act="undo" '+(!(history.topic==='relation'?relPast.length:history.canUndo)?'disabled':'')+'>↶ 이전</button>'+ 
+   '<button type="button" data-ck141-act="redo" '+(!(history.topic==='relation'?relFuture.length:history.canRedo)?'disabled':'')+'>↷ 다시</button>'+ 
+   '<button type="button" data-ck141-act="reset">초기화</button>'+
+   '<label class="ck141-compare-base"><input type="checkbox" data-ck141-compare '+(compareBase?'checked':'')+'/> 초기 E₀ 비교</label></div></div>'+ 
    '<div class="ck141-explain"><h4>변화 원인과 결과</h4><div class="ck141-narrative" aria-live="polite">'+narrativeHtml()+'</div>'+
    '<h4>기본이론·공식 기출</h4>'+
    '<p>부동산학개론 · 수요/공급의 이동과 곡선 위 이동, 균형의 비교정태. 모형은 다른 조건 일정인 경우만 해석합니다.</p>'+
@@ -186,6 +187,10 @@
   const svg=root.querySelector('.ck141-live-svg');
   if(svg)svg.innerHTML=history.topic==='relation'?relationSvg():marketSvg();
   const n=root.querySelector('.ck141-narrative');if(n)n.innerHTML=narrativeHtml();
+  const undo=root.querySelector('[data-ck141-act="undo"]'),redo=root.querySelector('[data-ck141-act="redo"]');
+  if(undo)undo.disabled=!(history.topic==='relation'?relPast.length:history.canUndo);
+  if(redo)redo.disabled=!(history.topic==='relation'?relFuture.length:history.canRedo);
+  const saved=root.querySelector('.ck141-save-status');if(saved)saved.textContent=saveMessage;
   const task=root.querySelector('.ck141-task-holder');if(task)task.innerHTML=taskHtml();
   for(const input of root.querySelectorAll('[data-ck141-control]')){
    const type=input.dataset.ck141Control;
@@ -251,7 +256,7 @@
  function openSearch(){
   if(!window.CK76Search?.open?.())return;
   const q=document.getElementById('ck76-search-query');
-  if(q){q.value='수요 공급';q.closest('form')?.dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}));}
+  if(q){q.value='수요';q.closest('form')?.dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}));}
  }
  document.addEventListener('click',e=>{
   const root=e.target.closest?.('#ck141-concept-lab');if(!root)return;
@@ -271,6 +276,7 @@
  document.addEventListener('change',e=>{
   const root=e.target.closest?.('#ck141-concept-lab');if(!root)return;
   if(e.target.matches('[data-ck141-storage]')){setStorage(e.target.checked);render(root);return;}
+  if(e.target.matches('[data-ck141-compare]')){compareBase=e.target.checked;render(root);return;}
   if(e.target.matches('[data-ck141-control]'))finishSlider(root);
  });
  document.addEventListener('input',e=>{
@@ -319,7 +325,16 @@
  }
  document.addEventListener('pointerup',e=>finishDrag(e,true));
  document.addEventListener('pointercancel',e=>finishDrag(e,false));
+ document.addEventListener('lostpointercapture',e=>{
+  if(drag&&e.pointerId===drag.id)finishDrag(e,false);
+ });
+ window.addEventListener('ck:pen-deactivate',()=>{if(!drag)return;
+  const item=drag;history.cancel();item.stage.classList.remove('ck141-grabbing');drag=null;
+  if(item.root.isConnected)render(item.root);
+ });
  window.addEventListener('blur',()=>{if(!drag)return;const item=drag;history.cancel();item.stage.classList.remove('ck141-grabbing');drag=null;render(item.root);});
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden||!drag)return;const item=drag;history.cancel();item.stage.classList.remove('ck141-grabbing');drag=null;render(item.root);});
+ window.addEventListener('pagehide',()=>{if(!drag)return;history.cancel();drag=null;});
  document.addEventListener('keydown',e=>{
   const h=e.target.closest?.('#ck141-concept-lab [data-ck141-drag]');
   if(!h||!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End'].includes(e.key))return;

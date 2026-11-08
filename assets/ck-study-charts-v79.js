@@ -184,16 +184,27 @@ function ck141Ensure(){
  if(ck141Promise)return ck141Promise;
  if(!document.head||!document.body)return Promise.resolve(false);
  const css=document.createElement('link');
- css.rel='stylesheet';css.href='./assets/ck-concept-lab-v141.css?v=141';css.dataset.ck141Asset='css';
+ css.rel='stylesheet';css.href='./assets/ck-concept-lab-v141.css?v=142';css.dataset.ck141Asset='css';
  document.head.appendChild(css);
+ const css142=document.createElement('link');css142.rel='stylesheet';
+ css142.href='./assets/ck-theory-v142.css?v=142';css142.dataset.ck142Asset='css';
+ document.head.appendChild(css142);
  const load=src=>new Promise((resolve,reject)=>{
   const script=document.createElement('script');script.src=src;script.async=false;
   script.onload=resolve;script.onerror=()=>reject(new Error('P6-B failed: '+src));
   document.head.appendChild(script);
  });
  ck141Promise=load('./assets/ck-concept-math-v141.js?v=141')
-  .then(()=>load('./assets/ck-concept-lab-v141.js?v=141'))
-  .then(()=>{const chart=document.querySelector('.ck21-chart-section');if(chart)window.CK141ConceptLab?.mount(chart);return true;})
+  .then(()=>load('./assets/ck-concept-lab-v141.js?v=142'))
+  .then(async()=>{try{await load('./assets/ck-theory-models-v142.js?v=142');
+    await load('./assets/ck-theory-v142.js?v=142');}
+    catch{const chart=document.querySelector('.ck21-chart-section');if(chart&&!chart.querySelector('[data-ck142-error]')){
+      const msg=document.createElement('p');msg.dataset.ck142Error='';msg.setAttribute('role','status');
+      msg.textContent='심화 경제 그래프 모듈을 불러오지 못했습니다. 온라인 재접속 후 다시 시도하세요.';chart.append(msg);
+    }}
+    const chart=document.querySelector('.ck21-chart-section');if(chart){
+      window.CK141ConceptLab?.mount(chart);window.CK142Theory?.mount(chart);
+    }return true;})
   .catch(()=>{const chart=document.querySelector('.ck21-chart-section');
    if(chart&&!chart.querySelector('[data-ck141-error]')){
     const msg=document.createElement('p');msg.dataset.ck141Error='';msg.setAttribute('role','alert');
@@ -205,7 +216,7 @@ function ck141Ensure(){
 function ck141Mount(){
  const chart=document.querySelector('.ck21-chart-section');
  if(!chart)return;
- ck141Ensure().then(ready=>{if(ready&&chart.isConnected)window.CK141ConceptLab?.mount(chart);});
+ ck141Ensure().then(ready=>{if(ready&&chart.isConnected){window.CK141ConceptLab?.mount(chart);window.CK142Theory?.mount(chart);}});
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ck141Mount,{once:true});
 else ck141Mount();

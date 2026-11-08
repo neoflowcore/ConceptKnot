@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="ck-release" content="v142-p6b-theory-scenes">
 <script id="ck74-theme-before-paint">(()=>{try{document.documentElement.dataset.ckTheme=localStorage.getItem("conceptknot-theme-v14")==="dark"?"dark":"light";}catch{}})();</script>
 <meta name="theme-color" content="#fcfcf9">
 <meta name="color-scheme" content="only light">
@@ -100,7 +101,7 @@ body{font-family:Pretendard,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;bac
 <link rel="stylesheet" href="./experience-v19.css">
 <link rel="stylesheet" href="./experience-v20.css">
 <link rel="stylesheet" href="./experience-v21.css?v=114">
-<script src="./assets/ck-pen-input-v60.js" defer></script>
+<script src="./assets/ck-pen-input-v60.js?v=142" defer></script>
 <script src="./assets/ck-display-v17.js" defer></script>
 <link rel="stylesheet" href="./experience-v26.css">
 <link rel="stylesheet" href="./assets/ck-typing-modes-v61.css?v=61">
@@ -114,7 +115,7 @@ body{font-family:Pretendard,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;bac
 <link rel="stylesheet" href="./assets/ck-study-p4-v78.css?v=111">
 <link rel="stylesheet" href="./assets/ck-study-review-v79.css?v=79">
 <link rel="stylesheet" href="./assets/ck-study-final-v79.css?v=79">
-<link rel="stylesheet" href="./assets/ck-study-charts-v79.css?v=79">
+<link rel="stylesheet" href="./assets/ck-study-charts-v79.css?v=142">
 <link rel="stylesheet" href="./assets/ck-study-editor-v80.css?v=112">
 <link rel="stylesheet" href="./assets/ck-study-workbench-v81.css?v=100">
 <link rel="stylesheet" href="./assets/ck-full-exam-v82.css?v=82">
@@ -2827,7 +2828,8 @@ window.addEventListener('beforeunload',()=>{if(localPdfUrl)URL.revokeObjectURL(l
     const status=board.querySelector('#ck-v7-note-status');
     const finish=e=>{
       if(pointer===null||e.pointerId!==pointer)return;
-      if(e.type==='pointerup'&&window.CKPen60?.contact(e)){movePen(e);return;}
+      if(e.type==='pointerup'&&[2,5].includes(e.button)&&e.pointerType==='pen'&&
+         Number(e.pressure)>0&&window.CKPen60?.contact(e)){movePen(e);return;}
       if(active){
         inkRecord(key).push(active);inkRedo.set(key,[]);active=null;
         const ok=save();
@@ -4259,7 +4261,7 @@ render();setInterval(timerTick,500);
 <script src="./assets/ck-study-p4-v78.js?v=114" defer></script>
 <script src="./assets/ck-study-review-v79.js?v=79" defer></script>
 <script src="./assets/ck-study-final-v79.js?v=79" defer></script>
-<script src="./assets/ck-study-charts-v79.js?v=79" defer></script>
+<script src="./assets/ck-study-charts-v79.js?v=142" defer></script>
 <script src="./assets/ck-study-editor-v80.js?v=127" defer></script>
 <script src="./assets/ck-study-workbench-v81.js?v=112" defer></script>
 <script src="./assets/ck-official-bank-v89.js?v=89" defer></script>
