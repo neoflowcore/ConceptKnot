@@ -1,0 +1,88 @@
+/* ConceptKnot v145: touch/S Pen graph interaction fix and explain-as-you-drag UI.
+   Narrow scope: only SVG graph canvases; scroll outside them is unaffected. */
+#main #ck141-concept-lab,#main #ck142-theory-studio{overflow-anchor:none}
+
+#main #ck141-concept-lab .ck141-stage,
+#main #ck141-concept-lab .ck141-live-svg,
+#main #ck142-theory-studio .ck142-graph,
+#main #ck142-theory-studio .ck142-svg{
+ touch-action:none!important;
+ -ms-touch-action:none!important;
+ overscroll-behavior:contain;
+ -webkit-user-select:none!important;
+ user-select:none!important;
+ -webkit-touch-callout:none;
+ cursor:crosshair;
+}
+#main #ck141-concept-lab .ck141-stage,
+#main #ck142-theory-studio .ck142-graph{overflow:hidden;contain:layout paint}
+#main #ck141-concept-lab .ck141-live-svg{overflow:hidden;display:block}
+#main #ck141-concept-lab .ck141-line-hit path,
+#main #ck141-concept-lab [data-ck141-drag],
+#main #ck141-concept-lab [data-ck141-rel-drag],
+#main #ck142-theory-studio .ck142-line-hit,
+#main #ck142-theory-studio [data-ck142-handle]{
+ touch-action:none!important;
+ -ms-touch-action:none!important;
+ cursor:grab!important;
+}
+#main #ck141-concept-lab .ck141-grabbing,
+#main #ck141-concept-lab .ck141-grabbing *,
+#main #ck142-theory-studio .ck142-grabbing,
+#main #ck142-theory-studio .ck142-grabbing *{cursor:grabbing!important}
+#main #ck141-concept-lab .ck141-line-hit path{
+ stroke:transparent!important;
+ stroke-width:36!important;
+ pointer-events:stroke!important;
+}
+#main #ck141-concept-lab .ck141-line-hit path:focus-visible{stroke:rgba(109,163,135,.32)!important}
+#main .ck145-example-block{margin:6px 0 10px;padding:11px 12px;border:1px dashed color-mix(in srgb,currentColor 22%,transparent);border-radius:11px}
+#main .ck145-example-block>strong{display:block;font-size:12px;line-height:1.5;margin-bottom:8px}
+#main .ck145-example-block>small{font-size:11px;line-height:1.5;opacity:.73}
+#main .ck145-example-buttons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-bottom:7px}
+#main .ck145-example-buttons button{border:1px solid color-mix(in srgb,currentColor 28%,transparent);border-radius:9px;min-width:0;min-height:44px;padding:8px 9px;color:inherit;background:transparent;font:inherit;font-size:12px;text-align:left;cursor:pointer}
+#main .ck145-example-buttons button:focus-visible{outline:3px solid #84bca4;outline-offset:2px}
+#main .ck145-example-buttons button:active{background:color-mix(in srgb,currentColor 9%,transparent)}
+#main .ck145-example-buttons button:disabled{opacity:.42;cursor:not-allowed}
+#main .ck145-live-brief{display:grid;gap:7px;padding:12px;border:1px solid color-mix(in srgb,currentColor 18%,transparent);border-left:4px solid #66977c;background:color-mix(in srgb,currentColor 3%,transparent);border-radius:11px;margin:6px 0 10px;min-width:0}
+#main .ck145-brief-label{display:block;font-size:11px;opacity:.72;margin-bottom:2px}
+#main .ck145-brief-title{display:block;font-size:clamp(15px,1.6vw,20px);line-height:1.35}
+#main .ck145-metric-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+#main .ck145-metric{display:grid;gap:2px;padding:7px 9px;border:1px solid color-mix(in srgb,currentColor 15%,transparent);border-radius:8px;min-width:0}
+#main .ck145-metric small{font-size:11px;opacity:.72}
+#main .ck145-metric strong{font-size:clamp(13px,1.5vw,16px);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+#main .ck145-brief-example{font-size:12px;line-height:1.55;margin:0!important}
+#main .ck145-brief-example b{margin-right:5px}
+#main .ck145-equation{font-size:12px;line-height:1.65;border-top:1px solid color-mix(in srgb,currentColor 15%,transparent);padding:7px 0 0;margin:0!important;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+#main .ck145-easy{padding:10px 12px;border-bottom:1px solid color-mix(in srgb,currentColor 12%,transparent)}
+#main .ck145-easy strong{display:block;font-size:12px;margin-bottom:4px}
+#main .ck145-easy p{margin:0!important;line-height:1.7;font-size:13px}
+#main .ck145-deep{border-top:1px solid color-mix(in srgb,currentColor 13%,transparent)}
+#main .ck145-deep summary{cursor:pointer;min-height:44px;display:flex;align-items:center;gap:5px;padding:10px 12px;font-size:12px;font-weight:720}
+#main .ck145-deep summary:focus-visible{outline:3px solid #84bca4;outline-offset:-3px}
+#main .ck145-deep[open]>summary{border-bottom:1px solid color-mix(in srgb,currentColor 14%,transparent)}
+#main .ck145-deep .ck144-explanations{padding:9px 12px}
+@media(max-width:490px){
+ #main .ck145-example-buttons{grid-template-columns:minmax(0,1fr)}
+ #main .ck145-metric-pair{grid-template-columns:minmax(0,1fr)}
+ #main .ck145-example-block{padding:9px}
+ #main .ck145-live-brief{padding:10px}
+}
+@media(prefers-reduced-motion:reduce){#main .ck145-live-brief *,#main .ck145-example-buttons *{animation:none!important;transition:none!important}}
+
+/* Legacy 17 SVGs are scrubber-style diagrams, not mathematically movable curves. */
+#main .ck21-chart-section .ck21-chart-stage,
+#main .ck21-chart-section svg.ck21-chart-svg{
+ touch-action:none!important;
+ overscroll-behavior:contain;
+ -webkit-user-select:none!important;
+ user-select:none!important;
+ -webkit-touch-callout:none;
+}
+#main .ck21-chart-section .ck21-chart-stage{overflow-anchor:none}
+#main .ck21-chart-actions [data-ck145-open-lab]{
+ min-height:44px;padding:9px 12px;border:2px solid #66947a;border-radius:10px;
+ color:inherit;background:color-mix(in srgb,currentColor 7%,transparent);
+ font-weight:700;cursor:pointer;
+}
+#main .ck21-chart-actions [data-ck145-open-lab]:focus-visible{outline:3px solid #8dbba0;outline-offset:3px}

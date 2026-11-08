@@ -9,3 +9,15 @@
 #main .ck79-chart-modes p{margin:2px 0;font-size:12px;opacity:.85}
 #main .ck79-chart-note{font-size:13px;line-height:1.55}
 @media(prefers-reduced-motion:reduce){#main .ck79-chart-draggable,#main .ck21-transform-target{transition:none!important}}
+
+/* v145 preflight: apply before lazily loaded P6-B scripts and CSS arrive.
+ * Native pan is blocked on graph canvases only, not elsewhere on the page. */
+#main .ck21-chart-section .ck21-chart-stage,
+#main .ck21-chart-section svg.ck21-chart-svg,
+#main #ck141-concept-lab .ck141-stage,
+#main #ck142-theory-studio .ck142-graph{
+ touch-action:none!important;
+ overscroll-behavior:contain;
+ -webkit-user-select:none!important;
+ user-select:none!important;
+}

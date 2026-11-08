@@ -18,7 +18,7 @@ function run(){
  const html=read('index.html'),service=read('sw.js'),vc=JSON.parse(read('vercel.json'));
  check(vc.git?.deploymentEnabled===false,'Vercel Git 자동배포가 비활성이 아닙니다.');
  check(!fs.existsSync(path.join(ROOT,'.github/workflows')),'GitHub Actions workflow 디렉터리가 존재합니다.');
- check(service.includes('conceptknot-study-v144-before-after-graphs-p6b'),'서비스 워커 v143 캐시 버전 불일치');
+ check(service.includes('conceptknot-study-v145-touch-gesture-lock-p6b'),'서비스 워커 v145 캐시 버전 불일치');
  const {scripts,css}=pathsFromHtml(html);
  for(const src of [...scripts,...css]){
   if(!isLocal(src))continue;

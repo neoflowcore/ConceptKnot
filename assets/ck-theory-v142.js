@@ -200,7 +200,7 @@
   const grid='<g class="ck142-grid">'+Array.from({length:3},(_,i)=>{
    const j=i+1;return '<path d="M 46 '+(333-286*j/4)+' H 576 M '+(46+530*j/4)+' 47 V 333"/>';
   }).join('')+'</g>';
-  return '<svg class="ck142-svg" viewBox="0 0 630 395" role="img" aria-label="'+esc(cfg().name)+' 학습용 비교 그래프">'+
+  return '<svg class="ck142-svg" viewBox="0 0 630 395" role="group" aria-label="'+esc(cfg().name)+' 학습용 비교 그래프">'+
    '<defs><clipPath id="ck142-clip"><rect x="46" y="47" width="530" height="286"/></clipPath></defs>'+
    grid+'<path class="ck142-axis" d="M 46 47 V 333 H 576"/>'+
    '<g class="ck142-ticks">'+ticksX+ticksY+'</g><text x="8" y="22">'+esc(cfg().axes[1])+'</text>'+
@@ -224,11 +224,23 @@
    draw.paths.map(p=>'<span class="ck142-key ck142-key-'+esc(p.tone)+'">'+esc(p.label)+'</span>').join('')+
    '<span class="ck142-key ck142-key-old">직전 상태(점선)</span></div>';
  }
- function transitionHtml(){
+ function quickTheoryHtml(){
+  const view=window.CK144ChangeExplain,session=sessions[selected];
+  if(!view)return '';
+  const prior=baseline?models.initial(selected):session.previous;
+  const v=view.theory(selected,prior,session.current,models);
+  const metrics=v.metrics.slice(0,2).map(m=>'<span class="ck145-metric"><small>'+esc(m.label)+
+   '</small><strong>'+esc(m.before)+' → '+esc(m.after)+'</strong></span>').join('');
+  return '<div class="ck145-live-brief" aria-live="off"><div>'+
+   '<span class="ck145-brief-label">곡선 조작 · 즉시 이론</span><strong class="ck145-brief-title">'+esc(v.tag)+'</strong></div>'+
+   '<div class="ck145-metric-pair">'+metrics+'</div>'+
+   '<p class="ck145-brief-example"><b>쉬운 예시</b> '+esc(v.example)+'</p></div>';
+ }
+ function transitionHtml(openOverride){
   const model=window.CK144ChangeExplain,view=window.CK144ChangeView;
   if(!model||!view)return '';
   const session=sessions[selected],old=baseline?models.initial(selected):session.previous;
-  return view.render(model.theory(selected,old,session.current,models));
+  return view.render(model.theory(selected,old,session.current,models),level,openOverride);
  }
  function panel(){
   const {current,previous,result}=selectedValues();
@@ -276,10 +288,11 @@
    [['free','자유 실험'],['mission','목표 미션'],['compare','전후 비교']].map(p=>
     '<button type="button" data-ck142-mode="'+p[0]+'" aria-pressed="'+(p[0]===mode)+'">'+p[1]+'</button>').join('')+'</div>'+
    '<div class="ck143-level-toggle" role="group" aria-label="설명 난이도">'+
-    '<button type="button" data-ck142-level="beginner" aria-pressed="'+(level==='beginner')+'">초급 · 쉽게 이해</button>'+
-    '<button type="button" data-ck142-level="advanced" aria-pressed="'+(level==='advanced')+'">심화 · 수식/수치</button></div>'+
-   '<div class="ck142-tip">'+esc(labels[selected])+'</div>'+insightHtml()+
-   '<div class="ck142-layout"><div class="ck142-left"><div class="ck142-graph">'+svg()+'</div>'+legendHtml()+
+    '<button type="button" data-ck142-level="beginner" aria-pressed="'+(level==='beginner')+'">쉽게 · 생활 예시</button>'+
+    '<button type="button" data-ck142-level="advanced" aria-pressed="'+(level==='advanced')+'">심화 · 가격/수량</button></div>'+
+   '<div class="ck142-tip">'+esc(labels[selected])+'</div>'+
+   '<div class="ck142-layout"><div class="ck142-left">'+
+    '<div class="ck142-graph">'+svg()+'</div>'+quickTheoryHtml()+insightHtml()+legendHtml()+
    '<details class="ck143-numeric" '+(level==='advanced'?'open':'')+'><summary>숫자·가격·기울기 정밀 조절 (선택)</summary>'+
    '<div class="ck142-controls">'+Object.entries(cfg().f).map(([k,f])=>slider(k,f)).join('')+'</div></details>'+
    '<div class="ck142-actions"><button type="button" data-ck142-action="undo" '+(sessions[selected].past.length?'':'disabled')+'>이전</button>'+
@@ -301,7 +314,11 @@
   if(existing&&markup){existing.innerHTML=markup.slice(markup.indexOf('>')+1,markup.lastIndexOf('</svg>'));}
   else if(graph)graph.innerHTML=markup;
   const explanation=root.querySelector('[data-ck142-explain]');if(explanation)explanation.innerHTML=panel();
-  const board=root.querySelector('.ck144-change-board');if(board)board.outerHTML=transitionHtml();
+  const board=root.querySelector('.ck144-change-board');if(board){
+   const wasOpen=board.querySelector?.('.ck145-deep')?.open;
+   board.outerHTML=transitionHtml(wasOpen);
+  }
+  const brief=root.querySelector('.ck145-live-brief');if(brief)brief.outerHTML=quickTheoryHtml();
   const bar=root.querySelector('.ck143-insight');if(bar)bar.outerHTML=insightHtml();
   const legend=root.querySelector('.ck142-legend');if(legend)legend.outerHTML=legendHtml();
   for(const [k,v] of Object.entries(sessions[selected].current)){
@@ -383,10 +400,25 @@
   if(box.width<=0)return null;
   const graph=task.graph;
   if(!graph)return null;
-  const x=(e.clientX-box.left)/box.width*630,y=(e.clientY-box.top)/box.height*395;
+  const point=window.CK145GraphGesture?.pointer(e,box,630,395);
+  const x=point?.x??((e.clientX-box.left)/box.width*630),
+   y=point?.y??((e.clientY-box.top)/box.height*395);
+  if(!Number.isFinite(x)||!Number.isFinite(y))return null;
   const xValue=limited((x-46)/530*graph.maxX,0,graph.maxX);
   const yValue=limited((333-y)/286*graph.maxY,0,graph.maxY);
   const k=task.key,s=task.before;
+  if(task.fromCurve){
+   const scale=point?.scale||Math.min(box.width/630,box.height/395);
+   if(!(scale>0))return null;
+   const dx=(e.clientX-task.initialClientX)/scale/530*graph.maxX;
+   const dy=(e.clientY-task.initialClientY)/scale/286*graph.maxY;
+   if(selected==='budget'&&k==='I')return Math.abs(dx*s.px)>=Math.abs(dy*s.py)?
+     s.I+2*dx*s.px:s.I-2*dy*s.py;
+   if(k==='alpha')return s.alpha+dx/Math.max(10,graph.maxX)*.5;
+   if(selected==='cobweb'&&k==='c')return s.c+dx;
+   if(k==='q2')return s.q2+dx;
+   if(['A','c','R0','a','ymax'].includes(k))return s[k]-dy;
+  }
   if(selected==='budget'){
    if(k==='alpha')return xValue*s.px/s.I;
    if(k==='px')return s.I/Math.max(xValue,.01);
@@ -442,17 +474,25 @@
   if(next){sessions[selected].current=next;sessions[selected].previous={...drag.before};queue(drag.root);}
  }
  document.addEventListener('pointerdown',e=>{
+  if(drag||rangeDraft||e.isPrimary===false||(e.pointerType==='mouse'&&e.button!==0))return;
   const handle=e.target.closest?.('#ck142-theory-studio [data-ck142-handle]');
-  if(!handle||drag||rangeDraft||e.button!==0)return;
-  const root=handle.closest('#ck142-theory-studio'),svg=root?.querySelector('.ck142-svg');
-  if(!svg)return;
-  drag={id:e.pointerId,svg,root,key:handle.dataset.ck142Handle,
+  const svg=e.target.closest?.('#ck142-theory-studio .ck142-svg')||
+   handle?.closest?.('.ck142-svg')||
+   handle?.closest?.('#ck142-theory-studio')?.querySelector?.('.ck142-svg');
+  const root=svg?.closest?.('#ck142-theory-studio')||handle?.closest?.('#ck142-theory-studio');
+  if(!svg||!root)return;
+  const graph=models.drawing(selected,sessions[selected].current);
+  const nearest=!handle?window.CK145GraphGesture?.nearestTheory(
+   e,svg.getBoundingClientRect(),graph,selected,e.pointerType||'touch'):null;
+  const key=handle?.dataset?.ck142Handle||nearest?.key;
+  if(!key)return;
+  drag={id:e.pointerId,svg,root,key,fromCurve:Boolean(nearest),
    before:{...sessions[selected].current},previous:{...sessions[selected].previous},
-   graph:models.drawing(selected,sessions[selected].current),
-   initialClientX:e.clientX,initialClientY:e.clientY};
+   graph,initialClientX:e.clientX,initialClientY:e.clientY};
+  svg.closest?.('.ck142-graph')?.classList.add('ck142-grabbing');
   try{svg.setPointerCapture(e.pointerId);}catch{}
-  e.preventDefault();
- });
+  if(e.cancelable!==false)e.preventDefault?.();
+ },{capture:true,passive:false});
  document.addEventListener('pointermove',e=>{
   if(!drag||drag.id!==e.pointerId)return;
   if(e.cancelable)e.preventDefault();pointerPreview(e);
@@ -465,6 +505,7 @@
   try{d.svg.releasePointerCapture(e.pointerId);}catch{}
   if(commit)record(d.before);
   else {sessions[selected].current=d.before;sessions[selected].previous=d.previous;}
+  d.svg.closest?.('.ck142-graph')?.classList.remove('ck142-grabbing');
   paint(d.root);
  }
  document.addEventListener('pointerup',e=>endPointer(e,true));

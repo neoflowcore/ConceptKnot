@@ -90,9 +90,19 @@ function update(value,options={}){
   b.setAttribute('aria-pressed',String(Number(b.dataset.ck79ChartDirection)===sign));
  lastValue=p;
 }
+function ensureLabShortcut(root){
+ const actions=root.querySelector('.ck21-chart-actions');
+ if(!actions||actions.querySelector('[data-ck145-open-lab]'))return;
+ const btn=document.createElement('button');
+ btn.type='button';btn.dataset.ck145OpenLab='';
+ btn.textContent='선 직접 이동 · 전후 이론 실험실';
+ btn.setAttribute('aria-label','실제 수요 공급선의 평행이동, 기울기 변경과 전후 이론 계산 실험실로 이동');
+ actions.append(btn);
+}
 function mount(){
  const info=active();if(!info)return;
  const {root,chart:c}=info,controls=root.querySelector('.ck76-chart-control');
+ ensureLabShortcut(root);
  if(!controls||controls.querySelector('[data-ck79-chart-modes]'))return;
  lastChart=c.id;override=direction(c);
  const target=document.createElement('div');target.className='ck79-chart-modes';
@@ -125,16 +135,25 @@ function updateAria(){
 }
 document.addEventListener('pointerdown',e=>{
  const svg=e.target.closest?.('.ck21-chart-section svg.ck21-chart-svg');
- if(!svg||e.button!==0)return;
- gesture={id:e.pointerId,svg};
+ if(!svg||gesture||e.isPrimary===false||(e.pointerType==='mouse'&&e.button!==0))return;
+ const startingPhase=fromPointer(e,svg);
+ gesture={id:e.pointerId,svg,startX:e.clientX,startY:e.clientY,startValue:startingPhase};
  try{svg.setPointerCapture(e.pointerId)}catch{}
  svg.closest('.ck21-chart-section')?.classList.add('ck79-chart-dragging');
- update(fromPointer(e,svg));updateAria();
-});
+ update(startingPhase);updateAria();
+ if(e.cancelable!==false)e.preventDefault?.();
+},{capture:true,passive:false});
 document.addEventListener('pointermove',e=>{
  if(!gesture||gesture.id!==e.pointerId)return;
  if(e.cancelable)e.preventDefault();
- update(fromPointer(e,gesture.svg));updateAria();
+ const bounds=gesture.svg.getBoundingClientRect();
+ const dx=e.clientX-gesture.startX,dy=e.clientY-gesture.startY;
+ // Existing 17 figures are schematic scrubbers. Accept a vertical touch swipe
+ // as a progression change, not a fabricated economic slope change.
+ const phase=bounds.height>0&&Math.abs(dy)>Math.abs(dx)*1.2?
+  gesture.startValue-Math.round(dy/bounds.height*100):
+  fromPointer(e,gesture.svg);
+ update(phase);updateAria();
 },{passive:false});
 function finish(e){
  if(!gesture||gesture.id!==e.pointerId)return;
@@ -156,6 +175,12 @@ document.addEventListener('input',e=>{
  update(e.target.value);updateAria();
 });
 document.addEventListener('click',e=>{
+ const jump=e.target.closest?.('[data-ck145-open-lab]');
+ if(jump){
+  const lab=document.getElementById('ck141-concept-lab');
+  if(lab?.scrollIntoView)lab.scrollIntoView({behavior:'smooth',block:'start'});
+  return;
+ }
  const sign=e.target.closest?.('[data-ck79-chart-direction]');
  if(sign){update(lastValue,{direction:Number(sign.dataset.ck79ChartDirection)});updateAria();return;}
  if(e.target.closest?.('[data-ck21-play]')){
@@ -195,6 +220,9 @@ function ck141Ensure(){
  const css144=document.createElement('link');css144.rel='stylesheet';
  css144.href='./assets/ck-concept-transition-v144.css?v=144';css144.dataset.ck144Asset='css';
  document.head.appendChild(css144);
+ const css145=document.createElement('link');css145.rel='stylesheet';
+ css145.href='./assets/ck-concept-touch-fix-v145.css?v=145';css145.dataset.ck145Asset='css';
+ document.head.appendChild(css145);
  const load=src=>new Promise((resolve,reject)=>{
   const script=document.createElement('script');script.src=src;script.async=false;
   script.onload=resolve;script.onerror=()=>reject(new Error('P6-B failed: '+src));
@@ -202,11 +230,12 @@ function ck141Ensure(){
  });
  ck141Promise=load('./assets/ck-concept-math-v141.js?v=141')
   .then(()=>load('./assets/ck-concept-coach-v143.js?v=143'))
-  .then(()=>load('./assets/ck-concept-transition-v144.js?v=144'))
-  .then(()=>load('./assets/ck-concept-transition-view-v144.js?v=144'))
-  .then(()=>load('./assets/ck-concept-lab-v141.js?v=144'))
+  .then(()=>load('./assets/ck-concept-gesture-v145.js?v=145'))
+  .then(()=>load('./assets/ck-concept-transition-v144.js?v=145'))
+  .then(()=>load('./assets/ck-concept-transition-view-v144.js?v=145'))
+  .then(()=>load('./assets/ck-concept-lab-v141.js?v=145'))
   .then(async()=>{try{await load('./assets/ck-theory-models-v142.js?v=142');
-    await load('./assets/ck-theory-v142.js?v=144');}
+    await load('./assets/ck-theory-v142.js?v=145');}
     catch{const chart=document.querySelector('.ck21-chart-section');if(chart&&!chart.querySelector('[data-ck142-error]')){
       const msg=document.createElement('p');msg.dataset.ck142Error='';msg.setAttribute('role','status');
       msg.textContent='심화 경제 그래프 모듈을 불러오지 못했습니다. 온라인 재접속 후 다시 시도하세요.';chart.append(msg);

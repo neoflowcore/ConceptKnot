@@ -62,9 +62,12 @@
    changed='선택한 가격점';constant='수요·공급곡선 전체 고정';
    const p0=math.point(before,before.price),p1=math.point(after,after.price);
    metrics=[row('선택 가격 P',p0.price,p1.price),row('같은 D의 수요량 Qd',p0.qd,p1.qd),
-    row('같은 S의 공급량 Qs',p0.qs,p1.qs)];
+    row('같은 S의 공급량 Qs',p0.qs,p1.qs),
+    row('초과공급(Qs−Qd)',p0.qs-p0.qd,p1.qs-p1.qd)];
+   const eq=math.solve(before);
+   if(eq.ok)metrics.push(row('고정된 균형가격 P*',eq.price,eq.price));
    cause='가격점만 '+sg(priceDelta)+'했습니다. 그래프의 수요·공급곡선은 변하지 않았습니다.';
-   rule='자기 가격이 바뀌면 주어진 곡선 위에서 수요량·공급량이 달라집니다. 새로운 시장균형이 아닙니다.';
+   rule='자기 가격이 바뀌면 주어진 곡선 위에서 수요량·공급량이 달라집니다. 초과공급(Qs−Qd)>0이면 공급이 많고, <0이면 초과수요입니다. 선택 가격은 새로운 시장균형이 아닙니다.';
    example='주택 가격을 낮추면 같은 수요곡선 위에서 구매하려는 수량은 늘어납니다.';
    trap='가격점은 E₁ 균형점이 아닙니다. 곡선의 평행이동(수요 변화)과 다릅니다.';
   }else if(rotateDemand||rotateSupply){
