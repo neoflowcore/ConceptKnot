@@ -177,4 +177,42 @@ if(main&&window.MutationObserver)new MutationObserver(records=>{
    n.querySelector?.('.ck21-chart-section,.ck76-chart-control')))))queueMount();
 }).observe(main,{subtree:true,childList:true});
 window.CK79Charts=Object.freeze({update,narrative,getState:()=>({id:lastChart,value:lastValue,sign:override})});
+
+/* P6-B v141 separately loads the verified numeric model and opt-in laboratory. */
+let ck141Promise=null;
+function ck141Ensure(){
+ if(ck141Promise)return ck141Promise;
+ if(!document.head||!document.body)return Promise.resolve(false);
+ const css=document.createElement('link');
+ css.rel='stylesheet';css.href='./assets/ck-concept-lab-v141.css?v=141';css.dataset.ck141Asset='css';
+ document.head.appendChild(css);
+ const load=src=>new Promise((resolve,reject)=>{
+  const script=document.createElement('script');script.src=src;script.async=false;
+  script.onload=resolve;script.onerror=()=>reject(new Error('P6-B failed: '+src));
+  document.head.appendChild(script);
+ });
+ ck141Promise=load('./assets/ck-concept-math-v141.js?v=141')
+  .then(()=>load('./assets/ck-concept-lab-v141.js?v=141'))
+  .then(()=>{const chart=document.querySelector('.ck21-chart-section');if(chart)window.CK141ConceptLab?.mount(chart);return true;})
+  .catch(()=>{const chart=document.querySelector('.ck21-chart-section');
+   if(chart&&!chart.querySelector('[data-ck141-error]')){
+    const msg=document.createElement('p');msg.dataset.ck141Error='';msg.setAttribute('role','alert');
+    msg.textContent='개념 그래프 엔진을 불러오지 못했습니다. 온라인에서 새로고침을 시도하세요.';
+    chart.append(msg);
+   }return false;});
+ return ck141Promise;
+}
+function ck141Mount(){
+ const chart=document.querySelector('.ck21-chart-section');
+ if(!chart)return;
+ ck141Ensure().then(ready=>{if(ready&&chart.isConnected)window.CK141ConceptLab?.mount(chart);});
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ck141Mount,{once:true});
+else ck141Mount();
+const ck141Host=document.getElementById('main');
+if(ck141Host&&window.MutationObserver)new MutationObserver(changes=>{
+ if(changes.some(r=>Array.from(r.addedNodes).some(n=>n.nodeType===1&&
+  (n.matches?.('.ck21-chart-section')||n.querySelector?.('.ck21-chart-section')))))ck141Mount();
+}).observe(ck141Host,{subtree:true,childList:true});
+
 })();

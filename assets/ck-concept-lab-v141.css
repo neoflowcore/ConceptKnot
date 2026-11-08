@@ -1,0 +1,65 @@
+/* ConceptKnot P6-B v141, separate from 17 existing charts. */
+#main #ck141-concept-lab{margin:18px 0 8px;padding:clamp(12px,2vw,22px);border:1px solid rgba(137,153,139,.38);border-radius:18px;box-shadow:0 10px 32px rgba(20,29,26,.10);background:color-mix(in srgb,currentColor 3%,transparent);color:inherit;isolation:isolate}
+#main #ck141-concept-lab *{box-sizing:border-box}
+#main .ck141-intro{display:flex;align-items:start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+#main .ck141-intro h3{margin:0;font-size:clamp(17px,2.2vw,23px);line-height:1.3}
+#main .ck141-intro h3 small{font-size:11px;opacity:.72}
+#main .ck141-intro p{font-size:13px;opacity:.85;margin:6px 0 13px;line-height:1.5}
+#main .ck141-legend{font-size:12px;opacity:.85;padding:5px 8px;border:1px dashed currentColor;border-radius:9px}
+#main .ck141-tabs{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:7px 0}
+#main .ck141-tabs button,#main .ck141-actions button,#main .ck141-explain button{min-height:38px;min-width:44px;padding:7px 11px;font:inherit;font-size:12px;border:1px solid rgba(119,144,127,.5);border-radius:10px;background:transparent;color:inherit;cursor:pointer}
+#main .ck141-tabs button[aria-pressed=true]{background:rgba(137,165,127,.2);border-width:2px;font-weight:700}
+#main .ck141-tabs button:focus-visible,#main .ck141-actions button:focus-visible,#main .ck141-explain button:focus-visible,#main .ck141-live-svg [tabindex]:focus-visible{outline:3px solid #84bca4;outline-offset:3px}
+#main .ck141-task{font-size:12px;line-height:1.5;margin:10px 0;padding:9px 12px;border-left:3px solid #839c7a;background:rgba(131,156,122,.09)}
+#main .ck141-task strong{margin-right:8px}
+#main .ck141-columns{display:grid;grid-template-columns:minmax(0,2fr) minmax(230px,1fr);gap:clamp(14px,2vw,25px);align-items:start}
+#main .ck141-stage{width:100%;min-width:0;aspect-ratio:660/400;position:relative}
+#main .ck141-live-svg{width:100%;height:100%;display:block;overflow:visible;font:13px system-ui,'Malgun Gothic',sans-serif;user-select:none}
+#main .ck141-live-svg .ck141-grid path{fill:none;stroke:currentColor;opacity:.11;stroke-width:1}
+#main .ck141-live-svg .ck141-axis{fill:none;stroke:currentColor;opacity:.8;stroke-width:2}
+#main .ck141-live-svg .ck141-ticks{fill:currentColor;opacity:.68;font-size:11px}
+#main .ck141-now path{fill:none;stroke-width:3.4;stroke-linecap:round}
+#main .ck141-now .ck141-demand{stroke:#cc7855}
+#main .ck141-now .ck141-supply{stroke:#468ea8}
+#main .ck141-past path{fill:none;stroke:currentColor;stroke-width:2;stroke-dasharray:7 5;opacity:.36}
+#main .ck141-eq-old path,#main .ck141-eq-old circle{fill:currentColor;stroke:currentColor;stroke-dasharray:4 5;opacity:.55}
+#main .ck141-eq-old path{fill:none;stroke-width:1.2}
+#main .ck141-eq-new path{fill:none;stroke:#679b65;stroke-width:1.7;stroke-dasharray:3 4}
+#main .ck141-eq-new circle{fill:#679b65}
+#main .ck141-eq-new text{fill:#679b65;font-weight:700}
+#main .ck141-price-guide path{stroke:#b48952;stroke-width:1.3;stroke-dasharray:5 5}
+#main .ck141-price-guide text{fill:#a47a44;font-weight:600}
+#main .ck141-handle{cursor:grab;touch-action:none}
+#main .ck141-handle .ck141-hit{fill:transparent}
+#main .ck141-handle .ck141-handle-core{fill:#fff}
+#main .ck141-handle-core.ck141-demand{stroke:#cc7855}
+#main .ck141-handle-core.ck141-supply{stroke:#468ea8}
+#main .ck141-handle-core.ck141-price{stroke:#b48952}
+#main .ck141-handle text{fill:currentColor;paint-order:stroke;stroke:rgba(250,250,248,.75);stroke-width:3;font-size:11px;font-weight:700;pointer-events:none}
+#main .ck141-grabbing .ck141-handle{cursor:grabbing}
+#main .ck141-relation-guide{stroke:#839c7a;stroke-dasharray:5 5;opacity:.7}
+#main .ck141-rel-point-direct{fill:#cc7855}
+#main .ck141-rel-point-inverse{fill:#468ea8}
+#main .ck141-label-demand{fill:#cc7855;font-size:13px;font-weight:700}
+#main .ck141-label-supply{fill:#468ea8;font-size:13px;font-weight:700}
+#main .ck141-axis-note{font-size:11px;opacity:.72;margin:6px 0 11px}
+#main .ck141-controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;padding:11px;border:1px solid rgba(133,156,143,.22);border-radius:12px}
+#main .ck141-input{display:flex;flex-direction:column;gap:6px;font-size:12px}
+#main .ck141-input span{display:flex;justify-content:space-between;gap:5px}
+#main .ck141-input output{font-variant-numeric:tabular-nums;font-weight:700}
+#main .ck141-input input{width:100%;accent-color:#719b80;min-height:30px;touch-action:pan-y}
+#main .ck141-actions{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 0}
+#main .ck141-actions button:disabled{opacity:.4;cursor:not-allowed}
+#main .ck141-explain{padding:14px;background:rgba(120,144,130,.07);border-radius:12px;font-size:13px;line-height:1.65;min-width:0}
+#main .ck141-explain h4{font-size:14px;margin:0 0 6px}
+#main .ck141-explain h4:not(:first-child){margin-top:15px}
+#main .ck141-explain p{margin:5px 0 9px;overflow-wrap:anywhere}
+#main .ck141-explain small{display:block;opacity:.8}
+#main .ck141-explain .ck141-results{font-weight:700}
+#main .ck141-source{opacity:.8;font-size:12px}
+#main .ck141-save{display:flex;align-items:start;gap:7px;margin:17px 0 6px;cursor:pointer;font-size:12px}
+#main .ck141-save input{accent-color:#719b80;width:17px;height:17px;flex:none}
+#main .ck141-save-status{font-size:11px}
+@media(max-width:780px){#main .ck141-columns{grid-template-columns:minmax(0,1fr)}#main .ck141-explain{padding:12px}#main .ck141-tabs button{min-height:44px}}
+@media(max-width:410px){#main #ck141-concept-lab{padding:10px}#main .ck141-controls{grid-template-columns:minmax(0,1fr)}#main .ck141-live-svg{font-size:12px}#main .ck141-stage{aspect-ratio:660/420}}
+@media(prefers-reduced-motion:reduce){#main #ck141-concept-lab *,#main #ck141-concept-lab *::before,#main #ck141-concept-lab *::after{transition:none!important;animation:none!important}}
