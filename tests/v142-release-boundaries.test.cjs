@@ -20,12 +20,12 @@ test('canonical 800 A-form questions and official concept candidates are byte id
 });
 test('new P6-B scripts and official short buttons exist under v142 HTML',()=>{
  const html=read('index.html'),sw=read('sw.js'),glue=read('assets/ck-study-charts-v79.js');
- assert.match(html,/ck-release" content="v145-p6b-touch-gesture-fix"/);
- assert.match(html,/ck-study-charts-v79.js\?v=145/);
+ assert.match(html,/ck-release" content="v149-curve-grip-before-after"/);
+ assert.match(html,/ck-study-charts-v79.js\?v=149/);
  assert.match(html,/ck-study-charts-v79.css\?v=145/);
- assert.match(sw,/conceptknot-study-v145-touch-gesture-lock-p6b/);
- for(const name of ['ck-concept-lab-v141.js?v=145','ck-concept-lab-v141.css?v=142',
-  'ck-concept-coach-v143.js?v=143','ck-theory-models-v142.js?v=142','ck-theory-v142.js?v=145','ck-theory-v142.css?v=142','ck-concept-intuition-v143.css?v=143']){
+ assert.match(sw,/conceptknot-study-v149-curve-grip-before-after/);
+ for(const name of ['ck-concept-lab-v141.js?v=148','ck-concept-lab-v141.css?v=142',
+  'ck-concept-coach-v143.js?v=143','ck-theory-models-v142.js?v=142','ck-theory-v142.js?v=148','ck-theory-v142.css?v=142','ck-concept-intuition-v143.css?v=143']){
    assert.ok(sw.includes(name),'missing cache '+name);
  }
  assert.match(glue,/CK141ConceptLab\?\.mount/);

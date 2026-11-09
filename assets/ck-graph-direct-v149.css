@@ -1,0 +1,44 @@
+/* ConceptKnot v149: direct-grip 17 schematic diagrams, mobile safe.
+ * Only graph SVG gets touch-action lock; page, OMR, boards stay scrollable. */
+#main .ck21-chart-section .ck21-chart-svg{touch-action:none;cursor:crosshair}
+#main .ck21-chart-section .ck21-chart-svg .ck21-curve{cursor:grab}
+#main .ck21-chart-section.ck149-grabbing .ck21-chart-svg{cursor:grabbing}
+#main .ck21-chart-section.ck149-grabbing .ck21-transform-target,
+#main .ck21-chart-section.ck149-grabbing .ck21-equilibrium-moving,
+#main .ck21-chart-section.ck149-grabbing .ck21-along,
+#main .ck21-chart-section.ck149-grabbing .ck21-step{transition:none!important}
+#main .ck21-chart-svg .ck149-previous-curves{opacity:0;pointer-events:none;transition:opacity .2s}
+#main .ck21-chart-section.ck149-moved .ck149-previous-curves{opacity:.7}
+#main .ck21-chart-svg .ck149-previous-curves .ck21-curve{
+ stroke-dasharray:7 6;stroke-width:3;opacity:.48;stroke-linecap:round;pointer-events:none;
+}
+#main .ck21-chart-svg [data-ck149-equilibrium-arrow]{fill:none;stroke:#e0c25f;stroke-width:2.4;stroke-dasharray:5 4;pointer-events:none}
+#main .ck21-chart-svg [data-ck149-original-observation]{pointer-events:none}
+#main .ck21-chart-svg [data-ck149-original-observation] circle{fill:rgba(231,215,160,.48);stroke:#e1c776;stroke-width:2;stroke-dasharray:3 3}
+#main .ck21-chart-svg [data-ck149-original-observation] text{font-size:13px;fill:currentColor;font-weight:800;paint-order:stroke;stroke:rgba(15,35,35,.32);stroke-width:2px}
+#main .ck149-tools{display:grid;gap:7px;margin:8px 0;padding:10px;
+  border:1px solid color-mix(in srgb,currentColor 24%,transparent);border-radius:12px;
+  background:color-mix(in srgb,currentColor 4%,transparent);
+}
+#main .ck149-tools-row{display:flex;flex-wrap:wrap;align-items:center;gap:7px}
+#main .ck149-tools-row button{
+ min-height:44px;min-width:48px;padding:8px 11px;font:inherit;font-size:12px;font-weight:650;
+ color:inherit;background:color-mix(in srgb,currentColor 3%,transparent);
+ border:1px solid color-mix(in srgb,currentColor 35%,transparent);border-radius:9px;cursor:pointer;
+}
+#main .ck149-tools-row button:focus-visible{outline:3px solid #8bbda4;outline-offset:2px}
+#main .ck149-tools-row button[aria-pressed=true]{border:2px solid #7ea892;background:color-mix(in srgb,#78a486 15%,transparent)}
+#main .ck149-tools-row button:disabled{opacity:.38;cursor:default}
+#main .ck149-tools-status{font-size:12px;line-height:1.6;margin:2px 0!important;overflow-wrap:anywhere}
+#main .ck149-tools-status strong{font-size:12px}
+#main .ck149-tools-status output{display:inline-block;margin-left:5px;min-width:65px;font-weight:800;font-variant-numeric:tabular-nums}
+#main .ck149-tools small{font-size:11px;opacity:.74;line-height:1.55}
+#main .ck21-chart-section .ck148-legacy-panels{scroll-margin-top:85px}
+@media(max-width:460px){
+ #main .ck149-tools{padding:8px}
+ #main .ck149-tools-row{gap:5px}
+ #main .ck149-tools-row button{flex:1 1 auto}
+}
+@media(prefers-reduced-motion:reduce){
+ #main .ck149-previous-curves,#main .ck149-tools *,#main .ck21-chart-svg .ck149-previous-curves *{transition:none!important;animation:none!important}
+}

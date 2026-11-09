@@ -149,12 +149,12 @@ test('legacy graph scrub updates all visible cards together without any page scr
 test('release offline routes and asset ordering do not enable CI or alter official records',()=>{
  const html=read('index.html'),sw=read('sw.js');
  const glue=read('assets/ck-study-charts-v79.js');
- assert.ok(html.indexOf('ck-three-step-v148.js?v=148')<html.indexOf('ck-study-charts-v79.js?v=148'));
- assert.match(html,/ck-release" content="v148-three-stage-all-graphs"/);
- assert.match(sw,/conceptknot-study-v148-three-stage-all-graphs/);
+ assert.ok(html.indexOf('ck-three-step-v148.js?v=149')<html.indexOf('ck-study-charts-v79.js?v=149'));
+ assert.match(html,/ck-release" content="v149-curve-grip-before-after"/);
+ assert.match(sw,/conceptknot-study-v149-curve-grip-before-after/);
  assert.match(glue,/data-ck148-legacy/);
- for(const file of ['ck-three-step-v148.js?v=148','ck-three-step-v148.css?v=148',
-  'ck-study-charts-v79.js?v=148','ck-concept-transition-view-v144.js?v=148'])
+ for(const file of ['ck-three-step-v148.js?v=149','ck-three-step-v148.css?v=148',
+  'ck-study-charts-v79.js?v=149','ck-concept-transition-view-v144.js?v=148'])
   assert.ok(sw.includes(file),file);
  const core=sw.match(/const CRITICAL=\[([\s\S]*?)\];/);
  assert.ok(core);assert.equal([...core[1].matchAll(/'\.\/[^']+'/g)].length,11);

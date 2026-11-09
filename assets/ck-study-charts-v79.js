@@ -86,7 +86,7 @@ function update(value,options={}){
  if(explanation)explanation.textContent=narrative(c,p,sign);
  const steps=window.CK148LearningSteps;
  const cards=root.querySelector('[data-ck148-legacy]');
- if(cards&&steps){const model=steps.legacy(c,p,sign);
+ if(cards&&steps&&!(c.type==='both'&&window.CK149GraphEnhance?.enabled)){const model=steps.legacy(c,p,sign);
   if(model)cards.innerHTML=steps.render(model);
  }
  const out=root.querySelector('[data-ck79-chart-percentage]');
@@ -94,6 +94,7 @@ function update(value,options={}){
  for(const b of root.querySelectorAll('[data-ck79-chart-direction]'))
   b.setAttribute('aria-pressed',String(Number(b.dataset.ck79ChartDirection)===sign));
  lastValue=p;
+ window.CK149GraphEnhance?.afterUpdate?.(info,{value:p,sign});
 }
 function ensureLabShortcut(root){
  const actions=root.querySelector('.ck21-chart-actions');
@@ -126,6 +127,7 @@ function mount(){
   svg.setAttribute('aria-valuenow',String(info.state?.phase?100:0));
  }
  update(info.state?.phase?100:0);
+ window.CK149GraphEnhance?.mount?.(root,c);
 }
 function fromPointer(event,svg){
  const rect=svg.getBoundingClientRect();
@@ -140,6 +142,7 @@ function updateAria(){
 }
 document.addEventListener('pointerdown',e=>{
  const svg=e.target.closest?.('.ck21-chart-section svg.ck21-chart-svg');
+ if(window.CK149GraphEnhance?.enabled)return; // v149 handles precise curve grips.
  if(!svg||gesture||e.isPrimary===false||(e.pointerType==='mouse'&&e.button!==0))return;
  const startingPhase=fromPointer(e,svg);
  gesture={id:e.pointerId,svg,startX:e.clientX,startY:e.clientY,startValue:startingPhase};

@@ -22,7 +22,46 @@ const DATA=Object.freeze({
  'cap-rate':{ex:['순영업소득 연 1천만 원이면 환원율 5%에서 2억 원, 10%에서 1억 원으로 평가됩니다.'],rule:'직접환원법은 V=NOI/R (R>0). 순영업소득 일정 시 환원율과 가치는 반비례합니다.'},
  huff:{ex:['점포 매력도와 경쟁조건이 일정하면 그 점포까지 거리가 멀수록 선택 유인이 줄어듭니다.'],rule:'허프모형 Pi=(Si/di^β)/Σ(Sj/dj^β). 선택확률은 다른 경쟁점포와의 상대적 유인력을 반영합니다.'}
 });
-function legacy(chart,progress,sign){
+// The dual diagram is a pair of independently grabbable schematic curves.
+// Only one curve may be moved; do not reuse the original both-shift exam answer.
+function explainDual(state){
+ const d=Number(state.demandSign||1)*Number(state.demand||0),
+  s=Number(state.supplySign||1)*Number(state.supply||0);
+ const change=n=>n>0?'증가':n<0?'감소':'불변';
+ const dd=change(d),ss=change(s),hasD=d!==0,hasS=s!==0;
+ let concept,example;
+ if(!hasD&&!hasS){
+  concept='수요곡선과 공급곡선은 모두 원래 위치입니다. 각 선을 잡아 이동해 보세요.';
+  example='집을 사려는 사람과 새집 공급이 아직 바뀌지 않은 출발 상황입니다.';
+ }else if(hasD&&!hasS){
+  concept='수요 '+dd+'·공급 불변 → 균형가격 '+dd+'·균형거래량 '+dd+'.';
+  example=d>0?'구매 희망자만 증가하고 공급 주택 수는 그대로인 상황입니다.':
+   '구매 희망자만 감소하고 공급 주택 수는 그대로인 상황입니다.';
+ }else if(!hasD&&hasS){
+  concept='공급 '+ss+'·수요 불변 → 균형가격 '+(s>0?'하락':'상승')+
+   '·균형거래량 '+ss+'.';
+  example=s>0?'신축 공급만 늘고 구매 희망자는 그대로인 상황입니다.':
+   '공급 차질만 생기고 구매 희망자는 그대로인 상황입니다.';
+ }else if(d>0&&s>0){
+  concept='수요와 공급 모두 증가 → 균형거래량 증가, 균형가격은 두 이동폭에 따라 달라집니다.';
+  example='전입 가구와 신축 주택이 함께 늘어나는 지역을 떠올려 보세요.';
+ }else if(d<0&&s<0){
+  concept='수요와 공급 모두 감소 → 균형거래량 감소, 균형가격은 이동폭에 따라 달라집니다.';
+  example='거주 수요가 줄고 신규 공급도 위축되는 지역의 사례입니다.';
+ }else if(d>0&&s<0){
+  concept='수요 증가·공급 감소 → 균형가격 상승, 균형거래량 방향은 이동폭에 따라 달라집니다.';
+  example='살 사람은 늘지만 공사 차질로 새집 공급이 줄어드는 상황입니다.';
+ }else{
+  concept='수요 감소·공급 증가 → 균형가격 하락, 균형거래량 방향은 이동폭에 따라 달라집니다.';
+  example='구매 희망자는 줄고 신규 주택 공급은 늘어나는 상황입니다.';
+ }
+ const describe=n=>n>0?'우측 '+Math.abs(n)+'%':n<0?'좌측 '+Math.abs(n)+'%':'변화 없음';
+ return {concept,example,after:'E₁ · 수요 '+describe(d)+' · 공급 '+describe(s),
+  advanced:'수요와 공급의 상대적 이동폭 및 기울기에 따라 새 교점이 달라집니다. '+ 
+   '화면의 조작 진행률은 가상 도식의 이동 비중이며 경제지표 변화율이 아닙니다.',
+  warning:'원래 기출의 동시 증가 조건과 다른 방향을 선택했다면 원문 정답을 그대로 적용하면 안 됩니다.'};
+}
+function legacy(chart,progress,sign,motion){
  if(!chart||!Object.hasOwn(DATA,chart.id))return null;
  const p=clamp(progress),meta=DATA[chart.id],shifted=chart.type==='demand'||chart.type==='supply';
  const d=sign===-1?-1:sign===1?1:Number(chart.shift)<0?-1:1;
@@ -42,8 +81,11 @@ function legacy(chart,progress,sign){
  }else if(p===0){concept='변화 전: '+chart.title+'의 기준 상태입니다. 도형을 움직여 이후 변화를 관찰해 보세요.';}
  else if(chart.id==='price-along')concept='가격 하락에 따른 같은 수요곡선 위 수요량 증가입니다. 수요곡선 자체는 그대로입니다.';
  else if(chart.id==='both-shift')concept='수요와 공급의 동시 이동입니다. 거래량은 증가할 수 있으나 가격은 상대적인 이동 폭에 따라 결정됩니다.';
- return {title:chart.title,before:'E₀ · 기준 도식',after:'E₁ · '+after,concept,example,advanced:meta.rule,
-  warning,note:'도식 진행률은 학습용 표현입니다. 검수되지 않은 공식 기출 해설로 해석하지 마세요.'};
+ const special=chart.type==='both'&&motion?explainDual(motion):null;
+ return {title:chart.title,before:'E₀ · 기준 도식',after:special?.after||'E₁ · '+after,
+  concept:special?.concept||concept,example:special?.example||example,
+  advanced:special?.advanced||meta.rule,warning:special?.warning||warning,
+  note:'도식 진행률은 학습용 표현입니다. 검수되지 않은 공식 기출 해설로 해석하지 마세요.'};
 }
 function comparison(v){
  if(!v)return null;

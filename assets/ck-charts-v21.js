@@ -86,8 +86,8 @@ function svg(c){
  const dx=Math.abs(c.shift||0),dir=Math.sign(c.shift||1),offset=(dir*dx)+'px';
  const moving=type==='demand'||type==='both'?'demand':type==='supply'?'supply':'';
  const shiftClass='ck21-transform-target '+(phase?'ck21-shifted':'');
- const d='<g class="'+(moving==='demand'?shiftClass:'')+'" style="--ck21-dx:'+(moving==='demand'?offset:'0px')+'">'+demand+'</g>';
- const s='<g class="'+(moving==='supply'||type==='both'?shiftClass:'')+'" style="--ck21-dx:'+(moving==='supply'||type==='both'?offset:'0px')+'">'+supply+'</g>';
+ const d='<g data-ck149-target="demand" class="'+(moving==='demand'?shiftClass:'')+'" style="--ck21-dx:'+(moving==='demand'?offset:'0px')+'">'+demand+'</g>';
+ const s='<g data-ck149-target="supply" class="'+(moving==='supply'||type==='both'?shiftClass:'')+'" style="--ck21-dx:'+(moving==='supply'||type==='both'?offset:'0px')+'">'+supply+'</g>';
  let line='',extra='',renderSupply=s,renderDemand=d;
  if(type==='distance'){renderSupply='';renderDemand='<path class="ck21-curve demand" d="M120 85 Q 255 225 485 295"/>'}
  if(type==='elasticity'){renderDemand='<path class="ck21-curve demand" d="M135 142 L460 220"/><path class="ck21-curve supply" d="M285 65 L320 310"/>';renderSupply='';extra='<text x="390" y="178">탄력적</text><text x="324" y="88">비탄력적</text>'}
@@ -95,15 +95,16 @@ function svg(c){
  if(type==='along'){renderSupply='';extra='<circle class="ck21-point ck21-along '+(phase?'ck21-moved':'')+'" cx="300" cy="190" r="8"/><text x="305" y="170">D₀</text>'}
  if(type==='ceiling'){line='<line class="ck21-policy '+(phase?'ck21-policy-show':'')+'" x1="90" y1="247" x2="490" y2="247"/><text x="120" y="235">최고가격</text>';}
  if(type==='cobweb'){extra='<path class="ck21-step '+(phase?'ck21-step-show':'')+'" d="M145 270 L145 155 L288 155 L288 197 L321 197 L321 177 L300 177 L300 184 L304 184"/>';}
+ const ghost=(type==='demand'||type==='supply'||type==='both')?'<g class="ck149-previous-curves" aria-hidden="true">'+(type==='supply'?'':demand)+(type==='demand'?'':supply)+'</g>':'';
  const ruler='<path class="ck21-axis" d="M86 50 V315 H510"/><path class="ck21-axis-arrow" d="M80 60 L86 49 L92 60 M499 309 L510 315 L499 321"/>';
  return '<svg class="ck21-chart-svg" viewBox="0 0 560 348" role="img" aria-label="'+escape(c.title)+' · '+escape(c.effect)+'">'
   +'<g class="ck21-grid"><path d="M85 120 H505 M85 205 H505 M85 285 H505 M185 50 V315 M295 50 V315 M405 50 V315"/></g>'
   +ruler+'<text x="18" y="42">'+escape(c.axis[1])+'</text><text x="430" y="340">'+escape(c.axis[0])+'</text>'
-  +renderDemand+renderSupply+line+extra+equilibriumSvg(c)+'</svg>';
+  +ghost+renderDemand+renderSupply+line+extra+equilibriumSvg(c)+'</svg>';
 }
 function render(){
  const c=charts[selected];
- return '<div class="ck21-chart-section'+(phase?' ck21-revealed':'')+'"><header class="ck21-chart-head"><h2>기출에서 이해하는 그래프 · '+charts.length+'가지</h2><p>반드시 재생 버튼을 눌러야 움직입니다. 실제 시장 데이터가 아닌 경제원리 도식입니다.</p></header>'
+ return '<div class="ck21-chart-section'+(phase?' ck21-revealed':'')+'"><header class="ck21-chart-head"><h2>기출에서 이해하는 그래프 · '+charts.length+'가지</h2><p>선을 직접 잡아 이동하거나 슬라이더·방향키를 사용하세요. 실제 시장 데이터가 아닌 경제원리 도식입니다.</p></header>'
   +'<div class="ck21-chart-tabs" role="group" aria-label="차트 종류">'+charts.map((v,i)=>'<button type="button" data-ck21-chart="'+i+'" aria-pressed="'+(i===selected)+'">'+escape(v.title)+'</button>').join('')+'</div>'
   +'<div class="ck21-chart-card"><div class="ck21-chart-stage">'+svg(c)+'</div>'
   +'<div class="ck21-chart-copy"><span>'+escape(c.group)+' · 관련 기출 '+escape(c.source.slice(0,4))+'년 '+escape(c.source.split('-')[1])+'번</span><h3>'+escape(c.title)+'</h3><p><strong>질문</strong> '+escape(c.question)+'</p>'
