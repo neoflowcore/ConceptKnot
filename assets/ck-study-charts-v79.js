@@ -33,4 +33,235 @@ function ensureMarker(root,c){
 function markerPosition(c,p){
  const x=118+360*p;
  const type=c.type;
- if(type==='along')retu���q�^
+ if(type==='along')return [x,96+185*p];
+ if(type==='elasticity')return [x,145+75*p];
+ if(type==='ceiling')return [x,247];
+ if(type==='stock')return [x,260-110*p];
+ if(type==='cobweb')return [145+170*p,270-90*p];
+ if(type==='distance')return [x,100+175*p];
+ return [x,150+80*p];
+}
+function applyMarker(root,c,value){
+ const node=ensureMarker(root,c);if(!node)return;
+ const svg=root.querySelector('.ck21-chart-svg'),p=value/100,[x,y]=markerPosition(c,p);
+ const guide=node.querySelector('line'),dot=node.querySelector('circle');
+ if(guide){guide.setAttribute('x1',String(x));guide.setAttribute('x2',String(x));
+  guide.setAttribute('y1',String(315));guide.setAttribute('y2',String(y));}
+ if(dot){dot.setAttribute('cx',String(x));dot.setAttribute('cy',String(y));}
+ if(svg)svg.setAttribute('aria-label',c.title+' · 조작 진행 '+value+'% · 학습용 도식');
+}
+function narrative(c,v,sign){
+ const p=clamp(v),base=direction(c);
+ if(shifted(c)){
+  const kind=c.type==='demand'?'수요곡선':'공급곡선',left=sign<0;
+  if(!p)return kind+' 원래 위치. 비가격 요인을 바꾸기 전의 조건을 나타냅니다.';
+  if(sign!==base)return '반대 조건을 가정했습니다. '+kind+'이 '+(left?'좌측':'우측')+'으로 이동합니다. 기출 원래 조건과 다르므로 원문의 정답을 그대로 적용하지 마세요.';
+  return kind+' '+(left?'좌측':'우측')+' 이동 '+p+'% (도식상 이동 강도) · '+c.answer;
+ }
+ if(c.type==='both')return p?'수요와 공급이 동시에 변하는 학습 도식 '+p+'% · 거래량은 증가 가능하나 가격 방향은 상대적 이동 폭에 따라 달라져 단정할 수 없습니다.':
+  '동시 이동 시작 전입니다. 가격 방향을 임의로 확정하면 안 됩니다.';
+ if(!p)return '조건 변화 전 상태. 그래프 안을 드래그하거나 슬라이더를 움직여 개념을 확인하세요.';
+ if(c.type==='along')return '자체 가격이 달라지는 상황의 도식상 위치 '+p+'% · 수요곡선은 그대로이고 곡선 위 점(수요량)이 바뀝니다.';
+ if(c.type==='elasticity')return '상대적 기울기 비교 위치 '+p+'% · 탄력성은 실제로 수요량 변화율 / 가격 변화율이며, 선의 외형만으로 정확한 수치를 계산하지 않습니다.';
+ if(c.type==='ceiling')return '최고가격제 조건 확인 '+p+'% · 균형보다 낮은 가격상한이 실효적이면 초과수요가 발생할 수 있습니다.';
+ if(c.type==='cobweb')return '시차에 따른 조정 경로 '+p+'% · 실제 수렴/발산은 공급·수요 기울기 관계로 판단해야 합니다.';
+ if(c.type==='stock')return '시점·기간 비교 위치 '+p+'% · 저량은 특정 시점 값, 유량은 일정 기간 값입니다.';
+ return '가로축 조건이 증가하는 방향으로 관찰 위치 '+p+'% · '+c.answer+
+  ' (위치는 학습용이며 실제 기출 수치/관측값이 아닙니다.)';
+}
+function update(value,options={}){
+ const info=active();if(!info)return;
+ const {root,chart:c}=info,p=clamp(value);
+ let sign=override;
+ if(lastChart!==c.id){lastChart=c.id;override=direction(c);sign=override;}
+ if(options.direction===-1||options.direction===1){override=options.direction;sign=override;}
+ if(sign!==1&&sign!==-1)sign=direction(c);
+ const range=root.querySelector('[data-ck76-chart-scrub]');if(range&&Number(range.value)!==p)range.value=String(p);
+ const g=root.querySelectorAll('.ck21-transform-target');
+ if(shifted(c))g.forEach(node=>node.dataset.ck76Shift=String(Math.abs(Number(c.shift)||65)*sign));
+ window.CK76Search?.applyScrub?.(root,p);
+ applyMarker(root,c,p);
+ const desc=root.querySelector('.ck21-chart-explanation');if(desc)desc.textContent=narrative(c,p,sign);
+ const explanation=root.querySelector('[data-ck79-chart-note]');
+ if(explanation)explanation.textContent=narrative(c,p,sign);
+ const out=root.querySelector('[data-ck79-chart-percentage]');
+ if(out)out.textContent=p+'%';
+ for(const b of root.querySelectorAll('[data-ck79-chart-direction]'))
+  b.setAttribute('aria-pressed',String(Number(b.dataset.ck79ChartDirection)===sign));
+ lastValue=p;
+}
+function ensureLabShortcut(root){
+ const actions=root.querySelector('.ck21-chart-actions');
+ if(!actions||actions.querySelector('[data-ck145-open-lab]'))return;
+ const btn=document.createElement('button');
+ btn.type='button';btn.dataset.ck145OpenLab='';
+ btn.textContent='선 직접 이동 · 전후 이론 실험실';
+ btn.setAttribute('aria-label','실제 수요 공급선의 평행이동, 기울기 변경과 전후 이론 계산 실험실로 이동');
+ actions.append(btn);
+}
+function mount(){
+ const info=active();if(!info)return;
+ const {root,chart:c}=info,controls=root.querySelector('.ck76-chart-control');
+ ensureLabShortcut(root);
+ if(!controls||controls.querySelector('[data-ck79-chart-modes]'))return;
+ lastChart=c.id;override=direction(c);
+ const target=document.createElement('div');target.className='ck79-chart-modes';
+ target.dataset.ck79ChartModes='';
+ target.innerHTML='<div class="ck79-chart-condition">'+
+ (shifted(c)?'<span>조건 조절</span><button type="button" data-ck79-chart-direction="-1">수요·공급 감소</button>'+
+  '<button type="button" data-ck79-chart-direction="1">수요·공급 증가</button>':
+  '<span>가로축을 드래그하며 개념 비교 · 반대 상황을 확정해석하지 않음</span>')+'</div>'+
+ '<p class="ck79-chart-instruction">차트 위 포인터 드래그 ↔ 슬라이더 조작 ↔ 방향키 입력이 동기화됩니다. '+
+ '진행률은 실제 경제 지표나 공식 문제지 수치가 아닙니다.</p>'+
+ '<p data-ck79-chart-note class="ck79-chart-note" role="status"></p>';
+ controls.append(target);
+ const svg=root.querySelector('svg.ck21-chart-svg');
+ if(svg){svg.classList.add('ck79-chart-draggable');svg.setAttribute('tabindex','0');
+  svg.setAttribute('role','slider');svg.setAttribute('aria-valuemin','0');svg.setAttribute('aria-valuemax','100');
+  svg.setAttribute('aria-valuenow',String(info.state?.phase?100:0));
+ }
+ update(info.state?.phase?100:0);
+}
+function fromPointer(event,svg){
+ const rect=svg.getBoundingClientRect();
+ if(rect.width<=0)return lastValue;
+ const x=(event.clientX-rect.left)*560/rect.width;
+ return clamp((x-105)/380*100);
+}
+function updateAria(){
+ const svg=$('.ck21-chart-section svg.ck21-chart-svg');
+ if(svg){svg.setAttribute('aria-valuenow',String(lastValue));
+  svg.setAttribute('aria-valuetext','학습용 진행 '+lastValue+'퍼센트');}
+}
+document.addEventListener('pointerdown',e=>{
+ const svg=e.target.closest?.('.ck21-chart-section svg.ck21-chart-svg');
+ if(!svg||gesture||e.isPrimary===false||(e.pointerType==='mouse'&&e.button!==0))return;
+ const startingPhase=fromPointer(e,svg);
+ gesture={id:e.pointerId,svg,startX:e.clientX,startY:e.clientY,startValue:startingPhase};
+ try{svg.setPointerCapture(e.pointerId)}catch{}
+ svg.closest('.ck21-chart-section')?.classList.add('ck79-chart-dragging');
+ update(startingPhase);updateAria();
+ if(e.cancelable!==false)e.preventDefault?.();
+},{capture:true,passive:false});
+document.addEventListener('pointermove',e=>{
+ if(!gesture||gesture.id!==e.pointerId)return;
+ if(e.cancelable)e.preventDefault();
+ const bounds=gesture.svg.getBoundingClientRect();
+ const dx=e.clientX-gesture.startX,dy=e.clientY-gesture.startY;
+ // Existing 17 figures are schematic scrubbers. Accept a vertical touch swipe
+ // as a progression change, not a fabricated economic slope change.
+ const phase=bounds.height>0&&Math.abs(dy)>Math.abs(dx)*1.2?
+  gesture.startValue-Math.round(dy/bounds.height*100):
+  fromPointer(e,gesture.svg);
+ update(phase);updateAria();
+},{passive:false});
+function finish(e){
+ if(!gesture||gesture.id!==e.pointerId)return;
+ gesture.svg?.closest('.ck21-chart-section')?.classList.remove('ck79-chart-dragging');
+ try{gesture.svg?.releasePointerCapture(e.pointerId)}catch{}
+ gesture=null;
+}
+document.addEventListener('pointerup',finish);
+document.addEventListener('pointercancel',finish);
+document.addEventListener('keydown',e=>{
+ const svg=e.target.closest?.('svg.ck79-chart-draggable');
+ if(!svg||!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;
+ e.preventDefault();
+ const next=e.key==='Home'?0:e.key==='End'?100:lastValue+(e.key==='ArrowLeft'?-5:5);
+ update(next);updateAria();
+});
+document.addEventListener('input',e=>{
+ if(!e.target.matches?.('[data-ck76-chart-scrub]'))return;
+ update(e.target.value);updateAria();
+});
+document.addEventListener('click',e=>{
+ const jump=e.target.closest?.('[data-ck145-open-lab]');
+ if(jump){
+  const lab=document.getElementById('ck141-concept-lab');
+  if(lab?.scrollIntoView)lab.scrollIntoView({behavior:'smooth',block:'start'});
+  return;
+ }
+ const sign=e.target.closest?.('[data-ck79-chart-direction]');
+ if(sign){update(lastValue,{direction:Number(sign.dataset.ck79ChartDirection)});updateAria();return;}
+ if(e.target.closest?.('[data-ck21-play]')){
+  const state=window.CK21Charts?.getState?.();
+  // Existing play button updates model before this listener; align the slider.
+  update(state?.phase?100:0);updateAria();
+ }
+});
+let scheduled=false;
+function queueMount(){
+ if(scheduled)return;scheduled=true;
+ requestAnimationFrame(()=>{scheduled=false;mount()});
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount,{once:true});else mount();
+const main=document.getElementById('main');
+if(main&&window.MutationObserver)new MutationObserver(records=>{
+ if(records.some(r=>Array.from(r.addedNodes).some(n=>n.nodeType===1&&
+  (n.matches?.('.ck21-chart-section,.ck76-chart-control')||
+   n.querySelector?.('.ck21-chart-section,.ck76-chart-control')))))queueMount();
+}).observe(main,{subtree:true,childList:true});
+window.CK79Charts=Object.freeze({update,narrative,getState:()=>({id:lastChart,value:lastValue,sign:override})});
+
+/* P6-B v141 separately loads the verified numeric model and opt-in laboratory. */
+let ck141Promise=null;
+function ck141Ensure(){
+ if(ck141Promise)return ck141Promise;
+ if(!document.head||!document.body)return Promise.resolve(false);
+ const css=document.createElement('link');
+ css.rel='stylesheet';css.href='./assets/ck-concept-lab-v141.css?v=142';css.dataset.ck141Asset='css';
+ document.head.appendChild(css);
+ const css142=document.createElement('link');css142.rel='stylesheet';
+ css142.href='./assets/ck-theory-v142.css?v=142';css142.dataset.ck142Asset='css';
+ document.head.appendChild(css142);
+ const css143=document.createElement('link');css143.rel='stylesheet';
+ css143.href='./assets/ck-concept-intuition-v143.css?v=143';css143.dataset.ck143Asset='css';
+ document.head.appendChild(css143);
+ const css144=document.createElement('link');css144.rel='stylesheet';
+ css144.href='./assets/ck-concept-transition-v144.css?v=144';css144.dataset.ck144Asset='css';
+ document.head.appendChild(css144);
+ const css145=document.createElement('link');css145.rel='stylesheet';
+ css145.href='./assets/ck-concept-touch-fix-v145.css?v=145';css145.dataset.ck145Asset='css';
+ document.head.appendChild(css145);
+ const load=src=>new Promise((resolve,reject)=>{
+  const script=document.createElement('script');script.src=src;script.async=false;
+  script.onload=resolve;script.onerror=()=>reject(new Error('P6-B failed: '+src));
+  document.head.appendChild(script);
+ });
+ ck141Promise=load('./assets/ck-concept-math-v141.js?v=141')
+  .then(()=>load('./assets/ck-concept-coach-v143.js?v=143'))
+  .then(()=>load('./assets/ck-concept-gesture-v145.js?v=145'))
+  .then(()=>load('./assets/ck-concept-transition-v144.js?v=145'))
+  .then(()=>load('./assets/ck-concept-transition-view-v144.js?v=145'))
+  .then(()=>load('./assets/ck-concept-lab-v141.js?v=145'))
+  .then(async()=>{try{await load('./assets/ck-theory-models-v142.js?v=142');
+    await load('./assets/ck-theory-v142.js?v=145');}
+    catch{const chart=document.querySelector('.ck21-chart-section');if(chart&&!chart.querySelector('[data-ck142-error]')){
+      const msg=document.createElement('p');msg.dataset.ck142Error='';msg.setAttribute('role','status');
+      msg.textContent='심화 경제 그래프 모듈을 불러오지 못했습니다. 온라인 재접속 후 다시 시도하세요.';chart.append(msg);
+    }}
+    const chart=document.querySelector('.ck21-chart-section');if(chart){
+      window.CK141ConceptLab?.mount(chart);window.CK142Theory?.mount(chart);
+    }return true;})
+  .catch(()=>{const chart=document.querySelector('.ck21-chart-section');
+   if(chart&&!chart.querySelector('[data-ck141-error]')){
+    const msg=document.createElement('p');msg.dataset.ck141Error='';msg.setAttribute('role','alert');
+    msg.textContent='개념 그래프 엔진을 불러오지 못했습니다. 온라인에서 새로고침을 시도하세요.';
+    chart.append(msg);
+   }return false;});
+ return ck141Promise;
+}
+function ck141Mount(){
+ const chart=document.querySelector('.ck21-chart-section');
+ if(!chart)return;
+ ck141Ensure().then(ready=>{if(ready&&chart.isConnected){window.CK141ConceptLab?.mount(chart);window.CK142Theory?.mount(chart);}});
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ck141Mount,{once:true});
+else ck141Mount();
+const ck141Host=document.getElementById('main');
+if(ck141Host&&window.MutationObserver)new MutationObserver(changes=>{
+ if(changes.some(r=>Array.from(r.addedNodes).some(n=>n.nodeType===1&&
+  (n.matches?.('.ck21-chart-section')||n.querySelector?.('.ck21-chart-section')))))ck141Mount();
+}).observe(ck141Host,{subtree:true,childList:true});
+
+})();
