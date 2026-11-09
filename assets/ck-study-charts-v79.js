@@ -84,6 +84,11 @@ function update(value,options={}){
  const desc=root.querySelector('.ck21-chart-explanation');if(desc)desc.textContent=narrative(c,p,sign);
  const explanation=root.querySelector('[data-ck79-chart-note]');
  if(explanation)explanation.textContent=narrative(c,p,sign);
+ const steps=window.CK148LearningSteps;
+ const cards=root.querySelector('[data-ck148-legacy]');
+ if(cards&&steps){const model=steps.legacy(c,p,sign);
+  if(model)cards.innerHTML=steps.render(model);
+ }
  const out=root.querySelector('[data-ck79-chart-percentage]');
  if(out)out.textContent=p+'%';
  for(const b of root.querySelectorAll('[data-ck79-chart-direction]'))
@@ -113,7 +118,7 @@ function mount(){
   '<span>가로축을 드래그하며 개념 비교 · 반대 상황을 확정해석하지 않음</span>')+'</div>'+
  '<p class="ck79-chart-instruction">차트 위 포인터 드래그 ↔ 슬라이더 조작 ↔ 방향키 입력이 동기화됩니다. '+
  '진행률은 실제 경제 지표나 공식 문제지 수치가 아닙니다.</p>'+
- '<p data-ck79-chart-note class="ck79-chart-note" role="status"></p>';
+ '<p data-ck79-chart-note class="ck79-chart-note" role="status"></p>'+'<div class="ck148-legacy-panels" data-ck148-legacy aria-live="off"></div>';
  controls.append(target);
  const svg=root.querySelector('svg.ck21-chart-svg');
  if(svg){svg.classList.add('ck79-chart-draggable');svg.setAttribute('tabindex','0');
@@ -232,10 +237,10 @@ function ck141Ensure(){
   .then(()=>load('./assets/ck-concept-coach-v143.js?v=143'))
   .then(()=>load('./assets/ck-concept-gesture-v145.js?v=145'))
   .then(()=>load('./assets/ck-concept-transition-v144.js?v=145'))
-  .then(()=>load('./assets/ck-concept-transition-view-v144.js?v=145'))
-  .then(()=>load('./assets/ck-concept-lab-v141.js?v=145'))
+  .then(()=>load('./assets/ck-concept-transition-view-v144.js?v=148'))
+  .then(()=>load('./assets/ck-concept-lab-v141.js?v=148'))
   .then(async()=>{try{await load('./assets/ck-theory-models-v142.js?v=142');
-    await load('./assets/ck-theory-v142.js?v=145');}
+    await load('./assets/ck-theory-v142.js?v=148');}
     catch{const chart=document.querySelector('.ck21-chart-section');if(chart&&!chart.querySelector('[data-ck142-error]')){
       const msg=document.createElement('p');msg.dataset.ck142Error='';msg.setAttribute('role','status');
       msg.textContent='심화 경제 그래프 모듈을 불러오지 못했습니다. 온라인 재접속 후 다시 시도하세요.';chart.append(msg);

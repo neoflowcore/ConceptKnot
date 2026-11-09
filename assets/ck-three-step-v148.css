@@ -1,0 +1,34 @@
+/* ConceptKnot v148: 3 visible stages + genuine before/after; mobile & dark mode. */
+#main .ck148-learning{min-width:0;max-width:100%;color:inherit;box-sizing:border-box;contain:layout style}
+#main .ck148-learning *{box-sizing:border-box}
+#main .ck148-states{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:7px;margin:9px 0;padding:9px;border:1px solid color-mix(in srgb,currentColor 20%,transparent);border-radius:11px;background:color-mix(in srgb,currentColor 3%,transparent)}
+#main .ck148-states>div{min-width:0}
+#main .ck148-states span:not(.ck148-arrow){display:block;font-size:11px;opacity:.72;margin-bottom:3px}
+#main .ck148-states strong{display:block;font-size:12px;line-height:1.5;overflow-wrap:anywhere;word-break:keep-all}
+#main .ck148-states .ck148-arrow{opacity:.6;font-weight:800}
+#main .ck148-tiers{display:grid;gap:8px;grid-template-columns:minmax(0,1fr)}
+#main .ck148-tier{display:grid;grid-template-columns:30px minmax(0,1fr);align-items:start;gap:8px;padding:10px;border-radius:10px;border:1px solid color-mix(in srgb,currentColor 16%,transparent);border-left:3px solid #738f82;background:color-mix(in srgb,currentColor 3%,transparent)}
+#main .ck148-tier[data-ck148-tier="2"]{border-left-color:#b08c51}
+#main .ck148-tier[data-ck148-tier="3"]{border-left-color:#7293a7}
+#main .ck148-number{display:grid;place-items:center;width:27px;height:27px;line-height:1;border:1px solid color-mix(in srgb,currentColor 27%,transparent);border-radius:9px;font-weight:800;font-size:12px}
+#main .ck148-tier h5{margin:0 0 5px!important;font-size:13px;font-weight:800;line-height:1.35}
+#main .ck148-tier p{margin:0!important;font-size:12px;line-height:1.7;word-break:keep-all;overflow-wrap:anywhere}
+#main .ck148-tier p.ck148-caution{margin-top:5px!important;padding-top:6px;border-top:1px dashed color-mix(in srgb,currentColor 16%,transparent);opacity:.8}
+#main .ck148-learning>small{display:block;margin:6px 0 0!important;font-size:10px;line-height:1.5;opacity:.74}
+#main .ck148-legacy-panels{margin:12px 0 3px}
+#main .ck148-legacy-panels .ck148-tier{background:color-mix(in srgb,currentColor 2%,transparent)}
+#main .ck144-change-board .ck148-learning{padding:0 12px 12px}
+#main .ck144-change-board .ck145-easy.ck148-linked{margin:0;padding:0;background:none;border:0}
+#main .ck144-change-board .ck148-tiers{gap:7px}
+#main .ck144-change-board .ck148-tier{padding:9px}
+#main .ck144-change-board .ck148-tier h5{font-size:12px}
+#main .ck144-change-board .ck148-tier p{font-size:11.5px}
+#main .ck144-change-board .ck145-deep{border-top:1px solid color-mix(in srgb,currentColor 15%,transparent)}
+#main .ck144-change-board .ck145-deep>summary{padding:11px 12px;font-size:12px;cursor:pointer;line-height:1.5}
+#main .ck144-change-board .ck145-deep>summary:focus-visible{outline:3px solid #84bca4;outline-offset:-3px}
+#main .ck148-legacy-panels{container-type:inline-size}
+@container (min-width:780px){#main .ck148-legacy-panels .ck148-tiers{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:450px){#main .ck148-states{gap:5px;padding:8px 6px}#main .ck148-tier{grid-template-columns:26px minmax(0,1fr);padding:9px 8px;gap:6px}#main .ck144-change-board .ck148-learning{padding:0 9px 10px}}
+@media(prefers-reduced-motion:reduce){#main .ck148-learning *,#main .ck148-learning *::before,#main .ck148-learning *::after{animation:none!important;transition:none!important}}
+
+#main .ck148-guide{margin:2px 0 9px;font-size:11px;line-height:1.5;opacity:.74}

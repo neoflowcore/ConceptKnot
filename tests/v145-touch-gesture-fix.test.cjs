@@ -130,7 +130,7 @@ test('advanced panel is collapsible; easy explanation is visible before any drag
  const r=C.market(model.BASE,{...model.BASE,price:30},model);
  const easy=V.render(r,'beginner'),hard=V.render(r,'advanced');
  A.match(easy,/class="ck145-easy"/);
- A.match(easy,/심화 해설 열기/);
+ A.match(easy,/전후 수치·조건 더 보기/);
  A.doesNotMatch(easy,/class="ck145-deep" open/);
  A.match(hard,/class="ck145-deep" open/);
  A.match(hard,/초과공급/);
@@ -190,14 +190,14 @@ test('release cache and version align with no automatic CI or installer build',(
  const preflight=read('assets/ck-study-charts-v79.css');
  A.match(preflight,/ck21-chart-stage/);A.match(preflight,/touch-action:none!important/);
  A.match(html,/ck-study-charts-v79.css\?v=145/);
- A.match(html,/ck-release" content="v145-p6b-touch-gesture-fix"/);
- A.match(html,/ck-study-charts-v79.js\?v=145/);
+ A.match(html,/ck-release" content="v148-three-stage-all-graphs"/);
+ A.match(html,/ck-study-charts-v79.js\?v=148/);
  for(const name of ['ck-concept-gesture-v145.js?v=145','ck-concept-touch-fix-v145.css?v=145',
-  'ck-concept-lab-v141.js?v=145','ck-theory-v142.js?v=145',
-  'ck-concept-transition-view-v144.js?v=145']){
+  'ck-concept-lab-v141.js?v=148','ck-theory-v142.js?v=148',
+  'ck-concept-transition-view-v144.js?v=148']){
   A.ok(sw.includes(name));A.ok(load.includes(name));
  }
- A.match(sw,/conceptknot-study-v145-touch-gesture-lock-p6b/);
+ A.match(sw,/conceptknot-study-v148-three-stage-all-graphs/);
  const critical=sw.match(/const CRITICAL=\[([\s\S]*?)\];/);
  A.ok(critical);A.equal([...critical[1].matchAll(/'\.\/[^']+'/g)].length,11);
  A.equal(JSON.parse(read('vercel.json')).git.deploymentEnabled,false);

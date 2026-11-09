@@ -244,9 +244,10 @@
    '" aria-pressed="'+(history.topic===t[0])+'">'+t[1]+'</button>').join('')+'</div>'+
    '<div class="ck141-tabs ck141-modes" role="group" aria-label="학습 모드">'+modes.map(t=>'<button type="button" data-ck141-mode="'+t[0]+
    '" aria-pressed="'+(history.mode===t[0])+'">'+t[1]+'</button>').join('')+'</div>'+
-   '<div class="ck143-level-toggle" role="group" aria-label="설명 난이도">'+
-    '<button type="button" data-ck141-level="beginner" aria-pressed="'+(level==='beginner')+'">쉽게 · 생활 예시</button>'+
-    '<button type="button" data-ck141-level="advanced" aria-pressed="'+(level==='advanced')+'">심화 · 가격/수량</button></div>'+
+   '<div class="ck143-level-toggle" role="group" aria-label="추가 계산 표시">'+
+    '<button type="button" data-ck141-level="beginner" aria-pressed="'+(level==='beginner')+'">추가 계산 접기</button>'+
+    '<button type="button" data-ck141-level="advanced" aria-pressed="'+(level==='advanced')+'">추가 계산 펼치기</button></div>'+
+   '<p class="ck148-guide">개념·쉬운 예시·심화는 항상 표시됩니다. 위 버튼은 추가 계산만 접거나 펼칩니다.</p>'+
    '<div class="ck141-columns"><div class="ck141-stage-col">'+exampleButtons()+
    (history.topic==='relation'?'':('<div class="ck144-gesture-controls" role="group" aria-label="곡선 직접 조작">'+
     '<button type="button" data-ck144-gesture="shift" aria-pressed="'+(gestureMode==='shift')+'">⇄ 선 평행이동</button>'+
@@ -263,7 +264,7 @@
    '<button type="button" data-ck141-act="reset">초기화</button>'+
    '<label class="ck141-compare-base"><input type="checkbox" data-ck141-compare '+(compareBase?'checked':'')+'/> 초기 E₀ 비교</label></div></div>'+ 
    '<div class="ck141-explain"><h4>변화 전 · 변화 후</h4>'+transitionHtml()+
-   '<h4>개념 요약</h4><div class="ck141-narrative" aria-live="polite">'+narrativeHtml()+'</div>'+
+   '<h4>추가 개념 메모</h4><div class="ck141-narrative" aria-live="polite">'+narrativeHtml()+'</div>'+
    '<h4>기본이론·공식 기출</h4>'+
    '<p>부동산학개론 · 수요/공급의 이동과 곡선 위 이동, 균형의 비교정태. 모형은 다른 조건 일정인 경우만 해석합니다.</p>'+
    '<p class="ck141-source">공식 문항-개념 연결은 검수된 출처·태그가 0건이므로 개별 문항을 추측해 연결하지 않습니다.</p>'+

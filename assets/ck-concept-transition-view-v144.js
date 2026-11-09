@@ -1,14 +1,16 @@
 /* ConceptKnot v144 P6-B3: shared, accessible before/after semantic view. */
 (function(root,factory){
- 'use strict';const api=factory();
+ 'use strict';const api=factory(root);
  if(typeof module==='object'&&module.exports)module.exports=api;
  if(root)root.CK144ChangeView=api;
-})(typeof window==='object'?window:null,function(){
+})(typeof window==='object'?window:null,function(root){
  'use strict';
  const escape=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  function render(v,level='beginner',openOverride){
   if(!v)return '';
   const metrics=Array.isArray(v.metrics)?v.metrics.slice(0,6):[];
+  const layers=root?.CK148LearningSteps;
+  const cards=layers?.render?.(layers.comparison(v))||'';
   const rows=metrics.map(m=>'<tr><th scope="row">'+escape(m.label)+'</th>'+
    '<td>'+escape(m.before)+'</td><td>'+escape(m.after)+'</td>'+
    '<td class="ck144-change-'+escape(m.change==='증가'?'up':m.change==='감소'?'down':'flat')+'">'+escape(m.change)+'</td></tr>').join('');
@@ -16,10 +18,11 @@
    '<header class="ck144-board-head"><span>지금 조작한 방식</span>'+
     '<strong data-ck144-operation>'+escape(v.operation)+'</strong>'+
     '<span class="ck144-theory-tag" data-kind="'+escape(v.kind)+'">'+escape(v.tag)+'</span></header>'+
-   '<div class="ck145-easy"><strong>쉽게 이해하기 · '+escape(v.tag)+'</strong>'+
-    '<p>'+escape(v.example)+'</p><p>'+escape(v.cause)+'</p></div>'+
+   '<div class="ck145-easy'+(cards?' ck148-linked':'')+'">'+
+    (cards||('<strong>쉽게 이해하기 · '+escape(v.tag)+'</strong>'+
+    '<p>'+escape(v.example)+'</p><p>'+escape(v.cause)+'</p>'))+'</div>'+
    '<details class="ck145-deep" '+((openOverride===true||(openOverride===undefined&&level==='advanced'))?'open':'')+'>'+
-    '<summary>심화 해설 열기 · 가격·수량·기울기 전후 계산</summary>'+
+    '<summary>전후 수치·조건 더 보기 · 가격·수량·기울기 계산</summary>'+
    '<div class="ck144-before-after">'+
     '<div class="ck144-condition"><span>변경한 조건</span><strong>'+escape(v.changed)+'</strong></div>'+
     '<div class="ck144-condition"><span>그대로 둔 조건</span><strong>'+escape(v.constant)+'</strong></div></div>'+

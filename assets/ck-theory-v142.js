@@ -287,9 +287,10 @@
    '<div class="ck142-modes" role="group" aria-label="학습 모드">'+
    [['free','자유 실험'],['mission','목표 미션'],['compare','전후 비교']].map(p=>
     '<button type="button" data-ck142-mode="'+p[0]+'" aria-pressed="'+(p[0]===mode)+'">'+p[1]+'</button>').join('')+'</div>'+
-   '<div class="ck143-level-toggle" role="group" aria-label="설명 난이도">'+
-    '<button type="button" data-ck142-level="beginner" aria-pressed="'+(level==='beginner')+'">쉽게 · 생활 예시</button>'+
-    '<button type="button" data-ck142-level="advanced" aria-pressed="'+(level==='advanced')+'">심화 · 가격/수량</button></div>'+
+   '<div class="ck143-level-toggle" role="group" aria-label="추가 계산 표시">'+
+    '<button type="button" data-ck142-level="beginner" aria-pressed="'+(level==='beginner')+'">추가 계산 접기</button>'+
+    '<button type="button" data-ck142-level="advanced" aria-pressed="'+(level==='advanced')+'">추가 계산 펼치기</button></div>'+
+   '<p class="ck148-guide">세 단계 해설은 계속 표시됩니다. 위 버튼은 숫자 계산만 추가로 펼칩니다.</p>'+
    '<div class="ck142-tip">'+esc(labels[selected])+'</div>'+
    '<div class="ck142-layout"><div class="ck142-left">'+
     '<div class="ck142-graph">'+svg()+'</div>'+quickTheoryHtml()+insightHtml()+legendHtml()+
