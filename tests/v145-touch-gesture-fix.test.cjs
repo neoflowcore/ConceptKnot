@@ -191,7 +191,7 @@ test('release cache and version align with no automatic CI or installer build',(
  A.match(preflight,/ck21-chart-stage/);A.match(preflight,/touch-action:none!important/);
  A.match(html,/ck-study-charts-v79.css\?v=145/);
  A.match(html,/ck-release" content="v150-concept-scenario-learning"/);
- A.match(html,/ck-study-charts-v79.js\?v=149/);
+ A.match(html,/ck-study-charts-v79.js\?v=150/);
  for(const name of ['ck-concept-gesture-v145.js?v=145','ck-concept-touch-fix-v145.css?v=145',
   'ck-concept-lab-v141.js?v=150','ck-theory-v142.js?v=150',
   'ck-concept-transition-view-v144.js?v=148']){

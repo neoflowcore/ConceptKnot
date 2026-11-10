@@ -11,7 +11,7 @@ test('26 theory and diagram subjects provide five labeled situations each',()=>{
  assert.equal(Object.keys(bank.legacy).length,17);
  assert.equal(Object.keys(bank.numeric).length,9);
  assert.equal(bank.size,130);
- assert.deepEqual(Object.keys(bank.legacy).sort(),win.CK21Charts.charts.map(x=>x.id).sort());
+ assert.deepEqual(Object.keys(bank.legacy).sort(),Array.from(win.CK21Charts.charts,x=>x.id).sort());
  assert.deepEqual(Object.keys(bank.numeric).sort(),['market','elasticity','relation',...models.ids].sort());
  for(const [id,v] of Object.entries(bank.legacy)){
   assert.equal(v.length,5,id);
