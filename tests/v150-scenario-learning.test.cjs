@@ -52,9 +52,9 @@ test('traps: changed price does not move equilibrium, fixed cost does not change
 test('source and current PWA release contain all scenario learning scripts and correct offline core',()=>{
  const html=raw('index.html'),sw=raw('sw.js'),loader=raw('assets/ck-study-charts-v79.js');
  assert.ok(html.length>1000000,'homepage must not be truncated');
- assert.match(html,/v150-concept-scenario-learning/);
+ assert.match(html,/v151-p4-source-locked-study-drafts/);
  assert.match(html,/ck-study-charts-v79\.js\?v=150/);
- assert.match(sw,/conceptknot-study-v150-concept-scenario-learning/);
+ assert.match(sw,/conceptknot-study-v151-p4-source-locked-study-drafts/);
  const critical=(sw.match(/const CRITICAL=\[([\s\S]*?)\];/)||[])[1];
  assert.ok(critical);
  assert.equal((critical.match(/'\.\//g)||[]).length,11);

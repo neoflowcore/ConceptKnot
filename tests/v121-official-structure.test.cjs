@@ -114,8 +114,8 @@ test('manual 7-file audit reports 800+400 structures, distinct special answers a
  assert.equal(result.officialCount,800);
  assert.equal(result.uniqueIds,800);
  assert.equal(result.explanationCount,400);
- assert.equal(result.draft,32);
- assert.equal(result.unstarted,368);
+ assert.equal(result.draft,80);
+ assert.equal(result.unstarted,320);
  assert.equal(result.published,0);
  assert.equal(result.sourceChecked,0);
  assert.deepEqual(result.totals,{allAccepted:8,multiple:3});

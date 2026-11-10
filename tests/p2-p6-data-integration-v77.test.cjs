@@ -24,7 +24,7 @@ test('all official 400 remain unchanged and explanation records are 80 per year'
    slots+=row.options.length;
   }
  }
- assert.equal(drafts,32);assert.equal(published,0);assert.equal(slots,2000);assert.equal(specials,7);
+ assert.equal(drafts,80);assert.equal(published,0);assert.equal(slots,2000);assert.equal(specials,7);
  const report=j('data/reports/recent-five-coverage.json');
  assert.equal(report.optionVerdictsReviewed,0);
  assert.equal(report.publishedCount,0);
@@ -55,7 +55,7 @@ test('design and deployment policy remain stable',()=>{
  const v=j('vercel.json');
  assert.equal(v.git.deploymentEnabled,false);
  assert.equal(fs.existsSync(path.join(root,'.github','workflows')),false);
- assert.match(read('sw.js'),/conceptknot-study-v80-explain-drafts/);
+ assert.match(read('sw.js'),/conceptknot-study-v151-p4-source-locked-study-drafts/);
  const html=read('index.html');
  for(const m of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))new vm.Script(m[1]);
 });

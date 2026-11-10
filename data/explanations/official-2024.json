@@ -17,11 +17,12 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "select_correct"
+        "select_correct",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "토지는 물리적으로 새로 생산할 수 없지만 용도 전환 등으로 경제적 공급은 확대될 수 있습니다.",
+      "answerReason": "토지의 부증성은 지표면의 물리적 공급을 제한하지만, 유휴지 개발이나 용도변경으로 이용 가능한 경제적 공급량은 늘 수 있습니다. 따라서 ④가 맞습니다. 부동성은 입지 관련 외부효과와 연결되고, 개별성은 거래사례 직접 비교를 어렵게 하며, 토지 자체의 영속성은 건물과 달리 통상 감가상각 대상이 아닙니다.",
       "options": [
         {
           "no": 1,
@@ -45,7 +46,8 @@
           "no": 4,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "시험에서 인정된 선택지 번호입니다. 토지의 부증성은 지표면의 물리적 공급을 제한하지만, 유휴지 개발이나 용도변경으로 이용 가능한 경제적 공급량은 늘 수 있습니다. 따라서 ④가 맞습니다. 부동성은 입지 관련 외부효과와 연결되고, 개별성은 거래사례 직접 비교를 어렵게 하며, 토지 자체의 영속성은 건물과 달리 통상 감가상각 대상이 아닙니다."
         },
         {
           "no": 5,
@@ -55,7 +57,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "물리적 공급의 부증성과 경제적 공급의 용도·이용 변화 가능성을 구분하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -69,7 +76,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -145,11 +152,12 @@
       "questionType": [
         "multiple_choice",
         "select_correct",
-        "compound_statements"
+        "compound_statements",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "토지의 주된 용도에 따른 지적공부 등록 항목은 지목이고, 건물이 없고 사법상 사용 제한권리가 없는 토지는 나지입니다.",
+      "answerReason": "ㄱ '지적공부에 토지의 주된 용도를 등록하는 구분'은 지목(地目)입니다. ㄴ 지가공시의 용어로 건물 등 정착물이 없고 지상권 같은 토지 이용 제한권리가 없는 토지는 나지입니다. 따라서 '지목·나지'를 고른 ②가 정답입니다.",
       "options": [
         {
           "no": 1,
@@ -161,7 +169,8 @@
           "no": 2,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "시험에서 인정된 선택지 번호입니다. ㄱ '지적공부에 토지의 주된 용도를 등록하는 구분'은 지목(地目)입니다. ㄴ 지가공시의 용어로 건물 등 정착물이 없고 지상권 같은 토지 이용 제한권리가 없는 토지는 나지입니다. 따라서 '지목·나지'를 고른 ②가 정답입니다."
         },
         {
           "no": 3,
@@ -183,7 +192,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "지목(용도 분류)과 필지(토지 등록 단위), 나지와 나대지를 구별하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -197,7 +211,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -260,11 +274,12 @@
         "multiple_choice",
         "select_correct",
         "compound_statements",
-        "legal_temporal_review"
+        "legal_temporal_review",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "다세대주택은 주택으로 쓰는 바닥면적의 합계가 660㎡ 이하이며 주택으로 쓰는 층수가 4개 층 이하입니다.",
+      "answerReason": "건축법 시행령 별표 1의 다세대주택 정의는 '주택으로 쓰는 1개 동의 바닥면적 합계 660㎡ 이하'와 '주택으로 쓰는 층수 4개 층 이하'입니다. 실제 건물 전체 층수와 주택 사용층수를 혼동하면 안 됩니다. 따라서 ㄱ 바닥면적, ㄴ 4개 층의 ④가 정답입니다.",
       "options": [
         {
           "no": 1,
@@ -288,7 +303,8 @@
           "no": 4,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "시험에서 인정된 선택지 번호입니다. 건축법 시행령 별표 1의 다세대주택 정의는 '주택으로 쓰는 1개 동의 바닥면적 합계 660㎡ 이하'와 '주택으로 쓰는 층수 4개 층 이하'입니다. 실제 건물 전체 층수와 주택 사용층수를 혼동하면 안 됩니다. 따라서 ㄱ 바닥면적, ㄴ 4개 층의 ④가 정답입니다."
         },
         {
           "no": 5,
@@ -298,7 +314,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "건축면적·연면적·바닥면적과 '4층'·'4개 층'을 구별합니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -312,7 +333,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -366,17 +387,19 @@
       "questionType": [
         "multiple_choice",
         "compound_statements",
-        "legal_temporal_review"
+        "legal_temporal_review",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "등기 방식으로 소유권 공시가 가능한 제시 사례는 일정 톤수 이상의 선박인 ㄱ에 한정됩니다.",
+      "answerReason": "총톤수 25톤 기선은 선박법 등 관련 법령에 따라 소유권 등기 대상이 될 수 있습니다. 덤프트럭·항공기는 관련 법률상 등록제도와 구분하고, 수목은 단순히 한 그루가 토지에 붙어 있다는 사정만으로 독립한 소유권 등기 대상이 아닙니다. 따라서 ㄱ만 포함한 ①이 공식 정답입니다. 적용 법령의 시험 당시 등록·등기 대상 요건은 별도 원문 검수가 필요합니다.",
       "options": [
         {
           "no": 1,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "시험에서 인정된 선택지 번호입니다. 총톤수 25톤 기선은 선박법 등 관련 법령에 따라 소유권 등기 대상이 될 수 있습니다. 덤프트럭·항공기는 관련 법률상 등록제도와 구분하고, 수목은 단순히 한 그루가 토지에 붙어 있다는 사정만으로 독립한 소유권 등기 대상이 아닙니다. 따라서 ㄱ만 포함한 ①이 공식 정답입니다. 적용 법령의 시험 당시 등록·등기 대상 요건은 별도 원문 검수가 필요합니다."
         },
         {
           "no": 2,
@@ -429,7 +452,12 @@
           "sourceChecked": false
         }
       ],
-      "traps": [],
+      "traps": [
+        {
+          "text": "자동차·건설기계·항공기의 등록과 선박의 등기, 입목법상 입목등기를 구분하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -443,7 +471,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -497,11 +525,12 @@
       "questionType": [
         "multiple_choice",
         "select_incorrect",
-        "legal_temporal_review"
+        "legal_temporal_review",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "도시개발사업 환지방식은 토지소유자의 권리조정·동의 절차가 필요하므로 수용방식보다 언제나 간단한 것은 아닙니다.",
+      "answerReason": "수용방식은 토지를 일괄 확보하고 조성토지를 처분하는 방식이며, 환지방식은 종전 토지소유자에게 조성 후 토지의 권리를 배분하는 구조입니다. 환지방식은 이해관계자의 동의·환지계획·처분 등 복잡한 절차가 뒤따르므로 '수용방식보다 동의받는 단계가 적어 간단하다'고 단정한 ⑤는 틀립니다. 동의 요건·세금 사례는 시험 당시 법령 검토가 필요합니다.",
       "options": [
         {
           "no": 1,
@@ -531,11 +560,17 @@
           "no": 5,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "시험에서 인정된 선택지 번호입니다. 수용방식은 토지를 일괄 확보하고 조성토지를 처분하는 방식이며, 환지방식은 종전 토지소유자에게 조성 후 토지의 권리를 배분하는 구조입니다. 환지방식은 이해관계자의 동의·환지계획·처분 등 복잡한 절차가 뒤따르므로 '수용방식보다 동의받는 단계가 적어 간단하다'고 단정한 ⑤는 틀립니다. 동의 요건·세금 사례는 시험 당시 법령 검토가 필요합니다."
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "수용·사용방식과 환지방식의 소유권, 현금보상, 개발이익 귀속, 동의 절차를 비교하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -549,7 +584,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -610,11 +645,12 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "select_incorrect"
+        "select_incorrect",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "사업위탁방식과 신탁개발방식은 토지소유권의 이전 여부가 동일하지 않습니다.",
+      "answerReason": "⑤는 개발사업의 사업위탁과 신탁개발 모두 토지소유자가 제3자에게 토지소유권을 이전한다고 하여 틀립니다. 신탁개발은 신탁 구조에 따라 신탁회사에 재산권이 이전되는 반면 일반적인 사업위탁은 개발 업무의 위임으로 소유권 이전을 필수 요건으로 하지 않습니다. 시장지역 설정·BOT 방식·재건축의 재개발 분류는 다른 선지의 비교 개념입니다.",
       "options": [
         {
           "no": 1,
@@ -644,11 +680,17 @@
           "no": 5,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "시험에서 인정된 선택지 번호입니다. ⑤는 개발사업의 사업위탁과 신탁개발 모두 토지소유자가 제3자에게 토지소유권을 이전한다고 하여 틀립니다. 신탁개발은 신탁 구조에 따라 신탁회사에 재산권이 이전되는 반면 일반적인 사업위탁은 개발 업무의 위임으로 소유권 이전을 필수 요건으로 하지 않습니다. 시장지역 설정·BOT 방식·재건축의 재개발 분류는 다른 선지의 비교 개념입니다."
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "사업위탁(업무 위임)과 신탁(신탁재산 귀속)의 법적 구조 차이를 보세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -662,7 +704,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -723,11 +765,12 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "compound_statements"
+        "compound_statements",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "마케팅믹스 4P는 제품(Product)·가격(Price)·유통경로(Place)·판매촉진(Promotion)입니다.",
+      "answerReason": "문항의 ㄱ Price, ㄴ Product, ㄷ Place, ㅁ Promotion이 4P 구성요소입니다. ㄹ Positioning은 STP전략의 시장포지셔닝, ㅂ Partnership은 관계·제휴 개념이므로 4P의 P를 하나 더 늘리는 항목이 아닙니다. 제시 조합 중 ㄱ·ㄴ·ㄷ·ㅁ인 ②가 공식 정답입니다.",
       "options": [
         {
           "no": 1,
@@ -739,7 +782,8 @@
           "no": 2,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "시험에서 인정된 선택지 번호입니다. 문항의 ㄱ Price, ㄴ Product, ㄷ Place, ㅁ Promotion이 4P 구성요소입니다. ㄹ Positioning은 STP전략의 시장포지셔닝, ㅂ Partnership은 관계·제휴 개념이므로 4P의 P를 하나 더 늘리는 항목이 아닙니다. 제시 조합 중 ㄱ·ㄴ·ㄷ·ㅁ인 ②가 공식 정답입니다."
         },
         {
           "no": 3,
@@ -798,7 +842,12 @@
           "sourceChecked": false
         }
       ],
-      "traps": [],
+      "traps": [
+        {
+          "text": "4P의 P와 STP의 Positioning, 파트너십(Partnership)을 구분하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -812,7 +861,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -866,11 +915,12 @@
       "questionType": [
         "multiple_choice",
         "select_correct",
-        "visual_original_check"
+        "visual_original_check",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "수요·공급이 모두 감소하면 균형거래량이 감소하며 가격은 두 이동폭에 따라 달라집니다.",
+      "answerReason": "수요곡선이 좌측, 공급곡선도 좌측으로 이동하면 새 균형거래량은 감소합니다. 수요 감소폭보다 공급 감소폭이 더 큰 경우라도 두 곡선 모두 왼쪽으로 움직이므로 거래량 감소 방향은 유지됩니다. 따라서 ④가 맞습니다. 수요 증가·공급 감소는 가격 상승, 수요 감소·공급 증가는 가격 하락 방향이므로 나머지 선택지의 가격방향 단정은 틀립니다.",
       "options": [
         {
           "no": 1,
@@ -894,7 +944,8 @@
           "no": 4,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "시험에서 인정된 선택지 번호입니다. 수요곡선이 좌측, 공급곡선도 좌측으로 이동하면 새 균형거래량은 감소합니다. 수요 감소폭보다 공급 감소폭이 더 큰 경우라도 두 곡선 모두 왼쪽으로 움직이므로 거래량 감소 방향은 유지됩니다. 따라서 ④가 맞습니다. 수요 증가·공급 감소는 가격 상승, 수요 감소·공급 증가는 가격 하락 방향이므로 나머지 선택지의 가격방향 단정은 틀립니다."
         },
         {
           "no": 5,
@@ -904,7 +955,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "수요·공급 동시 증가·감소에서는 거래량 방향을 먼저, 가격은 상대 이동폭을 따져야 합니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -918,7 +974,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -1129,11 +1185,12 @@
       "questionType": [
         "multiple_choice",
         "calculation_or_numeric",
-        "visual_original_check"
+        "visual_original_check",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "정상재 가구 실질소득 상승과 건축자재비 상승은 각각 수요 증가·공급 감소로 균형가격을 상승시킵니다.",
+      "answerReason": "가구 실질소득 증가 → 정상재인 아파트 수요곡선 우측 이동 → 균형가격 상승. 건축자재가격 상승 → 공급비용 증가·공급곡선 좌측 이동 → 균형가격 상승. 아파트 선호도 감소와 주택담보대출 이자율 상승은 수요를 낮춰 가격을 하락시키는 요인입니다. 총 2개이므로 ③이 정답입니다.",
       "options": [
         {
           "no": 1,
@@ -1151,7 +1208,8 @@
           "no": 3,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "시험에서 인정된 선택지 번호입니다. 가구 실질소득 증가 → 정상재인 아파트 수요곡선 우측 이동 → 균형가격 상승. 건축자재가격 상승 → 공급비용 증가·공급곡선 좌측 이동 → 균형가격 상승. 아파트 선호도 감소와 주택담보대출 이자율 상승은 수요를 낮춰 가격을 하락시키는 요인입니다. 총 2개이므로 ③이 정답입니다."
         },
         {
           "no": 4,
@@ -1167,7 +1225,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "이자율 상승은 구매 비용을 높여 수요를 위축시키며 공급비용 상승과 혼동하지 않습니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -1181,7 +1244,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -1503,11 +1566,12 @@
       ],
       "specialAnswer": "normal",
       "questionType": [
-        "multiple_choice"
+        "multiple_choice",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "제시된 정비기반시설 열악 지역의 보전·정비·개량 사업은 주거환경개선사업입니다.",
+      "answerReason": "도시저소득 주민 밀집지 등에서 정비기반시설이 극히 열악하거나 노후·불량주택이 밀집된 지역의 주거환경을 개선하고 공동이용시설을 확충하는 제도의 명칭은 주거환경개선사업입니다. 자율주택·가로주택·소규모재개발·소규모재건축은 소규모주택정비 방식과 구분되므로 ⑤가 맞습니다.",
       "options": [
         {
           "no": 1,
@@ -1537,11 +1601,17 @@
           "no": 5,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "시험에서 인정된 선택지 번호입니다. 도시저소득 주민 밀집지 등에서 정비기반시설이 극히 열악하거나 노후·불량주택이 밀집된 지역의 주거환경을 개선하고 공동이용시설을 확충하는 제도의 명칭은 주거환경개선사업입니다. 자율주택·가로주택·소규모재개발·소규모재건축은 소규모주택정비 방식과 구분되므로 ⑤가 맞습니다."
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "주거환경개선·재개발·재건축과 소규모주택정비사업의 정의를 비교하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -1555,7 +1625,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -1737,11 +1807,12 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "select_incorrect"
+        "select_incorrect",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "크리스탈러는 중심지이론, 동심원이론은 버제스의 도시공간구조 이론입니다.",
+      "answerReason": "②는 크리스탈러의 중심지이론을 도시 내부의 동심원 구조를 설명하는 동심원이론과 혼동했습니다. 크리스탈러는 중심지의 위계·중심 기능·배후지의 공간적 배치를 설명합니다. 호이트는 선형/선상 부문구조를, 해리스와 울만은 다핵심 도시구조를 설명하며, 베버는 공업입지에서 원료지수 개념을 활용합니다. 틀린 ②가 정답입니다.",
       "options": [
         {
           "no": 1,
@@ -1753,7 +1824,8 @@
           "no": 2,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "시험에서 인정된 선택지 번호입니다. ②는 크리스탈러의 중심지이론을 도시 내부의 동심원 구조를 설명하는 동심원이론과 혼동했습니다. 크리스탈러는 중심지의 위계·중심 기능·배후지의 공간적 배치를 설명합니다. 호이트는 선형/선상 부문구조를, 해리스와 울만은 다핵심 도시구조를 설명하며, 베버는 공업입지에서 원료지수 개념을 활용합니다. 틀린 ②가 정답입니다."
         },
         {
           "no": 3,
@@ -1775,7 +1847,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "크리스탈러(중심지 위계)·버제스(동심원)·호이트(선형)·해리스·울만(다핵)을 구별하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -1789,7 +1866,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -1842,11 +1919,12 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "visual_original_check"
+        "visual_original_check",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "도심 접근성 차이와 운송비에 따른 토지 지대·농업이용의 구역 구분은 튀넨의 위치지대설입니다.",
+      "answerReason": "비옥도가 같아도 중심도시와의 거리에 따른 운송비 차이가 지대에 반영되고, 작물·농업 유형별 한계지대곡선 기울기 차이로 집약적·조방적 이용이 구분되며, 가장 높은 지대를 지불할 수 있는 용도에 토지가 배분된다는 설명은 튀넨의 고립국 모형입니다. 따라서 ③이 맞습니다.",
       "options": [
         {
           "no": 1,
@@ -1864,7 +1942,8 @@
           "no": 3,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "시험에서 인정된 선택지 번호입니다. 비옥도가 같아도 중심도시와의 거리에 따른 운송비 차이가 지대에 반영되고, 작물·농업 유형별 한계지대곡선 기울기 차이로 집약적·조방적 이용이 구분되며, 가장 높은 지대를 지불할 수 있는 용도에 토지가 배분된다는 설명은 튀넨의 고립국 모형입니다. 따라서 ③이 맞습니다."
         },
         {
           "no": 4,
@@ -1880,7 +1959,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "리카도 차액지대(비옥도), 튀넨 위치지대(거리·운송비), 알론소 입찰지대를 연결해 비교합니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -1894,7 +1978,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -1955,11 +2039,12 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "calculation_or_numeric"
+        "calculation_or_numeric",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "정보를 알기 전의 기대가격과 확정된 개발 후 가격 차이를 요구수익률로 할인하면 2억 원입니다.",
+      "answerReason": "개발 확률 60%에서 1년 후 기대가격은 14.3억×0.6+8.8억×0.4=12.1억 원입니다. 개발되는 상황을 확정적으로 아는 정보의 가격 차이는 14.3억−12.1억=2.2억 원이며, 현재가치로 2.2억/1.1=2억 원입니다. 제시 조건에서 ③이 맞습니다. 정보의 유형(완전정보·확정정보)을 원문 조건과 대조해야 합니다.",
       "options": [
         {
           "no": 1,
@@ -1977,7 +2062,8 @@
           "no": 3,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "시험에서 인정된 선택지 번호입니다. 개발 확률 60%에서 1년 후 기대가격은 14.3억×0.6+8.8억×0.4=12.1억 원입니다. 개발되는 상황을 확정적으로 아는 정보의 가격 차이는 14.3억−12.1억=2.2억 원이며, 현재가치로 2.2억/1.1=2억 원입니다. 제시 조건에서 ③이 맞습니다. 정보의 유형(완전정보·확정정보)을 원문 조건과 대조해야 합니다."
         },
         {
           "no": 4,
@@ -1993,7 +2079,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "미래 가격을 바로 빼지 말고 기대가격을 만든 뒤 현재가치로 할인해야 합니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -2007,7 +2098,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -2068,17 +2159,19 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "select_incorrect"
+        "select_incorrect",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "지구단위계획은 도시·군기본계획이 아니라 도시·군관리계획의 내용입니다.",
+      "answerReason": "지구단위계획은 특정 지구의 토지이용 합리화와 도시 기능 증진을 위한 세부 계획으로, 도시·군관리계획에 해당합니다. ①은 이를 도시·군기본계획이라고 바꿔 설명해 틀립니다. 지역지구제의 외부효과 완화, 토지비축의 정책 목적 등은 별도의 설명에 부합합니다.",
       "options": [
         {
           "no": 1,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "시험에서 인정된 선택지 번호입니다. 지구단위계획은 특정 지구의 토지이용 합리화와 도시 기능 증진을 위한 세부 계획으로, 도시·군관리계획에 해당합니다. ①은 이를 도시·군기본계획이라고 바꿔 설명해 틀립니다. 지역지구제의 외부효과 완화, 토지비축의 정책 목적 등은 별도의 설명에 부합합니다."
         },
         {
           "no": 2,
@@ -2106,7 +2199,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "도시·군기본계획(장기 종합 방향)과 도시·군관리계획(구체적 규제·관리)을 구분하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -2120,7 +2218,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -2183,11 +2281,12 @@
         "multiple_choice",
         "select_correct",
         "calculation_or_numeric",
-        "legal_temporal_review"
+        "legal_temporal_review",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "통합공공임대·행복주택·장기전세·분양전환공공임대는 모두 제시된 공공임대주택 유형의 설명과 부합합니다.",
+      "answerReason": "제시된 4가지 유형은 각기 수급대상이나 공급방식이 다른 공공임대주택입니다. 통합공공임대는 다양한 사회계층의 주거안정, 행복주택은 청년·신혼부부 등 젊은 층, 장기전세는 전세계약 방식, 분양전환공공임대는 일정 기간 임대 후 분양전환을 목적으로 합니다. 네 항목이 모두 해당하므로 4개인 ⑤가 정답입니다.",
       "options": [
         {
           "no": 1,
@@ -2217,11 +2316,17 @@
           "no": 5,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "시험에서 인정된 선택지 번호입니다. 제시된 4가지 유형은 각기 수급대상이나 공급방식이 다른 공공임대주택입니다. 통합공공임대는 다양한 사회계층의 주거안정, 행복주택은 청년·신혼부부 등 젊은 층, 장기전세는 전세계약 방식, 분양전환공공임대는 일정 기간 임대 후 분양전환을 목적으로 합니다. 네 항목이 모두 해당하므로 4개인 ⑤가 정답입니다."
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "공공임대 유형별 대상 계층·자금지원·임대차 계약 방식·분양전환 여부를 구별합니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -2235,7 +2340,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -2416,11 +2521,12 @@
       "questionType": [
         "multiple_choice",
         "select_incorrect",
-        "legal_temporal_review"
+        "legal_temporal_review",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "세대구분형 공동주택은 내부 공간을 나누어 생활할 수 있어도 구분된 부분을 별개로 구분소유하는 것은 아닙니다.",
+      "answerReason": "④는 세대구분형 공동주택의 세대별 내부 분리와 구분소유권의 별도 성립을 혼동한 문장입니다. 내부에서 독립생활이 가능하도록 공간을 구획하더라도 그 부분만을 별개의 구분소유로 하는 구조가 아닙니다. 도시형생활주택·토지임대부 분양주택·장수명 주택의 정의와 비교하여 틀린 ④가 정답입니다.",
       "options": [
         {
           "no": 1,
@@ -2444,7 +2550,8 @@
           "no": 4,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "시험에서 인정된 선택지 번호입니다. ④는 세대구분형 공동주택의 세대별 내부 분리와 구분소유권의 별도 성립을 혼동한 문장입니다. 내부에서 독립생활이 가능하도록 공간을 구획하더라도 그 부분만을 별개의 구분소유로 하는 구조가 아닙니다. 도시형생활주택·토지임대부 분양주택·장수명 주택의 정의와 비교하여 틀린 ④가 정답입니다."
         },
         {
           "no": 5,
@@ -2454,7 +2561,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "내부 공간의 구분 사용과 집합건물법상 독립한 구분소유권은 다릅니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -2468,7 +2580,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -2522,17 +2634,19 @@
       "questionType": [
         "multiple_choice",
         "select_correct",
-        "compound_statements"
+        "compound_statements",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "재산세와 종합부동산세는 모두 매년 6월 1일을 과세기준일로 합니다.",
+      "answerReason": "ㄴ만 옳습니다. ㄱ 양도소득세 강화의 동결효과는 거래를 미루는 현상을 뜻하므로 '매각을 앞당기게 한다'는 설명이 틀립니다. ㄷ 상속세는 국세이므로 두 세금을 모두 지방세라고 볼 수 없습니다. ㄹ 증여세를 처분단계 세금으로 양도소득세와 똑같이 묶는 설명도 틀립니다. 따라서 ㄴ만 선택한 ①입니다.",
       "options": [
         {
           "no": 1,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "시험에서 인정된 선택지 번호입니다. ㄴ만 옳습니다. ㄱ 양도소득세 강화의 동결효과는 거래를 미루는 현상을 뜻하므로 '매각을 앞당기게 한다'는 설명이 틀립니다. ㄷ 상속세는 국세이므로 두 세금을 모두 지방세라고 볼 수 없습니다. ㄹ 증여세를 처분단계 세금으로 양도소득세와 똑같이 묶는 설명도 틀립니다. 따라서 ㄴ만 선택한 ①입니다."
         },
         {
           "no": 2,
@@ -2585,7 +2699,12 @@
           "sourceChecked": false
         }
       ],
-      "traps": [],
+      "traps": [
+        {
+          "text": "조세의 국세·지방세 구분과 취득·보유·처분 단계, 동결효과의 방향을 각각 확인하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -2599,7 +2718,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -2797,11 +2916,12 @@
       "questionType": [
         "multiple_choice",
         "select_incorrect",
-        "calculation_or_numeric"
+        "calculation_or_numeric",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "자산 C와 D는 평균수익률은 8%로 같아도 표준편차가 각각 0.71%와 4.24%로 위험이 다릅니다.",
+      "answerReason": "제시된 확률분포상 A·B의 기대수익률은 4%, C·D는 8%입니다. 하지만 C와 D의 표준편차는 각각 0.71%와 4.24%로 크기가 다르므로 동일한 투자위험을 가진다는 ③이 틀립니다. C는 A보다 기대수익률이 높고 표준편차가 낮아 평균-분산 지배원리에서도 우세합니다.",
       "options": [
         {
           "no": 1,
@@ -2819,7 +2939,8 @@
           "no": 3,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "시험에서 인정된 선택지 번호입니다. 제시된 확률분포상 A·B의 기대수익률은 4%, C·D는 8%입니다. 하지만 C와 D의 표준편차는 각각 0.71%와 4.24%로 크기가 다르므로 동일한 투자위험을 가진다는 ③이 틀립니다. C는 A보다 기대수익률이 높고 표준편차가 낮아 평균-분산 지배원리에서도 우세합니다."
         },
         {
           "no": 4,
@@ -2835,7 +2956,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "기대수익률(평균)과 위험(분산·표준편차)은 별도로 비교해야 합니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -2849,7 +2975,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -3286,11 +3412,12 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "calculation_or_numeric"
+        "calculation_or_numeric",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "기본임대료 1,800만원/년이 아니라 1억 8천만원/년이며, 7~12월 추가 임대료 1,320만원을 더해 총 1억 9,320만원입니다.",
+      "answerReason": "기본 월임대료=300㎡×5만원/㎡=1,500만원이므로 연 1억8,000만원입니다. 1~6월 매출액은 3,000만원/월로 손익분기점 3,500만원 이하여서 추가임대료가 0입니다. 7~12월은 매출액 300×19만원=5,700만원/월, 초과분 2,200만원의 10%=220만원/월로 6개월 추가 1,320만원입니다. 총 18,000+1,320=19,320만원이며 ②가 맞습니다.",
       "options": [
         {
           "no": 1,
@@ -3302,7 +3429,8 @@
           "no": 2,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "시험에서 인정된 선택지 번호입니다. 기본 월임대료=300㎡×5만원/㎡=1,500만원이므로 연 1억8,000만원입니다. 1~6월 매출액은 3,000만원/월로 손익분기점 3,500만원 이하여서 추가임대료가 0입니다. 7~12월은 매출액 300×19만원=5,700만원/월, 초과분 2,200만원의 10%=220만원/월로 6개월 추가 1,320만원입니다. 총 18,000+1,320=19,320만원이며 ②가 맞습니다."
         },
         {
           "no": 3,
@@ -3324,7 +3452,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "초과매출액에만 추가임대료율을 적용해야지 총매출액 전액에 적용하면 안 됩니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -3338,7 +3471,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -3391,11 +3524,12 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "calculation_or_numeric"
+        "calculation_or_numeric",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "LTV 한도 3억5천만 원이 DTI 한도 3억6천만 원보다 작으므로 기존 5천만 원을 빼면 추가 3억 원입니다.",
+      "answerReason": "LTV 총대출 상한=주택 담보가치 5억×70%=3.5억 원. DTI 총대출 상한=연소득 6천만 원×60%÷저당상수 0.1=3.6억 원입니다. 두 제한 중 작은 3.5억 원에서 기존 대출 0.5억 원을 차감하면 추가 대출한도는 3억 원, ③입니다.",
       "options": [
         {
           "no": 1,
@@ -3413,7 +3547,8 @@
           "no": 3,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "시험에서 인정된 선택지 번호입니다. LTV 총대출 상한=주택 담보가치 5억×70%=3.5억 원. DTI 총대출 상한=연소득 6천만 원×60%÷저당상수 0.1=3.6억 원입니다. 두 제한 중 작은 3.5억 원에서 기존 대출 0.5억 원을 차감하면 추가 대출한도는 3억 원, ③입니다."
         },
         {
           "no": 4,
@@ -3429,7 +3564,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "LTV·DTI의 작은 상한을 선택한 뒤 기존 대출잔액을 차감해야 합니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -3443,7 +3583,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -3618,11 +3758,12 @@
         "multiple_choice",
         "select_correct",
         "compound_statements",
-        "calculation_or_numeric"
+        "calculation_or_numeric",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "체증식은 상환액이 점차 늘고, 거치기간은 총 이자비용을 늘리며, 원리금균등의 가중평균상환기간이 더 깁니다.",
+      "answerReason": "ㄱ 만기일시상환은 기간 중 이자만 지급하고 만기에 원금을 갚으므로 틀립니다. ㄴ 체증식 상환액은 시간이 갈수록 커지고, ㄷ 거치기간을 두면 이자지급 기간이 늘어 총 원리금 지급액이 커지며, ㄹ 동일 조건의 원리금균등 분할은 원금균등에 비해 원금 회수가 느려 가중평균상환기간이 길어집니다. 옳은 ㄴ·ㄷ·ㄹ의 ④입니다.",
       "options": [
         {
           "no": 1,
@@ -3646,7 +3787,8 @@
           "no": 4,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "시험에서 인정된 선택지 번호입니다. ㄱ 만기일시상환은 기간 중 이자만 지급하고 만기에 원금을 갚으므로 틀립니다. ㄴ 체증식 상환액은 시간이 갈수록 커지고, ㄷ 거치기간을 두면 이자지급 기간이 늘어 총 원리금 지급액이 커지며, ㄹ 동일 조건의 원리금균등 분할은 원금균등에 비해 원금 회수가 느려 가중평균상환기간이 길어집니다. 옳은 ㄴ·ㄷ·ㄹ의 ④입니다."
         },
         {
           "no": 5,
@@ -3681,7 +3823,12 @@
           "sourceChecked": false
         }
       ],
-      "traps": [],
+      "traps": [
+        {
+          "text": "만기일시상환과 원금균등·원리금균등, 체증식 상환액 및 듀레이션을 구별하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -3695,7 +3842,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -3763,11 +3910,12 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "select_correct"
+        "select_correct",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "주택연금 담보 제공 방식에는 저당권 설정등기 방식과 신탁등기 방식이 있습니다.",
+      "answerReason": "주택금융공사의 주택담보노후연금은 주택을 담보로 노후 생활자금을 받는 제도이며, 저당권 설정 방식과 신탁등기 방식이 모두 존재합니다. 따라서 ②가 옳습니다. 배우자 승계, 주거용 오피스텔 대상 여부, 연령·가격 기준은 시험 당시 요건에 따라 별도로 판단해야 하며 '무조건 불가'라는 절대 표현에 유의해야 합니다.",
       "options": [
         {
           "no": 1,
@@ -3779,7 +3927,8 @@
           "no": 2,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "시험에서 인정된 선택지 번호입니다. 주택금융공사의 주택담보노후연금은 주택을 담보로 노후 생활자금을 받는 제도이며, 저당권 설정 방식과 신탁등기 방식이 모두 존재합니다. 따라서 ②가 옳습니다. 배우자 승계, 주거용 오피스텔 대상 여부, 연령·가격 기준은 시험 당시 요건에 따라 별도로 판단해야 하며 '무조건 불가'라는 절대 표현에 유의해야 합니다."
         },
         {
           "no": 3,
@@ -3801,7 +3950,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "주택연금 가입 연령·공시가격·배우자 승계·담보제공 방식은 2024년 시험 당시 기준으로 확인해야 합니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -3815,7 +3969,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -3877,11 +4031,12 @@
       "questionType": [
         "multiple_choice",
         "compound_statements",
-        "legal_temporal_review"
+        "legal_temporal_review",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "자기관리 REITs의 자산운용 전문인력 요건에는 공인중개사 해당 분야 경력과 부동산학 석사의 관련 투자·운용 경력이 포함됩니다.",
+      "answerReason": "제시된 경력 조합 중 공식 인정되는 것은 ㄴ 공인중개사로 해당 분야 5년 경력과 ㄹ 부동산학 석사학위자로 관련 투자·운용 3년 경력입니다. ㄱ 감정평가사 3년 경력 및 ㄷ 부동산투자회사 단순 3년 근무는 해당 법령의 경력 인정요건을 충분히 갖추었다고 보기 어렵습니다. ㄴ·ㄹ의 ③이 정답입니다. 세부 직무·경력 정의는 2024년 시행법과 대조가 필요합니다.",
       "options": [
         {
           "no": 1,
@@ -3899,7 +4054,8 @@
           "no": 3,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "시험에서 인정된 선택지 번호입니다. 제시된 경력 조합 중 공식 인정되는 것은 ㄴ 공인중개사로 해당 분야 5년 경력과 ㄹ 부동산학 석사학위자로 관련 투자·운용 3년 경력입니다. ㄱ 감정평가사 3년 경력 및 ㄷ 부동산투자회사 단순 3년 근무는 해당 법령의 경력 인정요건을 충분히 갖추었다고 보기 어렵습니다. ㄴ·ㄹ의 ③이 정답입니다. 세부 직무·경력 정의는 2024년 시행법과 대조가 필요합니다."
         },
         {
           "no": 4,
@@ -3940,7 +4096,12 @@
           "sourceChecked": false
         }
       ],
-      "traps": [],
+      "traps": [
+        {
+          "text": "자격증·학위·근무기관 경력만으로 일률적으로 인정하지 않으며 법령상 대상 업무와 최소 기간을 확인하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -3954,7 +4115,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -4007,11 +4168,12 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "select_correct"
+        "select_correct",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "MBB는 모기지 풀을 담보로 발행하는 채권이어서 투자자가 대출의 조기상환·채무불이행 위험을 직접 부담하는 형태가 아닙니다.",
+      "answerReason": "MBB(Mortgage-Backed Bond)는 저당대출채권을 담보로 한 채권형 증권입니다. 대출 원리금을 그대로 투자자에게 전달하는 MPTS와 달리 발행기관이 원리금 지급의 채무자가 되고, 유동화기관은 저당권 관련 위험을 관리·흡수합니다. 따라서 ⑤가 맞으며, MBB의 채권성과 MPTS의 지분·수익배분 구조를 비교해야 합니다.",
       "options": [
         {
           "no": 1,
@@ -4041,11 +4203,17 @@
           "no": 5,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "시험에서 인정된 선택지 번호입니다. MBB(Mortgage-Backed Bond)는 저당대출채권을 담보로 한 채권형 증권입니다. 대출 원리금을 그대로 투자자에게 전달하는 MPTS와 달리 발행기관이 원리금 지급의 채무자가 되고, 유동화기관은 저당권 관련 위험을 관리·흡수합니다. 따라서 ⑤가 맞으며, MBB의 채권성과 MPTS의 지분·수익배분 구조를 비교해야 합니다."
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "MBB(담보부채권)·MPTS(통과증권)·MPTB(지급보증부채권)의 현금흐름과 위험부담을 비교하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -4059,7 +4227,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -4128,17 +4296,19 @@
       "questionType": [
         "multiple_choice",
         "select_incorrect",
-        "legal_temporal_review"
+        "legal_temporal_review",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "감정평가 기준시점을 미리 정했더라도 가격조사가 가능한 시점이어야 하므로 무조건 해당 날짜로 해야 한다는 표현은 틀립니다.",
+      "answerReason": "감정평가에 관한 규칙은 기준시점과 가격조사시점을 관련 요건에 맞춰 정하도록 합니다. ①은 '미리 정했을 때에는 그 날짜로 하여야 한다'고 하여 기준시점에 가격조사가 가능한지 등의 요건을 누락하고 의무적으로 단정한 점이 잘못입니다. 일괄·구분·부분 감정평가는 각각 규칙상 합리적 이유가 있을 때 허용됩니다.",
       "options": [
         {
           "no": 1,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "시험에서 인정된 선택지 번호입니다. 감정평가에 관한 규칙은 기준시점과 가격조사시점을 관련 요건에 맞춰 정하도록 합니다. ①은 '미리 정했을 때에는 그 날짜로 하여야 한다'고 하여 기준시점에 가격조사가 가능한지 등의 요건을 누락하고 의무적으로 단정한 점이 잘못입니다. 일괄·구분·부분 감정평가는 각각 규칙상 합리적 이유가 있을 때 허용됩니다."
         },
         {
           "no": 2,
@@ -4166,7 +4336,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "기준시점 사전 지정이 언제나 강제되는 것은 아니며 평가 가능성·절차의 단서를 함께 봅니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -4180,7 +4355,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -4354,11 +4529,12 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "calculation_or_numeric"
+        "calculation_or_numeric",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "토지만의 거래가격을 뽑아 단가를 산정한 뒤 시점수정·개별요인 비교와 면적을 곱하면 2억 8,600만원입니다.",
+      "answerReason": "거래가격 6억2,500만원 중 토지 구성비 80%를 적용하면 토지 거래가액 5억원, 거래사례 토지 200㎡의 단가 250만원/㎡입니다. 용도지역은 제3종일반주거지역이므로 제시된 지가변동률 4%를 적용하고, 지역요인 1.00, 개별요인 우세 1.10을 곱합니다. 대상 100㎡를 적용하면 250만원×1.04×1.10×100=286,000,000원이며 ②입니다.",
       "options": [
         {
           "no": 1,
@@ -4370,7 +4546,8 @@
           "no": 2,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "시험에서 인정된 선택지 번호입니다. 거래가격 6억2,500만원 중 토지 구성비 80%를 적용하면 토지 거래가액 5억원, 거래사례 토지 200㎡의 단가 250만원/㎡입니다. 용도지역은 제3종일반주거지역이므로 제시된 지가변동률 4%를 적용하고, 지역요인 1.00, 개별요인 우세 1.10을 곱합니다. 대상 100㎡를 적용하면 250만원×1.04×1.10×100=286,000,000원이며 ②입니다."
         },
         {
           "no": 3,
@@ -4392,7 +4569,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "거래사례에 건물가격이 포함되므로 토지 구성비 80%를 먼저 적용하고 주거지역 변동률을 선택합니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -4406,7 +4588,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -4467,11 +4649,12 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "select_incorrect"
+        "select_incorrect",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "재조달원가에는 정상적으로 생산·취득하는 데 필요한 제세공과금 등 적정 원가가 포함됩니다.",
+      "answerReason": "재조달원가는 기준시점에 대상을 재생산하거나 재취득하는 데 필요한 적정원가입니다. 일반적인 방법에 필요한 세금·공과금을 일률적으로 제외한다고 한 ③이 틀립니다. 총량조사법·구성단위법·비용지수법과 직·간접 산정방법, 수급인의 적정 이윤은 재조달원가 산정의 검토 요소입니다.",
       "options": [
         {
           "no": 1,
@@ -4489,7 +4672,8 @@
           "no": 3,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "시험에서 인정된 선택지 번호입니다. 재조달원가는 기준시점에 대상을 재생산하거나 재취득하는 데 필요한 적정원가입니다. 일반적인 방법에 필요한 세금·공과금을 일률적으로 제외한다고 한 ③이 틀립니다. 총량조사법·구성단위법·비용지수법과 직·간접 산정방법, 수급인의 적정 이윤은 재조달원가 산정의 검토 요소입니다."
         },
         {
           "no": 4,
@@ -4505,7 +4689,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "재조달원가의 비용 범위에 제세공과금과 적정 이윤을 포함하는지 확인하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -4519,7 +4708,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -4573,11 +4762,12 @@
       "questionType": [
         "multiple_choice",
         "select_incorrect",
-        "legal_temporal_review"
+        "legal_temporal_review",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "토지 분할·합병이나 주택 신축에 따른 추가 공시는 '개별주택가격'의 기준일 문제이며 공동주택가격으로 바꾸면 틀립니다.",
+      "answerReason": "⑤는 시장·군수·구청장이 분할·합병, 신축 등 사유가 발생한 경우 대통령령으로 정한 날을 기준으로 '공동주택가격'을 결정·공시한다고 하였습니다. 해당 수시 공시의 주체·대상은 개별주택가격 규정과 구분됩니다. 표준주택·개별주택·공동주택의 결정주체와 공시기준일을 구분하면 틀린 ⑤를 찾을 수 있습니다.",
       "options": [
         {
           "no": 1,
@@ -4607,11 +4797,17 @@
           "no": 5,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "시험에서 인정된 선택지 번호입니다. ⑤는 시장·군수·구청장이 분할·합병, 신축 등 사유가 발생한 경우 대통령령으로 정한 날을 기준으로 '공동주택가격'을 결정·공시한다고 하였습니다. 해당 수시 공시의 주체·대상은 개별주택가격 규정과 구분됩니다. 표준주택·개별주택·공동주택의 결정주체와 공시기준일을 구분하면 틀린 ⑤를 찾을 수 있습니다."
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "개별주택가격과 공동주택가격의 결정·공시 주체 및 수시 공시를 혼동하지 마세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -4625,7 +4821,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -4695,17 +4891,19 @@
         "multiple_choice",
         "select_correct",
         "compound_statements",
-        "legal_temporal_review"
+        "legal_temporal_review",
+        "analysis_draft"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "건물은 원가법, 집합건물의 전유부분과 대지사용권의 일괄평가는 거래사례비교법이 주된 방법입니다.",
+      "answerReason": "ㄱ 건물의 주된 감정평가방법은 원가법으로 맞고, ㄴ 구분소유권의 대상인 건물 부분과 대지사용권을 일괄 평가할 때에는 거래사례비교법이 주된 방법입니다. ㄷ 자동차는 거래사례비교법이나 선박은 선체·기관·의장별 원가법을 적용하므로 묶어 설명한 것이 틀립니다. ㄹ 영업권·특허권의 주된 방법을 수익분석법으로 단정한 것도 잘못입니다. 따라서 ㄱ·ㄴ의 ①이 정답입니다.",
       "options": [
         {
           "no": 1,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "시험에서 인정된 선택지 번호입니다. ㄱ 건물의 주된 감정평가방법은 원가법으로 맞고, ㄴ 구분소유권의 대상인 건물 부분과 대지사용권을 일괄 평가할 때에는 거래사례비교법이 주된 방법입니다. ㄷ 자동차는 거래사례비교법이나 선박은 선체·기관·의장별 원가법을 적용하므로 묶어 설명한 것이 틀립니다. ㄹ 영업권·특허권의 주된 방법을 수익분석법으로 단정한 것도 잘못입니다. 따라서 ㄱ·ㄴ의 ①이 정답입니다."
         },
         {
           "no": 2,
@@ -4758,7 +4956,12 @@
           "sourceChecked": false
         }
       ],
-      "traps": [],
+      "traps": [
+        {
+          "text": "감정평가에서 수익환원법과 수익분석법, 자동차와 선박의 주된 평가방법을 구분하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -4772,7 +4975,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,

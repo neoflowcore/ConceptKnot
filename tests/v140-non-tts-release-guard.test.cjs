@@ -15,8 +15,8 @@ test('v140 core cache and diagnostic report the same 11 exact URLs',()=>{
  const a=quotedValues(sw,/const CRITICAL=\[([\s\S]*?)\];/);
  const b=quotedValues(diag,/const OFFLINE_MINIMUM=Object\.freeze\(\[([\s\S]*?)\]\);/);
  assert.equal(a.length,11);assert.deepEqual(a,b);
- assert.match(sw,/conceptknot-study-v142-theory-scenes-p6b/);
- assert.match(diag,/conceptknot-study-v142-theory-scenes-p6b/);
+ assert.match(sw,/conceptknot-study-v151-p4-source-locked-study-drafts/);
+ assert.match(diag,/conceptknot-study-v151-p4-source-locked-study-drafts/);
  assert.ok(a.includes('./assets/ck-full-exam-v82.js?v=140'));
  assert.ok(a.includes('./assets/ck-data-diagnostics-v88.js?v=140'));
 });

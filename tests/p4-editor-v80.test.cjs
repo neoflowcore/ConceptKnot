@@ -1,7 +1,7 @@
 'use strict';
 const {test}=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const root=path.resolve(__dirname,'..'),read=p=>fs.readFileSync(path.join(root,p),'utf8'),parse=p=>JSON.parse(read(p));
-test('P4 32 draft explanations and original answers remain unmodified',()=>{
+test('P4 80 draft explanations and original answers remain unmodified',()=>{
  const map=new Map(parse('data/official-2021-2025.json').map(q=>[q.id,q]));
  let drafts=0,slots=0,published=0;
  for(const year of [2021,2022,2023,2024,2025]){
@@ -13,9 +13,9 @@ test('P4 32 draft explanations and original answers remain unmodified',()=>{
    assert.equal(row.quality.optionVerdictsReviewed,0);
   }
  }
- assert.equal(drafts,32);assert.equal(slots,2000);assert.equal(published,0);
+ assert.equal(drafts,80);assert.equal(slots,2000);assert.equal(published,0);
  const report=parse('data/reports/recent-five-coverage.json');
- assert.equal(report.draftCount,32);assert.equal(report.unstartedCount,368);
+ assert.equal(report.draftCount,80);assert.equal(report.unstartedCount,320);
 });
 test('P4 editorial desk is safely scoped and loaded into existing modal',()=>{
  const modal=read('assets/ck-study-p4-v78.js');
@@ -37,8 +37,8 @@ test('owl landing search forwards to existing study index',()=>{
 test('no CI, deployment or artifact creation',()=>{
  assert.equal(parse('vercel.json').git.deploymentEnabled,false);
  assert.equal(fs.existsSync(path.join(root,'.github','workflows')),false);
- assert.match(read('sw.js'),/conceptknot-study-v112-ten-year-editor-review/);
+ assert.match(read('sw.js'),/conceptknot-study-v151-p4-source-locked-study-drafts/);
  const html=read('index.html');
- assert.match(html,/ck-study-editor-v80.js\?v=112/);
+ assert.match(html,/ck-study-editor-v80.js\?v=127/);
  for(const m of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))new vm.Script(m[1]);
 });

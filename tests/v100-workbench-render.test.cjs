@@ -24,7 +24,7 @@ test('400-question workbench renders real readiness counts and batch controls',a
  for(let i=0;i<90;i++)await Promise.resolve();
  assert.equal(window.CK81Workbench.getState().loaded,400);
  assert.equal(window.CK81Workbench.getState().loadErrors,0);
- assert.match(panel.innerHTML,/미작성 해설 368/);
+ assert.match(panel.innerHTML,/미작성 해설 320/);
  assert.match(panel.innerHTML,/data-ck81-batch-prompt/);
  assert.match(panel.innerHTML,/data-ck81-batch-queue/);
  assert.match(panel.innerHTML,/공식 해설 근거 검수/);

@@ -194,8 +194,8 @@ test('version, current file contents and original records are protected',()=>{
  const files=['ck-graph-motion-v149.js?v=149','ck-graph-direct-v149.js?v=150',
   'ck-graph-direct-v149.css?v=149','ck-study-charts-v79.js?v=150'];
  for(const f of files){A.ok(html.includes(f)||f.endsWith('ck-study-charts-v79.js?v=150'),f);A.ok(sw.includes(f),f)}
- A.match(html,/ck-release" content="v150-concept-scenario-learning"/);
- A.match(sw,/const CACHE='conceptknot-study-v150-concept-scenario-learning'/);
+ A.match(html,/ck-release" content="v151-p4-source-locked-study-drafts"/);
+ A.match(sw,/const CACHE='conceptknot-study-v151-p4-source-locked-study-drafts'/);
  A.match(glue,/CK149GraphEnhance/);
  const critical=sw.match(/const CRITICAL=\[([\s\S]*?)\];/);
  A.equal([...critical[1].matchAll(/'\.\/[^']+'/g)].length,11);
