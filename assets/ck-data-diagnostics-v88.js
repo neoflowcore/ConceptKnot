@@ -245,7 +245,7 @@ function downloadRaw(){
 /* previous: conceptknot-study-v137-native-voice-guard */
 /* prior offline generation: conceptknot-study-v138-unified-voice-queue */
 /* previous core: conceptknot-study-v139-managed-model-guard */
-const OFFLINE_CACHE='conceptknot-study-v155-multiphase-direct-grips';
+const OFFLINE_CACHE='conceptknot-study-v156-curve-slope-before-after';
 const OFFLINE_MINIMUM=Object.freeze([
  './index.html',
  './assets/ck-data-diagnostics-v88.js?v=140',

@@ -104,8 +104,11 @@ function ensureGrips(root,c){
   const no=index++,parent=path.parentNode;
   if(path.dataset?.ck155Enhanced==='1'||!parent?.appendChild)continue;
   const d=path.getAttribute?.('d');if(!d)continue;
-  const kind=c.type==='both'?(path.classList?.contains('supply')?'supply':'demand'):
-   c.type==='supply'?'supply':c.type==='demand'?'demand':'curve';
+  const market=['demand','supply','both'].includes(c.type);
+  const kind=market?(path.classList?.contains('supply')?'supply':'demand'):'curve';
+  // The unshifted comparison curve is read-only in single-curve lessons.
+  if((c.type==='demand'&&kind==='supply')||
+   (c.type==='supply'&&kind==='demand'))continue;
   let pt=null;
   try{const length=path.getTotalLength?.();if(length>0)pt=path.getPointAtLength(length*.5)}catch{}
   if(!pt||!Number.isFinite(pt.x)||!Number.isFinite(pt.y)){
@@ -129,6 +132,16 @@ function ensureGrips(root,c){
   const text=make('text',{'class':'ck155-grip-letter',x:pt.x,y:pt.y,'text-anchor':'middle',
    'dominant-baseline':'central','aria-hidden':'true'});
   text.textContent=label;g.append(text);
+  if(market){
+   const geom=m?.curveGeometry?.(kind);
+   if(geom){
+    const end=make('circle',{'class':'ck156-slope-handle',
+     'data-ck156-slope-handle':kind,role:'button',tabindex:0,
+     'aria-label':(kind==='demand'?'수요':'공급')+' 곡선 기울기 조절. 위아래로 드래그',
+     cx:geom.x2,cy:geom.y2,r:13});
+    g.append(end);
+   }
+  }
   parent.appendChild(g);
   path.dataset.ck155Enhanced='1';
  }
@@ -144,6 +157,19 @@ function sync(root,c,state){
    for(const group of curves){
     const key=group.dataset?.ck149Target;
     if(key!=='demand'&&key!=='supply')continue;
+    const shape=m.curveGeometry?.(key,state);
+    if(shape){
+     // Rebuild only the selected path's SVG geometry, not the chart/root.
+     // Separate geometry from the parent's CSS translation so a tilt
+     // cannot silently turn into a parallel movement.
+     const path=group.querySelector?.('.ck21-curve');
+     path?.setAttribute?.('d',shape.d);
+     const g=group.querySelector?.('[data-ck155-grip]');
+     g?.querySelector?.('.ck155-grip-corridor')?.setAttribute?.('d',shape.d);
+     const endpoint=g?.querySelector?.('[data-ck156-slope-handle]');
+     endpoint?.setAttribute?.('cx',String(shape.x2));
+     endpoint?.setAttribute?.('cy',String(shape.y2));
+    }
     const shift=next[key];
     group.style?.setProperty?.('--ck21-dx',fmt(shift)+'px');
     if(Math.abs(shift)>.01)group.classList?.add?.('ck21-shifted');
@@ -165,13 +191,24 @@ function sync(root,c,state){
    '수요 '+state.demand+'퍼센트, 공급 '+state.supply+'퍼센트. 가상 도식입니다':
    '전후 도식 '+p+'퍼센트'+(['demand','supply'].includes(c.type)?' · '+(sign>0?'오른쪽':'왼쪽')+' 이동':' · 곡선 위 관찰'));
  }
- root.classList?.toggle?.('ck149-moved',p>0);
- root.classList?.toggle?.('ck21-revealed',p>0);
+ const slopeChanged=m?.outcome?.(c,state)?.slopeChanged===true;
+ root.classList?.toggle?.('ck149-moved',p>0||slopeChanged);
+ root.classList?.toggle?.('ck21-revealed',p>0||slopeChanged);
  const cards=root.querySelector?.('[data-ck148-legacy]');
  const steps=window.CK148LearningSteps;
  if(cards&&steps&&m&&c.type==='both'){
   const model=steps.legacy(c,p,sign,state);
   if(model)cards.innerHTML=steps.render(model);
+ }
+ const lesson=m?.explain?.(c,state);
+ if(lesson){
+  const put=(selector,value)=>{const el=root.querySelector?.(selector);
+   if(el&&el.textContent!==value)el.textContent=value};
+  put('[data-ck156-action]',lesson.action+' · '+lesson.equilibrium);
+  put('[data-ck156-easy]',lesson.easy);
+  put('[data-ck156-advanced]',lesson.advanced);
+  put('[data-ck156-exam]',lesson.exam);
+  put('[data-ck156-status]',lesson.slope+' '+lesson.shifted);
  }
  const stepOut=root.querySelector?.('[data-ck149-current]');
  if(stepOut)stepOut.textContent=c.type==='both'?
@@ -199,6 +236,11 @@ function mount(root,c){
    '<button type="button" data-ck155-nudge="-10" aria-label="선택한 선을 왼쪽으로 조금 이동">◀ 왼쪽 10</button>'+
    '<button type="button" data-ck155-nudge="10" aria-label="선택한 선을 오른쪽으로 조금 이동">오른쪽 10 ▶</button>'+
    '<small>선택한 선·관찰점을 도식 10단위씩 움직입니다.</small></div>'+
+   (['demand','supply','both'].includes(c.type)?
+    '<div class="ck149-tools-row" role="group" aria-label="곡선 기울기 조작">'+
+    '<button type="button" data-ck156-slope="-15">완만하게 −15</button>'+
+    '<button type="button" data-ck156-slope="15">가파르게 +15</button>'+
+    '<small>끝의 작은 손잡이를 위아래 드래그해도 됩니다. 실제 탄력성이 아닌 도식 각도입니다.</small></div>':'')+
    (c.type==='both'?'<div class="ck149-tools-row" role="group" aria-label="함께 이동하는 선 선택">'+
     '<button type="button" data-ck149-select="demand" aria-pressed="true">수요 D 선</button>'+
     '<button type="button" data-ck149-select="supply" aria-pressed="false">공급 S 선</button></div>':'')+
@@ -206,6 +248,20 @@ function mount(root,c){
    ' 빈 공간은 조작 시작 지점이 아닙니다. <output data-ck149-current></output></p>'+
    '<small>이전 점선 · 현재 실선 / 도식 진행률은 실제 가격 변동률이 아닙니다.</small>';
   controls.append?.(tools);
+  if(!controls.querySelector?.('[data-ck156-theory]')){
+   const theory=document.createElement('section');
+   theory.className='ck156-theory';theory.dataset.ck156Theory='';
+   theory.setAttribute?.('aria-label','곡선 이동 전후 개념설명');
+   theory.innerHTML='<strong>직전 그림 ↔ 현재 그림</strong>'+
+    '<p data-ck156-action role="status"></p>'+
+    '<p data-ck156-status></p>'+
+    '<details open><summary>쉬운 설명</summary><p data-ck156-easy></p></details>'+
+    '<details><summary>심화 설명 · 비례·반비례</summary>'+
+    '<p data-ck156-advanced></p></details>'+
+    '<details><summary>기출 개념 연결 · 자주 틀리는 구분</summary>'+
+    '<p data-ck156-exam></p></details>';
+   controls.append?.(theory);
+  }
  }
  if(tr?.state){
   const current=window.CK79Charts?.getState?.();
@@ -253,14 +309,19 @@ document.addEventListener('pointerdown',e=>{
  if(!svg||drag||e.isPrimary===false||(e.pointerType==='mouse'&&e.button!==0))return;
  const info=active(),m=math();if(!m||!info)return;
  const grip=e.target.closest?.('[data-ck155-grip]');
+ const slopeHandle=e.target.closest?.('[data-ck156-slope-handle]');
  if(e.pointerType!=='mouse'&&!grip)return;
- const hit=grip?{kind:grip.dataset.ck155Grip,
-  pathIndex:Number(grip.dataset.ck155PathIndex)||0}:m.nearest(svg,e,info.chart);
+ const hit=slopeHandle?{kind:'slope-'+slopeHandle.dataset.ck156SlopeHandle,
+  pathIndex:Number(grip?.dataset?.ck155PathIndex)||0}:
+  grip?{kind:grip.dataset.ck155Grip,
+   pathIndex:Number(grip.dataset.ck155PathIndex)||0}:m.nearest(svg,e,info.chart);
  if(!hit)return; // No grab: sliders and the surrounding page still work.
  const tr=trackFor(info.chart,info.phase);if(!tr)return;
  drag={svg,pointerId:e.pointerId,id:info.chart.id,kind:hit.kind,
   start:tr.state,first:{clientX:e.clientX,clientY:e.clientY,pointerType:e.pointerType}};
  if(hit.kind==='demand'||hit.kind==='supply')selectedCurve=hit.kind;
+ if(hit.kind==='slope-demand'||hit.kind==='slope-supply')
+  selectedCurve=hit.kind.slice(6);
  selectedPaths.set(info.chart.id,hit.pathIndex||0);
  try{svg.setPointerCapture?.(e.pointerId)}catch{}
  svg.closest?.('.ck21-chart-section')?.classList?.add?.('ck79-chart-dragging','ck149-grabbing');
@@ -288,13 +349,21 @@ document.addEventListener('lostpointercapture',e=>{if(drag&&drag.pointerId===e.p
 window.addEventListener?.('blur',cancel);
 document.addEventListener('visibilitychange',()=>{if(document.hidden)cancel()});
 document.addEventListener('click',e=>{
- const target=e.target.closest?.('[data-ck149-action],[data-ck149-select],[data-ck155-nudge]');if(!target)return;
+ const target=e.target.closest?.('[data-ck149-action],[data-ck149-select],[data-ck155-nudge],[data-ck156-slope]');if(!target)return;
  const info=active();if(!info)return;
  const root=target.closest?.('.ck21-chart-section');if(root&&root!==info.root)return;
  const tr=trackFor(info.chart);if(!tr)return;
  const select=target.dataset.ck149Select;
  if(select){selectedCurve=select;sync(info.root,info.chart,tr.state);return}
  const action=target.dataset.ck149Action,was=tr.state;
+ if(target.hasAttribute?.('data-ck156-slope')){
+  const amount=Number(target.dataset.ck156Slope);
+  if(Math.abs(amount)===15&&math()?.adjustSlope){
+   const next=math().adjustSlope(was,info.chart,selectedCurve,amount);
+   if(next){change(next,info.chart,info.root);done(was,info.chart,info.root)}
+  }
+  return;
+ }
  if(target.hasAttribute?.('data-ck155-nudge')){
   const step=Number(target.dataset.ck155Nudge);
   if(Number.isFinite(step)&&Math.abs(step)===10&&math()?.nudge){
@@ -310,13 +379,25 @@ document.addEventListener('click',e=>{
 });
 document.addEventListener('keydown',e=>{
  const svg=e.target.closest?.('svg.ck79-chart-draggable');
- if(!svg||!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;
+ const slopeHandle=e.target.closest?.('[data-ck156-slope-handle]');
+ if(!svg||!['ArrowLeft','ArrowRight','Home','End','ArrowUp','ArrowDown'].includes(e.key))return;
+ if(['ArrowUp','ArrowDown'].includes(e.key)&&!slopeHandle)return;
  if(e.altKey||e.metaKey||e.ctrlKey)return;
  const info=active(),tr=info&&trackFor(info.chart),m=math();if(!tr||!m)return;
  const grip=e.target.closest?.('[data-ck155-grip]');
  if(grip&&(grip.dataset.ck155Grip==='demand'||grip.dataset.ck155Grip==='supply'))
   selectedCurve=grip.dataset.ck155Grip;
  const start=tr.state;
+ if(slopeHandle){
+  selectedCurve=slopeHandle.dataset.ck156SlopeHandle;
+  const delta=e.key==='ArrowUp'?15:e.key==='ArrowDown'?-15:0;
+  if(delta&&m.adjustSlope){
+   const next=m.adjustSlope(start,info.chart,selectedCurve,delta);
+   if(next){change(next,info.chart,info.root);done(start,info.chart,info.root)}
+   e.preventDefault();e.stopImmediatePropagation?.();
+   return;
+  }
+ }
  let target=e.key==='Home'?0:e.key==='End'?100:start.value+(e.key==='ArrowLeft'?-5:5);
  target=m.round(target);
  let next={...start,value:target};

@@ -52,9 +52,9 @@ test('traps: changed price does not move equilibrium, fixed cost does not change
 test('source and current PWA release contain all scenario learning scripts and correct offline core',()=>{
  const html=raw('index.html'),sw=raw('sw.js'),loader=raw('assets/ck-study-charts-v79.js');
  assert.ok(html.length>1000000,'homepage must not be truncated');
- assert.match(html,/v152-p4-160-new-study-drafts/);
+ assert.match(html,/v156-p6b-tilt-parallel-comparative-lesson/);
  assert.match(html,/ck-study-charts-v79\.js\?v=150/);
- assert.match(sw,/conceptknot-study-v155-multiphase-direct-grips/);
+ assert.match(sw,/conceptknot-study-v156-curve-slope-before-after/);
  const critical=(sw.match(/const CRITICAL=\[([\s\S]*?)\];/)||[])[1];
  assert.ok(critical);
  assert.equal((critical.match(/'\.\//g)||[]).length,11);

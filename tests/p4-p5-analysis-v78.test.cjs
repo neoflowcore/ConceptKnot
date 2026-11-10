@@ -48,7 +48,7 @@ test('P2 through P6 remain wired without automatic build',()=>{
  assert.match(html,/window\.CK78Study=Object\.freeze/);
  assert.match(html,/ck-study-p4-v78\.js\?v=114/);
  assert.match(html,/ck-study-p6-v76\.js\?v=76/);
- assert.match(read('sw.js'),/conceptknot-study-v155-multiphase-direct-grips/);
+ assert.match(read('sw.js'),/conceptknot-study-v156-curve-slope-before-after/);
  assert.equal(j('vercel.json').git.deploymentEnabled,false);
  assert.equal(fs.existsSync(path.join(dir,'.github','workflows')),false);
  for(const x of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))new vm.Script(x[1]);

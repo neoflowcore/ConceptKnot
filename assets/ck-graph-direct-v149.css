@@ -65,3 +65,38 @@
 @media(prefers-reduced-motion:reduce){
  #main .ck21-chart-svg .ck155-grip-handle{filter:none!important;transition:none!important}
 }
+
+/* v156: independently draggable slope pivot and teaching cards. All changes
+   remain scoped to study SVGs; quiz OMR, S Pen notes and page scroll untouched. */
+#main .ck21-chart-svg .ck156-slope-handle{
+ fill:#f4c274;stroke:#52411c;stroke-width:2.5;
+ touch-action:none;pointer-events:all;cursor:ns-resize;
+ filter:drop-shadow(0 1px 2px rgba(25,23,13,.25));
+}
+#main .ck21-chart-svg .ck156-slope-handle:is(:focus-visible,:hover){
+ fill:#ffe5a1;stroke-width:4;outline:none
+}
+#main .ck21-chart-section.ck149-grabbing .ck156-slope-handle{cursor:ns-resize}
+#main .ck149-tools-row [data-ck156-slope]{
+ border-style:dashed;border-color:color-mix(in srgb,#d7ad61 68%,currentColor);
+}
+#main .ck156-theory{display:grid;gap:7px;margin:10px 0;padding:12px;
+ border:1px solid color-mix(in srgb,currentColor 22%,transparent);
+ border-radius:12px;background:color-mix(in srgb,currentColor 3%,transparent);
+ line-height:1.6;font-size:12px;overflow-wrap:anywhere;
+}
+#main .ck156-theory>strong{font-size:14px;letter-spacing:-.2px}
+#main .ck156-theory>[data-ck156-action]{margin:0;font-weight:750}
+#main .ck156-theory>[data-ck156-status]{font-size:11px;opacity:.8;margin:0}
+#main .ck156-theory details{border:1px solid color-mix(in srgb,currentColor 12%,transparent);
+ padding:9px 11px;border-radius:9px}
+#main .ck156-theory details>summary{font-weight:750;cursor:pointer;min-height:25px}
+#main .ck156-theory details>p{margin:8px 0 2px;line-height:1.65}
+#main .ck156-theory details[open]{background:color-mix(in srgb,currentColor 2%,transparent)}
+@media(max-width:480px){
+ #main .ck156-theory{padding:9px;gap:6px}
+ #main .ck156-theory details{padding:8px}
+}
+@media(prefers-reduced-motion:reduce){
+ #main .ck21-chart-svg .ck156-slope-handle{filter:none}
+}

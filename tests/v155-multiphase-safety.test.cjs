@@ -79,7 +79,7 @@ test('P3/P5 keyboard supports Ctrl+arrow but excludes IME and editable controls'
 });
 function workerFixture(options={}){
  const events={},saved=new Map(),logs=[],path='./assets/ck-graph-direct-v149.js?v=150';
- const prior='conceptknot-study-v154-p4-draft-coverage',current='conceptknot-study-v155-multiphase-direct-grips';
+ const prior='conceptknot-study-v154-p4-draft-coverage',current='conceptknot-study-v156-curve-slope-before-after';
  const res=(type='application/javascript')=>({ok:true,status:200,headers:{get:()=>type},clone(){return res(type)}});
  saved.set(prior,new Map([[path,res()]]));
  let skip=0;
@@ -122,8 +122,8 @@ test('P7 checklists remain user-marked and P4 expert checks stay unreviewed',()=
  A.match(qa,/ck115-manual-device-verification-v1/);
  A.match(qa,/PASS \(직접 확인\)/);
  A.ok(sw.includes('ck-typing-ime-guard-v155.js?v=155'));
- A.match(sw,/conceptknot-study-v155-multiphase-direct-grips/);
- A.match(diag,/conceptknot-study-v155-multiphase-direct-grips/);
+ A.match(sw,/conceptknot-study-v156-curve-slope-before-after/);
+ A.match(diag,/conceptknot-study-v156-curve-slope-before-after/);
  const core=(sw.match(/const CRITICAL=\[([\s\S]*?)\];/)||[])[1];
  A.equal((core.match(/'\.\//g)||[]).length,11);
  const report=JSON.parse(raw('data/reports/recent-five-coverage.json'));

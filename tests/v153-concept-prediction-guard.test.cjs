@@ -93,9 +93,9 @@ test('UI requires actual validated grade before graph action and supports review
 test('PWA and source guard: optional bundles, original 800, 11 core, no automated CI',()=>{
  const html=raw('index.html'),sw=raw('sw.js'),loader=raw('assets/ck-study-charts-v79.js');
  a.ok(Buffer.byteLength(html,'utf8')>1000000);
- a.match(html,/v152-p4-160-new-study-drafts/);
+ a.match(html,/v156-p6b-tilt-parallel-comparative-lesson/);
  a.match(html,/ck-study-charts-v79\.js\?v=150/);
- a.match(sw,/const CACHE='conceptknot-study-v155-multiphase-direct-grips'/);
+ a.match(sw,/const CACHE='conceptknot-study-v156-curve-slope-before-after'/);
  const critical=(sw.match(/const CRITICAL=\[([\s\S]*?)\];/)||[])[1];
  a.equal((critical?.match(/'\.\//g)||[]).length,11);
  for(const f of ['ck-legacy-rules-v153.js','ck-scenario-quiz-v153.js','ck-scenario-ui-v150.js','ck-scenario-ui-v150.css']){

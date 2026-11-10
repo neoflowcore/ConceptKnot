@@ -41,7 +41,10 @@ const TASKS=Object.freeze([
  {id:'chart-grips-v155',group:'그래프',name:'Android Brave/S Pen에서 D·S 곡선 동그란 손잡이를 잡아 이동할 때 그림만 변하고 페이지는 이동하지 않음, 빈 SVG 영역에서는 세로 스크롤 가능'},
  {id:'chart-nudge-v155',group:'그래프',name:'수요 D/공급 S 별도 선택 → 왼쪽/오른쪽 10단위 이동 → E₀/E₁ 전후 비교 → Undo/Redo/초기화 모두 일관됨'},
  {id:'mock-ctrl-arrow-v155',group:'모의고사',name:'공식 80문항·기출혼합 5세트에서 숫자 1~5 답안과 Ctrl+←/→ 문항 이동, 입력칸 편집시 단축키 미동작, 시험 타이머 100분 유지'},
- {id:'p4-unreviewed-v155',group:'해설',name:'2021~2025 해설 초안 400건·전문가 검수 0건·선지별 원전검수 0건을 구별하고 최신 원전/판례 검증 없이는 게시되지 않음'}
+ {id:'p4-unreviewed-v155',group:'해설',name:'2021~2025 해설 초안 400건·전문가 검수 0건·선지별 원전검수 0건을 구별하고 최신 원전/판례 검증 없이는 게시되지 않음'},
+ {id:'graph-slope-touch-v156',group:'그래프',name:'Android Brave와 S Pen으로 각 D/S 곡선 끝의 노란 손잡이를 위아래 드래그할 때 해당 선의 기울기만 변하고 페이지가 이동하지 않음'},
+ {id:'graph-slope-shift-v156',group:'그래프',name:'수요 D·공급 S를 선택해 각각 평행이동·기울기 ±15 조절·E₀/E₁ 교점 재계산·Undo/Redo/초기화가 서로 일치함'},
+ {id:'graph-before-after-v156',group:'그래프',name:'쉬운 설명·심화 설명·기출 개념의 비례/반비례 및 가격 변화=곡선 위 이동 구분, 원래 문제 조건과 변경 조건이 섞이지 않는지 확인'}
 ]);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const plain=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);

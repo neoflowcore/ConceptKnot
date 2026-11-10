@@ -134,7 +134,7 @@ test('expanded direct human QA tasks and no auto deployment or workflows',()=>{
  assert.match(qa,/id:'evidence-packet'/);
  assert.match(qa,/personal-v115-manual-qa/);
  const sw=read('sw.js');
- assert.match(sw,/conceptknot-study-v155-multiphase-direct-grips/);
+ assert.match(sw,/conceptknot-study-v156-curve-slope-before-after/);
  assert.equal((sw.match(/ck-data-diagnostics-v88\.js\?v=140/g)||[]).length,3);
  assert.equal((sw.match(/ck-data-diagnostics-v88\.css\?v=125/g)||[]).length,3);
  assert.match(sw,/ignoreSearch:true/);
@@ -271,6 +271,6 @@ test('offline fallback uses current cache only, with explicit 503 on uncached fi
  assert.equal((await ask('assets/ck-data-diagnostics-v88.js?v=121')).marker,'v125-current-js');
  assert.equal((await ask('assets/ck-study-analytics-v83.js?v=117')).status,503);
  assert.equal((await ask('offline','navigate')).marker,'current-index');
- assert.ok(cacheNames.every(name=>name==='conceptknot-study-v155-multiphase-direct-grips'));
+ assert.ok(cacheNames.every(name=>name==='conceptknot-study-v156-curve-slope-before-after'));
  assert.ok(matchCalls.some(x=>x.ignoreSearch));
 });

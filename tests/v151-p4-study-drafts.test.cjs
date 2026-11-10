@@ -98,8 +98,8 @@ test('P4 dashboard totals and fresh PWA cache paths match source version',()=>{
  A.equal(p4.reviewStages.draft,400);A.equal(p4.reviewStages.unstarted,0);
  A.equal(p4.reviewStages.published,0);A.equal(p4.seedOptionReasonDrafts,664);
  const sw=raw('sw.js'),html=raw('index.html');
- A.match(html,/ck-release" content="v152-p4-160-new-study-drafts"/);
- A.match(sw,/conceptknot-study-v155-multiphase-direct-grips/);
+ A.match(html,/ck-release" content="v156-p6b-tilt-parallel-comparative-lesson"/);
+ A.match(sw,/conceptknot-study-v156-curve-slope-before-after/);
  for(const year of years){
   A.ok(sw.includes('./data/explanations/official-'+year+'.json?v=154'));
  }
