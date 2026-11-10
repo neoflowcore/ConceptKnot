@@ -232,7 +232,7 @@ function ck141Ensure(){
  css145.href='./assets/ck-concept-touch-fix-v145.css?v=145';css145.dataset.ck145Asset='css';
  document.head.appendChild(css145);
  const css150=document.createElement('link');css150.rel='stylesheet';
- css150.href='./assets/ck-scenario-ui-v150.css?v=150';css150.dataset.ck150Asset='css';
+ css150.href='./assets/ck-scenario-ui-v150.css?v=153';css150.dataset.ck150Asset='css';
  document.head.appendChild(css150);
  const load=src=>new Promise((resolve,reject)=>{
   const script=document.createElement('script');script.src=src;script.async=false;
@@ -255,7 +255,9 @@ function ck141Ensure(){
       window.CK141ConceptLab?.mount(chart);window.CK142Theory?.mount(chart);
     }
     try{await load('./assets/ck-learning-scenarios-v150.js?v=150');
-        await load('./assets/ck-scenario-ui-v150.js?v=150');
+        await load('./assets/ck-legacy-rules-v153.js?v=153');
+        await load('./assets/ck-scenario-quiz-v153.js?v=153');
+        await load('./assets/ck-scenario-ui-v150.js?v=153');
         window.CK150ScenarioUI?.boot?.();
     }catch(err){console.warn('Optional examples unavailable',err);}
     return true;})

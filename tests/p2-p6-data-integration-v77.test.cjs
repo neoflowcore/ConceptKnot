@@ -55,7 +55,7 @@ test('design and deployment policy remain stable',()=>{
  const v=j('vercel.json');
  assert.equal(v.git.deploymentEnabled,false);
  assert.equal(fs.existsSync(path.join(root,'.github','workflows')),false);
- assert.match(read('sw.js'),/conceptknot-study-v152-p4-160-new-study-drafts/);
+ assert.match(read('sw.js'),/conceptknot-study-v153-case-prediction/);
  const html=read('index.html');
  for(const m of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))new vm.Script(m[1]);
 });

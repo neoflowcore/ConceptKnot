@@ -35,3 +35,12 @@
  #main .ck150-tabs button{flex:1 1 calc(33.333% - 8px);font-size:11px}
  #main .ck150-choices{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}}
 @media(prefers-reduced-motion:reduce){#main .ck150-scenarios *{animation:none!important;transition:none!important}}
+
+/* v153: answer is locked before simulation; correct/retry progress remains legible on mobile. */
+#main .ck150-review-controls{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}
+#main .ck150-review-controls button{flex:1 1 140px}
+#main .ck150-tabs button[data-ck150-wrong=true]{text-decoration:underline;text-decoration-style:dotted;text-underline-offset:4px}
+#main .ck150-result small{display:block;margin-top:7px;opacity:.8}
+#main .ck150-scenarios .ck150-apply:disabled{opacity:.62;background:transparent!important}
+#main .ck150-scenarios [role=status]{overflow-wrap:anywhere}
+@media(max-width:420px){#main .ck150-review-controls button{flex:1 1 100%}}

@@ -208,7 +208,7 @@ test('updated files are syntactically valid and manual-only',()=>{
   assert.ok(index.includes(token),token+' HTML');
   assert.ok(service.includes(token),token+' SW');
  }
- assert.match(service,/conceptknot-study-v152-p4-160-new-study-drafts/);
+ assert.match(service,/conceptknot-study-v153-case-prediction/);
  assert.match(index,/ck-study-editor-v80\.css\?v=112/);
  assert.match(service,/ck-study-editor-v80\.css\?v=113/);
  assert.equal(parse('vercel.json').git.deploymentEnabled,false);

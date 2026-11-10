@@ -54,13 +54,17 @@ test('source and current PWA release contain all scenario learning scripts and c
  assert.ok(html.length>1000000,'homepage must not be truncated');
  assert.match(html,/v152-p4-160-new-study-drafts/);
  assert.match(html,/ck-study-charts-v79\.js\?v=150/);
- assert.match(sw,/conceptknot-study-v152-p4-160-new-study-drafts/);
+ assert.match(sw,/conceptknot-study-v153-case-prediction/);
  const critical=(sw.match(/const CRITICAL=\[([\s\S]*?)\];/)||[])[1];
  assert.ok(critical);
  assert.equal((critical.match(/'\.\//g)||[]).length,11);
- for(const f of ['ck-learning-scenarios-v150.js','ck-scenario-ui-v150.js','ck-scenario-ui-v150.css']){
+ for(const f of ['ck-learning-scenarios-v150.js']){
   assert.ok(sw.includes(f+'?v=150'),f+' cache');
   assert.ok(loader.includes(f+'?v=150'),f+' loader');
+ }
+ for(const f of ['ck-legacy-rules-v153.js','ck-scenario-quiz-v153.js','ck-scenario-ui-v150.js','ck-scenario-ui-v150.css']){
+  assert.ok(sw.includes(f+'?v=153'),f+' cache');
+  assert.ok(loader.includes(f+'?v=153'),f+' loader');
  }
  for(const f of ['assets/ck-concept-lab-v141.js','assets/ck-theory-v142.js',
   'assets/ck-graph-direct-v149.js']){

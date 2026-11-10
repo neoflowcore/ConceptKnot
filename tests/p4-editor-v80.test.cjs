@@ -37,7 +37,7 @@ test('owl landing search forwards to existing study index',()=>{
 test('no CI, deployment or artifact creation',()=>{
  assert.equal(parse('vercel.json').git.deploymentEnabled,false);
  assert.equal(fs.existsSync(path.join(root,'.github','workflows')),false);
- assert.match(read('sw.js'),/conceptknot-study-v152-p4-160-new-study-drafts/);
+ assert.match(read('sw.js'),/conceptknot-study-v153-case-prediction/);
  const html=read('index.html');
  assert.match(html,/ck-study-editor-v80.js\?v=127/);
  for(const m of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))new vm.Script(m[1]);
