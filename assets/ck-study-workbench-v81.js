@@ -147,7 +147,7 @@ function load(force=false){
   const found=catalog();
   const bundles=await Promise.allSettled(EXPLANATION_YEARS.map(async year=>{
    if(!force&&bundleCache.has(year))return bundleCache.get(year);
-   const response=await fetch('./data/explanations/official-'+year+'.json?v=152',
+   const response=await fetch('./data/explanations/official-'+year+'.json?v=154',
     {cache:force?'reload':'force-cache'});
    if(!response.ok)throw Error('HTTP '+response.status);
    const data=await response.json();
@@ -320,6 +320,42 @@ function researchPacket(ids,items=rows,max=5){
  });
  return lines.join('\n');
 }
+/* v154: offline, read-only audit packet for human comparison.
+ * Never export a personal note without an explicit user action, and never
+ * reclassify an unreviewed draft/option as a certified explanation.
+ */
+function draftReviewPacket(ids,items,limit=5){
+ const selected=Array.from(new Set((Array.isArray(ids)?ids:[]).filter(isId))).slice(0,Math.min(5,Math.max(1,limit)));
+ if(!selected.length||!Array.isArray(items))return '';
+ const byId=new Map(items.map(item=>[item.q?.id,item]));
+ const lines=['ConceptKnot · 최근 5개년 기출 해설 초안 / 근거 대조 워크시트',
+  '상태: 학습용 후보 · 전문 검수 미완료 · 공식 정답표와 선지 진위 판단은 별개',
+  '이 문서는 원본 문제와 미검수 초안을 나란히 확인하기 위한 개인 작업 자료입니다.',''];
+ for(const id of selected){
+  const item=byId.get(id),q=item?.q,r=item?.entry;
+  if(!q||!r||r.quality?.status!=='draft')continue;
+  if(r.officialAnswer.join(',')!==(q.correct||[]).join(','))continue;
+  lines.push('=== '+id+' / '+(SUBJECTS[q.subject]||'과목 미확인')+' ===',
+   '원문: '+q.question,
+   ...q.options.map((value,i)=>'원문 선지 '+(i+1)+': '+value),
+   '공식 채점 인정 번호: '+q.correct.join(', ')+
+    (q.correct.length===5?' (전원정답, 선지 진위 전체를 보증하지 않음)':q.correct.length>1?' (복수정답 인정)':''),
+   '학습용 요약 초안 [검수 대기]: '+String(r.summaryEasy||''),
+   '정답 해설 후보 [검수 대기]: '+String(r.answerReason||''),
+   ...((r.traps||[]).filter(x=>x&&typeof x.text==='string')
+    .map(x=>'오답 유의점 후보 [검수 대기]: '+x.text)),
+   ...r.options.map((v,i)=>'선지 '+(i+1)+' 독립 검수: '+
+    (v?.sourceChecked===true&&v?.verdict!=='unreviewed'?'원전 검수 기재':'미검수')+
+    (v?.draftReason?' / 후보 설명: '+v.draftReason:' / 후보 설명 미작성')),
+   '시험 당시 법령·판례·적용일 검수: '+
+    (r.quality?.sourceChecked?'검수 표기 있음 (원전 별도 확인 필요)':'미검수'),
+   '원본 문제 PDF: '+String(q.paperUrl||'미기재'),
+   '공식 채점 출처: '+String(q.originalUrl||'미기재'),
+   '사람 검수 작성란: 조문/판례 번호 · 출처 쪽수 · 적용 기준일 · 각 선지 판단 이유 · 검수자/일시',
+   '검수자 서명: [미작성] · 게시 가능: [아니오]','');
+ }
+ return lines.join('\n');
+}
 function renderRows(items){
  if(!items.length)return '<p class="ck81-empty">조건에 맞는 문항이 없습니다. 필터를 변경하세요.</p>';
  return '<div class="ck81-row-list">'+items.map(x=>{
@@ -417,6 +453,8 @@ function render(){
  '>현재 페이지 상위 '+Math.min(researchBatch,batch.length)+'문항 출처 대조 질문 복사</button>'+
  '<button type="button" data-ck81-batch-queue'+(!batch.length?' disabled':'')+
  '>상위 '+Math.min(researchBatch,batch.length)+'문항 근거 확인 중으로 등록</button>'+
+ '<button type="button" data-ck154-review-packet'+(!batch.length?' disabled':'')+
+ '>상위 '+Math.min(researchBatch,batch.length)+'문항 해설·근거 대조 TXT</button>'+
  '<button type="button" data-ck112-packet-txt'+(!batch.length?' disabled':'')+
  '>현재 상위 '+Math.min(researchBatch,batch.length)+'문항 질문 TXT 저장</button>'+
  '<button type="button" data-ck112-voice-batch'+(!batch.length?' disabled':'')+
@@ -584,7 +622,7 @@ function copyPrompt(id){
 document.addEventListener('click',event=>{
  const target=event.target.closest?.('[data-ck81-toggle],[data-ck81-matrix],[data-ck81-page],'+
   '[data-ck81-pin],[data-ck81-open],[data-ck81-edit],[data-ck81-choice-note],[data-ck81-prompt],'+
-  '[data-ck81-export],[data-ck81-import],[data-ck81-clear-filters],[data-ck81-batch-prompt],[data-ck81-batch-queue],[data-ck112-packet-txt],[data-ck112-voice],[data-ck112-voice-batch],[data-ck112-voice-stop],[data-ck81-retry]');
+  '[data-ck81-export],[data-ck81-import],[data-ck81-clear-filters],[data-ck81-batch-prompt],[data-ck81-batch-queue],[data-ck154-review-packet],[data-ck112-packet-txt],[data-ck112-voice],[data-ck112-voice-batch],[data-ck112-voice-stop],[data-ck81-retry]');
  if(!target||!document.getElementById('ck81-workbench')?.contains(target))return;
  if(target.hasAttribute('data-ck81-toggle')){toggle();return;}
  if(target.hasAttribute('data-ck81-retry')){
@@ -656,6 +694,17 @@ document.addEventListener('click',event=>{
    result.count?'선택 '+result.count+'문항을 개인 근거 확인 중으로 일괄 기록했습니다.':
    '모두 이미 처리 중이거나 검토 보류/준비 상태여서 변경하지 않았습니다.');
   render();return;
+ }
+ if(target.hasAttribute('data-ck154-review-packet')){
+  const selected=sortRows(matchingRows(enriched(rows||[])))
+   .slice(view.page*view.pageSize,(view.page+1)*view.pageSize)
+   .slice(0,researchBatch).map(x=>x.q.id);
+  const content=draftReviewPacket(selected,rows,researchBatch);
+  if(!content){message('현재 목록에 해설 초안이 있는 문항이 없습니다.');return;}
+  download('ConceptKnot_미검수해설대조_'+new Date().toISOString().slice(0,10)+'.txt',
+   content,'text/plain;charset=utf-8');
+  message('학습용 초안과 공식 원문을 분리한 '+selected.length+'문항 대조표를 TXT로 저장했습니다. 검수 결과는 변경되지 않습니다.');
+  return;
  }
  if(target.hasAttribute('data-ck112-packet-txt')){
   const batch=sortRows(matchingRows(enriched(rows||[])))
@@ -747,7 +796,7 @@ if(main&&window.MutationObserver)new MutationObserver(changes=>{
  alignToolsDock();
 }).observe(main,{subtree:true,childList:true});
 window.CK81Workbench=Object.freeze({sanitizeProgress,assessDraft,specialAnswer,matchingRows,summary,
- riskScore,researchPacket,dueIds,markResearchBatch,
+ riskScore,researchPacket,draftReviewPacket,dueIds,markResearchBatch,
  getState:()=>({shown,loaded:rows?.length||0,loadErrors,legacyLoadError,
   filters:{...view},progress:Object.keys(local.records).length,storageIssue}),
  open:()=>{mount();const dock=document.getElementById('ck103-tools-dock');if(dock)dock.open=true;if(!shown)toggle();}});

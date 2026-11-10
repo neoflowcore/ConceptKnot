@@ -14,14 +14,14 @@ test('400 verified linked records have exactly 240 drafts and 160 unstarted, zer
  const u=buildPackets({...data,status:'unstarted',limit:5});
  const sp=buildPackets({...data,status:'special',limit:5});
  const needs=buildPackets({...data,status:'missing-evidence',limit:5});
- assert.equal(a.matched,400);assert.equal(d.matched,240);assert.equal(u.matched,160);
+ assert.equal(a.matched,400);assert.equal(d.matched,400);assert.equal(u.matched,0);
  assert.equal(sp.matched,7);assert.equal(needs.matched,400);
  assert.deepEqual(a.issues,[]);
  assert.ok(a.packets.every(p=>p.humanReviewRequired===true&&p.reviewReady===false&&p.options.length===5));
  assert.equal(JSON.stringify(data),raw,'audit is read-only');
 });
 test('each human-review TXT packet has all five official answer choices and no invented legal verdict',()=>{
- const packet=buildPackets({...sources(),year:2021,status:'unstarted',limit:3});
+ const packet=buildPackets({...sources(),year:2021,status:'draft',limit:3});
  const text=toTxt(packet);
  assert.equal(packet.returned,3);
  assert.match(text,/미검수 초안/);

@@ -54,14 +54,14 @@ test('48 new study rationales are substantive, traceable and never human-approve
   }
  }
 });
-test('2024/2025 estate 80/80 remain drafted; cumulative P4 v152 counts 240/160',()=>{
+test('2024/2025 estate 80/80 remain drafted; current P4 v154 counts 400/0',()=>{
  const a=years.flatMap(y=>json('data/explanations/official-'+y+'.json').records);
- A.equal(a.filter(r=>r.quality.status==='draft').length,240);
- A.equal(a.filter(r=>r.quality.status==='unstarted').length,160);
+ A.equal(a.filter(r=>r.quality.status==='draft').length,400);
+ A.equal(a.filter(r=>r.quality.status==='unstarted').length,0);
  A.equal(a.filter(r=>r.quality.status==='verified'||r.quality.status==='published').length,0);
  A.equal(a.filter(r=>r.subject==='estate'&&r.examYear>=2024&&r.quality.status==='draft').length,80);
- A.equal(a.filter(r=>r.subject==='civil'&&r.quality.status==='unstarted').length,120);
- A.equal(a.filter(r=>r.examYear<=2023&&r.quality.status==='unstarted').length,160);
+ A.equal(a.filter(r=>r.subject==='civil'&&r.quality.status==='unstarted').length,0);
+ A.equal(a.filter(r=>r.examYear<=2023&&r.quality.status==='unstarted').length,0);
  A.equal(a.filter(r=>r.specialAnswer!=='normal').length,7);
 });
 test('actual math cross-check: five financial and appraisal numerics',()=>{
@@ -78,11 +78,11 @@ test('actual math cross-check: five financial and appraisal numerics',()=>{
   A.ok(recMap.get(id).officialAnswer.length===1);
  }
 });
-test('P4 audit separates existing 48 estate drafts from all 240 study drafts',()=>{
+test('P4 audit separates existing 48 estate drafts from all 400 study drafts',()=>{
  const {evaluate}=require('../scripts/audit-p4-v152.cjs'),x=evaluate();
  A.deepEqual(x.issues,[]);A.equal(x.counts.total,400);
  A.equal(x.counts.answerKeyMatches,400);
- A.equal(x.counts.draft,240);A.equal(x.counts.unstarted,160);
+ A.equal(x.counts.draft,400);A.equal(x.counts.unstarted,0);
  A.equal(x.counts.optionDraftNotes,664);A.equal(x.counts.optionsTotal,2000);
  for(const k of ['sourceChecked','reasonReviewed','published','optionVerified'])A.equal(x.counts[k],0,k);
  A.equal(x.counts.byYearSubject['2024-estate'].draft,40);
@@ -93,20 +93,20 @@ test('P4 audit separates existing 48 estate drafts from all 240 study drafts',()
 test('P4 dashboard totals and fresh PWA cache paths match source version',()=>{
  const report=json('data/reports/recent-five-coverage.json');
  const p4=json('data/reports/analysis-candidates-v78.json');
- A.equal(report.draftCount,240);A.equal(report.unstartedCount,160);A.equal(report.reasonDraftCount,240);
+ A.equal(report.draftCount,400);A.equal(report.unstartedCount,0);A.equal(report.reasonDraftCount,400);
  A.equal(report.publishedCount,0);
- A.equal(p4.reviewStages.draft,240);A.equal(p4.reviewStages.unstarted,160);
+ A.equal(p4.reviewStages.draft,400);A.equal(p4.reviewStages.unstarted,0);
  A.equal(p4.reviewStages.published,0);A.equal(p4.seedOptionReasonDrafts,664);
  const sw=raw('sw.js'),html=raw('index.html');
  A.match(html,/ck-release" content="v152-p4-160-new-study-drafts"/);
- A.match(sw,/conceptknot-study-v153-case-prediction/);
+ A.match(sw,/conceptknot-study-v154-p4-draft-coverage/);
  for(const year of years){
-  A.ok(sw.includes('./data/explanations/official-'+year+'.json?v=152'));
+  A.ok(sw.includes('./data/explanations/official-'+year+'.json?v=154'));
  }
- A.ok(sw.includes('analysis-candidates-v78.json?v=152'));
- A.ok(raw('assets/ck-study-workbench-v81.js').includes("'.json?v=152'"));
- A.ok(raw('assets/ck-study-editor-v80.js').includes("'.json?v=152'"));
- A.ok(raw('assets/ck-study-p4-v78.js').includes('analysis-candidates-v78.json?v=152'));
+ A.ok(sw.includes('analysis-candidates-v78.json?v=154'));
+ A.ok(raw('assets/ck-study-workbench-v81.js').includes("'.json?v=154'"));
+ A.ok(raw('assets/ck-study-editor-v80.js').includes("'.json?v=154'"));
+ A.ok(raw('assets/ck-study-p4-v78.js').includes('analysis-candidates-v78.json?v=154'));
  const critical=sw.match(/const CRITICAL=\[([\s\S]*?)\];/);
  A.ok(critical);A.equal((critical[1].match(/'\.\//g)||[]).length,11);
  A.equal(json('vercel.json').git.deploymentEnabled,false);

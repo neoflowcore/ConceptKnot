@@ -221,8 +221,8 @@
     }
   ],
   "reviewStages": {
-    "unstarted": 160,
-    "draft": 240,
+    "unstarted": 0,
+    "draft": 400,
     "source_checked": 0,
     "reason_checked": 0,
     "legal_checked": 0,
@@ -234,5 +234,6 @@
   "updatedAt": "2026-11-10",
   "manualReasonedDraftsAdded": 28,
   "assistantStudyDraftsAddedV151": 48,
-  "assistantStudyDraftsAddedV152": 160
+  "assistantStudyDraftsAddedV152": 160,
+  "assistantStudyDraftsAddedV154": 160
 }

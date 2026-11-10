@@ -9,6 +9,6 @@ const bank=JSON.parse(read('data/official-2021-2025.json'));
 const years=[2021,2022,2023,2024,2025];
 const bundles=Object.fromEntries(years.map(y=>[y,JSON.parse(read('data/explanations/official-'+y+'.json'))]));
 test('400 official answer keys match explanation registry',()=>{const r=auditExplanations(bundles,bank);assert.equal(r.total,400);assert.equal(r.verifiedAnswerMatches,400);assert.equal(r.issues.length,0);});
-test('personal draft and source review are distinct',()=>{const r=auditExplanations(bundles,bank);assert.equal(r.draft,240);assert.equal(r.unstarted,160);assert.equal(r.optionUnreviewed,2000);assert.equal(r.readyForPublication,0);});
+test('personal draft and source review are distinct',()=>{const r=auditExplanations(bundles,bank);assert.equal(r.draft,400);assert.equal(r.unstarted,0);assert.equal(r.optionUnreviewed,2000);assert.equal(r.readyForPublication,0);});
 test('drifted official answer is rejected',()=>{const copies=JSON.parse(JSON.stringify(bundles));copies[2025].records[0].officialAnswer=[5];const r=auditExplanations(copies,bank);assert.ok(r.issues.some(x=>x.includes('최종답안 불일치')));});
 test('manual deploy policy',()=>{assert.equal(JSON.parse(read('vercel.json')).git.deploymentEnabled,false);assert.equal(fs.existsSync(path.join(base,'.github/workflows')),false);});

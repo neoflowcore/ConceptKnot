@@ -21,7 +21,7 @@ test('all 400 official A-form question-answer pairs and 2000 option slots remain
 });
 test('2022–2025 subject matrix: exactly 160 added substantive exam-specific rationales',()=>{
  const expected={
- '2021-estate':0,'2021-civil':0,'2022-estate':40,'2022-civil':0,'2023-estate':40,'2023-civil':0,
+ '2021-estate':40,'2021-civil':40,'2022-estate':40,'2022-civil':40,'2023-estate':40,'2023-civil':40,
  '2024-estate':40,'2024-civil':40,'2025-estate':40,'2025-civil':40
  };
  let count=0,blank=0,notes=0;
@@ -35,7 +35,7 @@ test('2022–2025 subject matrix: exactly 160 added substantive exam-specific ra
   notes+=row.options.filter(x=>x.draftReason?.trim()).length;
   A.ok(row.sourceRefs.some(x=>x.type==='officialNotice'&&x.verified===true));
  }
- A.equal(count,240);A.equal(blank,160);A.equal(notes,664);
+ A.equal(count,400);A.equal(blank,0);A.equal(notes,664);
  for(const [key,drafts] of Object.entries(expected)){
   const [year,subject]=key.split('-');
   A.equal(data.filter(x=>x.examYear===+year&&x.subject===subject&&x.quality.status==='draft').length,drafts,key);
@@ -87,25 +87,25 @@ test('independent numeric examples use all given variables and canonical choices
   A.ok(maps.get(id).answerReason.includes(token),id+' missing formula result token '+token);
  }
 });
-test('current P4 audit, workbench, editor and offline cache report 240/400 without faking review',()=>{
+test('current P4 audit, workbench, editor and offline cache report 400/400 without faking review',()=>{
  const {evaluate}=require('../scripts/audit-p4-v152.cjs'),audit=evaluate();
  A.deepEqual(audit.issues,[]);
- A.equal(audit.counts.total,400);A.equal(audit.counts.draft,240);A.equal(audit.counts.unstarted,160);
+ A.equal(audit.counts.total,400);A.equal(audit.counts.draft,400);A.equal(audit.counts.unstarted,0);
  A.equal(audit.counts.optionsTotal,2000);A.equal(audit.counts.optionDraftNotes,664);
  A.equal(audit.counts.answerKeyMatches,400);A.equal(audit.special.length,7);
  for(const v of ['reasonReviewed','sourceChecked','published','optionVerified'])A.equal(audit.counts[v],0,v);
  const report=json('data/reports/recent-five-coverage.json'),panel=json('data/reports/analysis-candidates-v78.json');
- A.equal(report.draftCount,240);A.equal(report.unstartedCount,160);
- A.equal(report.reasonDraftCount,240);A.equal(report.publishedCount,0);
- A.equal(panel.reviewStages.draft,240);A.equal(panel.reviewStages.unstarted,160);
+ A.equal(report.draftCount,400);A.equal(report.unstartedCount,0);
+ A.equal(report.reasonDraftCount,400);A.equal(report.publishedCount,0);
+ A.equal(panel.reviewStages.draft,400);A.equal(panel.reviewStages.unstarted,0);
  A.equal(panel.reviewStages.published,0);A.equal(panel.seedOptionReasonDrafts,664);
  A.ok(read('index.html').includes('v152-p4-160-new-study-drafts'));
- const sw=read('sw.js');A.ok(sw.includes('conceptknot-study-v153-case-prediction'));
- for(const y of years)A.ok(sw.includes('./data/explanations/official-'+y+'.json?v=152'));
- A.ok(sw.includes('analysis-candidates-v78.json?v=152'));
- A.ok(read('assets/ck-study-workbench-v81.js').includes("'.json?v=152'"));
- A.ok(read('assets/ck-study-editor-v80.js').includes("'.json?v=152'"));
- A.ok(read('assets/ck-study-p4-v78.js').includes('analysis-candidates-v78.json?v=152'));
+ const sw=read('sw.js');A.ok(sw.includes('conceptknot-study-v154-p4-draft-coverage'));
+ for(const y of years)A.ok(sw.includes('./data/explanations/official-'+y+'.json?v=154'));
+ A.ok(sw.includes('analysis-candidates-v78.json?v=154'));
+ A.ok(read('assets/ck-study-workbench-v81.js').includes("'.json?v=154'"));
+ A.ok(read('assets/ck-study-editor-v80.js').includes("'.json?v=154'"));
+ A.ok(read('assets/ck-study-p4-v78.js').includes('analysis-candidates-v78.json?v=154'));
  A.equal(json('vercel.json').git.deploymentEnabled,false);
  A.equal(fs.existsSync(path.join(root,'.github/workflows')),false);
  const critical=sw.match(/const CRITICAL=\[([\s\S]*?)\];/);

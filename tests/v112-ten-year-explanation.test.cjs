@@ -81,9 +81,9 @@ test('ten-year workbench loads only the five existing explanation files',async()
  assert.equal(loaded.length,5);
  assert.match(panel.innerHTML,/data-ck112-packet-txt/);
  assert.equal((panel.innerHTML.match(/data-ck81-matrix="/g)||[]).length,20);
- for(const token of ['10개년 공식 등록 문항</dt><dd>800','최근 5개년 해설 초안</dt><dd>240',
+ for(const token of ['10개년 공식 등록 문항</dt><dd>800','최근 5개년 해설 초안</dt><dd>400',
   '2016~2020 해설 미제공</dt><dd>400','내 선지 출처 기록</dt><dd>2/4000',
-  '최근 5개년 미작성 해설 160','data-ck81-batch-prompt','no-personal-source']){
+  '최근 5개년 미작성 해설 0','data-ck81-batch-prompt','no-personal-source']){
    assert.ok(panel.innerHTML.includes(token),token);
  }
 });
@@ -208,7 +208,7 @@ test('updated files are syntactically valid and manual-only',()=>{
   assert.ok(index.includes(token),token+' HTML');
   assert.ok(service.includes(token),token+' SW');
  }
- assert.match(service,/conceptknot-study-v153-case-prediction/);
+ assert.match(service,/conceptknot-study-v154-p4-draft-coverage/);
  assert.match(index,/ck-study-editor-v80\.css\?v=112/);
  assert.match(service,/ck-study-editor-v80\.css\?v=113/);
  assert.equal(parse('vercel.json').git.deploymentEnabled,false);

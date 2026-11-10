@@ -5044,8 +5044,8 @@
         "multiple_choice"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "유증은 상대방 없는 단독행위입니다.",
+      "answerReason": "손자에게 부동산을 유증하는 행위는 유언자의 일방적 의사표시로 이루어지므로 상대방의 승낙을 전제로 성립하는 계약과 다릅니다. ④가 공식 정답입니다.",
       "options": [
         {
           "no": 1,
@@ -5079,7 +5079,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "증여계약과 사인증여·유증의 성립방식을 구별하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -5093,7 +5098,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -5175,7 +5180,15 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": {
+        "kind": "assistant-curated-educational-draft",
+        "sourceBinding": "official A-form question and accepted key only",
+        "year": 2022,
+        "questionId": "2022-41",
+        "expertReviewed": false,
+        "legalEffectiveDateChecked": false,
+        "independentOptionVerdicts": false
+      }
     },
     {
       "questionId": "2022-42",
@@ -5192,8 +5205,8 @@
         "legal_temporal_review"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "보험사고를 가장해 보험금을 편취하려는 계약은 반사회적 법률행위가 문제됩니다.",
+      "answerReason": "보험계약자가 처음부터 보험사고를 꾸며 보험금을 받을 목적으로 계약을 체결하면 보험자가 선의여도 불법적 목적이 핵심입니다. ⑤가 무효인 행위로 분류됩니다.",
       "options": [
         {
           "no": 1,
@@ -5227,7 +5240,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "계약 상대방의 선의와 계약을 체결한 당사자의 반사회적 목적을 구분하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -5241,7 +5259,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -5316,7 +5334,15 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": {
+        "kind": "assistant-curated-educational-draft",
+        "sourceBinding": "official A-form question and accepted key only",
+        "year": 2022,
+        "questionId": "2022-42",
+        "expertReviewed": false,
+        "legalEffectiveDateChecked": false,
+        "independentOptionVerdicts": false
+      }
     },
     {
       "questionId": "2022-43",
@@ -5334,8 +5360,8 @@
         "legal_temporal_review"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "민법 제108조의 선의 제3자에 대해서는 통정허위표시 무효로 대항하지 못합니다.",
+      "answerReason": "통정허위표시는 당사자 사이에서 무효지만 새로운 법률상 이해관계를 얻은 선의 제3자는 보호될 수 있습니다. 이때 보호받는 제3자에게는 누구도 그 무효를 들어 대항할 수 없다는 ④의 원리를 확인합니다.",
       "options": [
         {
           "no": 1,
@@ -5369,7 +5395,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "단순히 허위표시를 안 사람과 선의로 새로운 법률상 이해관계를 취득한 제3자를 구분하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -5383,7 +5414,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -5451,7 +5482,15 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": {
+        "kind": "assistant-curated-educational-draft",
+        "sourceBinding": "official A-form question and accepted key only",
+        "year": 2022,
+        "questionId": "2022-43",
+        "expertReviewed": false,
+        "legalEffectiveDateChecked": false,
+        "independentOptionVerdicts": false
+      }
     },
     {
       "questionId": "2022-44",
@@ -5470,8 +5509,8 @@
         "legal_temporal_review"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "토지거래허가 전의 매매계약은 유동적 무효 상태의 협력의무가 핵심입니다.",
+      "answerReason": "허가를 전제로 계약했다면 허가 신청에 협력할 의무와 계약금 해제·급부청구 가능성을 따로 따져야 합니다. 공식 정답 ㄴ·ㄷ은 행정청 허가가 나오기 전부터 일반 유효 매매처럼 대금과 등기이행을 강제할 수 없다는 전제를 고려합니다.",
       "options": [
         {
           "no": 1,
@@ -5530,7 +5569,12 @@
           "sourceChecked": false
         }
       ],
-      "traps": [],
+      "traps": [
+        {
+          "text": "토지거래허가 신청에 협력할 의무와 매매대금 지급의무를 같은 이행단계로 두지 마세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -5544,7 +5588,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -5619,7 +5663,15 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": {
+        "kind": "assistant-curated-educational-draft",
+        "sourceBinding": "official A-form question and accepted key only",
+        "year": 2022,
+        "questionId": "2022-44",
+        "expertReviewed": false,
+        "legalEffectiveDateChecked": false,
+        "independentOptionVerdicts": false
+      }
     },
     {
       "questionId": "2022-45",
@@ -5637,8 +5689,8 @@
         "legal_temporal_review"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "제한능력자는 제한능력을 이유로 한 취소에 법정대리인의 동의를 요하지 않습니다.",
+      "answerReason": "제한능력자 보호를 위해 취소권이 부여되는 것이므로, 본인의 취소에 법정대리인 동의가 필수라고 한 ①은 틀립니다.",
       "options": [
         {
           "no": 1,
@@ -5672,7 +5724,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "취소권 행사와 법정대리인의 사전 동의가 필요한 원래 법률행위의 범위를 혼동하지 마세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -5686,7 +5743,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -5747,7 +5804,15 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": {
+        "kind": "assistant-curated-educational-draft",
+        "sourceBinding": "official A-form question and accepted key only",
+        "year": 2022,
+        "questionId": "2022-45",
+        "expertReviewed": false,
+        "legalEffectiveDateChecked": false,
+        "independentOptionVerdicts": false
+      }
     },
     {
       "questionId": "2022-46",
@@ -5765,8 +5830,8 @@
         "legal_temporal_review"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "반사회적 조건은 조건만 제거해 법률행위를 당연 유효로 만드는 사안이 아닙니다.",
+      "answerReason": "선량한 풍속 기타 사회질서에 위반되는 조건이 붙은 법률행위는 조건의 성질과 민법상 조건 규정을 함께 검토해야 합니다. 해제조건만 떼어 조건 없는 행위가 유효하다고 한 ②는 틀린 설명입니다.",
       "options": [
         {
           "no": 1,
@@ -5800,7 +5865,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "불법조건과 불능조건, 정지조건과 해제조건의 법적 효과를 분리하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -5814,7 +5884,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -5882,7 +5952,15 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": {
+        "kind": "assistant-curated-educational-draft",
+        "sourceBinding": "official A-form question and accepted key only",
+        "year": 2022,
+        "questionId": "2022-46",
+        "expertReviewed": false,
+        "legalEffectiveDateChecked": false,
+        "independentOptionVerdicts": false
+      }
     },
     {
       "questionId": "2022-47",
@@ -5900,8 +5978,8 @@
         "legal_temporal_review"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "임의대리인의 사망은 원칙적으로 대리권 소멸사유입니다.",
+      "answerReason": "대리관계는 본인과 대리인 사이의 인적 신뢰를 전제로 하므로 대리인 乙의 상속인에게 대리권이 그대로 승계되지 않습니다. 승계를 주장한 ①이 틀립니다.",
       "options": [
         {
           "no": 1,
@@ -5935,7 +6013,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "대리권과 대리인이 가졌던 재산권을 같은 상속대상으로 보지 마세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -5949,7 +6032,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -6010,7 +6093,15 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": {
+        "kind": "assistant-curated-educational-draft",
+        "sourceBinding": "official A-form question and accepted key only",
+        "year": 2022,
+        "questionId": "2022-47",
+        "expertReviewed": false,
+        "legalEffectiveDateChecked": false,
+        "independentOptionVerdicts": false
+      }
     },
     {
       "questionId": "2022-48",
@@ -6028,8 +6119,8 @@
         "legal_temporal_review"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "법정대리인은 자기 책임으로 복대리인을 선임할 수 있습니다.",
+      "answerReason": "임의대리인이 복대리인을 선임하는 경우의 별도 요건과 달리, 법정대리인에게는 특별한 사정이 없는 한 자기 책임 하에 복대리인을 선임할 권한이 인정됩니다. ⑤가 이에 해당합니다.",
       "options": [
         {
           "no": 1,
@@ -6063,7 +6154,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "법정대리와 임의대리의 복대리인 선임 요건을 다르게 기억하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -6077,7 +6173,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -6145,7 +6241,15 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": {
+        "kind": "assistant-curated-educational-draft",
+        "sourceBinding": "official A-form question and accepted key only",
+        "year": 2022,
+        "questionId": "2022-48",
+        "expertReviewed": false,
+        "legalEffectiveDateChecked": false,
+        "independentOptionVerdicts": false
+      }
     },
     {
       "questionId": "2022-49",
@@ -6163,8 +6267,8 @@
         "legal_temporal_review"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "권한 초과 표현대리의 정당한 이유는 대리행위 당시를 기준으로 판단합니다.",
+      "answerReason": "상대방이 대리권의 범위를 넘어선 행위를 유효한 대리행위로 믿을 정당한 이유가 있었는지는 계약 당시에 드러난 사정을 기준으로 평가합니다. ⑤가 그 시간적 기준을 정확히 제시합니다.",
       "options": [
         {
           "no": 1,
@@ -6198,7 +6302,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "사후 대리권 부여나 사후 알게 된 사정을 계약 당시의 믿음에 소급 적용하지 마세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -6212,7 +6321,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -6266,7 +6375,15 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": {
+        "kind": "assistant-curated-educational-draft",
+        "sourceBinding": "official A-form question and accepted key only",
+        "year": 2022,
+        "questionId": "2022-49",
+        "expertReviewed": false,
+        "legalEffectiveDateChecked": false,
+        "independentOptionVerdicts": false
+      }
     },
     {
       "questionId": "2022-50",
@@ -6284,8 +6401,8 @@
         "legal_temporal_review"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "무권대리 추인 최고에 본인이 침묵하면 원칙적으로 추인 거절로 봅니다.",
+      "answerReason": "상대방이 상당한 기간을 정해 추인 여부를 최고했는데 본인이 확답하지 않았다면 추인한 것으로 볼 수 없습니다. 무응답을 추인으로 취급한 ①이 틀립니다.",
       "options": [
         {
           "no": 1,
@@ -6319,7 +6436,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "본인의 명시적 추인과 최고 기간 경과에 따른 법정 효과를 구분하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -6333,7 +6455,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -6401,7 +6523,15 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": {
+        "kind": "assistant-curated-educational-draft",
+        "sourceBinding": "official A-form question and accepted key only",
+        "year": 2022,
+        "questionId": "2022-50",
+        "expertReviewed": false,
+        "legalEffectiveDateChecked": false,
+        "independentOptionVerdicts": false
+      }
     },
     {
       "questionId": "2022-51",
@@ -6418,8 +6548,8 @@
         "compound_statements"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "전세권·지상권은 토지 점유·사용이 가능한 물권이고 저당권은 담보물권입니다.",
+      "answerReason": "ㄱ 전세권과 ㄴ 지상권은 토지에 설정되어 점유·사용할 수 있는 물권입니다. 저당권은 원칙적으로 점유를 수반하지 않고 임차권은 채권이므로 ㄱ·ㄴ인 ②입니다.",
       "options": [
         {
           "no": 1,
@@ -6478,7 +6608,12 @@
           "sourceChecked": false
         }
       ],
-      "traps": [],
+      "traps": [
+        {
+          "text": "토지 점유 가능성과 '물권'인지 여부를 함께 확인하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -6492,7 +6627,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -6553,7 +6688,15 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": {
+        "kind": "assistant-curated-educational-draft",
+        "sourceBinding": "official A-form question and accepted key only",
+        "year": 2022,
+        "questionId": "2022-51",
+        "expertReviewed": false,
+        "legalEffectiveDateChecked": false,
+        "independentOptionVerdicts": false
+      }
     },
     {
       "questionId": "2022-52",
@@ -6571,8 +6714,8 @@
         "legal_temporal_review"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "등기상 양도인과 실체적 양도인이 일치하고 의심할 사정이 없다면 무과실 점유가 문제됩니다.",
+      "answerReason": "양도인의 소유권 등기를 신뢰한 양수인이 인도를 받아 점유한 경우, 특별한 의심 사유가 없다면 과실 없는 점유자로 평가될 수 있습니다. ⑤가 그 사정 판단을 반영합니다.",
       "options": [
         {
           "no": 1,
@@ -6606,7 +6749,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "자주점유의 추정과 선의·무과실의 평가 기준을 구분하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -6620,7 +6768,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -6695,7 +6843,15 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": {
+        "kind": "assistant-curated-educational-draft",
+        "sourceBinding": "official A-form question and accepted key only",
+        "year": 2022,
+        "questionId": "2022-52",
+        "expertReviewed": false,
+        "legalEffectiveDateChecked": false,
+        "independentOptionVerdicts": false
+      }
     },
     {
       "questionId": "2022-53",
@@ -6714,8 +6870,8 @@
         "legal_temporal_review"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "물권적 청구권은 현재 소유권과 물권의 내용에 따라 주체·범위가 달라집니다.",
+      "answerReason": "불법점유에 대한 방해배제청구와 양도 전 소유자의 청구, 물건 일부의 점유 문제를 분리해 판단해야 합니다. ㄷ만 인정한 ②의 판단은 현재 권리자와 물권적 청구권의 효력을 대조하는 문제입니다.",
       "options": [
         {
           "no": 1,
@@ -6768,7 +6924,12 @@
           "sourceChecked": false
         }
       ],
-      "traps": [],
+      "traps": [
+        {
+          "text": "소유권을 잃은 전 소유자도 소유권적 청구권을 계속 행사한다고 오인하지 마세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -6782,7 +6943,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -6843,7 +7004,15 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": {
+        "kind": "assistant-curated-educational-draft",
+        "sourceBinding": "official A-form question and accepted key only",
+        "year": 2022,
+        "questionId": "2022-53",
+        "expertReviewed": false,
+        "legalEffectiveDateChecked": false,
+        "independentOptionVerdicts": false
+      }
     },
     {
       "questionId": "2022-54",
@@ -6861,8 +7030,8 @@
         "legal_temporal_review"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "악의 점유자는 수취·소비한 과실의 대가를 보상할 수 있습니다.",
+      "answerReason": "점유권원 없음을 알고도 점유물의 과실을 취득해 소비했다면 회복자에 대해 과실 상당의 보상책임이 문제됩니다. 악의 점유자의 과실 반환을 인정한 ①이 공식 정답입니다.",
       "options": [
         {
           "no": 1,
@@ -6896,7 +7065,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "과실 수취권을 가진 선의 점유자와 악의 점유자의 책임을 나누세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -6910,7 +7084,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -6957,7 +7131,15 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": {
+        "kind": "assistant-curated-educational-draft",
+        "sourceBinding": "official A-form question and accepted key only",
+        "year": 2022,
+        "questionId": "2022-54",
+        "expertReviewed": false,
+        "legalEffectiveDateChecked": false,
+        "independentOptionVerdicts": false
+      }
     },
     {
       "questionId": "2022-55",
@@ -6976,8 +7158,8 @@
         "legal_temporal_review"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "상린관계에서는 우물과 경계 사이의 법정 거리 요건이 문제됩니다.",
+      "answerReason": "ㄴ의 우물 굴착 관련 경계 거리 기준을 선택한 ②가 공식 정답입니다. 소음·통행·배수는 일률적으로 소유권 행사가 가능한 것이 아니라 사회통념상 수인한도와 특칙을 검토합니다.",
       "options": [
         {
           "no": 1,
@@ -7030,7 +7212,12 @@
           "sourceChecked": false
         }
       ],
-      "traps": [],
+      "traps": [
+        {
+          "text": "상린관계의 법정 거리와 소음 수인한도 기준은 서로 다른 규칙입니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -7044,7 +7231,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -7091,7 +7278,15 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": {
+        "kind": "assistant-curated-educational-draft",
+        "sourceBinding": "official A-form question and accepted key only",
+        "year": 2022,
+        "questionId": "2022-55",
+        "expertReviewed": false,
+        "legalEffectiveDateChecked": false,
+        "independentOptionVerdicts": false
+      }
     },
     {
       "questionId": "2022-56",
@@ -7111,8 +7306,8 @@
         "multiple_accepted"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "점유취득시효는 자주점유·20년·평온공연 점유와 이전등기 등을 고려합니다.",
+      "answerReason": "공식 정답표는 ③과 ⑤를 모두 인정한 복수정답 사례입니다. 부동산 점유취득시효의 물권변동 효력, 자주점유 여부 및 등기 요건을 구분하며 어느 지문이든 자동으로 모두 참이라 확정하지 않습니다.",
       "options": [
         {
           "no": 1,
@@ -7146,7 +7341,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "복수정답 채점 정책과 개별 법리의 판례 검수 여부를 분리하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -7160,7 +7360,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -7242,7 +7442,15 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": {
+        "kind": "assistant-curated-educational-draft",
+        "sourceBinding": "official A-form question and accepted key only",
+        "year": 2022,
+        "questionId": "2022-56",
+        "expertReviewed": false,
+        "legalEffectiveDateChecked": false,
+        "independentOptionVerdicts": false
+      }
     },
     {
       "questionId": "2022-57",
@@ -7260,8 +7468,8 @@
         "legal_temporal_review"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "합유자는 합유물에 대한 원인 무효 등기의 말소를 각자 구할 수 있는 경우가 있습니다.",
+      "answerReason": "합유물은 합유자 전체의 공동 목적에 속하지만 원인 무효 이전등기의 말소를 구하는 보존행위는 각자가 할 수 있다는 ④를 기준으로 판단합니다.",
       "options": [
         {
           "no": 1,
@@ -7295,7 +7503,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "합유 지분의 처분과 합유물 보존행위의 권한을 혼동하지 마세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -7309,7 +7522,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -7377,7 +7590,15 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": {
+        "kind": "assistant-curated-educational-draft",
+        "sourceBinding": "official A-form question and accepted key only",
+        "year": 2022,
+        "questionId": "2022-57",
+        "expertReviewed": false,
+        "legalEffectiveDateChecked": false,
+        "independentOptionVerdicts": false
+      }
     },
     {
       "questionId": "2022-58",
@@ -7394,8 +7615,8 @@
         "legal_temporal_review"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "저당권은 1필지 토지의 일부를 독립 객체로 하여 설정하기 어렵습니다.",
+      "answerReason": "저당권은 등기 가능한 독립 부동산을 담보 목적으로 하는 것이 원칙입니다. 분필 등기 없이 한 필지의 일부만을 독립된 저당권의 목적물로 삼기 어렵다는 ①과 연결됩니다.",
       "options": [
         {
           "no": 1,
@@ -7429,7 +7650,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "지상권·지역권 등 일부 토지 사용권과 저당권의 객체 특정 방식을 구분하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -7443,7 +7669,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -7497,7 +7723,15 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": {
+        "kind": "assistant-curated-educational-draft",
+        "sourceBinding": "official A-form question and accepted key only",
+        "year": 2022,
+        "questionId": "2022-58",
+        "expertReviewed": false,
+        "legalEffectiveDateChecked": false,
+        "independentOptionVerdicts": false
+      }
     },
     {
       "questionId": "2022-59",
@@ -7517,8 +7751,8 @@
         "legal_temporal_review"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "복수 근저당권에서는 각 채권의 변제기·최고액·순위·잔존 채권을 구별합니다.",
+      "answerReason": "2019년과 2020년에 설정된 선후순위 근저당권의 채권최고액은 실제 대출원금·이자와 반드시 동일하지 않습니다. 원문 ㄱ만 인정된 ①의 구조는 근저당권별 담보채권 확정과 우선변제 범위를 먼저 계산해야 함을 보여줍니다.",
       "options": [
         {
           "no": 1,
@@ -7571,7 +7805,12 @@
           "sourceChecked": false
         }
       ],
-      "traps": [],
+      "traps": [
+        {
+          "text": "이자율을 월 기준과 연 기준으로 혼동하거나 채권최고액만큼 자동으로 배당받는다고 생각하지 마세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -7585,7 +7824,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -7632,7 +7871,15 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": {
+        "kind": "assistant-curated-educational-draft",
+        "sourceBinding": "official A-form question and accepted key only",
+        "year": 2022,
+        "questionId": "2022-59",
+        "expertReviewed": false,
+        "legalEffectiveDateChecked": false,
+        "independentOptionVerdicts": false
+      }
     },
     {
       "questionId": "2022-60",
@@ -7650,8 +7897,8 @@
         "legal_temporal_review"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "토지 저당권의 효력 범위는 부합물·종물과 독립 건물을 구분합니다.",
+      "answerReason": "저당권 설정 뒤 토지에 매설된 유류저장탱크 등 독립성이 약한 시설은 부합·종물 법리에 따라 담보효력 범위가 문제될 수 있습니다. ㄴ·ㄷ을 선택한 ③은 토지 저당권만으로 사후 신축된 독립 건물까지 당연히 담보된다고 보지 않는 구분입니다.",
       "options": [
         {
           "no": 1,
@@ -7710,7 +7957,12 @@
           "sourceChecked": false
         }
       ],
-      "traps": [],
+      "traps": [
+        {
+          "text": "부합물·종물과 독립된 건물은 담보물권의 목적이 되는 방식이 다릅니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -7724,7 +7976,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -7785,7 +8037,15 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": {
+        "kind": "assistant-curated-educational-draft",
+        "sourceBinding": "official A-form question and accepted key only",
+        "year": 2022,
+        "questionId": "2022-60",
+        "expertReviewed": false,
+        "legalEffectiveDateChecked": false,
+        "independentOptionVerdicts": false
+      }
     },
     {
       "questionId": "2022-61",
@@ -7803,8 +8063,8 @@
         "legal_temporal_review"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "유치권자는 유치물 과실을 받아 피담보채권 변제에 우선 충당할 수 있습니다.",
+      "answerReason": "유치권은 물건 점유를 계속하며 변제를 확보하는 담보물권입니다. 유치물의 과실인 금전을 수취해 채권 변제에 충당할 수 있다는 ②가 공식 정답입니다.",
       "options": [
         {
           "no": 1,
@@ -7838,7 +8098,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "유치권의 점유 권능과 과실을 변제에 충당하는 권능을 구분하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -7852,7 +8117,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -7913,7 +8178,15 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": {
+        "kind": "assistant-curated-educational-draft",
+        "sourceBinding": "official A-form question and accepted key only",
+        "year": 2022,
+        "questionId": "2022-61",
+        "expertReviewed": false,
+        "legalEffectiveDateChecked": false,
+        "independentOptionVerdicts": false
+      }
     },
     {
       "questionId": "2022-62",
@@ -7931,8 +8204,8 @@
         "legal_temporal_review"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "법정지상권 성립에는 저당권 설정 당시 토지·건물 소유관계가 중요합니다.",
+      "answerReason": "저당권 실행으로 토지와 건물의 소유자가 분리되더라도 설정 시점의 소유관계와 건물 존재 여부 등 법정 요건을 충족해야 합니다. 원문 ㄴ만 선택한 ②의 구조에 따라 단순히 토지소유자가 건물 신축을 승낙한 사실만으로 인정하지 않습니다.",
       "options": [
         {
           "no": 1,
@@ -7985,7 +8258,12 @@
           "sourceChecked": false
         }
       ],
-      "traps": [],
+      "traps": [
+        {
+          "text": "법정지상권과 계약에 의한 지상권, 관습법상 법정지상권은 성립요건이 다릅니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -7999,7 +8277,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -8067,7 +8345,15 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": {
+        "kind": "assistant-curated-educational-draft",
+        "sourceBinding": "official A-form question and accepted key only",
+        "year": 2022,
+        "questionId": "2022-62",
+        "expertReviewed": false,
+        "legalEffectiveDateChecked": false,
+        "independentOptionVerdicts": false
+      }
     },
     {
       "questionId": "2022-63",
@@ -8085,8 +8371,8 @@
         "legal_temporal_review"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "지역권은 요역지를 위한 권리로서 불가분성이 있습니다.",
+      "answerReason": "요역지가 공유라면 공유자 한 명이 자기 지분에 대해서만 지역권을 소멸시키는 것은 허용되지 않습니다. 지역권의 불가분성을 설명한 ⑤가 정답입니다.",
       "options": [
         {
           "no": 1,
@@ -8120,7 +8406,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "개별 공유자의 지분 처분과 지역권 자체의 소멸을 구분하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -8134,7 +8425,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -8195,7 +8486,15 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": {
+        "kind": "assistant-curated-educational-draft",
+        "sourceBinding": "official A-form question and accepted key only",
+        "year": 2022,
+        "questionId": "2022-63",
+        "expertReviewed": false,
+        "legalEffectiveDateChecked": false,
+        "independentOptionVerdicts": false
+      }
     },
     {
       "questionId": "2022-64",
@@ -8213,8 +8512,8 @@
         "legal_temporal_review"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "토지전세권의 갱신기간은 갱신일로부터 10년을 넘을 수 없습니다.",
+      "answerReason": "민법상 전세권에 관한 존속기간 규정을 토지전세권에 적용하는 문제입니다. 갱신은 가능하지만 갱신한 날부터 10년을 초과할 수 없다는 ③을 확인합니다.",
       "options": [
         {
           "no": 1,
@@ -8248,7 +8547,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "건물전세권과 토지전세권의 최단·최장 존속기간 규칙을 따로 기억하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -8262,7 +8566,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -8309,7 +8613,15 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": {
+        "kind": "assistant-curated-educational-draft",
+        "sourceBinding": "official A-form question and accepted key only",
+        "year": 2022,
+        "questionId": "2022-64",
+        "expertReviewed": false,
+        "legalEffectiveDateChecked": false,
+        "independentOptionVerdicts": false
+      }
     },
     {
       "questionId": "2022-65",
@@ -8328,8 +8640,8 @@
         "legal_temporal_review"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "우편 청약의 효력은 도달주의와 승낙기간, 철회 가능성을 구별합니다.",
+      "answerReason": "청약서 발송일과 상대방 도달일이 다른 상황입니다. 일정 기간을 정한 청약이 상대방에게 도달한 경우 기간 내 승낙과 철회의 법적 효과를 별도로 판단해야 하며 ㄱ·ㄴ을 선택한 ③이 공식 답입니다.",
       "options": [
         {
           "no": 1,
@@ -8382,7 +8694,12 @@
           "sourceChecked": false
         }
       ],
-      "traps": [],
+      "traps": [
+        {
+          "text": "청약 발송일을 계약 성립일로 착각하지 마세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -8396,7 +8713,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -8450,7 +8767,15 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": {
+        "kind": "assistant-curated-educational-draft",
+        "sourceBinding": "official A-form question and accepted key only",
+        "year": 2022,
+        "questionId": "2022-65",
+        "expertReviewed": false,
+        "legalEffectiveDateChecked": false,
+        "independentOptionVerdicts": false
+      }
     },
     {
       "questionId": "2022-66",
@@ -8468,8 +8793,8 @@
         "legal_temporal_review"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "동시이행관계는 손해배상·권리금과 보증금 반환처럼 항목별로 따져야 합니다.",
+      "answerReason": "목적물 반환과 임대인의 권리금회수 방해 손해배상은 전형적인 보증금 반환과 다른 법률관계입니다. 원문의 ㄷ만 선택한 ②는 동시이행 항변에 직접적인 대가관계가 필요한 점을 확인시키는 문제입니다.",
       "options": [
         {
           "no": 1,
@@ -8522,7 +8847,12 @@
           "sourceChecked": false
         }
       ],
-      "traps": [],
+      "traps": [
+        {
+          "text": "권리금 손해배상과 임대차보증금 반환채권을 동일한 반환의무로 취급하지 마세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -8536,7 +8866,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -8611,7 +8941,15 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": {
+        "kind": "assistant-curated-educational-draft",
+        "sourceBinding": "official A-form question and accepted key only",
+        "year": 2022,
+        "questionId": "2022-66",
+        "expertReviewed": false,
+        "legalEffectiveDateChecked": false,
+        "independentOptionVerdicts": false
+      }
     },
     {
       "questionId": "2022-67",
@@ -8629,8 +8967,8 @@
         "legal_temporal_review"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "제3자를 위한 계약의 낙약자는 기본관계상의 항변을 수익자에게 주장할 수 있습니다.",
+      "answerReason": "요약자와 낙약자 사이의 계약을 기초로 제3자의 권리가 생기므로 원칙적으로 낙약자는 그 기본관계에서 발생한 항변으로 수익자의 청구에 대항할 수 있습니다. ④가 이에 해당합니다.",
       "options": [
         {
           "no": 1,
@@ -8664,7 +9002,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "제3자가 새로 권리를 취득한다는 점과 기본계약상의 항변 존재는 양립할 수 있습니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -8678,7 +9021,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -8732,7 +9075,15 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": {
+        "kind": "assistant-curated-educational-draft",
+        "sourceBinding": "official A-form question and accepted key only",
+        "year": 2022,
+        "questionId": "2022-67",
+        "expertReviewed": false,
+        "legalEffectiveDateChecked": false,
+        "independentOptionVerdicts": false
+      }
     },
     {
       "questionId": "2022-68",
@@ -8751,8 +9102,8 @@
         "legal_temporal_review"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "대금지급 지체로 계약을 해제하려면 원칙적으로 상당기간 이행 최고가 필요합니다.",
+      "answerReason": "매수인이 잔대금을 지급하지 않아도 매도인은 원칙적으로 상당기간 이행을 최고하는 절차를 검토해야 하며 이행불능·이행거절 등의 예외를 따로 봅니다. ㄱ·ㄷ을 선택한 ④는 최고 없는 즉시 해제를 부정하는 사정과 연결됩니다.",
       "options": [
         {
           "no": 1,
@@ -8805,7 +9156,12 @@
           "sourceChecked": false
         }
       ],
-      "traps": [],
+      "traps": [
+        {
+          "text": "채무불이행 자체와 최고 없이 해제 가능한 특별한 경우를 구분하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -8819,7 +9175,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -8887,7 +9243,15 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": {
+        "kind": "assistant-curated-educational-draft",
+        "sourceBinding": "official A-form question and accepted key only",
+        "year": 2022,
+        "questionId": "2022-68",
+        "expertReviewed": false,
+        "legalEffectiveDateChecked": false,
+        "independentOptionVerdicts": false
+      }
     },
     {
       "questionId": "2022-69",
@@ -8904,8 +9268,8 @@
         "select_correct"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "증여는 당사자의 의사 합치로 성립하는 낙성계약입니다.",
+      "answerReason": "증여는 원칙적으로 증여 의사와 상대방의 수락으로 성립합니다. 서면 작성을 반드시 계약 성립요건으로 보는 것은 아니므로 낙성계약이라는 ③이 정답입니다.",
       "options": [
         {
           "no": 1,
@@ -8939,7 +9303,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "서면에 의하지 않은 증여의 해제 문제와 애초 계약 성립 여부를 구별하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -8953,7 +9322,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -9007,7 +9376,15 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": {
+        "kind": "assistant-curated-educational-draft",
+        "sourceBinding": "official A-form question and accepted key only",
+        "year": 2022,
+        "questionId": "2022-69",
+        "expertReviewed": false,
+        "legalEffectiveDateChecked": false,
+        "independentOptionVerdicts": false
+      }
     },
     {
       "questionId": "2022-70",
@@ -9025,8 +9402,8 @@
         "legal_temporal_review"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "매매예약완결권은 원칙적으로 양도할 수 있는 재산권입니다.",
+      "answerReason": "일방예약의 완결권은 단순한 사실행위가 아니라 상대방에게 행사하여 매매를 성립시키는 형성권입니다. 특별한 제한이 없으면 타인에게 양도될 수 있다는 ③이 공식 답입니다.",
       "options": [
         {
           "no": 1,
@@ -9060,7 +9437,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "형성권의 양도 가능성과 행사기간의 제척기간은 별개입니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -9074,7 +9456,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -9135,7 +9517,15 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": {
+        "kind": "assistant-curated-educational-draft",
+        "sourceBinding": "official A-form question and accepted key only",
+        "year": 2022,
+        "questionId": "2022-70",
+        "expertReviewed": false,
+        "legalEffectiveDateChecked": false,
+        "independentOptionVerdicts": false
+      }
     },
     {
       "questionId": "2022-71",
@@ -9153,8 +9543,8 @@
         "compound_statements"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "매도인의 권리하자 담보책임은 악의 매수인의 구제수단도 유형별로 구별합니다.",
+      "answerReason": "권리의 전부 또는 일부가 타인에게 속해 이전할 수 없는 사안에서는 매수인의 인식 여부와 대금감액·해제 등 구제수단이 달라질 수 있습니다. ㄱ·ㄴ·ㄷ을 포함한 ⑤의 조합을 법정 요건에 따라 각각 검토해야 합니다.",
       "options": [
         {
           "no": 1,
@@ -9213,7 +9603,12 @@
           "sourceChecked": false
         }
       ],
-      "traps": [],
+      "traps": [
+        {
+          "text": "악의 매수인에게 모든 종류의 손해배상과 해제권이 일률적으로 인정되거나 부인되는 것은 아닙니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -9227,7 +9622,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -9295,7 +9690,15 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": {
+        "kind": "assistant-curated-educational-draft",
+        "sourceBinding": "official A-form question and accepted key only",
+        "year": 2022,
+        "questionId": "2022-71",
+        "expertReviewed": false,
+        "legalEffectiveDateChecked": false,
+        "independentOptionVerdicts": false
+      }
     },
     {
       "questionId": "2022-72",
@@ -9313,8 +9716,8 @@
         "legal_temporal_review"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "환매권 행사기간과 환매로 생긴 소유권이전등기청구권의 소멸시효는 다릅니다.",
+      "answerReason": "환매기간 안에 환매권을 행사했다면 그 결과 생긴 이전등기청구권도 반드시 같은 환매기간 안에 행사해야 한다는 ⑤는 틀립니다. 형성권 행사와 그 결과 채권의 시효를 나누어 봐야 합니다.",
       "options": [
         {
           "no": 1,
@@ -9348,7 +9751,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "제척기간의 환매권과 환매 효과로 발생한 청구권을 같은 시계로 재지 마세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -9362,7 +9770,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -9430,7 +9838,15 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": {
+        "kind": "assistant-curated-educational-draft",
+        "sourceBinding": "official A-form question and accepted key only",
+        "year": 2022,
+        "questionId": "2022-72",
+        "expertReviewed": false,
+        "legalEffectiveDateChecked": false,
+        "independentOptionVerdicts": false
+      }
     },
     {
       "questionId": "2022-73",
@@ -9447,8 +9863,8 @@
         "select_incorrect"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "토지임차인의 지상물매수청구권과 건물임차인의 부속물매수청구권은 다릅니다.",
+      "answerReason": "부속물매수청구권은 건물 임대차의 부속물과 관련된 권리입니다. 토지 임차인이 건물을 소유하기 위해 임차한 경우에 문제되는 것은 지상물매수청구권 등으로, 부속물매수청구권을 고른 ①이 정답입니다.",
       "options": [
         {
           "no": 1,
@@ -9482,7 +9898,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "지상물·부속물의 객체와 임대차 목적물을 각각 확인하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -9496,7 +9917,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -9543,7 +9964,15 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": {
+        "kind": "assistant-curated-educational-draft",
+        "sourceBinding": "official A-form question and accepted key only",
+        "year": 2022,
+        "questionId": "2022-73",
+        "expertReviewed": false,
+        "legalEffectiveDateChecked": false,
+        "independentOptionVerdicts": false
+      }
     },
     {
       "questionId": "2022-74",
@@ -9562,8 +9991,8 @@
         "legal_temporal_review"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "보증금 반환의무는 임차인의 미지급 차임 등 정산 관계를 고려해야 합니다.",
+      "answerReason": "보증금은 임대차 종료 시 임대인의 반환채무를 담보하지만 차임·손해금 등의 정산이 선행될 수 있습니다. ㄷ만 틀리다고 선택한 ③은 보증금 반환과 임대차 기간 중 차임지급 의무를 나누는 문제입니다.",
       "options": [
         {
           "no": 1,
@@ -9616,7 +10045,12 @@
           "sourceChecked": false
         }
       ],
-      "traps": [],
+      "traps": [
+        {
+          "text": "보증금이 존재한다는 이유로 월차임 지급을 일방적으로 정지할 수 있다고 단정하지 마세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -9630,7 +10064,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -9684,7 +10118,15 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": {
+        "kind": "assistant-curated-educational-draft",
+        "sourceBinding": "official A-form question and accepted key only",
+        "year": 2022,
+        "questionId": "2022-74",
+        "expertReviewed": false,
+        "legalEffectiveDateChecked": false,
+        "independentOptionVerdicts": false
+      }
     },
     {
       "questionId": "2022-75",
@@ -9703,8 +10145,8 @@
         "legal_temporal_review"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "다가구에서 다세대로 공부상 변경되어도 기존 대항력이 자동 소멸하지는 않습니다.",
+      "answerReason": "주민등록·인도를 통해 대항력을 취득한 임차인은 후에 건축물대장상 용도가 바뀌었다는 사정만으로 이미 취득한 대항력을 잃지 않습니다. ㄱ·ㄴ을 선택한 ③은 주택의 실질·대항력·우선변제 요건을 함께 검토합니다.",
       "options": [
         {
           "no": 1,
@@ -9757,7 +10199,12 @@
           "sourceChecked": false
         }
       ],
-      "traps": [],
+      "traps": [
+        {
+          "text": "대항력의 존부와 우선변제권을 취득하기 위한 확정일자 요건을 구분하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -9771,7 +10218,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -9832,7 +10279,15 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": {
+        "kind": "assistant-curated-educational-draft",
+        "sourceBinding": "official A-form question and accepted key only",
+        "year": 2022,
+        "questionId": "2022-75",
+        "expertReviewed": false,
+        "legalEffectiveDateChecked": false,
+        "independentOptionVerdicts": false
+      }
     },
     {
       "questionId": "2022-76",
@@ -9851,8 +10306,8 @@
         "legal_temporal_review"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "상가건물 임대차보호법은 환산보증금·인도·사업자등록 시점을 나눠 적용합니다.",
+      "answerReason": "세종 소재 점포의 보증금과 월차임을 환산할 때 월차임×100을 더해 적용범위를 검토하는 것이 첫 단계입니다. ㄱ·ㄷ을 묶은 ④는 사업자등록과 인도 요건 및 특별법 적용 범위를 구별하는 조건부 사례입니다.",
       "options": [
         {
           "no": 1,
@@ -9905,7 +10360,12 @@
           "sourceChecked": false
         }
       ],
-      "traps": [],
+      "traps": [
+        {
+          "text": "보증금 6억원에 월차임 100만원이 더해진 환산보증금을 빠뜨리지 마세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -9919,7 +10379,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -9987,7 +10447,15 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": {
+        "kind": "assistant-curated-educational-draft",
+        "sourceBinding": "official A-form question and accepted key only",
+        "year": 2022,
+        "questionId": "2022-76",
+        "expertReviewed": false,
+        "legalEffectiveDateChecked": false,
+        "independentOptionVerdicts": false
+      }
     },
     {
       "questionId": "2022-77",
@@ -10006,8 +10474,8 @@
         "legal_temporal_review"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "공용부분의 보존행위와 변경·관리행위는 구분소유자의 권한이 다릅니다.",
+      "answerReason": "집합건물 공용부분은 구분소유자 전원의 이해관계가 걸리므로 단독 점유·사용에 대한 대응, 보존행위와 처분행위를 각각 판단해야 합니다. ㄴ·ㄷ인 ④는 보존 여부와 관리단 의결 요건을 구분하는 문제입니다.",
       "options": [
         {
           "no": 1,
@@ -10060,7 +10528,12 @@
           "sourceChecked": false
         }
       ],
-      "traps": [],
+      "traps": [
+        {
+          "text": "공용부분의 독점 사용 문제를 단순한 사유재산 반환청구로 처리하지 마세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -10074,7 +10547,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -10121,7 +10594,15 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": {
+        "kind": "assistant-curated-educational-draft",
+        "sourceBinding": "official A-form question and accepted key only",
+        "year": 2022,
+        "questionId": "2022-77",
+        "expertReviewed": false,
+        "legalEffectiveDateChecked": false,
+        "independentOptionVerdicts": false
+      }
     },
     {
       "questionId": "2022-78",
@@ -10139,8 +10620,8 @@
         "legal_temporal_review"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "가등기담보권은 피담보채권과 함께 제3자에게 양도할 수 있습니다.",
+      "answerReason": "가등기담보권은 채권을 담보하는 권리이므로 피담보채권과의 부종성·수반성을 고려해 양도할 수 있습니다. 피담보채권과 함께 양도 가능하다는 ④가 공식 답입니다.",
       "options": [
         {
           "no": 1,
@@ -10174,7 +10655,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "가등기담보권만 채권과 무관하게 자유롭게 처분할 수 있다고 일반화하지 마세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -10188,7 +10674,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -10249,7 +10735,15 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": {
+        "kind": "assistant-curated-educational-draft",
+        "sourceBinding": "official A-form question and accepted key only",
+        "year": 2022,
+        "questionId": "2022-78",
+        "expertReviewed": false,
+        "legalEffectiveDateChecked": false,
+        "independentOptionVerdicts": false
+      }
     },
     {
       "questionId": "2022-79",
@@ -10267,8 +10761,8 @@
         "legal_temporal_review"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "명의신탁 무효를 제3자에게 대항할 수 없는 법정 보호범위가 있습니다.",
+      "answerReason": "계약명의신탁에서 등기 명의자가 제3자에게 적법하게 처분한 경우 단순히 명의신탁 사실을 알았다는 사정만으로 제3자의 취득이 당연히 부인되지는 않습니다. ⑤는 그 점을 잘못 설명합니다.",
       "options": [
         {
           "no": 1,
@@ -10302,7 +10796,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "명의신탁 약정의 무효와 제3자의 소유권 취득 보호를 별도 판단하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -10316,7 +10815,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -10377,7 +10876,15 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": {
+        "kind": "assistant-curated-educational-draft",
+        "sourceBinding": "official A-form question and accepted key only",
+        "year": 2022,
+        "questionId": "2022-79",
+        "expertReviewed": false,
+        "legalEffectiveDateChecked": false,
+        "independentOptionVerdicts": false
+      }
     },
     {
       "questionId": "2022-80",
@@ -10395,8 +10902,8 @@
         "legal_temporal_review"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "구분소유자가 10인 이상인 집합건물은 관리인 선임 규정을 확인해야 합니다.",
+      "answerReason": "집합건물법상 관리단은 구분소유관계에 따라 성립하고, 일정 규모 이상이면 관리인을 선임해 관리단의 사무를 맡도록 합니다. 10인 이상 선임 요건을 설명한 ②가 공식 답입니다.",
       "options": [
         {
           "no": 1,
@@ -10430,7 +10937,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "관리단의 당연 성립과 관리인 선임 의무는 별개입니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -10444,7 +10956,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -10491,7 +11003,15 @@
           "need": "Build contrasting condition and active-recall prompt"
         }
       ],
-      "explanationSeedProvenance": null
+      "explanationSeedProvenance": {
+        "kind": "assistant-curated-educational-draft",
+        "sourceBinding": "official A-form question and accepted key only",
+        "year": 2022,
+        "questionId": "2022-80",
+        "expertReviewed": false,
+        "legalEffectiveDateChecked": false,
+        "independentOptionVerdicts": false
+      }
     }
   ]
 }

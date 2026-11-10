@@ -5,9 +5,9 @@
   "totalQuestions": 400,
   "questionsPerYear": 80,
   "verifiedOriginalCount": 400,
-  "draftCount": 240,
+  "draftCount": 400,
   "publishedCount": 0,
-  "unstartedCount": 160,
+  "unstartedCount": 0,
   "reasonReviewedCount": 0,
   "optionVerdictsReviewed": 0,
   "optionVerdictsTotal": 2000,
@@ -18,7 +18,8 @@
   "excludedFromPublishedAnalytics": 400,
   "verifiedOccurrences": 0,
   "warning": "Registration verified != explanation reviewed. Neither draft nor unstarted records may be counted as published.",
-  "reasonDraftCount": 240,
-  "newDraftProvenance": "Assistant-authored 2022-2025 subject-specific study drafts, bound to official A-form answer arrays. All five-option verdicts and legal grounds require independently checked primary sources and human expert sign-off.",
-  "updatedByP4BatchV152": 160
+  "reasonDraftCount": 400,
+  "newDraftProvenance": "400 educational question-level drafts (2021-2025). As-of legal/precedent, 2000 option verdicts and source citations remain unreviewed. Accepted answer arrays are unchanged.",
+  "updatedByP4BatchV152": 160,
+  "updatedByP4BatchV154": 160
 }

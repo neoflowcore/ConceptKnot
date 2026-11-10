@@ -197,7 +197,7 @@ test('release cache and version align with no automatic CI or installer build',(
   'ck-concept-transition-view-v144.js?v=148']){
   A.ok(sw.includes(name));A.ok(load.includes(name));
  }
- A.match(sw,/conceptknot-study-v153-case-prediction/);
+ A.match(sw,/conceptknot-study-v154-p4-draft-coverage/);
  const critical=sw.match(/const CRITICAL=\[([\s\S]*?)\];/);
  A.ok(critical);A.equal([...critical[1].matchAll(/'\.\/[^']+'/g)].length,11);
  A.equal(JSON.parse(read('vercel.json')).git.deploymentEnabled,false);

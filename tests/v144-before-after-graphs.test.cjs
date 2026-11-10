@@ -152,7 +152,7 @@ test('release is manual-only and offline core 11 unchanged',()=>{
  for(const name of ['ck-concept-transition-v144.js?v=145','ck-concept-transition-view-v144.js?v=148','ck-concept-transition-v144.css?v=144']){
   A.ok(glue.includes(name));A.ok(sw.includes(name));
  }
- A.match(sw,/conceptknot-study-v153-case-prediction/);
+ A.match(sw,/conceptknot-study-v154-p4-draft-coverage/);
  const core=sw.match(/const CRITICAL=\[([\s\S]*?)\];/);
  A.ok(core);A.equal([...core[1].matchAll(/'\.\/[^']+'/g)].length,11);
  const vercel=JSON.parse(read('vercel.json'));

@@ -13,9 +13,9 @@ test('P4 80 draft explanations and original answers remain unmodified',()=>{
    assert.equal(row.quality.optionVerdictsReviewed,0);
   }
  }
- assert.equal(drafts,240);assert.equal(slots,2000);assert.equal(published,0);
+ assert.equal(drafts,400);assert.equal(slots,2000);assert.equal(published,0);
  const report=parse('data/reports/recent-five-coverage.json');
- assert.equal(report.draftCount,240);assert.equal(report.unstartedCount,160);
+ assert.equal(report.draftCount,400);assert.equal(report.unstartedCount,0);
 });
 test('P4 editorial desk is safely scoped and loaded into existing modal',()=>{
  const modal=read('assets/ck-study-p4-v78.js');
@@ -37,7 +37,7 @@ test('owl landing search forwards to existing study index',()=>{
 test('no CI, deployment or artifact creation',()=>{
  assert.equal(parse('vercel.json').git.deploymentEnabled,false);
  assert.equal(fs.existsSync(path.join(root,'.github','workflows')),false);
- assert.match(read('sw.js'),/conceptknot-study-v153-case-prediction/);
+ assert.match(read('sw.js'),/conceptknot-study-v154-p4-draft-coverage/);
  const html=read('index.html');
  assert.match(html,/ck-study-editor-v80.js\?v=127/);
  for(const m of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))new vm.Script(m[1]);
