@@ -391,7 +391,7 @@ async function showReviewDashboard(){
  el.innerHTML='<p role="status">검수 현황 조회 중…</p><button data-ck78-close>닫기</button>';
  let report={questions:400,withCandidateMatches:0,parsedCompoundStatements:0,
    reviewStages:{unstarted:'현황 자료 확인 필요',draft:'현황 자료 확인 필요',published:'현황 자료 확인 필요'},verifiedOptionVerdicts:0,requiredOptionVerdicts:2000};
- try{const response=await fetch('./data/reports/analysis-candidates-v78.json?v=151',{cache:'force-cache'});
+ try{const response=await fetch('./data/reports/analysis-candidates-v78.json?v=152',{cache:'force-cache'});
   if(response.ok)report=await response.json();
  }catch{}
  if(selected!=='report')return;

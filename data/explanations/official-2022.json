@@ -17,11 +17,13 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "select_incorrect"
+        "select_incorrect",
+        "analysis_draft",
+        "exam_2022_legal_and_econ_source_review_required"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "임시로 옮겨 심어 둔 가식 중 수목은 토지에 영속적으로 고정된 정착물이 아닙니다.",
+      "answerReason": "토지의 정착물은 토지에 고정되어 상당 기간 그 자리에서 이용되는 물건입니다. 구거·교량·담장 등은 토지의 정착물로 볼 수 있고, 다년생 식물도 통상 정착성을 갖습니다. 그러나 가식 중 수목은 일시적인 이식을 전제로 하기 때문에 정착물에서 제외되는 ③이 정답입니다.",
       "options": [
         {
           "no": 1,
@@ -39,7 +41,8 @@
           "no": 3,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 정답으로 인정된 번호입니다. 학습용 정답 근거 초안: 토지의 정착물은 토지에 고정되어 상당 기간 그 자리에서 이용되는 물건입니다. 구거·교량·담장 등은 토지의 정착물로 볼 수 있고, 다년생 식물도 통상 정착성을 갖습니다. 그러나 가식 중 수목은 일시적인 이식을 전제로 하기 때문에 정착물에서 제외되는 ③이 정답입니다."
         },
         {
           "no": 4,
@@ -55,7 +58,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "땅에 뿌리를 내렸더라도 영속적 정착 의사가 없는 임시 식재를 구별하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -69,7 +77,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -122,17 +130,20 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "select_correct"
+        "select_correct",
+        "analysis_draft",
+        "exam_2022_legal_and_econ_source_review_required"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "토지의 물리적 위치가 고정된 부동성 때문에 부동산시장은 지역별로 국지화됩니다.",
+      "answerReason": "부동성은 토지를 다른 장소로 옮길 수 없다는 특성으로, 부동산 이용가치가 입지·지역 환경에 크게 의존하고 시장이 국지화되는 이유가 됩니다. 따라서 ①이 맞습니다. 토지도 소비재 성격을 가지며, 물리적 부증성과 용도별 경제적 공급 확대 가능성은 별개입니다.",
       "options": [
         {
           "no": 1,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 정답으로 인정된 번호입니다. 학습용 정답 근거 초안: 부동성은 토지를 다른 장소로 옮길 수 없다는 특성으로, 부동산 이용가치가 입지·지역 환경에 크게 의존하고 시장이 국지화되는 이유가 됩니다. 따라서 ①이 맞습니다. 토지도 소비재 성격을 가지며, 물리적 부증성과 용도별 경제적 공급 확대 가능성은 별개입니다."
         },
         {
           "no": 2,
@@ -160,7 +171,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "토지의 물리적 공급이 비탄력적이어도 특정 용도의 경제적 공급은 달라질 수 있습니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -174,7 +190,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -242,11 +258,13 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "select_incorrect"
+        "select_incorrect",
+        "analysis_draft",
+        "exam_2022_legal_and_econ_source_review_required"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "소유권이 인정되지 않는 바다와 육지 사이의 해변 토지는 포락지가 아니라 빈지입니다.",
+      "answerReason": "토지의 위치와 법적 상태에 따라 용어가 달라집니다. 바다와 육지 사이에서 소유권이 인정되지 않는 해변 토지는 빈지이고 포락지는 물에 잠겨 토지 형태를 잃은 토지와 관련됩니다. 그러므로 ④가 틀렸습니다. 법지·선하지·환지·체비지는 다른 토지 형태·개발 절차를 설명합니다.",
       "options": [
         {
           "no": 1,
@@ -270,7 +288,8 @@
           "no": 4,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 정답으로 인정된 번호입니다. 학습용 정답 근거 초안: 토지의 위치와 법적 상태에 따라 용어가 달라집니다. 바다와 육지 사이에서 소유권이 인정되지 않는 해변 토지는 빈지이고 포락지는 물에 잠겨 토지 형태를 잃은 토지와 관련됩니다. 그러므로 ④가 틀렸습니다. 법지·선하지·환지·체비지는 다른 토지 형태·개발 절차를 설명합니다."
         },
         {
           "no": 5,
@@ -280,7 +299,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "빈지(해변의 무소유지)와 포락지(유실·침수된 토지)를 구별하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -294,7 +318,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -347,11 +371,13 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "compound_statements"
+        "compound_statements",
+        "analysis_draft",
+        "exam_2022_legal_and_econ_source_review_required"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "주택가격 하락 기대·건설업체 수 감소·정부 보조금 축소는 신규주택 공급을 감소시킵니다.",
+      "answerReason": "ㄱ 향후 주택가격 하락 기대는 신규주택 생산·공급 유인을 낮추고, ㄴ 건설업체 수 감소는 생산능력을 줄이며, ㄹ 건설 보조금 축소는 비용을 높여 공급을 감소시킵니다. 반면 ㄷ 건설용 토지가격 하락과 ㅁ 건설기술 발전으로 인한 원가 절감은 공급을 증가시킵니다. 따라서 ㄱ·ㄴ·ㄹ의 ④입니다.",
       "options": [
         {
           "no": 1,
@@ -375,7 +401,8 @@
           "no": 4,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 정답으로 인정된 번호입니다. 학습용 정답 근거 초안: ㄱ 향후 주택가격 하락 기대는 신규주택 생산·공급 유인을 낮추고, ㄴ 건설업체 수 감소는 생산능력을 줄이며, ㄹ 건설 보조금 축소는 비용을 높여 공급을 감소시킵니다. 반면 ㄷ 건설용 토지가격 하락과 ㅁ 건설기술 발전으로 인한 원가 절감은 공급을 증가시킵니다. 따라서 ㄱ·ㄴ·ㄹ의 ④입니다."
         },
         {
           "no": 5,
@@ -416,7 +443,12 @@
           "sourceChecked": false
         }
       ],
-      "traps": [],
+      "traps": [
+        {
+          "text": "공급곡선 좌측 이동 요인과 우측 이동 요인을 비용·업체 수·기대가격별로 나누세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -430,7 +462,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -498,11 +530,13 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "calculation_or_numeric"
+        "calculation_or_numeric",
+        "analysis_draft",
+        "exam_2022_legal_and_econ_source_review_required"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "소득탄력성은 0.4입니다. 자체가격 상승 효과 -2.5%와 대체재가격 상승 효과 +1.5%를 먼저 합산합니다.",
+      "answerReason": "자체가격 상승 5%×가격탄력성 0.5=수요량 -2.5%, 대체재인 아파트가격 상승 5%×교차탄력성 0.3=수요량 +1.5%입니다. 두 효과 합계 -1%인데 전체 수요량이 +1%였으므로 소득 증가효과가 +2%여야 합니다. 소득이 5% 증가했으니 소득탄력성=2%/5%=0.4, 정답 ②입니다.",
       "options": [
         {
           "no": 1,
@@ -514,7 +548,8 @@
           "no": 2,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 정답으로 인정된 번호입니다. 학습용 정답 근거 초안: 자체가격 상승 5%×가격탄력성 0.5=수요량 -2.5%, 대체재인 아파트가격 상승 5%×교차탄력성 0.3=수요량 +1.5%입니다. 두 효과 합계 -1%인데 전체 수요량이 +1%였으므로 소득 증가효과가 +2%여야 합니다. 소득이 5% 증가했으니 소득탄력성=2%/5%=0.4, 정답 ②입니다."
         },
         {
           "no": 3,
@@ -536,7 +571,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "가격탄력성은 절댓값이므로 자체가격 상승일 때 수요 감소 부호를 붙여야 합니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -550,7 +590,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -619,11 +659,13 @@
       "questionType": [
         "multiple_choice",
         "select_correct",
-        "visual_original_check"
+        "visual_original_check",
+        "analysis_draft",
+        "exam_2022_legal_and_econ_source_review_required"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "수요·공급이 모두 감소하고 수요 감소폭이 더 크면 균형가격과 균형거래량이 모두 하락합니다.",
+      "answerReason": "수요곡선 좌측 이동은 가격·거래량을 모두 낮추는 방향이고 공급곡선 좌측 이동은 가격을 높이지만 거래량을 낮추는 방향입니다. 두 곡선이 모두 좌측으로 이동하면 거래량은 감소하고, 수요 감소효과가 공급 감소효과보다 크면 가격도 하락합니다. 따라서 ④가 옳습니다.",
       "options": [
         {
           "no": 1,
@@ -647,7 +689,8 @@
           "no": 4,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 정답으로 인정된 번호입니다. 학습용 정답 근거 초안: 수요곡선 좌측 이동은 가격·거래량을 모두 낮추는 방향이고 공급곡선 좌측 이동은 가격을 높이지만 거래량을 낮추는 방향입니다. 두 곡선이 모두 좌측으로 이동하면 거래량은 감소하고, 수요 감소효과가 공급 감소효과보다 크면 가격도 하락합니다. 따라서 ④가 옳습니다."
         },
         {
           "no": 5,
@@ -657,7 +700,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "동시 이동에서는 먼저 확실한 거래량 방향을 찾고, 가격은 상대 이동폭을 비교하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -671,7 +719,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -746,11 +794,13 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "select_correct"
+        "select_correct",
+        "analysis_draft",
+        "exam_2022_legal_and_econ_source_review_required"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "경기 회복국면에서는 매수자 중심 시장에서 매도자 중심 시장으로 전환되는 경향이 있습니다.",
+      "answerReason": "부동산 경기의 회복시장에서는 수요가 점차 살아나고 거래가 증가하면서 매도자의 협상력이 커질 수 있습니다. 따라서 ④가 옳습니다. 상향시장에서는 가격·거래가 일반적으로 활발하고, 하향시장에서는 건축허가가 위축되며, 안정시장은 과거 거래가격의 활용 가능성이 비교적 높습니다.",
       "options": [
         {
           "no": 1,
@@ -774,7 +824,8 @@
           "no": 4,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 정답으로 인정된 번호입니다. 학습용 정답 근거 초안: 부동산 경기의 회복시장에서는 수요가 점차 살아나고 거래가 증가하면서 매도자의 협상력이 커질 수 있습니다. 따라서 ④가 옳습니다. 상향시장에서는 가격·거래가 일반적으로 활발하고, 하향시장에서는 건축허가가 위축되며, 안정시장은 과거 거래가격의 활용 가능성이 비교적 높습니다."
         },
         {
           "no": 5,
@@ -784,7 +835,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "경기국면을 회복→상향→후퇴→하향의 가격·거래·매도자 우위 변화로 이해하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -798,7 +854,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -851,11 +907,13 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "compound_statements"
+        "compound_statements",
+        "analysis_draft",
+        "exam_2022_legal_and_econ_source_review_required"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "수요함수 기울기 변화 전 균형은 P=35, Q=50이고 변경 후는 P=40, Q=60입니다.",
+      "answerReason": "변경 전: 120−2P=2P−20을 풀면 4P=140, P=35, Q=50입니다. 변경 후: 120−(3/2)P=2P−20이므로 3.5P=140, P=40, Q=60입니다. 따라서 균형가격은 5 상승하고 균형거래량은 10 증가하므로 ②가 정답입니다.",
       "options": [
         {
           "no": 1,
@@ -867,7 +925,8 @@
           "no": 2,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 정답으로 인정된 번호입니다. 학습용 정답 근거 초안: 변경 전: 120−2P=2P−20을 풀면 4P=140, P=35, Q=50입니다. 변경 후: 120−(3/2)P=2P−20이므로 3.5P=140, P=40, Q=60입니다. 따라서 균형가격은 5 상승하고 균형거래량은 10 증가하므로 ②가 정답입니다."
         },
         {
           "no": 3,
@@ -889,7 +948,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "수요곡선이 단순 평행이동한 것이 아니라 기울기가 변했으므로 두 교점을 직접 구하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -903,7 +967,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -971,11 +1035,13 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "select_incorrect"
+        "select_incorrect",
+        "analysis_draft",
+        "exam_2022_legal_and_econ_source_review_required"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "부동산 공급은 단기보다 장기에 더 탄력적으로 반응하는 것이 일반적입니다.",
+      "answerReason": "부동산은 건설·인허가·토지확보에 시간이 필요해 단기에 공급량을 빠르게 조정하기 어렵습니다. 따라서 공급의 가격탄력성이 장기보다 단기에 크고 수급조절이 쉽다는 ②는 틀렸습니다. 시장의 국지성·비대칭정보·협상가격과 불완전경쟁에서도 가능한 할당효율성은 별개입니다.",
       "options": [
         {
           "no": 1,
@@ -987,7 +1053,8 @@
           "no": 2,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 정답으로 인정된 번호입니다. 학습용 정답 근거 초안: 부동산은 건설·인허가·토지확보에 시간이 필요해 단기에 공급량을 빠르게 조정하기 어렵습니다. 따라서 공급의 가격탄력성이 장기보다 단기에 크고 수급조절이 쉽다는 ②는 틀렸습니다. 시장의 국지성·비대칭정보·협상가격과 불완전경쟁에서도 가능한 할당효율성은 별개입니다."
         },
         {
           "no": 3,
@@ -1009,7 +1076,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "부동산 공급은 단기 비탄력적, 장기 상대적으로 탄력적입니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -1023,7 +1095,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -1097,41 +1169,48 @@
         "multiple_choice",
         "select_correct",
         "compound_statements",
-        "all_accepted"
+        "all_accepted",
+        "analysis_draft",
+        "exam_2022_legal_and_econ_source_review_required"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "2022년 허프모형 문항은 공식 최종정답이 ①~⑤ 모두 인정된 특수문항입니다.",
+      "answerReason": "허프모형은 점포의 면적·효용과 거리·공간마찰계수를 활용해 점포 선택확률을 추정합니다. 그러나 이 문항은 2022년 제33회 시험 정답심사에서 ①·②·③·④·⑤ 모두 정답으로 변경됐습니다. 따라서 모든 조합의 진위를 일률적으로 참으로 판단하거나 임의로 단일 정답으로 바꿔서는 안 되며, 공식 이의제기 심사내용을 별도로 확인하는 것이 바람직합니다.",
       "options": [
         {
           "no": 1,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 채점상 이 번호를 인정합니다. 전원정답이므로 이 선지가 법리·경제학적으로 참인지 여부는 별도 검수해야 합니다."
         },
         {
           "no": 2,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 채점상 이 번호를 인정합니다. 전원정답이므로 이 선지가 법리·경제학적으로 참인지 여부는 별도 검수해야 합니다."
         },
         {
           "no": 3,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 채점상 이 번호를 인정합니다. 전원정답이므로 이 선지가 법리·경제학적으로 참인지 여부는 별도 검수해야 합니다."
         },
         {
           "no": 4,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 채점상 이 번호를 인정합니다. 전원정답이므로 이 선지가 법리·경제학적으로 참인지 여부는 별도 검수해야 합니다."
         },
         {
           "no": 5,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 채점상 이 번호를 인정합니다. 전원정답이므로 이 선지가 법리·경제학적으로 참인지 여부는 별도 검수해야 합니다."
         }
       ],
       "compoundStatements": [
@@ -1166,7 +1245,12 @@
           "sourceChecked": false
         }
       ],
-      "traps": [],
+      "traps": [
+        {
+          "text": "2022년 부동산학개론 A형 10번 **모두 정답**: 채점 인정과 이론 진위판정은 구분합니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -1180,7 +1264,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -1240,11 +1324,13 @@
       ],
       "specialAnswer": "normal",
       "questionType": [
-        "multiple_choice"
+        "multiple_choice",
+        "analysis_draft",
+        "exam_2022_legal_and_econ_source_review_required"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "중심지의 최소요구치·도달범위와 중심지 계층체계를 설명하는 것은 크리스탈러 중심지이론입니다.",
+      "answerReason": "크리스탈러의 중심지이론은 재화 공급의 중심지 위계와 배후지, 최소요구치(기능 유지를 위한 최소 수요), 도달범위(소비자 접근 가능 범위) 사이의 관계를 설명합니다. 문항은 고객의 다목적 구매나 문화적 차이를 충분히 설명하지 못한다는 한계도 언급합니다. 따라서 ⑤가 맞습니다.",
       "options": [
         {
           "no": 1,
@@ -1274,11 +1360,17 @@
           "no": 5,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 정답으로 인정된 번호입니다. 학습용 정답 근거 초안: 크리스탈러의 중심지이론은 재화 공급의 중심지 위계와 배후지, 최소요구치(기능 유지를 위한 최소 수요), 도달범위(소비자 접근 가능 범위) 사이의 관계를 설명합니다. 문항은 고객의 다목적 구매나 문화적 차이를 충분히 설명하지 못한다는 한계도 언급합니다. 따라서 ⑤가 맞습니다."
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "크리스탈러의 중심지 계층이론과 레일리의 소매중력·컨버스 분기점 모형을 구별하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -1292,7 +1384,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -1353,11 +1445,13 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "calculation_or_numeric"
+        "calculation_or_numeric",
+        "analysis_draft",
+        "exam_2022_legal_and_econ_source_review_required"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "2년 후 대형마트 개발에 관한 정보의 현재가치는 3억 3,000만원입니다.",
+      "answerReason": "개발되는 경우 토지가치 12억1천만원, 미개발 4억8,400만원, 개발확률 45%입니다. 2년 후 기대가격은 12.1억×0.45+4.84억×0.55=8.107억원입니다. 개발이 확실할 때의 추가가치 12.1−8.107=3.993억원을 연 10%로 2년 할인하면 3.993/1.1²=3.3억원이므로 ③입니다.",
       "options": [
         {
           "no": 1,
@@ -1375,7 +1469,8 @@
           "no": 3,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 정답으로 인정된 번호입니다. 학습용 정답 근거 초안: 개발되는 경우 토지가치 12억1천만원, 미개발 4억8,400만원, 개발확률 45%입니다. 2년 후 기대가격은 12.1억×0.45+4.84억×0.55=8.107억원입니다. 개발이 확실할 때의 추가가치 12.1−8.107=3.993억원을 연 10%로 2년 할인하면 3.993/1.1²=3.3억원이므로 ③입니다."
         },
         {
           "no": 4,
@@ -1391,7 +1486,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "정보가치 계산에서 개발가능성을 반영한 기대가격을 먼저 만들고 2년 할인계수를 적용하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -1405,7 +1505,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -1466,17 +1566,20 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "visual_original_check"
+        "visual_original_check",
+        "analysis_draft",
+        "exam_2022_legal_and_econ_source_review_required"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "농산물별 입지경쟁·운송비·중심지 거리로 지대가 달라지는 이론은 튀넨 위치지대설입니다.",
+      "answerReason": "튀넨의 고립국 모형은 농산물 종류에 따라 다른 한계지대곡선을 고려하여 특정 지점에 가장 높은 입찰지대를 지불할 수 있는 농업적 용도가 배치된다고 봅니다. 중심도시 인근에 집약농업, 외곽에 조방농업이 나타나는 설명은 위치지대설에 부합하여 ①입니다.",
       "options": [
         {
           "no": 1,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 정답으로 인정된 번호입니다. 학습용 정답 근거 초안: 튀넨의 고립국 모형은 농산물 종류에 따라 다른 한계지대곡선을 고려하여 특정 지점에 가장 높은 입찰지대를 지불할 수 있는 농업적 용도가 배치된다고 봅니다. 중심도시 인근에 집약농업, 외곽에 조방농업이 나타나는 설명은 위치지대설에 부합하여 ①입니다."
         },
         {
           "no": 2,
@@ -1504,7 +1607,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "리카도(토지 비옥도), 튀넨(거리·운송비), 마샬(준지대)을 구분하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -1518,7 +1626,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -1579,11 +1687,13 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "calculation_or_numeric"
+        "calculation_or_numeric",
+        "analysis_draft",
+        "exam_2022_legal_and_econ_source_review_required"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "레일리 소매중력모형에서 A와 B의 소비흡인력 비율은 1:4이므로 A 2억원, B 8억원입니다.",
+      "answerReason": "C에서 A까지 5km·A인구 5만명, B까지 2km·B인구 3만2천명입니다. 중력모형의 흡인력은 인구/거리²에 비례하므로 A=50,000/25=2,000, B=32,000/4=8,000입니다. 점유비중은 2,000:8,000=1:4이므로 월 총소비 10억원의 20%=A 2억원, 80%=B 8억원으로 ③입니다.",
       "options": [
         {
           "no": 1,
@@ -1601,7 +1711,8 @@
           "no": 3,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 정답으로 인정된 번호입니다. 학습용 정답 근거 초안: C에서 A까지 5km·A인구 5만명, B까지 2km·B인구 3만2천명입니다. 중력모형의 흡인력은 인구/거리²에 비례하므로 A=50,000/25=2,000, B=32,000/4=8,000입니다. 점유비중은 2,000:8,000=1:4이므로 월 총소비 10억원의 20%=A 2억원, 80%=B 8억원으로 ③입니다."
         },
         {
           "no": 4,
@@ -1617,7 +1728,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "거리제곱의 분모를 빠뜨리면 A도시 소비액이 과대계산됩니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -1631,7 +1747,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -1686,11 +1802,13 @@
         "multiple_choice",
         "select_correct",
         "compound_statements",
-        "calculation_or_numeric"
+        "calculation_or_numeric",
+        "analysis_draft",
+        "exam_2022_legal_and_econ_source_review_required"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "베버·뢰쉬·넬슨·해리스·울만의 설명은 모두 각 이론의 기본 취지에 해당합니다.",
+      "answerReason": "ㄱ 베버는 운송비·노동비·집적이익을 고려한 최소비용 입지를, ㄴ 뢰쉬는 수요와 시장조직의 공간적 배치를, ㄷ 넬슨은 최대매출을 확보하기 위한 소매입지 원칙을, ㄹ 해리스·울만은 분리된 복수 핵을 중심으로 한 도시공간구조를 설명합니다. 따라서 ㄱ·ㄴ·ㄷ·ㄹ 전부가 옳아 ⑤가 정답입니다.",
       "options": [
         {
           "no": 1,
@@ -1720,7 +1838,8 @@
           "no": 5,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 정답으로 인정된 번호입니다. 학습용 정답 근거 초안: ㄱ 베버는 운송비·노동비·집적이익을 고려한 최소비용 입지를, ㄴ 뢰쉬는 수요와 시장조직의 공간적 배치를, ㄷ 넬슨은 최대매출을 확보하기 위한 소매입지 원칙을, ㄹ 해리스·울만은 분리된 복수 핵을 중심으로 한 도시공간구조를 설명합니다. 따라서 ㄱ·ㄴ·ㄷ·ㄹ 전부가 옳아 ⑤가 정답입니다."
         }
       ],
       "compoundStatements": [
@@ -1749,7 +1868,12 @@
           "sourceChecked": false
         }
       ],
-      "traps": [],
+      "traps": [
+        {
+          "text": "입지이론마다 중심 변수(비용·수요·소매매출·다핵)를 따로 정리하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -1763,7 +1887,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -1825,17 +1949,20 @@
       "questionType": [
         "multiple_choice",
         "compound_statements",
-        "legal_temporal_review"
+        "legal_temporal_review",
+        "analysis_draft",
+        "exam_2022_legal_and_econ_source_review_required"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "국토계획법상 도시지역은 주거·상업·공업·녹지지역으로 구분되므로 제시된 것 중 녹지지역만 해당합니다.",
+      "answerReason": "제시된 ㄹ 녹지지역은 도시지역입니다. ㄱ 농림지역과 ㄴ 관리지역은 도시지역 이외 국토의 용도지역이고, ㄷ 취락지역과 ㅁ 산업지역, ㅂ 유보지역은 법령상 도시지역의 4대 구분명칭이 아닙니다. 따라서 ㄹ만 고른 ①입니다.",
       "options": [
         {
           "no": 1,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 정답으로 인정된 번호입니다. 학습용 정답 근거 초안: 제시된 ㄹ 녹지지역은 도시지역입니다. ㄱ 농림지역과 ㄴ 관리지역은 도시지역 이외 국토의 용도지역이고, ㄷ 취락지역과 ㅁ 산업지역, ㅂ 유보지역은 법령상 도시지역의 4대 구분명칭이 아닙니다. 따라서 ㄹ만 고른 ①입니다."
         },
         {
           "no": 2,
@@ -1900,7 +2027,12 @@
           "sourceChecked": false
         }
       ],
-      "traps": [],
+      "traps": [
+        {
+          "text": "도시지역 4개: 주거·상업·공업·녹지; 관리·농림·자연환경보전은 별도입니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -1914,7 +2046,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -1969,11 +2101,13 @@
         "multiple_choice",
         "select_correct",
         "compound_statements",
-        "legal_temporal_review"
+        "legal_temporal_review",
+        "analysis_draft",
+        "exam_2022_legal_and_econ_source_review_required"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "임직원을 상근으로 두고 직접 자산 운용하면 자기관리 REITs, 자산관리회사에 위탁하면 위탁관리 REITs입니다.",
+      "answerReason": "자기관리 부동산투자회사는 자산운용 전문인력 등 임직원을 자체적으로 두고 직접 자산을 투자·운용합니다. 위탁관리 부동산투자회사는 외부 자산관리회사에 자산의 투자·운용업무를 위탁합니다. 따라서 ㄱ 자기관리, ㄴ 위탁관리인 ③이 정답입니다.",
       "options": [
         {
           "no": 1,
@@ -1991,7 +2125,8 @@
           "no": 3,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 정답으로 인정된 번호입니다. 학습용 정답 근거 초안: 자기관리 부동산투자회사는 자산운용 전문인력 등 임직원을 자체적으로 두고 직접 자산을 투자·운용합니다. 위탁관리 부동산투자회사는 외부 자산관리회사에 자산의 투자·운용업무를 위탁합니다. 따라서 ㄱ 자기관리, ㄴ 위탁관리인 ③이 정답입니다."
         },
         {
           "no": 4,
@@ -2007,7 +2142,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "자기관리형과 위탁관리형을 운용 주체를 기준으로 구별하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -2021,7 +2161,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -2074,11 +2214,13 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "select_correct"
+        "select_correct",
+        "analysis_draft",
+        "exam_2022_legal_and_econ_source_review_required"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "개발부담금제는 재건축부담금제보다 먼저 도입된 제도입니다.",
+      "answerReason": "개발이익환수제도로서 개발부담금제는 재건축 초과이익에 대한 별도 부담금 제도보다 먼저 도입됐으므로 ③이 옳습니다. 택지소유상한제가 당시 시행 중이라는 설명은 틀리고, 토지비축은 직접개입이며 PIR이 높을수록 집값 부담은 큰 편입니다. 부동산실명제의 근거는 부동산실권리자명의등기에관한법률입니다.",
       "options": [
         {
           "no": 1,
@@ -2096,7 +2238,8 @@
           "no": 3,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 정답으로 인정된 번호입니다. 학습용 정답 근거 초안: 개발이익환수제도로서 개발부담금제는 재건축 초과이익에 대한 별도 부담금 제도보다 먼저 도입됐으므로 ③이 옳습니다. 택지소유상한제가 당시 시행 중이라는 설명은 틀리고, 토지비축은 직접개입이며 PIR이 높을수록 집값 부담은 큰 편입니다. 부동산실명제의 근거는 부동산실권리자명의등기에관한법률입니다."
         },
         {
           "no": 4,
@@ -2112,7 +2255,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "개발부담금·재건축부담금의 제정 시기와 규율 대상을 구별하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -2126,7 +2274,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -2195,11 +2343,13 @@
       "questionType": [
         "multiple_choice",
         "select_correct",
-        "compound_statements"
+        "compound_statements",
+        "analysis_draft",
+        "exam_2022_legal_and_econ_source_review_required"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "양도소득세·부가가치세는 국세, 취득세·등록면허세는 지방세입니다.",
+      "answerReason": "ㄱ 양도소득세와 부가가치세는 국세, ㄴ 취득세와 등록면허세는 지방세로서 옳습니다. ㄷ 상속세는 국세·취득단계의 세금일 수 있으나 재산세는 보유세라 두 세금을 취득단계로 묶을 수 없습니다. ㄹ 증여세는 증여에 대한 국세이고 종합부동산세는 보유세라 둘 다 보유단계에 부과한다는 주장이 틀립니다. ㄱ·ㄴ의 ②입니다.",
       "options": [
         {
           "no": 1,
@@ -2211,7 +2361,8 @@
           "no": 2,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 정답으로 인정된 번호입니다. 학습용 정답 근거 초안: ㄱ 양도소득세와 부가가치세는 국세, ㄴ 취득세와 등록면허세는 지방세로서 옳습니다. ㄷ 상속세는 국세·취득단계의 세금일 수 있으나 재산세는 보유세라 두 세금을 취득단계로 묶을 수 없습니다. ㄹ 증여세는 증여에 대한 국세이고 종합부동산세는 보유세라 둘 다 보유단계에 부과한다는 주장이 틀립니다. ㄱ·ㄴ의 ②입니다."
         },
         {
           "no": 3,
@@ -2258,7 +2409,12 @@
           "sourceChecked": false
         }
       ],
-      "traps": [],
+      "traps": [
+        {
+          "text": "국세/지방세 구분과 취득/보유/처분단계 구분을 독립적으로 적용하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -2272,7 +2428,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -2333,11 +2489,13 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "legal_temporal_review"
+        "legal_temporal_review",
+        "analysis_draft",
+        "exam_2022_legal_and_econ_source_review_required"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "주택으로 쓰는 바닥면적 600㎡, 4개 층, 8세대가 각각 취사 가능한 건물은 다세대주택입니다.",
+      "answerReason": "다세대주택은 주택으로 쓰는 바닥면적의 합계가 660㎡ 이하이고 층수가 4개 층 이하인 공동주택입니다. 제시 건물은 600㎡, 4층 전부 주택, 8세대에 취사시설을 갖추었으므로 다세대주택인 ⑤입니다. 다가구주택은 단독주택 분류이고 연립주택은 660㎡ 초과가 일반적 구분 기준입니다.",
       "options": [
         {
           "no": 1,
@@ -2367,11 +2525,17 @@
           "no": 5,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 정답으로 인정된 번호입니다. 학습용 정답 근거 초안: 다세대주택은 주택으로 쓰는 바닥면적의 합계가 660㎡ 이하이고 층수가 4개 층 이하인 공동주택입니다. 제시 건물은 600㎡, 4층 전부 주택, 8세대에 취사시설을 갖추었으므로 다세대주택인 ⑤입니다. 다가구주택은 단독주택 분류이고 연립주택은 660㎡ 초과가 일반적 구분 기준입니다."
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "다가구(단독)·다세대(공동)의 법적 분류와 바닥면적 660㎡ 경계를 구별하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -2385,7 +2549,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -2438,11 +2602,13 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "select_incorrect"
+        "select_incorrect",
+        "analysis_draft",
+        "exam_2022_legal_and_econ_source_review_required"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "순현재가치(NPV)는 내부수익률이 아니라 투자자의 요구수익률로 현금흐름을 할인해 산정합니다.",
+      "answerReason": "NPV는 장래 현금유입·유출을 적정 할인율인 요구수익률(또는 자본비용)로 현재가치화한 차액입니다. 내부수익률(IRR)은 NPV가 0이 되는 할인율이므로 ⑤처럼 NPV를 일률적으로 IRR로 할인하여 구한다고 하면 논리가 뒤바뀝니다. 금리와 요구수익률의 정(+) 관계, 위험회피도에 따른 요구수익률 등은 별도입니다.",
       "options": [
         {
           "no": 1,
@@ -2472,11 +2638,17 @@
           "no": 5,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 정답으로 인정된 번호입니다. 학습용 정답 근거 초안: NPV는 장래 현금유입·유출을 적정 할인율인 요구수익률(또는 자본비용)로 현재가치화한 차액입니다. 내부수익률(IRR)은 NPV가 0이 되는 할인율이므로 ⑤처럼 NPV를 일률적으로 IRR로 할인하여 구한다고 하면 논리가 뒤바뀝니다. 금리와 요구수익률의 정(+) 관계, 위험회피도에 따른 요구수익률 등은 별도입니다."
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "IRR은 NPV=0인 할인율이고 NPV법에서 의사결정에 쓰는 할인율은 요구수익률입니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -2490,7 +2662,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -2551,17 +2723,20 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "select_incorrect"
+        "select_incorrect",
+        "analysis_draft",
+        "exam_2022_legal_and_econ_source_review_required"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "상관계수 0일 때도 위험분산 효과가 있지만 가장 큰 효과는 상관계수 -1인 완전한 역상관 관계입니다.",
+      "answerReason": "두 자산수익률의 상관계수가 0이면 위험이 어느 정도 분산될 수 있지만 위험감소 효과가 최대인 것은 아닙니다. 동일 위험 등 조건에서 수익률이 완전 반대 방향으로 움직이는 상관계수 -1일 때 더 큰 위험 제거가 가능하므로 ①이 틀립니다. 포트폴리오 기대수익은 가중평균, 분산은 상관계수·비중에 의해 달라집니다.",
       "options": [
         {
           "no": 1,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 정답으로 인정된 번호입니다. 학습용 정답 근거 초안: 두 자산수익률의 상관계수가 0이면 위험이 어느 정도 분산될 수 있지만 위험감소 효과가 최대인 것은 아닙니다. 동일 위험 등 조건에서 수익률이 완전 반대 방향으로 움직이는 상관계수 -1일 때 더 큰 위험 제거가 가능하므로 ①이 틀립니다. 포트폴리오 기대수익은 가중평균, 분산은 상관계수·비중에 의해 달라집니다."
         },
         {
           "no": 2,
@@ -2589,7 +2764,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "상관계수는 +1(같이 움직임)·0(무상관)·−1(반대로 움직임)을 비교하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -2603,7 +2783,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -2657,11 +2837,13 @@
       "questionType": [
         "multiple_choice",
         "select_incorrect",
-        "calculation_or_numeric"
+        "calculation_or_numeric",
+        "analysis_draft",
+        "exam_2022_legal_and_econ_source_review_required"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "NOI가 일정하면 부동산 가격 상승으로 자본환원율(NOI/가치)은 낮아집니다.",
+      "answerReason": "자본환원율은 직접환원법에서 NOI를 부동산 가격·가치로 나눈 비율입니다. NOI가 일정할 때 투자수요 증가로 자산가격이 오르면 분모가 커지므로 환원율은 하락합니다. ③은 이를 상승이라고 적어 틀렸습니다. 금리·투자위험 상승은 요구수익률·환원율을 높이는 일반 요인입니다.",
       "options": [
         {
           "no": 1,
@@ -2679,7 +2861,8 @@
           "no": 3,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 정답으로 인정된 번호입니다. 학습용 정답 근거 초안: 자본환원율은 직접환원법에서 NOI를 부동산 가격·가치로 나눈 비율입니다. NOI가 일정할 때 투자수요 증가로 자산가격이 오르면 분모가 커지므로 환원율은 하락합니다. ③은 이를 상승이라고 적어 틀렸습니다. 금리·투자위험 상승은 요구수익률·환원율을 높이는 일반 요인입니다."
         },
         {
           "no": 4,
@@ -2695,7 +2878,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "NOI 일정 시 부동산가치와 자본환원율은 역비례합니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -2709,7 +2897,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -2784,17 +2972,20 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "select_incorrect"
+        "select_incorrect",
+        "analysis_draft",
+        "exam_2022_legal_and_econ_source_review_required"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "수익률법·승수법 등 전통적 투자분석은 시간가치를 반영하지 않는 경우가 많습니다.",
+      "answerReason": "①은 수익률법과 승수법이 투자현금흐름의 시간가치를 반영한다고 설명하는데, 이들은 일반적으로 할인현금수지분석(DCF)과 달리 시간가치를 충분히 반영하지 않는 전통적 분석법입니다. 현금흐름이 여러 차례 부호를 바꾸면 IRR이 복수로 존재할 수 있고, 세후지분수익률은 지분투자액 대비 세후현금흐름입니다.",
       "options": [
         {
           "no": 1,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 정답으로 인정된 번호입니다. 학습용 정답 근거 초안: ①은 수익률법과 승수법이 투자현금흐름의 시간가치를 반영한다고 설명하는데, 이들은 일반적으로 할인현금수지분석(DCF)과 달리 시간가치를 충분히 반영하지 않는 전통적 분석법입니다. 현금흐름이 여러 차례 부호를 바꾸면 IRR이 복수로 존재할 수 있고, 세후지분수익률은 지분투자액 대비 세후현금흐름입니다."
         },
         {
           "no": 2,
@@ -2822,7 +3013,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "시간가치 반영 여부로 전통적 수익률·승수법과 NPV·IRR 할인분석을 구별하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -2836,7 +3032,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -2904,11 +3100,13 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "calculation_or_numeric"
+        "calculation_or_numeric",
+        "analysis_draft",
+        "exam_2022_legal_and_econ_source_review_required"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "순소득승수는 총투자액을 NOI로 나눈 값이며, 10,000만원/500만원=20입니다.",
+      "answerReason": "연간 유효총소득 EGI=1,000만원에서 영업비용 500만원을 차감하면 순영업소득 NOI=500만원입니다. 순소득승수=총투자액 10,000만원÷NOI 500만원=20이므로 ⑤가 맞습니다. 부채서비스액 260만원과 영업소득세 120만원은 세전·세후 현금흐름 계산 단계에서 반영할 항목이지 NOI 계산에서 직접 공제하는 것이 아닙니다.",
       "options": [
         {
           "no": 1,
@@ -2938,11 +3136,17 @@
           "no": 5,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 정답으로 인정된 번호입니다. 학습용 정답 근거 초안: 연간 유효총소득 EGI=1,000만원에서 영업비용 500만원을 차감하면 순영업소득 NOI=500만원입니다. 순소득승수=총투자액 10,000만원÷NOI 500만원=20이므로 ⑤가 맞습니다. 부채서비스액 260만원과 영업소득세 120만원은 세전·세후 현금흐름 계산 단계에서 반영할 항목이지 NOI 계산에서 직접 공제하는 것이 아닙니다."
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "순소득승수의 분모는 EGI가 아니라 NOI이고 지분투자액이 아닌 총투자액을 사용합니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -2956,7 +3160,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -3010,11 +3214,13 @@
       "questionType": [
         "multiple_choice",
         "compound_statements",
-        "calculation_or_numeric"
+        "calculation_or_numeric",
+        "analysis_draft",
+        "exam_2022_legal_and_econ_source_review_required"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "타인자본 40%를 활용하면 자기자본수익률 7.5%, 무차입이면 6.5%입니다.",
+      "answerReason": "부동산 매입가 2억원, 1년간 NOI 700만원, 자산가격 상승이익 600만원이므로 연간 투자성과는 1,300만원입니다. 무차입 자기자본 2억원에 대한 수익률은 1,300/20,000=6.5%입니다. 대출 40%=8,000만원, 자기자본 1억2천만원, 연 이자 5%=400만원이므로 순수익 1,300−400=900만원, 자기자본수익률은 900/12,000=7.5%입니다. ㄱ 7.5, ㄴ 6.5인 ④가 맞습니다.",
       "options": [
         {
           "no": 1,
@@ -3038,7 +3244,8 @@
           "no": 4,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 정답으로 인정된 번호입니다. 학습용 정답 근거 초안: 부동산 매입가 2억원, 1년간 NOI 700만원, 자산가격 상승이익 600만원이므로 연간 투자성과는 1,300만원입니다. 무차입 자기자본 2억원에 대한 수익률은 1,300/20,000=6.5%입니다. 대출 40%=8,000만원, 자기자본 1억2천만원, 연 이자 5%=400만원이므로 순수익 1,300−400=900만원, 자기자본수익률은 900/12,000=7.5%입니다. ㄱ 7.5, ㄴ 6.5인 ④가 맞습니다."
         },
         {
           "no": 5,
@@ -3048,7 +3255,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "차입금 8천만원의 이자만 순수익에서 차감하고 원금 상환은 수익이 아닙니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -3062,7 +3274,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -3130,17 +3342,20 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "select_incorrect"
+        "select_incorrect",
+        "analysis_draft",
+        "exam_2022_legal_and_econ_source_review_required"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "주택가격 급등 시 금리 인하·소비대출 확대·규제 완화는 수요를 자극해 급등을 억제하기 어렵습니다.",
+      "answerReason": "주택소비금융을 확대하고 대출금리를 낮추면 구매자의 유효 수요가 증가해 주택가격 상승압력을 높일 수 있습니다. 따라서 정부가 급격한 가격상승에 대응하면서 이 세 수단으로 규제를 완화한다고 한 ①은 틀린 설명입니다. 주택금융은 구입·임대 등에 필요한 자금조달을 지원하고 주택 거래에 영향을 줍니다.",
       "options": [
         {
           "no": 1,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 정답으로 인정된 번호입니다. 학습용 정답 근거 초안: 주택소비금융을 확대하고 대출금리를 낮추면 구매자의 유효 수요가 증가해 주택가격 상승압력을 높일 수 있습니다. 따라서 정부가 급격한 가격상승에 대응하면서 이 세 수단으로 규제를 완화한다고 한 ①은 틀린 설명입니다. 주택금융은 구입·임대 등에 필요한 자금조달을 지원하고 주택 거래에 영향을 줍니다."
         },
         {
           "no": 2,
@@ -3168,7 +3383,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "금리 인하·대출완화는 일반적으로 수요 증가 방향이며 가격 안정화정책과 구별해야 합니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -3182,7 +3402,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -3243,11 +3463,13 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "legal_temporal_review"
+        "legal_temporal_review",
+        "analysis_draft",
+        "exam_2022_legal_and_econ_source_review_required"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "주택담보노후연금인 주택연금의 법정 보증기관은 한국주택금융공사입니다.",
+      "answerReason": "주택담보노후연금인 주택연금의 보증기관은 한국주택금융공사(HF)이며, 주택도시보증공사(HUG)나 한국토지주택공사(LH), 한국부동산원과는 법정 업무가 다릅니다. 따라서 ⑤가 맞습니다.",
       "options": [
         {
           "no": 1,
@@ -3277,11 +3499,17 @@
           "no": 5,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 정답으로 인정된 번호입니다. 학습용 정답 근거 초안: 주택담보노후연금인 주택연금의 보증기관은 한국주택금융공사(HF)이며, 주택도시보증공사(HUG)나 한국토지주택공사(LH), 한국부동산원과는 법정 업무가 다릅니다. 따라서 ⑤가 맞습니다."
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "한국주택금융공사 주택연금 보증과 주택도시보증공사 임대보증 등의 업무를 구분하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -3295,7 +3523,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -3348,11 +3576,13 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "calculation_or_numeric"
+        "calculation_or_numeric",
+        "analysis_draft",
+        "exam_2022_legal_and_econ_source_review_required"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "원리금균등분할상환 대출의 5년 후 잔액은 남은 25년 현금흐름의 현재가치인 9,237만원입니다.",
+      "answerReason": "원리금균등분할상환 잔액은 남은 월별 상환액의 현재가치를 계산하여 구합니다. 남은 기간 25년의 연금 현가계수 171.06과 월 원리금상환액 54만원을 곱하면 54×171.06=9,237.24만원입니다. 문제의 만원 미만 절사 조건에 따라 9,237만원이어서 ④가 맞습니다.",
       "options": [
         {
           "no": 1,
@@ -3376,7 +3606,8 @@
           "no": 4,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 정답으로 인정된 번호입니다. 학습용 정답 근거 초안: 원리금균등분할상환 잔액은 남은 월별 상환액의 현재가치를 계산하여 구합니다. 남은 기간 25년의 연금 현가계수 171.06과 월 원리금상환액 54만원을 곱하면 54×171.06=9,237.24만원입니다. 문제의 만원 미만 절사 조건에 따라 9,237만원이어서 ④가 맞습니다."
         },
         {
           "no": 5,
@@ -3386,7 +3617,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "기존 대출액에서 5년간 원리금 총납입액을 단순 차감하면 이자까지 원금으로 오인합니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -3400,7 +3636,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -3470,17 +3706,20 @@
         "multiple_choice",
         "select_correct",
         "compound_statements",
-        "calculation_or_numeric"
+        "calculation_or_numeric",
+        "analysis_draft",
+        "exam_2022_legal_and_econ_source_review_required"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "대출채권의 가중평균상환기간은 원금균등→원리금균등→만기일시상환 순으로 길어집니다.",
+      "answerReason": "동일 원금·금리·상환기간 조건에서 원금균등방식은 초기부터 원금을 많이 회수하므로 현금흐름의 평균 회수시점이 가장 짧습니다. 원리금균등은 초기 원금상환이 더 느리고, 만기일시상환은 대부분 원금을 만기에 회수하므로 가장 깁니다. ㄱ→ㄴ→ㄷ의 ①이 정답입니다.",
       "options": [
         {
           "no": 1,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 정답으로 인정된 번호입니다. 학습용 정답 근거 초안: 동일 원금·금리·상환기간 조건에서 원금균등방식은 초기부터 원금을 많이 회수하므로 현금흐름의 평균 회수시점이 가장 짧습니다. 원리금균등은 초기 원금상환이 더 느리고, 만기일시상환은 대부분 원금을 만기에 회수하므로 가장 깁니다. ㄱ→ㄴ→ㄷ의 ①이 정답입니다."
         },
         {
           "no": 2,
@@ -3527,7 +3766,12 @@
           "sourceChecked": false
         }
       ],
-      "traps": [],
+      "traps": [
+        {
+          "text": "초기 원금회수 비중이 높을수록 대출채권 듀레이션은 짧아집니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -3541,7 +3785,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -3610,11 +3854,13 @@
       "questionType": [
         "multiple_choice",
         "select_incorrect",
-        "legal_temporal_review"
+        "legal_temporal_review",
+        "analysis_draft",
+        "exam_2022_legal_and_econ_source_review_required"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "PF ABCP는 자산유동화법상 ABS의 유동화계획 등록체계를 그대로 적용한다고 볼 수 없습니다.",
+      "answerReason": "자산유동화증권(ABS)과 PF 관련 ABCP는 발행수단·도관체·등록 근거가 서로 다릅니다. ⑤는 PF ABCP를 금융감독원에 등록한 자산유동화계획의 기재내용대로 반복 발행해야 한다고 하여 ABS 등록절차를 ABCP에 그대로 적용한 점이 틀립니다. 구체적인 발행규제는 시험 당시 자산유동화법령과 시장 규정 대조가 필요합니다.",
       "options": [
         {
           "no": 1,
@@ -3644,11 +3890,17 @@
           "no": 5,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 정답으로 인정된 번호입니다. 학습용 정답 근거 초안: 자산유동화증권(ABS)과 PF 관련 ABCP는 발행수단·도관체·등록 근거가 서로 다릅니다. ⑤는 PF ABCP를 금융감독원에 등록한 자산유동화계획의 기재내용대로 반복 발행해야 한다고 하여 ABS 등록절차를 ABCP에 그대로 적용한 점이 틀립니다. 구체적인 발행규제는 시험 당시 자산유동화법령과 시장 규정 대조가 필요합니다."
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "ABS(자산유동화증권)와 ABCP(자산담보부 기업어음)의 법적 등록절차를 구별하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -3662,7 +3914,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -3716,11 +3968,13 @@
       "questionType": [
         "multiple_choice",
         "select_incorrect",
-        "legal_temporal_review"
+        "legal_temporal_review",
+        "analysis_draft",
+        "exam_2022_legal_and_econ_source_review_required"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "공공지원민간임대주택은 공공임대주택이 아니라 민간임대주택 범주에 속합니다.",
+      "answerReason": "영구임대·국민임대·분양전환공공임대·기존주택등 매입임대는 공공주택특별법에 따른 공공임대 유형입니다. 반면 공공지원민간임대주택은 이름에 '공공지원'이 있더라도 민간임대주택에 관한 특별법에 따른 민간임대 유형이므로 ④가 정답입니다.",
       "options": [
         {
           "no": 1,
@@ -3744,7 +3998,8 @@
           "no": 4,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 정답으로 인정된 번호입니다. 학습용 정답 근거 초안: 영구임대·국민임대·분양전환공공임대·기존주택등 매입임대는 공공주택특별법에 따른 공공임대 유형입니다. 반면 공공지원민간임대주택은 이름에 '공공지원'이 있더라도 민간임대주택에 관한 특별법에 따른 민간임대 유형이므로 ④가 정답입니다."
         },
         {
           "no": 5,
@@ -3754,7 +4009,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "지원 주체의 이름에 '공공'이 들어 있어도 운영 주체와 법정 유형을 확인하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -3768,7 +4028,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -3821,17 +4081,20 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "select_incorrect"
+        "select_incorrect",
+        "analysis_draft",
+        "exam_2022_legal_and_econ_source_review_required"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "시장점유 전략을 단순히 수요자 측면의 접근으로 정의한 설명은 옳지 않습니다.",
+      "answerReason": "부동산마케팅의 시장점유·공급자 측 접근은 사업자 입장에서 시장지배와 판매범위를 넓히는 전략입니다. ①은 이를 '수요자 측면의 접근'으로 바꿔 적어 틀렸습니다. 시장세분화는 고객 집단을 나누고, 마케팅믹스는 제품·가격·유통·촉진 등 요소를 조합하며, 고객점유는 구매과정의 심리적 접점을 관리합니다.",
       "options": [
         {
           "no": 1,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 정답으로 인정된 번호입니다. 학습용 정답 근거 초안: 부동산마케팅의 시장점유·공급자 측 접근은 사업자 입장에서 시장지배와 판매범위를 넓히는 전략입니다. ①은 이를 '수요자 측면의 접근'으로 바꿔 적어 틀렸습니다. 시장세분화는 고객 집단을 나누고, 마케팅믹스는 제품·가격·유통·촉진 등 요소를 조합하며, 고객점유는 구매과정의 심리적 접점을 관리합니다."
         },
         {
           "no": 2,
@@ -3859,7 +4122,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "시장점유(시장·공급자 관점)와 고객점유(수요자 관계 관점)를 구별하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -3873,7 +4141,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -3925,11 +4193,13 @@
       ],
       "specialAnswer": "normal",
       "questionType": [
-        "multiple_choice"
+        "multiple_choice",
+        "analysis_draft",
+        "exam_2022_legal_and_econ_source_review_required"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "관리 전문성·고도설비 대응·대형건물 효율성이라는 장점은 위탁관리방식에 해당합니다.",
+      "answerReason": "위탁관리방식은 전문 관리업체에 건물관리를 맡기는 방식이므로 전문인력과 설비 운용 노하우를 활용할 수 있고 대형건물에 유리합니다. 반면 외부 업체가 참여해 기밀유지의 어려움과 용역비 부담이 생길 수 있습니다. 따라서 ②가 정답입니다.",
       "options": [
         {
           "no": 1,
@@ -3941,7 +4211,8 @@
           "no": 2,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 정답으로 인정된 번호입니다. 학습용 정답 근거 초안: 위탁관리방식은 전문 관리업체에 건물관리를 맡기는 방식이므로 전문인력과 설비 운용 노하우를 활용할 수 있고 대형건물에 유리합니다. 반면 외부 업체가 참여해 기밀유지의 어려움과 용역비 부담이 생길 수 있습니다. 따라서 ②가 정답입니다."
         },
         {
           "no": 3,
@@ -3963,7 +4234,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "직접관리의 통제력·보안과 위탁관리의 전문성·규모효과를 비교하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -3977,7 +4253,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -4031,11 +4307,13 @@
       "questionType": [
         "multiple_choice",
         "select_correct",
-        "compound_statements"
+        "compound_statements",
+        "analysis_draft",
+        "exam_2022_legal_and_econ_source_review_required"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "감가수정에는 물리적·기능적·경제적 감가가 있고, 내용연수법에는 정액·정률·상환기금법이 포함됩니다.",
+      "answerReason": "ㄴ 재조달원가 감액 요인으로 물리적·기능적·경제적 감가를 고려하는 것은 맞습니다. ㄷ 내용연수법·관찰감가법·분해법은 감가수정방법이고, ㄹ 내용연수법의 정액·정률·상환기금법도 맞습니다. ㄱ은 감가의 내용연수를 물리적 내용연수로만 한정해 틀리며, ㅁ 정률법은 남은 미상각잔액에 일정 감가율을 적용하므로 해마다 감가액이 일정하지 않습니다. ㄴ·ㄷ·ㄹ의 ④입니다.",
       "options": [
         {
           "no": 1,
@@ -4059,7 +4337,8 @@
           "no": 4,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 정답으로 인정된 번호입니다. 학습용 정답 근거 초안: ㄴ 재조달원가 감액 요인으로 물리적·기능적·경제적 감가를 고려하는 것은 맞습니다. ㄷ 내용연수법·관찰감가법·분해법은 감가수정방법이고, ㄹ 내용연수법의 정액·정률·상환기금법도 맞습니다. ㄱ은 감가의 내용연수를 물리적 내용연수로만 한정해 틀리며, ㅁ 정률법은 남은 미상각잔액에 일정 감가율을 적용하므로 해마다 감가액이 일정하지 않습니다. ㄴ·ㄷ·ㄹ의 ④입니다."
         },
         {
           "no": 5,
@@ -4100,7 +4379,12 @@
           "sourceChecked": false
         }
       ],
-      "traps": [],
+      "traps": [
+        {
+          "text": "정액법(매년 감가액 일정)과 정률법(감가율 일정, 감가액 감소)을 구분하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -4114,7 +4398,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -4167,11 +4451,13 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "select_incorrect"
+        "select_incorrect",
+        "analysis_draft",
+        "exam_2022_legal_and_econ_source_review_required"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "시장가치 외의 가치로 감정평가하더라도 그 가치의 성격·특징과 적법성 검토는 필요합니다.",
+      "answerReason": "감정평가의 기본은 시장가치이며 법령에 따른 예외나 사회통념상 필요가 있으면 다른 가치 기준을 선택할 수 있습니다. 그러나 의뢰인이 요청했다는 이유만으로 그 가치의 성격·특징을 검토하지 않는다는 ④는 틀렸습니다. 합리성·적법성이 부족하면 수임을 거절하거나 철회할 수 있습니다.",
       "options": [
         {
           "no": 1,
@@ -4195,7 +4481,8 @@
           "no": 4,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 정답으로 인정된 번호입니다. 학습용 정답 근거 초안: 감정평가의 기본은 시장가치이며 법령에 따른 예외나 사회통념상 필요가 있으면 다른 가치 기준을 선택할 수 있습니다. 그러나 의뢰인이 요청했다는 이유만으로 그 가치의 성격·특징을 검토하지 않는다는 ④는 틀렸습니다. 합리성·적법성이 부족하면 수임을 거절하거나 철회할 수 있습니다."
         },
         {
           "no": 5,
@@ -4205,7 +4492,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "시장가치 외 가치의 사용 사유가 있어도 해당 가치기준의 검토는 생략할 수 없습니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -4219,7 +4511,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -4272,11 +4564,13 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "calculation_or_numeric"
+        "calculation_or_numeric",
+        "analysis_draft",
+        "exam_2022_legal_and_econ_source_review_required"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "수익가액은 NOI 3,850만원을 물리적 투자결합 환원율 7%로 나눈 5억5천만원입니다.",
+      "answerReason": "가능총소득 4,400만원에서 공실손실 10%=440만원, 운영경비 2.5%=110만원을 차감하면 NOI 3,850만원입니다. 토지구성비 60%×환원율 5%=3%와 건물구성비 40%×환원율 10%=4%를 더한 물리적 투자결합 환원율은 7%입니다. 수익가액=38,500,000/0.07=550,000,000원, ③입니다.",
       "options": [
         {
           "no": 1,
@@ -4294,7 +4588,8 @@
           "no": 3,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 정답으로 인정된 번호입니다. 학습용 정답 근거 초안: 가능총소득 4,400만원에서 공실손실 10%=440만원, 운영경비 2.5%=110만원을 차감하면 NOI 3,850만원입니다. 토지구성비 60%×환원율 5%=3%와 건물구성비 40%×환원율 10%=4%를 더한 물리적 투자결합 환원율은 7%입니다. 수익가액=38,500,000/0.07=550,000,000원, ③입니다."
         },
         {
           "no": 4,
@@ -4310,7 +4605,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "운영경비 2.5%의 분모는 제시대로 PGI 4,400만원이며, 환원율은 토지·건물 구성비로 가중평균합니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -4324,7 +4624,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -4386,11 +4686,13 @@
       "questionType": [
         "multiple_choice",
         "select_correct",
-        "legal_temporal_review"
+        "legal_temporal_review",
+        "analysis_draft",
+        "exam_2022_legal_and_econ_source_review_required"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "표준지공시지가 공시에는 지번·단위면적당 가격·표준지 면적·형상·이용상황 등 법정 사항이 포함됩니다.",
+      "answerReason": "표준지공시지가 공시에 포함되어야 할 항목을 열거한 ②가 옳습니다. 조사·평가 의뢰를 언제나 두 곳 이상의 기관에 해야 한다거나 표준주택가격을 시군구 부동산가격공시위원회 심의를 거친다고 단정하는 것은 조사·공시 주체 및 절차를 혼동한 것입니다. 시험 당시 시행법의 의뢰기관 요건과 심의기관을 별도로 대조해야 합니다.",
       "options": [
         {
           "no": 1,
@@ -4402,7 +4704,8 @@
           "no": 2,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 정답으로 인정된 번호입니다. 학습용 정답 근거 초안: 표준지공시지가 공시에 포함되어야 할 항목을 열거한 ②가 옳습니다. 조사·평가 의뢰를 언제나 두 곳 이상의 기관에 해야 한다거나 표준주택가격을 시군구 부동산가격공시위원회 심의를 거친다고 단정하는 것은 조사·공시 주체 및 절차를 혼동한 것입니다. 시험 당시 시행법의 의뢰기관 요건과 심의기관을 별도로 대조해야 합니다."
         },
         {
           "no": 3,
@@ -4424,7 +4727,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "표준지·표준주택·공동주택가격의 공시 주체와 평가·조사 절차를 분리하세요.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -4438,7 +4746,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -4491,11 +4799,13 @@
       "specialAnswer": "normal",
       "questionType": [
         "multiple_choice",
-        "calculation_or_numeric"
+        "calculation_or_numeric",
+        "analysis_draft",
+        "exam_2022_legal_and_econ_source_review_required"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "거래사례비교법 비준가액은 거래단가 400만원/㎡×0.9×1.05×0.95×150㎡=5억3,865만원입니다.",
+      "answerReason": "거래사례의 토지 단가=800,000,000원/200㎡=4,000,000원/㎡입니다. 사정보정 0.9, 주거지역 지가변동률 5% 상승→1.05, 지역요인 1.00, 개별요인 5% 열세→0.95를 적용하고 대상면적 150㎡를 곱합니다. 4,000,000×0.9×1.05×1.00×0.95×150=538,650,000원이므로 ②입니다.",
       "options": [
         {
           "no": 1,
@@ -4507,7 +4817,8 @@
           "no": 2,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 정답으로 인정된 번호입니다. 학습용 정답 근거 초안: 거래사례의 토지 단가=800,000,000원/200㎡=4,000,000원/㎡입니다. 사정보정 0.9, 주거지역 지가변동률 5% 상승→1.05, 지역요인 1.00, 개별요인 5% 열세→0.95를 적용하고 대상면적 150㎡를 곱합니다. 4,000,000×0.9×1.05×1.00×0.95×150=538,650,000원이므로 ②입니다."
         },
         {
           "no": 3,
@@ -4529,7 +4840,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "현재 이용상황 '주상용'보다 용도지역 '제2종일반주거'를 기준으로 지가변동률 5%를 선택합니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -4543,7 +4859,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,
@@ -4605,11 +4921,13 @@
       "questionType": [
         "multiple_choice",
         "select_incorrect",
-        "legal_temporal_review"
+        "legal_temporal_review",
+        "analysis_draft",
+        "exam_2022_legal_and_econ_source_review_required"
       ],
       "conceptIds": [],
-      "summaryEasy": "",
-      "answerReason": "",
+      "summaryEasy": "공시지가기준법도 감정평가의 비교방식에 포함됩니다.",
+      "answerReason": "감정평가에 관한 규칙에 따른 비교방식에는 거래사례비교법과 공시지가기준법 등이 속합니다. ③은 거래사례비교법은 비교방식이지만 공시지가기준법은 아니라고 구분하여 틀렸습니다. 감정평가 기준시점, 구분평가, 주된 방법의 예외 및 명확한 평가서 작성은 다른 규정입니다.",
       "options": [
         {
           "no": 1,
@@ -4627,7 +4945,8 @@
           "no": 3,
           "verdict": "unreviewed",
           "why": "",
-          "sourceChecked": false
+          "sourceChecked": false,
+          "draftReason": "공식 정답으로 인정된 번호입니다. 학습용 정답 근거 초안: 감정평가에 관한 규칙에 따른 비교방식에는 거래사례비교법과 공시지가기준법 등이 속합니다. ③은 거래사례비교법은 비교방식이지만 공시지가기준법은 아니라고 구분하여 틀렸습니다. 감정평가 기준시점, 구분평가, 주된 방법의 예외 및 명확한 평가서 작성은 다른 규정입니다."
         },
         {
           "no": 4,
@@ -4643,7 +4962,12 @@
         }
       ],
       "compoundStatements": [],
-      "traps": [],
+      "traps": [
+        {
+          "text": "거래사례비교법·공시지가기준법 모두 비교방식이고, 원가법은 원가방식입니다.",
+          "verified": false
+        }
+      ],
       "sourceRefs": [
         {
           "type": "officialNotice",
@@ -4657,7 +4981,7 @@
         }
       ],
       "quality": {
-        "status": "unstarted",
+        "status": "draft",
         "answerKeyChecked": true,
         "reasonReviewed": false,
         "optionVerdictsReviewed": 0,

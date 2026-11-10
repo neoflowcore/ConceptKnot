@@ -147,7 +147,7 @@ function load(force=false){
   const found=catalog();
   const bundles=await Promise.allSettled(EXPLANATION_YEARS.map(async year=>{
    if(!force&&bundleCache.has(year))return bundleCache.get(year);
-   const response=await fetch('./data/explanations/official-'+year+'.json?v=151',
+   const response=await fetch('./data/explanations/official-'+year+'.json?v=152',
     {cache:force?'reload':'force-cache'});
    if(!response.ok)throw Error('HTTP '+response.status);
    const data=await response.json();

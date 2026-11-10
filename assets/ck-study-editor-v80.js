@@ -106,7 +106,7 @@ function patchYear(year){
   const unseeded=new Map();loaded.set(year,unseeded);return Promise.resolve(unseeded);
  }
  if(!Number.isInteger(year)||year<2021||year>2025)return Promise.reject(Error('지원하지 않는 연도'));
- return fetch('./data/explanations/official-'+year+'.json?v=151',{cache:'force-cache'})
+ return fetch('./data/explanations/official-'+year+'.json?v=152',{cache:'force-cache'})
   .then(res=>{if(!res.ok)throw Error('문항 데이터 불러오기 '+res.status);return res.json();})
   .then(data=>{
    if(data.year!==year||!Array.isArray(data.records)||data.records.length!==80)
