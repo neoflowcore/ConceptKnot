@@ -136,10 +136,10 @@ function simulated(){
   const handlers=hooks[type]||[];
   for(const {fn} of handlers){if(e._stop)break;fn(e)}
  }
- const mk=(x,y,id=1)=>({target:{closest(k){return k==='.ck21-chart-section svg.ck21-chart-svg'?svg:null}},
+ const mk=(x,y,id=1)=>({target:{closest(k){if(k==='[data-ck155-grip]')return x>250&&x<360?{dataset:{ck155Grip:'demand',ck155PathIndex:'0'}}:null;return k==='.ck21-chart-section svg.ck21-chart-svg'?svg:null}},
   pointerType:'touch',clientX:x,clientY:y,pointerId:id,button:0,isPrimary:true,
   cancelable:true,preventDefault(){this.prevented=true},stopImmediatePropagation(){this._stop=true}});
- const action=name=>({target:{closest(k){if(k==='[data-ck149-action],[data-ck149-select]')
+ const action=name=>({target:{closest(k){if(k.includes('[data-ck149-action]'))
    return {dataset:{ck149Action:name},closest(){return root}};return null;}}});
  return {w,root,cards,buttons,notes,svg,moving,fire,mk,action,windows};
 }
@@ -195,7 +195,7 @@ test('version, current file contents and original records are protected',()=>{
   'ck-graph-direct-v149.css?v=149','ck-study-charts-v79.js?v=150'];
  for(const f of files){A.ok(html.includes(f)||f.endsWith('ck-study-charts-v79.js?v=150'),f);A.ok(sw.includes(f==='ck-study-charts-v79.js?v=150'?'ck-study-charts-v79.js?v=153':f),f)}
  A.match(html,/ck-release" content="v152-p4-160-new-study-drafts"/);
- A.match(sw,/const CACHE='conceptknot-study-v154-p4-draft-coverage'/);
+ A.match(sw,/const CACHE='conceptknot-study-v155-multiphase-direct-grips'/);
  A.match(glue,/CK149GraphEnhance/);
  const critical=sw.match(/const CRITICAL=\[([\s\S]*?)\];/);
  A.equal([...critical[1].matchAll(/'\.\/[^']+'/g)].length,11);

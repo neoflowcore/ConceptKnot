@@ -130,6 +130,21 @@
   const delta=Math.abs(dx)>=Math.abs(dy)*.7?dx/320*100:-dy/215*100;
   return {...snapshot,value:round(snapshot.value+delta)};
  }
+ /* v155: signed, accessible schematic-step controls (not market statistics). */
+ function nudge(snapshot,chart,target,step){
+  if(!snapshot||!chart||!Number.isFinite(step))return null;
+  const next=copy(snapshot),amount=clamp(step,-100,100);
+  if(['demand','supply','both'].includes(chart.type)){
+   const which=chart.type==='both'?(target==='supply'?'supply':'demand'):chart.type;
+   const previous=(next[which+'Sign']||next.sign||direction(chart))*(next[which]||0);
+   const signed=clamp(previous+amount,-100,100);
+   const sign=signed<0?-1:signed>0?1:next[which+'Sign']||next.sign||direction(chart);
+   next[which]=round(Math.abs(signed));next[which+'Sign']=sign;
+   if(chart.type==='both')next.value=Math.max(next.demand,next.supply);
+   else{next.value=next[which];next.sign=sign}
+  }else next.value=round(next.value+amount);
+  return next;
+ }
  function offsets(chart,s){
   const extent=Math.abs(Number(chart.shift)||55);
   if(chart.type==='demand')return {demand:s.sign*s.value/100*extent,supply:0};
@@ -150,5 +165,5 @@
    schematic:true};
  }
  return Object.freeze({SIZE,round,direction,defaultSnapshot,copy,same,timeline,
-  boxPoint,polylines,nearest,drag,offsets,equilibrium,outcome});
+  boxPoint,polylines,nearest,drag,nudge,offsets,equilibrium,outcome});
 });

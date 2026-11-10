@@ -35,7 +35,13 @@ const TASKS=Object.freeze([
  {id:'exam-idle-clock',group:'성능',name:'시험 미시작·일시중지·브라우저 숨김에서 시험 1초 시계 중지, 복귀 후 남은 시간/답안 유지 확인'},
  {id:'evidence-packet',group:'근거',name:'선지 교차보고 카드에서 ①~⑤ 상세 비교·선택 최대 5문항·TXT 근거 패킷·원본 PDF·미저장 내보내기 차단 직접 확인'},
  {id:'tts-canonical',group:'음성',name:'개인 대조문장과 공식 원문이 다른 경우 공식 TTS는 A형 원문만 낭독하며 긴 문장 오류는 누락 없이 나눠 읽는지 직접 확인'},
- {id:'offline-core',group:'오프라인',name:'v132 필수 캐시 11개·실제 활성 서비스워커 버전 확인·업데이트 중 연결 끊김 시 구버전 보존·오프라인/온라인 복귀 확인'}
+ {id:'offline-core',group:'오프라인',name:'v155 필수 캐시 11개·실제 활성 서비스워커 버전 확인·업데이트 중 연결 끊김 시 구버전 보존·오프라인/온라인 복귀 확인'},
+ {id:'offline-optional-reuse-v155',group:'오프라인',name:'기존 오프라인 자산 준비 후 일부 선택 다운로드 실패 시 이전 정상 학습 모듈 유지·온라인 재접속 후 갱신 확인'},
+ {id:'typing-korean-ime-v155',group:'타이핑',name:'Android Brave 한글 조합 중 빠른 입력/수정/이동, 조합 끝 마지막 글자 누락 없음·커서 위치·타수·정확도 정상 확인'},
+ {id:'chart-grips-v155',group:'그래프',name:'Android Brave/S Pen에서 D·S 곡선 동그란 손잡이를 잡아 이동할 때 그림만 변하고 페이지는 이동하지 않음, 빈 SVG 영역에서는 세로 스크롤 가능'},
+ {id:'chart-nudge-v155',group:'그래프',name:'수요 D/공급 S 별도 선택 → 왼쪽/오른쪽 10단위 이동 → E₀/E₁ 전후 비교 → Undo/Redo/초기화 모두 일관됨'},
+ {id:'mock-ctrl-arrow-v155',group:'모의고사',name:'공식 80문항·기출혼합 5세트에서 숫자 1~5 답안과 Ctrl+←/→ 문항 이동, 입력칸 편집시 단축키 미동작, 시험 타이머 100분 유지'},
+ {id:'p4-unreviewed-v155',group:'해설',name:'2021~2025 해설 초안 400건·전문가 검수 0건·선지별 원전검수 0건을 구별하고 최신 원전/판례 검증 없이는 게시되지 않음'}
 ]);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const plain=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);

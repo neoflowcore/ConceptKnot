@@ -100,7 +100,7 @@ test('current P4 audit, workbench, editor and offline cache report 400/400 witho
  A.equal(panel.reviewStages.draft,400);A.equal(panel.reviewStages.unstarted,0);
  A.equal(panel.reviewStages.published,0);A.equal(panel.seedOptionReasonDrafts,664);
  A.ok(read('index.html').includes('v152-p4-160-new-study-drafts'));
- const sw=read('sw.js');A.ok(sw.includes('conceptknot-study-v154-p4-draft-coverage'));
+ const sw=read('sw.js');A.ok(sw.includes('conceptknot-study-v155-multiphase-direct-grips'));
  for(const y of years)A.ok(sw.includes('./data/explanations/official-'+y+'.json?v=154'));
  A.ok(sw.includes('analysis-candidates-v78.json?v=154'));
  A.ok(read('assets/ck-study-workbench-v81.js').includes("'.json?v=154'"));

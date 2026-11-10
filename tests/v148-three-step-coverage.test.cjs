@@ -151,7 +151,7 @@ test('release offline routes and asset ordering do not enable CI or alter offici
  const glue=read('assets/ck-study-charts-v79.js');
  assert.ok(html.indexOf('ck-three-step-v148.js?v=149')<html.indexOf('ck-study-charts-v79.js?v=150'));
  assert.match(html,/ck-release" content="v152-p4-160-new-study-drafts"/);
- assert.match(sw,/conceptknot-study-v154-p4-draft-coverage/);
+ assert.match(sw,/conceptknot-study-v155-multiphase-direct-grips/);
  assert.match(glue,/data-ck148-legacy/);
  for(const file of ['ck-three-step-v148.js?v=149','ck-three-step-v148.css?v=148',
   'ck-study-charts-v79.js?v=150','ck-concept-transition-view-v144.js?v=148'])

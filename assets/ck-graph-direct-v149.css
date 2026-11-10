@@ -1,6 +1,6 @@
 /* ConceptKnot v149: direct-grip 17 schematic diagrams, mobile safe.
  * Only graph SVG gets touch-action lock; page, OMR, boards stay scrollable. */
-#main .ck21-chart-section .ck21-chart-svg{touch-action:none;cursor:crosshair}
+#main .ck21-chart-section .ck21-chart-svg{touch-action:pan-y;cursor:default}
 #main .ck21-chart-section .ck21-chart-svg .ck21-curve{cursor:grab}
 #main .ck21-chart-section.ck149-grabbing .ck21-chart-svg{cursor:grabbing}
 #main .ck21-chart-section.ck149-grabbing .ck21-transform-target,
@@ -41,4 +41,27 @@
 }
 @media(prefers-reduced-motion:reduce){
  #main .ck149-previous-curves,#main .ck149-tools *,#main .ck21-chart-svg .ck149-previous-curves *{transition:none!important;animation:none!important}
+}
+
+/* v155: large curve-only touch targets and visible hand grips. */
+#main .ck21-chart-svg .ck155-grip{touch-action:none;cursor:grab;outline:none}
+#main .ck21-chart-svg .ck155-grip-corridor{
+ fill:none;stroke:rgba(0,0,0,.001);stroke-width:44;stroke-linecap:round;
+ stroke-linejoin:round;pointer-events:stroke;touch-action:none
+}
+#main .ck21-chart-svg .ck155-grip-handle{
+ fill:color-mix(in srgb,var(--accent,#8fd19d) 75%,#fff);
+ stroke:color-mix(in srgb,currentColor 72%,transparent);
+ stroke-width:2.5;opacity:.96;pointer-events:all;touch-action:none
+}
+#main .ck21-chart-svg .ck155-grip-letter{
+ font-size:13px;font-weight:850;fill:#172322;pointer-events:none;user-select:none
+}
+#main .ck21-chart-svg .ck155-grip:is(:focus-visible,:hover) .ck155-grip-handle{
+ stroke-width:4;filter:drop-shadow(0 0 4px rgba(75,125,75,.3))
+}
+#main .ck21-chart-section.ck149-grabbing .ck155-grip{cursor:grabbing}
+@media(pointer:coarse){#main .ck21-chart-svg .ck155-grip-corridor{stroke-width:52}}
+@media(prefers-reduced-motion:reduce){
+ #main .ck21-chart-svg .ck155-grip-handle{filter:none!important;transition:none!important}
 }

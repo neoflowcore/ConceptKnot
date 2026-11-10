@@ -202,6 +202,7 @@ function questionPanel(s){
  const can=s.status==='running';
  return '<div class="ck129-session-head"><div><strong>혼합 '+s.set+'세트 · '+(i+1)+'/80</strong><small>'+subject(i)+' · '+esc(q.id)+'</small></div>'+
   '<strong data-ck129-clock class="ck129-clock">'+clockText(remaining(s))+'</strong></div>'+
+  '<p class="ck129-shortcuts">답안 1~5 · 이전/다음: ← → 또는 Ctrl+← → · 입력칸을 편집 중일 때는 비활성화</p>'+
   '<p class="ck129-progress">응답 '+s.answers.filter(x=>x!==null).length+'/80 · 보류 '+s.flags.filter(Boolean).length+
   ' · 중단 '+s.pauseCount+'회</p><div class="ck129-layout"><section class="ck129-question">'+
   '<p class="ck129-stem">'+esc(q.question)+'</p><div class="ck129-options" role="group" aria-label="답안 선택">'+
@@ -452,7 +453,8 @@ document.addEventListener('change',e=>{
 });
 document.addEventListener('keydown',e=>{
  if(!expanded||!root?.contains(e.target)||active()?.status!=='running'||
- e.altKey||e.ctrlKey||e.metaKey||e.isComposing||e.repeat||e.keyCode===229||
+ e.altKey||e.metaKey||(e.ctrlKey&&!['ArrowLeft','ArrowRight'].includes(e.key))||
+ e.isComposing||e.repeat||e.keyCode===229||
  /INPUT|TEXTAREA|SELECT/.test(e.target?.tagName||''))return;
  if(/^[1-5]$/.test(e.key)){e.preventDefault();e.stopImmediatePropagation();answer(Number(e.key));}
  else if(e.key==='ArrowLeft'||e.key==='ArrowRight'){

@@ -47,3 +47,6 @@
 @media(max-width:740px){.ck129-layout{grid-template-columns:1fr}.ck129-heading{align-items:flex-start}.ck129-controls{width:100%}.ck129-mixed-mocks{padding:10px}.ck129-scores strong{font-size:18px}}
 @media(max-width:380px){.ck129-grid{grid-template-columns:repeat(8,minmax(0,1fr));gap:2px}.ck129-mixed-mocks .ck129-grid button{font-size:10px}}
 @media(prefers-reduced-motion:reduce){.ck129-mixed-mocks *{scroll-behavior:auto!important;animation:none!important}}
+/* v155: compact keyboard shortcut hint. */
+#main .ck129-shortcuts{margin:4px 0 10px;font-size:12px;line-height:1.5;opacity:.83}
+@media(max-width:480px){#main .ck129-shortcuts{font-size:11px}}

@@ -288,7 +288,7 @@ function renderSession(s){
     (s.flags[i]?'보류 표시 해제':'검토 보류 표시')+'</button>'+
   '<button type="button" data-ck82-prev'+(i===0?' disabled':'')+'>이전</button>'+
   '<button type="button" data-ck82-next'+(i===79?' disabled':'')+'>다음</button></div>'+
-  '<div class="ck82-tips">작업 영역에 초점을 맞춘 뒤 숫자 1~5로 선택, 좌·우 방향키로 문항 이동. 선지 선택 시 정답은 공개하지 않습니다.</div>'+
+  '<div class="ck82-tips">작업 영역에 초점을 맞춘 뒤 숫자 1~5로 선택, 좌·우 방향키 또는 Ctrl+좌·우 방향키로 문항 이동. 선지 선택 시 정답은 공개하지 않습니다.</div>'+
   '<a class="ck82-original" href="'+esc(/^https:\/\//.test(q.originalUrl||'')?q.originalUrl:'https://www.q-net.or.kr/')+
   '" target="_blank" rel="noopener noreferrer">원문 출처 열기</a>'+
   '</section>'+renderOmr(s)+'</div>'+
@@ -529,7 +529,9 @@ document.addEventListener('change',event=>{
  }
 });
 document.addEventListener('keydown',event=>{
- if(!expanded||!root?.contains(event.target)||event.altKey||event.ctrlKey||event.metaKey||
+ const navKey=event.key==='ArrowLeft'||event.key==='ArrowRight';
+ if(!expanded||!root?.contains(event.target)||event.altKey||event.metaKey||
+  (event.ctrlKey&&!navKey)||
   /INPUT|TEXTAREA|SELECT/.test(event.target?.tagName||''))return;
  const s=active();if(s?.status!=='running'||event.isComposing||event.repeat||event.keyCode===229)return;
  if(/^[1-5]$/.test(event.key)){event.preventDefault();event.stopImmediatePropagation();setAnswer(Number(event.key));focusRegion();}

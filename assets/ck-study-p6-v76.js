@@ -198,4 +198,12 @@ if(main&&window.MutationObserver)new MutationObserver(changes=>{
     el.querySelector?.('.ck21-chart-section,#ck10-final-root')))))schedule();
 }).observe(main,{childList:true,subtree:true});
 window.CK76Search=Object.freeze({ranked,openQuestion,open:openSearch,getState:()=>({query:lastQuery,results:lastResults.length}),applyScrub});
+/* v155: safe late-IME fallback for embedded typing editor. */
+(function ck155LoadImeGuard(){
+ if(!document.head||document.querySelector('[data-ck155-ime]'))return;
+ const script=document.createElement('script');
+ script.src='./assets/ck-typing-ime-guard-v155.js?v=155';
+ script.async=true;script.dataset.ck155Ime='1';
+ document.head.appendChild(script);
+})();
 })();

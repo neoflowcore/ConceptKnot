@@ -95,7 +95,7 @@ test('PWA and source guard: optional bundles, original 800, 11 core, no automate
  a.ok(Buffer.byteLength(html,'utf8')>1000000);
  a.match(html,/v152-p4-160-new-study-drafts/);
  a.match(html,/ck-study-charts-v79\.js\?v=150/);
- a.match(sw,/const CACHE='conceptknot-study-v154-p4-draft-coverage'/);
+ a.match(sw,/const CACHE='conceptknot-study-v155-multiphase-direct-grips'/);
  const critical=(sw.match(/const CRITICAL=\[([\s\S]*?)\];/)||[])[1];
  a.equal((critical?.match(/'\.\//g)||[]).length,11);
  for(const f of ['ck-legacy-rules-v153.js','ck-scenario-quiz-v153.js','ck-scenario-ui-v150.js','ck-scenario-ui-v150.css']){

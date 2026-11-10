@@ -91,11 +91,54 @@ function markerArrow(svg,from,to){
  p.setAttribute('d','M '+fmt(from.x)+' '+fmt(from.y)+' L '+fmt(to.x)+' '+fmt(to.y));
  p.setAttribute('visibility',Math.hypot(to.x-from.x,to.y-from.y)>.5?'visible':'hidden');
 }
+/* v155: only an actual curve has a large direct-grip touch target.
+ * Empty SVG stays vertically scrollable; transformed targets follow curves.
+ */
+function ensureGrips(root,c){
+ const svg=root?.querySelector?.('svg.ck21-chart-svg');
+ if(!svg||typeof document.createElementNS!=='function')return;
+ const ns='http://www.w3.org/2000/svg',m=math();
+ let index=0;
+ for(const path of Array.from(svg.querySelectorAll?.('.ck21-curve')||[])){
+  if(path.closest?.('.ck149-previous-curves'))continue;
+  const no=index++,parent=path.parentNode;
+  if(path.dataset?.ck155Enhanced==='1'||!parent?.appendChild)continue;
+  const d=path.getAttribute?.('d');if(!d)continue;
+  const kind=c.type==='both'?(path.classList?.contains('supply')?'supply':'demand'):
+   c.type==='supply'?'supply':c.type==='demand'?'demand':'curve';
+  let pt=null;
+  try{const length=path.getTotalLength?.();if(length>0)pt=path.getPointAtLength(length*.5)}catch{}
+  if(!pt||!Number.isFinite(pt.x)||!Number.isFinite(pt.y)){
+   const fallback=m?.polylines?.(c)?.[no]?.points||[];
+   if(!fallback.length)continue;
+   const mid=fallback[Math.floor((fallback.length-1)/2)];
+   pt={x:mid[0],y:mid[1]};
+  }
+  const make=(type,attrs)=>{
+   const el=document.createElementNS(ns,type);
+   for(const [name,value] of Object.entries(attrs))el.setAttribute(name,String(value));
+   return el;
+  };
+  const label=kind==='demand'?'D':kind==='supply'?'S':String(no+1);
+  const g=make('g',{'class':'ck155-grip','data-ck155-grip':kind,
+   'data-ck155-path-index':no,role:'button',tabindex:0,
+   'aria-label':(kind==='curve'?'관찰곡선 '+label:kind==='demand'?'수요곡선 D':'공급곡선 S')+
+    ' 직접 잡고 드래그하거나 방향키로 이동'});
+  g.append(make('path',{'class':'ck155-grip-corridor',d,'aria-hidden':'true'}));
+  g.append(make('circle',{'class':'ck155-grip-handle',cx:pt.x,cy:pt.y,r:17,'aria-hidden':'true'}));
+  const text=make('text',{'class':'ck155-grip-letter',x:pt.x,y:pt.y,'text-anchor':'middle',
+   'dominant-baseline':'central','aria-hidden':'true'});
+  text.textContent=label;g.append(text);
+  parent.appendChild(g);
+  path.dataset.ck155Enhanced='1';
+ }
+}
 function sync(root,c,state){
  if(!root||!c||!state)return;
  const m=math(),p=state.value,sign=state.sign;
  const canvas=root.querySelector?.('svg.ck21-chart-svg');
  if(m&&canvas){
+  ensureGrips(root,c);
   if(['demand','supply','both'].includes(c.type)){
    const next=m.outcome(c,state),curves=canvas.querySelectorAll?.('[data-ck149-target]')||[];
    for(const group of curves){
@@ -152,10 +195,14 @@ function mount(root,c){
    '<button type="button" data-ck149-action="undo">↶ 이전</button>'+
    '<button type="button" data-ck149-action="redo">↷ 다시</button>'+
    '<button type="button" data-ck149-action="reset">초기화</button></div>'+
+   '<div class="ck149-tools-row" role="group" aria-label="정밀 곡선 조작">'+
+   '<button type="button" data-ck155-nudge="-10" aria-label="선택한 선을 왼쪽으로 조금 이동">◀ 왼쪽 10</button>'+
+   '<button type="button" data-ck155-nudge="10" aria-label="선택한 선을 오른쪽으로 조금 이동">오른쪽 10 ▶</button>'+
+   '<small>선택한 선·관찰점을 도식 10단위씩 움직입니다.</small></div>'+
    (c.type==='both'?'<div class="ck149-tools-row" role="group" aria-label="함께 이동하는 선 선택">'+
     '<button type="button" data-ck149-select="demand" aria-pressed="true">수요 D 선</button>'+
     '<button type="button" data-ck149-select="supply" aria-pressed="false">공급 S 선</button></div>':'')+
-   '<p class="ck149-tools-status"><strong>직접 조작</strong> 선이나 곡선 위 점을 잡고 이동하세요.'+
+   '<p class="ck149-tools-status"><strong>직접 조작</strong> 곡선 위 D/S 동그란 손잡이 또는 두꺼운 터치영역을 잡고 이동하세요.'+
    ' 빈 공간은 조작 시작 지점이 아닙니다. <output data-ck149-current></output></p>'+
    '<small>이전 점선 · 현재 실선 / 도식 진행률은 실제 가격 변동률이 아닙니다.</small>';
   controls.append?.(tools);
@@ -205,7 +252,10 @@ document.addEventListener('pointerdown',e=>{
  const svg=e.target.closest?.('.ck21-chart-section svg.ck21-chart-svg');
  if(!svg||drag||e.isPrimary===false||(e.pointerType==='mouse'&&e.button!==0))return;
  const info=active(),m=math();if(!m||!info)return;
- const hit=m.nearest(svg,e,info.chart);
+ const grip=e.target.closest?.('[data-ck155-grip]');
+ if(e.pointerType!=='mouse'&&!grip)return;
+ const hit=grip?{kind:grip.dataset.ck155Grip,
+  pathIndex:Number(grip.dataset.ck155PathIndex)||0}:m.nearest(svg,e,info.chart);
  if(!hit)return; // No grab: sliders and the surrounding page still work.
  const tr=trackFor(info.chart,info.phase);if(!tr)return;
  drag={svg,pointerId:e.pointerId,id:info.chart.id,kind:hit.kind,
@@ -238,13 +288,21 @@ document.addEventListener('lostpointercapture',e=>{if(drag&&drag.pointerId===e.p
 window.addEventListener?.('blur',cancel);
 document.addEventListener('visibilitychange',()=>{if(document.hidden)cancel()});
 document.addEventListener('click',e=>{
- const target=e.target.closest?.('[data-ck149-action],[data-ck149-select]');if(!target)return;
+ const target=e.target.closest?.('[data-ck149-action],[data-ck149-select],[data-ck155-nudge]');if(!target)return;
  const info=active();if(!info)return;
  const root=target.closest?.('.ck21-chart-section');if(root&&root!==info.root)return;
  const tr=trackFor(info.chart);if(!tr)return;
  const select=target.dataset.ck149Select;
  if(select){selectedCurve=select;sync(info.root,info.chart,tr.state);return}
  const action=target.dataset.ck149Action,was=tr.state;
+ if(target.hasAttribute?.('data-ck155-nudge')){
+  const step=Number(target.dataset.ck155Nudge);
+  if(Number.isFinite(step)&&Math.abs(step)===10&&math()?.nudge){
+   const after=math().nudge(was,info.chart,selectedCurve,step);
+   if(after){change(after,info.chart,info.root);done(was,info.chart,info.root)}
+  }
+  return;
+ }
  if(action==='undo'){const old=tr.undo();if(old)apply(old,info.root,info.chart)}
  if(action==='redo'){const next=tr.redo();if(next)apply(next,info.root,info.chart)}
  if(action==='reset'){const orig=tr.reset();apply(orig,info.root,info.chart)}
@@ -255,6 +313,9 @@ document.addEventListener('keydown',e=>{
  if(!svg||!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;
  if(e.altKey||e.metaKey||e.ctrlKey)return;
  const info=active(),tr=info&&trackFor(info.chart),m=math();if(!tr||!m)return;
+ const grip=e.target.closest?.('[data-ck155-grip]');
+ if(grip&&(grip.dataset.ck155Grip==='demand'||grip.dataset.ck155Grip==='supply'))
+  selectedCurve=grip.dataset.ck155Grip;
  const start=tr.state;
  let target=e.key==='Home'?0:e.key==='End'?100:start.value+(e.key==='ArrowLeft'?-5:5);
  target=m.round(target);

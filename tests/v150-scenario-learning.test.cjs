@@ -54,7 +54,7 @@ test('source and current PWA release contain all scenario learning scripts and c
  assert.ok(html.length>1000000,'homepage must not be truncated');
  assert.match(html,/v152-p4-160-new-study-drafts/);
  assert.match(html,/ck-study-charts-v79\.js\?v=150/);
- assert.match(sw,/conceptknot-study-v154-p4-draft-coverage/);
+ assert.match(sw,/conceptknot-study-v155-multiphase-direct-grips/);
  const critical=(sw.match(/const CRITICAL=\[([\s\S]*?)\];/)||[])[1];
  assert.ok(critical);
  assert.equal((critical.match(/'\.\//g)||[]).length,11);
