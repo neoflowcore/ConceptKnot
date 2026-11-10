@@ -99,8 +99,8 @@ test('current P4 audit, workbench, editor and offline cache report 400/400 witho
  A.equal(report.reasonDraftCount,400);A.equal(report.publishedCount,0);
  A.equal(panel.reviewStages.draft,400);A.equal(panel.reviewStages.unstarted,0);
  A.equal(panel.reviewStages.published,0);A.equal(panel.seedOptionReasonDrafts,664);
- A.ok(read('index.html').includes('v156-p6b-tilt-parallel-comparative-lesson'));
- const sw=read('sw.js');A.ok(sw.includes('conceptknot-study-v156-curve-slope-before-after'));
+ A.ok(read('index.html').includes('v157-phase-remaining-offline-restore-ime-board'));
+ const sw=read('sw.js');A.ok(sw.includes('conceptknot-study-v157-resume-offline-omr-ime'));
  for(const y of years)A.ok(sw.includes('./data/explanations/official-'+y+'.json?v=154'));
  A.ok(sw.includes('analysis-candidates-v78.json?v=154'));
  A.ok(read('assets/ck-study-workbench-v81.js').includes("'.json?v=154'"));

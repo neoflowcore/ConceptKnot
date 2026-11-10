@@ -172,17 +172,17 @@ test('CRITICAL in SW matches offline health scope; index and SW use identical v1
  assert.ok(idx>0&&end>idx);
  const paths=[...sw.slice(idx,end).matchAll(/'(\.\/[^']+)'/g)].map(m=>m[1]);
  assert.deepEqual(paths,[...api.OFFLINE_MINIMUM]);
- for(const suffix of ['ck-data-diagnostics-v88.js?v=133',
- 'ck-data-diagnostics-v88.css?v=125','ck-manual-qa-v115.js?v=130']){
+ for(const suffix of ['ck-data-diagnostics-v88.js?v=157',
+ 'ck-data-diagnostics-v88.css?v=125','ck-manual-qa-v115.js?v=157']){
   assert.equal(html.split(suffix).length-1,1);
   assert.equal(sw.split(suffix).length-1,3,'ASSETS, HOT, CRITICAL');
  }
  assert.match(diag,/data-v125-offline-run/);
  assert.match(diag,/runOfflineHealth\(\)/);
 });
-test('legacy manual QA records survive 25 to 28 tasks; automatic deploy remains forbidden',()=>{
+test('legacy manual QA records survive legacy QA entries plus v157 tasks; automatic deploy remains forbidden',()=>{
  const src=read('assets/ck-manual-qa-v115.js');
- assert.equal([...src.matchAll(/\{id:'[-a-z0-9]+',group:/g)].length,28);
+ assert.equal([...src.matchAll(/\{id:'[-a-z0-9]+',group:/g)].length,42);
  assert.match(src,/id:'tts-canonical'/);assert.match(src,/id:'offline-core'/);
  assert.match(src,/personal-v115-manual-qa/);
  assert.equal(JSON.parse(read('vercel.json')).git.deploymentEnabled,false);

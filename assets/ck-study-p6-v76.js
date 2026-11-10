@@ -202,7 +202,7 @@ window.CK76Search=Object.freeze({ranked,openQuestion,open:openSearch,getState:()
 (function ck155LoadImeGuard(){
  if(!document.head||document.querySelector('[data-ck155-ime]'))return;
  const script=document.createElement('script');
- script.src='./assets/ck-typing-ime-guard-v155.js?v=155';
+ script.src='./assets/ck-typing-ime-guard-v155.js?v=157';
  script.async=true;script.dataset.ck155Ime='1';
  document.head.appendChild(script);
 })();

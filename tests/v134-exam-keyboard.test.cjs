@@ -136,8 +136,8 @@ test('current cache query and manual deployment safety are aligned',()=>{
  const config=JSON.parse(read('vercel.json'));
  assert.ok(sw.includes('conceptknot-study-v137-native-voice-guard'));
  assert.ok(diag.includes('conceptknot-study-v137-native-voice-guard'));
- for(const name of ['ck-mixed-mock-v129.js?v=134','ck-full-exam-v82.js?v=140',
-  'ck-exam-hub-v133.js?v=134','ck-data-diagnostics-v88.js?v=140']){
+ for(const name of ['ck-mixed-mock-v129.js?v=134','ck-full-exam-v82.js?v=157',
+  'ck-exam-hub-v133.js?v=134','ck-data-diagnostics-v88.js?v=157']){
   assert.ok(index.includes('./assets/'+name),name+' index');
   assert.ok(sw.includes('./assets/'+name),name+' SW');
  }

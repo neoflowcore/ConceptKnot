@@ -12,6 +12,6 @@ test('v81 workbench is wired and syntactically valid',()=>{
 test('no automated builds and existing official inputs untouched',()=>{
  assert.equal(fs.existsSync(path.join(root,'.github','workflows')),false);
  assert.equal(JSON.parse(read('vercel.json')).git.deploymentEnabled,false);
- assert.match(read('sw.js'),/conceptknot-study-v156-curve-slope-before-after/);
+ assert.match(read('sw.js'),/conceptknot-study-v157-resume-offline-omr-ime/);
  assert.match(read('sw.js'),/ck-study-workbench-v81.js/);
 });

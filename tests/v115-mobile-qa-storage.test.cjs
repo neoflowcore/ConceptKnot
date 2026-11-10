@@ -15,11 +15,11 @@ test('header is anchored from first paint and drag script is loaded, not merely 
  assert.match(html,/class="ck-v7-global-nav ck105-anchored-tools"/);
  assert.match(html,/class="ck-v7-nav-pill ck4-unified"/);
  assert.match(html,/<\/nav>\s*<\/div><div class="ck-v7-date-pill">/);
- assert.match(html,/<script src="\.\/assets\/ck-nav-drag-v56\.js\?v=115" defer><\/script>/);
+ assert.match(html,/<script src="\.\/assets\/ck-nav-drag-v56\.js\?v=128" defer><\/script>/);
  assert.match(html,/data-ck56-nav-style="1"/);
- assert.match(html,/ck-manual-qa-v115\.js\?v=130/);
+ assert.match(html,/ck-manual-qa-v115\.js\?v=157/);
  assert.match(html,/ck-manual-qa-v115\.css\?v=115/);
- assert.match(html,/ck-full-exam-v82\.js\?v=134/);
+ assert.match(html,/ck-full-exam-v82\.js\?v=157/);
  assert.match(html,/ck-data-integrity-v86\.js\?v=120/);
 });
 
@@ -167,7 +167,7 @@ test('extended manual QA checks are schema validated and may join the guarded JS
  vm.runInNewContext(read('assets/ck-data-integrity-v86.js'),
   {window,localStorage});
  const key='ck115-manual-device-verification-v1';
- assert.equal(window.CK115QA.tasks.length,28);
+ assert.equal(window.CK115QA.tasks.length,42);
  const valid={schemaVersion:1,scope:'personal-v115-manual-qa',updatedAt:0,
   entries:{tabs:{status:'fail',note:'360px · wrong tab'}}};
  assert.ok(window.CK115QA.sanitize(valid));
@@ -186,17 +186,17 @@ test('extended manual QA checks are schema validated and may join the guarded JS
  assert.ok(memory.has(key));
 });
 
-test('offline v115 assets, guarded restore and manual-only deployment configuration',()=>{
+test('offline v157 assets, guarded restore and manual-only deployment configuration',()=>{
  const html=read('index.html'),sw=read('sw.js'),config=JSON.parse(read('vercel.json'));
  assert.equal(config.git.deploymentEnabled,false);
  for(const asset of ['ck-nav-drag-v56.js?v=128','ck-study-links-v83.js?v=115',
-  'ck-full-exam-v82.js?v=134','ck-manual-qa-v115.js?v=130',
+  'ck-full-exam-v82.js?v=157','ck-manual-qa-v115.js?v=157',
   'ck-manual-qa-v115.css?v=115','ck-data-integrity-v86.js?v=120',
   'ck-pdf-workspace-v15.js?v=118']){
   assert.ok(html.includes(asset),'HTML: '+asset);
   assert.ok(sw.includes(asset.split('?')[0]),'SW (current version may differ from HTML URL): '+asset);
  }
- assert.match(sw,/conceptknot-study-v129/);
+ assert.match(sw,/conceptknot-study-v157-resume-offline-omr-ime/);
  const pdfIndex=[...html.matchAll(/ck-pdf-workspace-v15\.js(?:\?v=\d+)?/g)].map(x=>x[0]);
  const pdfCache=[...sw.matchAll(/ck-pdf-workspace-v15\.js(?:\?v=\d+)?/g)].map(x=>x[0]);
  assert.deepEqual(pdfIndex,['ck-pdf-workspace-v15.js?v=118']);

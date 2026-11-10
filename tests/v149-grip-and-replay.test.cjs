@@ -191,11 +191,11 @@ test('ghost reference curves are never interactive grip targets',()=>{
 });
 test('version, current file contents and original records are protected',()=>{
  const html=read('index.html'),sw=read('sw.js'),glue=read('assets/ck-study-charts-v79.js');
- const files=['ck-graph-motion-v149.js?v=156','ck-graph-direct-v149.js?v=156',
-  'ck-graph-direct-v149.css?v=156','ck-study-charts-v79.js?v=150'];
+ const files=['ck-graph-motion-v149.js?v=156','ck-graph-direct-v149.js?v=157',
+  'ck-graph-direct-v149.css?v=157','ck-study-charts-v79.js?v=150'];
  for(const f of files){A.ok(html.includes(f)||f.endsWith('ck-study-charts-v79.js?v=150'),f);A.ok(sw.includes(f==='ck-study-charts-v79.js?v=150'?'ck-study-charts-v79.js?v=153':f),f)}
- A.match(html,/ck-release" content="v156-p6b-tilt-parallel-comparative-lesson"/);
- A.match(sw,/const CACHE='conceptknot-study-v156-curve-slope-before-after'/);
+ A.match(html,/ck-release" content="v157-phase-remaining-offline-restore-ime-board"/);
+ A.match(sw,/const CACHE='conceptknot-study-v157-resume-offline-omr-ime'/);
  A.match(glue,/CK149GraphEnhance/);
  const critical=sw.match(/const CRITICAL=\[([\s\S]*?)\];/);
  A.equal([...critical[1].matchAll(/'\.\/[^']+'/g)].length,11);

@@ -103,7 +103,7 @@ test('2021 mortgage amortization, income capitalization and appraisal arithmetic
 test('PWA cache and review workbench preserve old HTML compatibility and load v154 questions',()=>{
  const sw=read('sw.js'),wb=read('assets/ck-study-workbench-v81.js');
  const editor=read('assets/ck-study-editor-v80.js'),p4=read('assets/ck-study-p4-v78.js');
- assert.match(sw,/conceptknot-study-v156-curve-slope-before-after/);
+ assert.match(sw,/conceptknot-study-v157-resume-offline-omr-ime/);
  for(let y=2021;y<=2025;y++){
   assert.ok(sw.includes('official-'+y+'.json?v=154'));
   assert.ok(sw.includes('official-'+y+'.json?v=152'));

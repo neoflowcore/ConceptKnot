@@ -55,7 +55,7 @@ test('design and deployment policy remain stable',()=>{
  const v=j('vercel.json');
  assert.equal(v.git.deploymentEnabled,false);
  assert.equal(fs.existsSync(path.join(root,'.github','workflows')),false);
- assert.match(read('sw.js'),/conceptknot-study-v156-curve-slope-before-after/);
+ assert.match(read('sw.js'),/conceptknot-study-v157-resume-offline-omr-ime/);
  const html=read('index.html');
  for(const m of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))new vm.Script(m[1]);
 });

@@ -190,14 +190,14 @@ test('release cache and version align with no automatic CI or installer build',(
  const preflight=read('assets/ck-study-charts-v79.css');
  A.match(preflight,/ck21-chart-stage/);A.match(preflight,/touch-action:none!important/);
  A.match(html,/ck-study-charts-v79.css\?v=145/);
- A.match(html,/ck-release" content="v156-p6b-tilt-parallel-comparative-lesson"/);
+ A.match(html,/ck-release" content="v157-phase-remaining-offline-restore-ime-board"/);
  A.match(html,/ck-study-charts-v79.js\?v=150/);
  for(const name of ['ck-concept-gesture-v145.js?v=145','ck-concept-touch-fix-v145.css?v=145',
   'ck-concept-lab-v141.js?v=150','ck-theory-v142.js?v=150',
   'ck-concept-transition-view-v144.js?v=148']){
   A.ok(sw.includes(name));A.ok(load.includes(name));
  }
- A.match(sw,/conceptknot-study-v156-curve-slope-before-after/);
+ A.match(sw,/conceptknot-study-v157-resume-offline-omr-ime/);
  const critical=sw.match(/const CRITICAL=\[([\s\S]*?)\];/);
  A.ok(critical);A.equal([...critical[1].matchAll(/'\.\/[^']+'/g)].length,11);
  A.equal(JSON.parse(read('vercel.json')).git.deploymentEnabled,false);

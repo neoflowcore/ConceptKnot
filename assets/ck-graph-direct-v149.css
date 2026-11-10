@@ -100,3 +100,11 @@
 @media(prefers-reduced-motion:reduce){
  #main .ck21-chart-svg .ck156-slope-handle{filter:none}
 }
+
+/* v157 accessibility: narrate only committed actions, not every SVG pointer frame. */
+#main .ck156-theory .ck157-sr-status{
+ position:absolute!important;width:1px!important;height:1px!important;
+ overflow:hidden!important;clip:rect(0,0,0,0)!important;
+ clip-path:inset(50%)!important;white-space:nowrap!important;
+ margin:-1px!important;padding:0!important;border:0!important;
+}

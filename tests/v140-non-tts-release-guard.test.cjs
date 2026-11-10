@@ -15,14 +15,14 @@ test('v140 core cache and diagnostic report the same 11 exact URLs',()=>{
  const a=quotedValues(sw,/const CRITICAL=\[([\s\S]*?)\];/);
  const b=quotedValues(diag,/const OFFLINE_MINIMUM=Object\.freeze\(\[([\s\S]*?)\]\);/);
  assert.equal(a.length,11);assert.deepEqual(a,b);
- assert.match(sw,/conceptknot-study-v156-curve-slope-before-after/);
- assert.match(diag,/conceptknot-study-v156-curve-slope-before-after/);
- assert.ok(a.includes('./assets/ck-full-exam-v82.js?v=140'));
- assert.ok(a.includes('./assets/ck-data-diagnostics-v88.js?v=140'));
+ assert.match(sw,/conceptknot-study-v157-resume-offline-omr-ime/);
+ assert.match(diag,/conceptknot-study-v157-resume-offline-omr-ime/);
+ assert.ok(a.includes('./assets/ck-full-exam-v82.js?v=157'));
+ assert.ok(a.includes('./assets/ck-data-diagnostics-v88.js?v=157'));
 });
 test('new official/mixed review scripts receive v140 cache identities across HTML and worker',()=>{
- for(const k of ['ck-full-exam-v82.js?v=140','ck-mixed-review-v131.js?v=140',
-  'ck-data-diagnostics-v88.js?v=140']){
+ for(const k of ['ck-full-exam-v82.js?v=157','ck-mixed-review-v131.js?v=140',
+  'ck-data-diagnostics-v88.js?v=157']){
   assert.ok(html.includes(k),'missing HTML '+k);
   assert.ok(sw.includes(k),'missing SW '+k);
  }

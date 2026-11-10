@@ -387,6 +387,85 @@ function exportResult(source='active'){
   setTimeout(()=>URL.revokeObjectURL(url),2000);message('개인 채점 결과 TXT를 저장했습니다.');return true;
  }catch(e){message('TXT 내려받기 실패: '+(e?.message||e));return false;}
 }
+/* v157: non-destructive, local-only JSON backup/merge for official 80Q attempts.
+ * Preserve an active unsent exam and refuse history overflow or identity
+ * conflicts instead of silently dropping 40+ minutes of a user's work.
+ */
+function sessionKey(s){
+ return [s.year,s.startedAt,s.submittedAt].join(':');
+}
+function mergeRestore(current,incoming){
+ const a=cleanStore(current),b=cleanStore(incoming);
+ if(!a||!b)throw Error('원본 또는 백업 데이터 형식이 올바르지 않습니다.');
+ const seen=new Map(),history=[];
+ const add=s=>{
+  if(!s||s.status!=='submitted')return;
+  const key=sessionKey(s),existing=seen.get(key);
+  if(existing){
+   // An attempt ID collision with different OMR or flags is not a duplicate.
+   if(JSON.stringify(existing)!==JSON.stringify(s))
+    throw Error('같은 응시시각에 서로 다른 답안이 있어 안전하게 병합할 수 없습니다.');
+   return;
+  }
+  seen.set(key,s);history.push(s);
+ };
+ a.history.forEach(add);b.history.forEach(add);
+ if(a.active?.status==='submitted')add(a.active);
+ if(b.active?.status==='submitted')add(b.active);
+ if(history.length>HISTORY_LIMIT)
+  throw Error('제출 이력 '+history.length+'건이 한도 '+HISTORY_LIMIT+
+    '건을 초과합니다. 기존 이력을 삭제하지 않고 복원을 취소합니다.');
+ history.sort((x,y)=>y.submittedAt-x.submittedAt);
+ // Running/paused local OMR always takes precedence; incoming unsent work
+ // can become active only if no local unsent attempt is currently open.
+ const localUnsent=a.active&&a.active.status!=='submitted';
+ const inboundUnsent=b.active&&b.active.status!=='submitted';
+ const chosen=localUnsent?a.active:inboundUnsent?b.active:a.active||b.active||null;
+ return cleanStore({...a,active:chosen,history});
+}
+function exportRawBackup(){
+ try{
+  const current=localStorage.getItem(KEY);
+  if(storageIssue||current!==loadedRaw){
+   message('다른 탭 또는 손상된 기록을 감지했습니다. 원본을 변경하지 않았으며 백업을 보류합니다.');
+   return false;
+  }
+  if(current===null){message('저장된 공식 실전 기록이 없습니다.');return false;}
+  const blob=new Blob([current],{type:'application/json;charset=utf-8'}),
+   url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download='ConceptKnot_공식80문항_원본보관_'+new Date().toISOString().slice(0,10)+'.json';
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),3000);
+  message('원본 JSON 저장을 요청했습니다. 다운로드 목록에서 실제 저장 여부를 확인하세요.');
+  return true;
+ }catch{message('원본 백업에 실패했습니다. 기존 기록은 유지됩니다.');return false;}
+}
+async function importBackupFile(file){
+ if(!file)return false;
+ if(storageIssue){message(storageIssue+' 손상 원본을 먼저 별도 보관하세요.');return false;}
+ try{
+  if(file.size>500000)throw Error('백업 파일 크기 500KB 초과');
+  const initial=localStorage.getItem(KEY);
+  if(initial!==loadedRaw)throw Error('다른 탭에서 변경됐습니다. 복원하지 않았습니다.');
+  const incoming=cleanStore(JSON.parse((await file.text()).replace(/^\uFEFF/,'')));
+  if(!incoming)throw Error('지원하지 않는 백업 데이터');
+  const merged=mergeRestore(state,incoming);
+  if(JSON.stringify({...merged,revision:0})===JSON.stringify({...state,revision:0})){
+   message('병합할 새 답안이나 성적 기록이 없습니다.');return false;
+  }
+  if(!window.confirm?.('현재 미제출 답안은 유지하고 공식 시험 백업의 제출 이력을 병합할까요? '+HISTORY_LIMIT+
+    '건 한도를 초과하거나 충돌하면 복원은 자동 취소됩니다.'))return false;
+  if(localStorage.getItem(KEY)!==initial)throw Error('확인 도중 다른 탭에서 변경됐습니다.');
+  if(!persist(merged))return false;
+  historySelection=-1;showHistory=false;selectedYear=state.active?.year||selectedYear;
+  message('공식 실전 원본이 안전하게 병합됐습니다. 제출 이력 '+state.history.length+'건을 확인하세요.');
+  paint();checkExpiry();return true;
+ }catch(e){
+  message('안전한 백업 병합 실패: '+String(e?.message||e).slice(0,180)+
+   ' · 기존 답안은 변경하지 않았습니다.');
+  return false;
+ }
+}
 function renderHistory(){
  const items=state.history;
  if(!items.length)return '<p>아직 제출한 실전 시험이 없습니다.</p>';
@@ -415,6 +494,9 @@ function renderLauncher(){
   '<button type="button" data-ck82-start>새 시험 시작</button>'+
   (s?'<button type="button" data-ck82-expand>'+(expanded?'시험 화면 접기':s.status==='submitted'?'최근 결과 보기':'진행 중인 시험 열기')+'</button>':'')+
   (state.history.length?'<button type="button" data-ck82-history>성적 기록 '+state.history.length+'건</button>':'')+
+  '<button type="button" data-ck82-backup>원본 JSON 백업</button>'+
+  '<button type="button" data-ck82-import>백업 병합 복원</button>'+
+  '<input type="file" data-ck82-import-file accept=".json,application/json" aria-label="공식 실전 JSON 백업 선택" hidden>'+
   '</div></div>';
 }
 function paint(){
@@ -456,9 +538,13 @@ document.addEventListener('click',event=>{
  const t=event.target.closest?.('[data-ck82-start],[data-ck82-expand],[data-ck82-history],[data-ck82-history-select],'+
  '[data-ck82-answer],[data-ck82-goto],[data-ck82-prev],[data-ck82-next],'+
  '[data-ck82-clear],[data-ck82-flag],[data-ck82-pause],[data-ck82-resume],'+
- '[data-ck82-submit],[data-ck82-filter],[data-ck82-export],[data-ck82-detail],[data-ck82-option-edit],[data-ck82-hide],[data-ck82-new],[data-ck82-raw],[data-ck82-retry-bank]');
+ '[data-ck82-submit],[data-ck82-filter],[data-ck82-export],[data-ck82-detail],[data-ck82-option-edit],[data-ck82-hide],[data-ck82-new],[data-ck82-raw],[data-ck82-retry-bank],[data-ck82-backup],[data-ck82-import]');
  if(!t||!root?.contains(t))return;
  event.preventDefault();event.stopPropagation();
+ if(t.hasAttribute('data-ck82-backup')){exportRawBackup();return;}
+ if(t.hasAttribute('data-ck82-import')){
+  root.querySelector?.('[data-ck82-import-file]')?.click?.();return;
+ }
  if(t.hasAttribute('data-ck82-raw')){
   try{
    const raw=localStorage.getItem(KEY);if(raw===null)return;
@@ -528,6 +614,12 @@ document.addEventListener('change',event=>{
   if(selectedYear<=2020)window.CK89OfficialBank?.loadYear?.(selectedYear).catch(e=>message('공식 문제 로딩 실패: '+e.message));
  }
 });
+document.addEventListener('change',event=>{
+ if(!event.target.matches?.('[data-ck82-import-file]')||!root?.contains(event.target))return;
+ const file=event.target.files?.[0]||null;
+ event.target.value='';
+ if(file)importBackupFile(file);
+});
 document.addEventListener('keydown',event=>{
  const navKey=event.key==='ArrowLeft'||event.key==='ArrowRight';
  if(!expanded||!root?.contains(event.target)||event.altKey||event.metaKey||
@@ -571,6 +663,7 @@ window.CK82FullExam=Object.freeze({
  getState:()=>({active:active()?.status||'none',year:active()?.year||null,position:active()?.position??null,history:state.history.length,
   remainingMs:remaining(active()),revision:state.revision,storageIssue,loadingYear,expiryLoadingYear,expanded,historySelection,error,clockTicking:clockTimer!==null}),
  start,setAnswer,navigate,pause,resume,finish,historyAt,resultSource,makeResultText,exportResult,
+ mergeRestore,exportRawBackup,importBackupFile,
  open:()=>{checkExpiry();syncClockTimer();mount();if(root&&!expanded){expanded=true;paint();focusRegion();}}
 });
 })();

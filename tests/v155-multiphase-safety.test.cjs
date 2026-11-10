@@ -67,7 +67,7 @@ test('P2 late IME composition gets one fallback input, native input and unrelate
  area.isConnected=false;area.value='한국어공부';frames.shift()();
  A.deepEqual(area.events,['input']);
  A.equal(win.CK155TypingImeGuard.getStats().recovered,1);
- A.match(raw('assets/ck-study-p6-v76.js'),/ck-typing-ime-guard-v155.js\?v=155/);
+ A.match(raw('assets/ck-study-p6-v76.js'),/ck-typing-ime-guard-v155.js\?v=157/);
 });
 test('P3/P5 keyboard supports Ctrl+arrow but excludes IME and editable controls',()=>{
  const full=raw('assets/ck-full-exam-v82.js'),mixed=raw('assets/ck-mixed-mock-v129.js');
@@ -79,7 +79,7 @@ test('P3/P5 keyboard supports Ctrl+arrow but excludes IME and editable controls'
 });
 function workerFixture(options={}){
  const events={},saved=new Map(),logs=[],path='./assets/ck-graph-direct-v149.js?v=150';
- const prior='conceptknot-study-v154-p4-draft-coverage',current='conceptknot-study-v156-curve-slope-before-after';
+ const prior='conceptknot-study-v154-p4-draft-coverage',current='conceptknot-study-v157-resume-offline-omr-ime';
  const res=(type='application/javascript')=>({ok:true,status:200,headers:{get:()=>type},clone(){return res(type)}});
  saved.set(prior,new Map([[path,res()]]));
  let skip=0;
@@ -121,9 +121,9 @@ test('P7 checklists remain user-marked and P4 expert checks stay unreviewed',()=
  for(const id of ['chart-grips-v155','chart-nudge-v155','typing-korean-ime-v155','mock-ctrl-arrow-v155','p4-unreviewed-v155','offline-optional-reuse-v155'])A.ok(qa.includes("id:'"+id+"'"));
  A.match(qa,/ck115-manual-device-verification-v1/);
  A.match(qa,/PASS \(직접 확인\)/);
- A.ok(sw.includes('ck-typing-ime-guard-v155.js?v=155'));
- A.match(sw,/conceptknot-study-v156-curve-slope-before-after/);
- A.match(diag,/conceptknot-study-v156-curve-slope-before-after/);
+ A.ok(sw.includes('ck-typing-ime-guard-v155.js?v=157'));
+ A.match(sw,/conceptknot-study-v157-resume-offline-omr-ime/);
+ A.match(diag,/conceptknot-study-v157-resume-offline-omr-ime/);
  const core=(sw.match(/const CRITICAL=\[([\s\S]*?)\];/)||[])[1];
  A.equal((core.match(/'\.\//g)||[]).length,11);
  const report=JSON.parse(raw('data/reports/recent-five-coverage.json'));

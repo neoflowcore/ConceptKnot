@@ -253,7 +253,8 @@ function mount(root,c){
    theory.className='ck156-theory';theory.dataset.ck156Theory='';
    theory.setAttribute?.('aria-label','곡선 이동 전후 개념설명');
    theory.innerHTML='<strong>직전 그림 ↔ 현재 그림</strong>'+
-    '<p data-ck156-action role="status"></p>'+
+    '<p data-ck156-action></p>'+
+    '<p class="ck157-sr-status" role="status" aria-live="polite" data-ck157-final-status></p>'+
     '<p data-ck156-status></p>'+
     '<details open><summary>쉬운 설명</summary><p data-ck156-easy></p></details>'+
     '<details><summary>심화 설명 · 비례·반비례</summary>'+
@@ -294,6 +295,11 @@ function change(s,c,root){
 function done(before,c,root){
  const tr=trackFor(c);if(tr&&before)tr.commit(before);
  if(tr)sync(root,c,tr.state);
+ // v157: screen readers announce only a completed drag/key step, never every
+ // pointermove frame. Frequent live text changes caused duplicate narration.
+ const lesson=tr&&math()?.explain?.(c,tr.state);
+ const speech=root?.querySelector?.('[data-ck157-final-status]');
+ if(speech&&lesson)speech.textContent=lesson.action+' · '+lesson.equilibrium;
 }
 function cancel(){
  if(!drag)return;
@@ -374,7 +380,11 @@ document.addEventListener('click',e=>{
  }
  if(action==='undo'){const old=tr.undo();if(old)apply(old,info.root,info.chart)}
  if(action==='redo'){const next=tr.redo();if(next)apply(next,info.root,info.chart)}
- if(action==='reset'){const orig=tr.reset();apply(orig,info.root,info.chart)}
+ if(action==='reset'){
+  const orig=tr.reset();apply(orig,info.root,info.chart);
+  const speech=info.root.querySelector?.('[data-ck157-final-status]');
+  if(speech)speech.textContent='그래프 초기화 완료 · 처음 조건으로 돌아왔습니다.';
+ }
  sync(info.root,info.chart,tr.state);
 });
 document.addEventListener('keydown',e=>{

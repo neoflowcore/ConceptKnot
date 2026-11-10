@@ -245,19 +245,27 @@ function downloadRaw(){
 /* previous: conceptknot-study-v137-native-voice-guard */
 /* prior offline generation: conceptknot-study-v138-unified-voice-queue */
 /* previous core: conceptknot-study-v139-managed-model-guard */
-const OFFLINE_CACHE='conceptknot-study-v156-curve-slope-before-after';
+const OFFLINE_CACHE='conceptknot-study-v157-resume-offline-omr-ime';
 const OFFLINE_MINIMUM=Object.freeze([
  './index.html',
- './assets/ck-data-diagnostics-v88.js?v=140',
+ './assets/ck-data-diagnostics-v88.js?v=157',
  './assets/ck-data-diagnostics-v88.css?v=125',
- './assets/ck-manual-qa-v115.js?v=130',
+ './assets/ck-manual-qa-v115.js?v=157',
  './assets/ck-study-links-v83.js?v=115',
  './assets/ck-study-editor-v80.js?v=127',
  './assets/ck-data-integrity-v86.js?v=120',
  './assets/ck-official-bank-v89.js?v=89',
- './assets/ck-full-exam-v82.js?v=140',
+ './assets/ck-full-exam-v82.js?v=157',
  './data/official-2016-2020.json',
  './data/official-2021-2025.json'
+]);
+const P2P6_OFFLINE=Object.freeze([
+ './assets/ck-graph-motion-v149.js?v=156',
+ './assets/ck-graph-direct-v149.js?v=157',
+ './assets/ck-graph-direct-v149.css?v=157',
+ './assets/ck-mobile-board-v21.js?v=157',
+ './assets/ck-study-p6-v76.js?v=157',
+ './assets/ck-typing-ime-guard-v155.js?v=157'
 ]);
 const MIXED_OFFLINE=Object.freeze(['./assets/ck-mixed-mock-v129.js?v=134','./assets/ck-mixed-mock-v129.css?v=130']);
 const REVIEW_OFFLINE=Object.freeze(['./assets/ck-mixed-review-v131.js?v=140','./assets/ck-mixed-review-v131.css?v=131']);
@@ -265,11 +273,11 @@ const HUB_OFFLINE=Object.freeze(['./assets/ck-exam-hub-v133.js?v=134','./assets/
 async function offlineHealth(cacheStorage,controlled=false){
  if(!cacheStorage?.keys||!cacheStorage?.open)
   return {supported:false,installed:false,controlled:Boolean(controlled),cached:0,
-   required:OFFLINE_MINIMUM.length,missing:OFFLINE_MINIMUM.slice(),ready:false,mixedCached:0,mixedRequired:MIXED_OFFLINE.length,mixedReady:false,reviewCached:0,reviewRequired:REVIEW_OFFLINE.length,reviewReady:false,hubCached:0,hubRequired:HUB_OFFLINE.length,hubReady:false};
+   required:OFFLINE_MINIMUM.length,missing:OFFLINE_MINIMUM.slice(),ready:false,mixedCached:0,mixedRequired:MIXED_OFFLINE.length,mixedReady:false,reviewCached:0,reviewRequired:REVIEW_OFFLINE.length,reviewReady:false,hubCached:0,hubRequired:HUB_OFFLINE.length,hubReady:false,studyCached:0,studyRequired:P2P6_OFFLINE.length,studyReady:false};
  const keys=await cacheStorage.keys();
  if(!keys.includes(OFFLINE_CACHE))
   return {supported:true,installed:false,controlled:Boolean(controlled),cached:0,
-   required:OFFLINE_MINIMUM.length,missing:OFFLINE_MINIMUM.slice(),ready:false,mixedCached:0,mixedRequired:MIXED_OFFLINE.length,mixedReady:false,reviewCached:0,reviewRequired:REVIEW_OFFLINE.length,reviewReady:false,hubCached:0,hubRequired:HUB_OFFLINE.length,hubReady:false};
+   required:OFFLINE_MINIMUM.length,missing:OFFLINE_MINIMUM.slice(),ready:false,mixedCached:0,mixedRequired:MIXED_OFFLINE.length,mixedReady:false,reviewCached:0,reviewRequired:REVIEW_OFFLINE.length,reviewReady:false,hubCached:0,hubRequired:HUB_OFFLINE.length,hubReady:false,studyCached:0,studyRequired:P2P6_OFFLINE.length,studyReady:false};
  // Opening only after keys confirms its existence avoids creating a misleading empty cache.
  const current=await cacheStorage.open(OFFLINE_CACHE);
  const matches=await Promise.all(OFFLINE_MINIMUM.map(async path=>{
@@ -299,12 +307,21 @@ async function offlineHealth(cacheStorage,controlled=false){
   return !/text\/html/i.test(String(response.headers?.get?.('content-type')||''));
  }));
  const hubCached=hubChecks.filter(Boolean).length;
+ const studyChecks=await Promise.all(P2P6_OFFLINE.map(async path=>{
+  const response=await current.match(path);
+  if(!response?.ok)return false;
+  return !/text\/html/i.test(String(response.headers?.get?.('content-type')||''));
+ }));
+ const studyCached=studyChecks.filter(Boolean).length;
+
  return {supported:true,installed:true,controlled:Boolean(controlled),
   cached:OFFLINE_MINIMUM.length-missing.length,required:OFFLINE_MINIMUM.length,
   missing,ready:missing.length===0&&Boolean(controlled),mixedCached,
   mixedRequired:MIXED_OFFLINE.length,mixedReady:mixedCached===MIXED_OFFLINE.length&&Boolean(controlled),
   reviewCached,reviewRequired:REVIEW_OFFLINE.length,reviewReady:reviewCached===REVIEW_OFFLINE.length&&Boolean(controlled),
-  hubCached,hubRequired:HUB_OFFLINE.length,hubReady:hubCached===HUB_OFFLINE.length&&Boolean(controlled)};
+  hubCached,hubRequired:HUB_OFFLINE.length,hubReady:hubCached===HUB_OFFLINE.length&&Boolean(controlled),
+  studyCached,studyRequired:P2P6_OFFLINE.length,
+  studyReady:studyCached===P2P6_OFFLINE.length&&Boolean(controlled)};
 }
 /* Ask the currently controlling SW which generation it actually runs.
  * No caches are modified, no page navigation, and no network requests.
@@ -341,9 +358,9 @@ async function runOfflineHealth(){
   const activeCurrent=controller.cache===OFFLINE_CACHE;
   const result=await offlineHealth(window.caches,activeCurrent);
   message.textContent=!result.supported?'브라우저에서 캐시 읽기를 지원하지 않습니다.':
-   !result.installed?'v140 오프라인 캐시 없음 · 아직 미배포 또는 설치 미완료입니다.':
+   !result.installed?'v157 오프라인 캐시 없음 · 아직 미배포 또는 설치 미완료입니다.':
    '현재 캐시의 필수 파일 '+result.cached+'/'+result.required+'개 · '+
-   (activeCurrent?'현재 v140 서비스워커가 이 탭을 제어함':controller.controlled?
+   (activeCurrent?'현재 v157 서비스워커가 이 탭을 제어함':controller.controlled?
     '구형 또는 응답 없는 서비스워커가 제어 중 · 현재 세대 확인 불가':'서비스워커가 이 탭을 제어하지 않음')+
    (result.missing.length?' · 미저장: '+result.missing.slice(0,3).map(x=>x.split('/').pop()).join(', ')+
     (result.missing.length>3?' 외 '+(result.missing.length-3)+'개':''):
@@ -354,6 +371,8 @@ async function runOfflineHealth(){
     (result.reviewReady?'복습 자산 준비':'복습 자산 준비 미확인')+
     ' · 통합 모의고사 UI '+result.hubCached+'/'+result.hubRequired+'개 · '+
     (result.hubReady?'선택 UI 준비':'선택 UI 오프라인 준비 미확인')+
+    ' · 칠판·그래프·한글입력 '+result.studyCached+'/'+result.studyRequired+'개 · '+
+    (result.studyReady?'학습 도구 자산 확보(조작은 별도 검증)':'학습 도구 오프라인 준비 미확인')+
     ' · 실제 기기 동작은 별도 검사');
   return result.ready;
  }catch(error){

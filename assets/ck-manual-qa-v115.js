@@ -35,7 +35,7 @@ const TASKS=Object.freeze([
  {id:'exam-idle-clock',group:'성능',name:'시험 미시작·일시중지·브라우저 숨김에서 시험 1초 시계 중지, 복귀 후 남은 시간/답안 유지 확인'},
  {id:'evidence-packet',group:'근거',name:'선지 교차보고 카드에서 ①~⑤ 상세 비교·선택 최대 5문항·TXT 근거 패킷·원본 PDF·미저장 내보내기 차단 직접 확인'},
  {id:'tts-canonical',group:'음성',name:'개인 대조문장과 공식 원문이 다른 경우 공식 TTS는 A형 원문만 낭독하며 긴 문장 오류는 누락 없이 나눠 읽는지 직접 확인'},
- {id:'offline-core',group:'오프라인',name:'v155 필수 캐시 11개·실제 활성 서비스워커 버전 확인·업데이트 중 연결 끊김 시 구버전 보존·오프라인/온라인 복귀 확인'},
+ {id:'offline-core',group:'오프라인',name:'v157 필수 캐시 11개·실제 활성 서비스워커 버전 확인·업데이트 중 연결 끊김 시 구버전 보존·오프라인/온라인 복귀 확인'},
  {id:'offline-optional-reuse-v155',group:'오프라인',name:'기존 오프라인 자산 준비 후 일부 선택 다운로드 실패 시 이전 정상 학습 모듈 유지·온라인 재접속 후 갱신 확인'},
  {id:'typing-korean-ime-v155',group:'타이핑',name:'Android Brave 한글 조합 중 빠른 입력/수정/이동, 조합 끝 마지막 글자 누락 없음·커서 위치·타수·정확도 정상 확인'},
  {id:'chart-grips-v155',group:'그래프',name:'Android Brave/S Pen에서 D·S 곡선 동그란 손잡이를 잡아 이동할 때 그림만 변하고 페이지는 이동하지 않음, 빈 SVG 영역에서는 세로 스크롤 가능'},
@@ -44,7 +44,12 @@ const TASKS=Object.freeze([
  {id:'p4-unreviewed-v155',group:'해설',name:'2021~2025 해설 초안 400건·전문가 검수 0건·선지별 원전검수 0건을 구별하고 최신 원전/판례 검증 없이는 게시되지 않음'},
  {id:'graph-slope-touch-v156',group:'그래프',name:'Android Brave와 S Pen으로 각 D/S 곡선 끝의 노란 손잡이를 위아래 드래그할 때 해당 선의 기울기만 변하고 페이지가 이동하지 않음'},
  {id:'graph-slope-shift-v156',group:'그래프',name:'수요 D·공급 S를 선택해 각각 평행이동·기울기 ±15 조절·E₀/E₁ 교점 재계산·Undo/Redo/초기화가 서로 일치함'},
- {id:'graph-before-after-v156',group:'그래프',name:'쉬운 설명·심화 설명·기출 개념의 비례/반비례 및 가격 변화=곡선 위 이동 구분, 원래 문제 조건과 변경 조건이 섞이지 않는지 확인'}
+ {id:'graph-before-after-v156',group:'그래프',name:'쉬운 설명·심화 설명·기출 개념의 비례/반비례 및 가격 변화=곡선 위 이동 구분, 원래 문제 조건과 변경 조건이 섞이지 않는지 확인'},
+ {id:'v157-offline-live',group:'오프라인',name:'온라인에서 오프라인 상태 확인을 실행한 뒤 비행기 모드에서 새로고침하여 11개 필수 자산·6개 칠판/그래프 도구와 10개년 문제 로딩을 구분해서 확인'},
+ {id:'v157-ime-stylus-recovery',group:'타이핑',name:'Android Brave에서 한글 조합→마지막 자모 지연 반영, 손바닥 접촉으로 칠판 크기 조절 중단, 포인터 취소 시 원래 높이 및 S Pen 자동 해제 확인'},
+ {id:'v157-official-json-restore',group:'모의고사',name:'공식 80문항 진행 중 답안 보존 상태로 JSON 백업 병합 복원, 다른 탭 변경/같은 응시 중복/20회 이력 한도 초과는 변경 없이 차단'},
+ {id:'v157-visual-p6',group:'그래프',name:'Android/S Pen에서 8개 시장형 곡선의 가운데 D·S 및 끝 노란 기울기 손잡이; 9개 관찰형 그래프 전후 이론·Undo/Redo/키보드·모바일 스크롤 확인'},
+ {id:'v157-expert-audit',group:'해설',name:'2021~2025년 학습용 초안 400건 중 법령/판례/선지별 전문가 검수 완료 기록은 0건이며 검증되지 않은 문장을 공식 해설로 게시하지 않는지 확인'}
 ]);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const plain=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
@@ -134,7 +139,7 @@ function render(){
  const oldOpen=panel.querySelector('details')?.open===true;
  const c=summary();
  panel.innerHTML='<details class="ck115-qa-details"'+(oldOpen?' open':'')+'>'+
- '<summary><strong>실기검증표 v130 · 직접 PASS/FAIL 기록</strong><span data-ck115-counter>'+
+ '<summary><strong>실기검증표 v157 · 직접 PASS/FAIL 기록</strong><span data-ck115-counter>'+
  '수기 PASS '+c.pass+'/'+c.total+' · FAIL '+c.fail+' · 미확인 '+c.pending+'</span></summary>'+
  '<p class="ck115-qa-warning"><strong>필수 수기 검증:</strong> 이 항목은 자동으로 PASS 처리되지 않습니다. PC와 Android Brave, S Pen을 직접 사용해 재현한 경우에만 표시하세요. 모든 기록은 현재 브라우저에만 보관됩니다.</p>'+
  '<div class="ck115-qa-tools"><button type="button" data-ck115-diagnose>현재 기기 상태 확인</button>'+
@@ -165,13 +170,19 @@ function diagnose(){
   '음성 '+(speech.status||'미준비'),
   'PDF '+(pdf.page?(pdf.page+'쪽'):'열려 있지 않음'),
   '80문항 시험 '+(exam.active||'미준비'),
-  '서비스워커 '+(navigator.serviceWorker?.controller?'제어 중':'제어 확인 안 됨')
+  '서비스워커 '+(navigator.serviceWorker?.controller?'제어 중':'제어 확인 안 됨'),
+  '포인터 이벤트 '+(typeof window.PointerEvent==='function'?'지원 감지':'지원 미확인'),
+  '펜/터치 '+(window.matchMedia?.('(pointer:coarse)')?.matches?'거친 터치 포인터 감지':'기기별 별도 검증'),
+  '한글 입력 보완 '+(window.CK155TypingImeGuard?'모듈 활성':'미로드'),
+  '도식 전후 비교 '+(window.CK149GraphMotion?.explain?'모듈 활성':'미로드'),
+  '기존 시험 JSON 병합 '+(window.CK82FullExam?.mergeRestore?'모듈 활성':'미로드'),
+  '아래 PASS/FAIL은 실제 조작 후 사용자가 직접 표기'
  ];
  panel.querySelector('[data-ck115-diag]').textContent=pieces.join(' · ');
 }
 function exportText(){
  const snap=gather(),c=summary(snap);
- const lines=['ConceptKnot v132 사용자 수기 실기검증표','개인 기기에서 수동으로 표시한 결과; 공식 검증 아님',
+ const lines=['ConceptKnot v157 사용자 수기 실기검증표','개인 기기에서 수동으로 표시한 결과; 공식 검증 아님',
   '작성일: '+new Date().toISOString(),'PASS '+c.pass+'/'+c.total+' · FAIL '+c.fail+
   ' · 미확인 '+c.pending+' · 해당 없음 '+c.skip,''];
  TASKS.forEach((task,i)=>{
@@ -182,7 +193,7 @@ function exportText(){
  try{
   const blob=new Blob(['\uFEFF',lines.join('\n')],{type:'text/plain;charset=utf-8'});
   const url=URL.createObjectURL(blob),a=document.createElement('a');
-  a.href=url;a.download='ConceptKnot_v132_수기실기검증_'+new Date().toISOString().slice(0,10)+'.txt';
+  a.href=url;a.download='ConceptKnot_v157_수기실기검증_'+new Date().toISOString().slice(0,10)+'.txt';
   document.body.appendChild(a);a.click();a.remove();
   setTimeout(()=>URL.revokeObjectURL(url),3000);
   announce('TXT 다운로드를 요청했습니다. 현재 입력을 포함하며 실제 파일 저장 여부는 다운로드 목록에서 확인하세요.');

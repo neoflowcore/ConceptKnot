@@ -7,7 +7,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const root=path.resolve(__dirname,'..'),read=name=>fs.readFileSync(path.join(root,name),'utf8');
 const SW=read('sw.js'),DIAG=read('assets/ck-data-diagnostics-v88.js');
-const GEN='conceptknot-study-v137-native-voice-guard';
+const GEN='conceptknot-study-v157-resume-offline-omr-ime';
 const ORIGIN='https://conceptknot.test';
 function mime(path){
  const u=new URL(path,ORIGIN+'/sw.js');
@@ -66,7 +66,7 @@ function makeWorker({badCore='',badType='text/html'}={}){
   get skips(){return skips},get deletes(){return deletes}};
 }
 test('v127 worker refuses HTTP 200 HTML instead of a critical JS resource',async()=>{
- const bad='./assets/ck-full-exam-v82.js?v=134';
+ const bad='./assets/ck-full-exam-v82.js?v=157';
  const app=makeWorker({badCore:bad});
  await assert.rejects(app.install(),/Invalid critical offline asset/);
  assert.equal(app.skips,0);assert.equal(app.deletes,0);
@@ -175,7 +175,7 @@ test('release remains read-only and cannot run GitHub Actions or Vercel auto-bui
  const script=read('scripts/check-release-readonly.cjs'),vc=JSON.parse(read('vercel.json'));
  assert.equal(vc.git.deploymentEnabled,false);
  assert.equal(fs.existsSync(path.join(root,'.github/workflows')),false);
- assert.match(script,/conceptknot-study-v137-native-voice-guard/);
+ assert.match(script,/conceptknot-study-v157-resume-offline-omr-ime/);
  assert.match(script,/invalidCoreResponse/);
  assert.match(script,/if\(url.search\)return null/);
  new vm.Script(SW);new vm.Script(DIAG);

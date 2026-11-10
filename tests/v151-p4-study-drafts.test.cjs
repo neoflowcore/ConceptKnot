@@ -98,8 +98,8 @@ test('P4 dashboard totals and fresh PWA cache paths match source version',()=>{
  A.equal(p4.reviewStages.draft,400);A.equal(p4.reviewStages.unstarted,0);
  A.equal(p4.reviewStages.published,0);A.equal(p4.seedOptionReasonDrafts,664);
  const sw=raw('sw.js'),html=raw('index.html');
- A.match(html,/ck-release" content="v156-p6b-tilt-parallel-comparative-lesson"/);
- A.match(sw,/conceptknot-study-v156-curve-slope-before-after/);
+ A.match(html,/ck-release" content="v157-phase-remaining-offline-restore-ime-board"/);
+ A.match(sw,/conceptknot-study-v157-resume-offline-omr-ime/);
  for(const year of years){
   A.ok(sw.includes('./data/explanations/official-'+year+'.json?v=154'));
  }
