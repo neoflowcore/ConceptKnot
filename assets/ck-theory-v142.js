@@ -307,6 +307,7 @@
    '<button type="button" data-ck142-action="search">원문 800문항 검색으로 이동</button>'+
    '<label class="ck142-opt-in"><input type="checkbox" data-ck142-store '+(storage?'checked':'')+'/> 그래프 실험기록만 기기에 저장 (선택)</label>'+
    '<small data-ck142-status role="status">'+esc(note)+'</small></div></div>';
+  window.CK150ScenarioUI?.mountTheory?.(root,selected);
  }
  function live(root){
   if(!root||!root.isConnected)return;
@@ -534,8 +535,15 @@
   live(root);
   root.querySelector('[data-ck142-handle="'+k+'"]')?.focus();
  });
+ function applyStudyCase(id,action){
+  if(id!==selected||action?.scope!=='theory'||action.topic!==id||
+     !models.S[id]?.f?.[action.control]||!Number.isFinite(action.value))return false;
+  const root=document.getElementById('ck142-theory-studio');if(!root?.isConnected)return false;
+  if(!apply(action.control,action.value))return false;
+  baseline=false;paint(root);return true;
+ }
  window.CK142Theory=Object.freeze({
-  mount,getState:()=>({selected,mode,storage,baseline,session:deep(sessions),note,
+  mount,applyStudyCase,getState:()=>({selected,mode,storage,baseline,session:deep(sessions),note,
    comparison:window.CK144ChangeExplain?.theory(selected,
     baseline?models.initial(selected):sessions[selected].previous,sessions[selected].current,models)}),
   models

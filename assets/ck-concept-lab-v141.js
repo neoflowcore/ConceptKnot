@@ -271,6 +271,7 @@
    '<button type="button" data-ck141-act="search">공식 800문항에서 키워드 검색</button>'+
    '<label class="ck141-save"><input type="checkbox" data-ck141-storage '+(storeEnabled?'checked':'')+'/> 이 기기에 그래프 학습 이력 저장 (선택)</label>'+
    '<small class="ck141-save-status" role="status">'+esc(saveMessage)+'</small></div></div>';
+  window.CK150ScenarioUI?.mountLab?.(root,history.topic);
  }
  function updateLive(root){
   if(!root)return;
@@ -527,7 +528,24 @@
    (kind.includes('slope')?5:kind==='price'?60:80);
   if(type){e.preventDefault();history.apply(type,val);persist();updateLive(root);}
  });
- window.CK141ConceptLab=Object.freeze({mount,getState:()=>({
+ function applyStudyCase(id,action){
+  if(history.topic!==id||!action)return false;
+  const root=document.getElementById('ck141-concept-lab');if(!root?.isConnected)return false;
+  if(id==='relation'&&action.scope==='lab'){
+   const key=action.control,value=Number(action.value);
+   if(!['x','k'].includes(key)||!Number.isFinite(value)||
+      (key==='x'&&(value<.5||value>3))||(key==='k'&&(value<1||value>3))||
+      relation[key]===value)return false;
+   relPast.push({...relation});if(relPast.length>100)relPast.shift();relFuture=[];
+   relationPrevious={...relation};relation={...relation,[key]:value};
+   compareBase=false;persist();render(root);return true;
+  }
+  const allowed=['set-demand','set-supply','change-price-point','adjust-demand-slope','adjust-supply-slope'];
+  if(!allowed.includes(action.kind)||!Number.isFinite(action.value))return false;
+  if(!history.apply(action.kind,action.value))return false;
+  compareBase=false;persist();render(root);return true;
+ }
+ window.CK141ConceptLab=Object.freeze({mount,applyStudyCase,getState:()=>({
   session:history.export(),storeEnabled,relation:{...relation},saveMessage,gestureMode,
    comparison:window.CK144ChangeExplain?.market(
     compareBase?math.BASE:history.previous,history.state,math,history.topic,relationPrevious,relation)}),math});

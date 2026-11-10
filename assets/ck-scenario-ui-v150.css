@@ -1,0 +1,37 @@
+/* ConceptKnot P6-B v150: readable 5-scenario study UI. */
+#main .ck150-scenarios{border:1px solid color-mix(in srgb,currentColor 24%,transparent);border-radius:14px;
+ margin:15px 0;padding:13px;background:color-mix(in srgb,currentColor 4%,transparent);
+ color:inherit;font:inherit;line-height:1.6;min-width:0;overflow-anchor:none}
+#main .ck150-scenarios *,#main .ck150-scenarios *:before,#main .ck150-scenarios *:after{box-sizing:border-box}
+#main .ck150-heading{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;
+ border-bottom:1px solid color-mix(in srgb,currentColor 16%,transparent);padding-bottom:9px}
+#main .ck150-heading strong{font-size:15px}
+#main .ck150-heading span{font-size:12px;opacity:.8;font-variant-numeric:tabular-nums}
+#main .ck150-scenarios p{margin:8px 0}
+#main .ck150-guide{font-size:12px;opacity:.85}
+#main .ck150-tabs{display:flex;flex-wrap:wrap;gap:7px;margin:11px 0}
+#main .ck150-scenarios button{display:inline-block;min-height:44px;border:1px solid color-mix(in srgb,currentColor 27%,transparent);
+ border-radius:9px;background:color-mix(in srgb,currentColor 3%,transparent);color:inherit;cursor:pointer;
+ font:inherit;font-size:12px;line-height:1.45;padding:8px 10px;text-align:center;overflow-wrap:anywhere}
+#main .ck150-tabs button{flex:1 1 88px}
+#main .ck150-tabs button[aria-pressed=true],#main .ck150-choices button[aria-pressed=true]{
+ border:2px solid #608e72;background:color-mix(in srgb,#6e977e 18%,transparent);font-weight:750}
+#main .ck150-scenarios button:focus-visible{outline:3px solid #7da78a;outline-offset:2px}
+#main .ck150-scenarios button:disabled{cursor:default;opacity:.58}
+#main .ck150-story{border-left:4px solid #669b75;padding:10px 12px;border-radius:8px;
+ background:color-mix(in srgb,currentColor 4%,transparent);font-size:13px;line-height:1.7}
+#main .ck150-story strong{font-size:14px}
+#main .ck150-story p{font-size:12px}
+#main .ck150-choices{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:12px 0}
+#main .ck150-choices button{width:100%;font-weight:680}
+#main .ck150-apply{width:100%;font-weight:700!important;margin-top:4px;
+ background:color-mix(in srgb,#7ba287 13%,transparent)!important}
+#main .ck150-result{border-left:4px solid #669b75;padding:10px 12px;margin:12px 0;
+ border-radius:8px;background:color-mix(in srgb,#669b75 9%,transparent);font-size:12px}
+#main .ck150-result strong{font-size:13px}
+#main .ck150-note{display:block;font-size:11px;opacity:.75;margin-top:12px;line-height:1.65}
+#main .ck150-applied{border:1px solid #7ba287;padding:8px 10px;border-radius:8px;font-size:12px}
+@media(max-width:530px){#main .ck150-scenarios{padding:10px}
+ #main .ck150-tabs button{flex:1 1 calc(33.333% - 8px);font-size:11px}
+ #main .ck150-choices{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}}
+@media(prefers-reduced-motion:reduce){#main .ck150-scenarios *{animation:none!important;transition:none!important}}

@@ -231,6 +231,9 @@ function ck141Ensure(){
  const css145=document.createElement('link');css145.rel='stylesheet';
  css145.href='./assets/ck-concept-touch-fix-v145.css?v=145';css145.dataset.ck145Asset='css';
  document.head.appendChild(css145);
+ const css150=document.createElement('link');css150.rel='stylesheet';
+ css150.href='./assets/ck-scenario-ui-v150.css?v=150';css150.dataset.ck150Asset='css';
+ document.head.appendChild(css150);
  const load=src=>new Promise((resolve,reject)=>{
   const script=document.createElement('script');script.src=src;script.async=false;
   script.onload=resolve;script.onerror=()=>reject(new Error('P6-B failed: '+src));
@@ -241,16 +244,21 @@ function ck141Ensure(){
   .then(()=>load('./assets/ck-concept-gesture-v145.js?v=145'))
   .then(()=>load('./assets/ck-concept-transition-v144.js?v=145'))
   .then(()=>load('./assets/ck-concept-transition-view-v144.js?v=148'))
-  .then(()=>load('./assets/ck-concept-lab-v141.js?v=148'))
+  .then(()=>load('./assets/ck-concept-lab-v141.js?v=150'))
   .then(async()=>{try{await load('./assets/ck-theory-models-v142.js?v=142');
-    await load('./assets/ck-theory-v142.js?v=148');}
+    await load('./assets/ck-theory-v142.js?v=150');}
     catch{const chart=document.querySelector('.ck21-chart-section');if(chart&&!chart.querySelector('[data-ck142-error]')){
       const msg=document.createElement('p');msg.dataset.ck142Error='';msg.setAttribute('role','status');
       msg.textContent='심화 경제 그래프 모듈을 불러오지 못했습니다. 온라인 재접속 후 다시 시도하세요.';chart.append(msg);
     }}
     const chart=document.querySelector('.ck21-chart-section');if(chart){
       window.CK141ConceptLab?.mount(chart);window.CK142Theory?.mount(chart);
-    }return true;})
+    }
+    try{await load('./assets/ck-learning-scenarios-v150.js?v=150');
+        await load('./assets/ck-scenario-ui-v150.js?v=150');
+        window.CK150ScenarioUI?.boot?.();
+    }catch(err){console.warn('Optional examples unavailable',err);}
+    return true;})
   .catch(()=>{const chart=document.querySelector('.ck21-chart-section');
    if(chart&&!chart.querySelector('[data-ck141-error]')){
     const msg=document.createElement('p');msg.dataset.ck141Error='';msg.setAttribute('role','alert');

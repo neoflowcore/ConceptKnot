@@ -191,11 +191,11 @@ test('ghost reference curves are never interactive grip targets',()=>{
 });
 test('version, current file contents and original records are protected',()=>{
  const html=read('index.html'),sw=read('sw.js'),glue=read('assets/ck-study-charts-v79.js');
- const files=['ck-graph-motion-v149.js?v=149','ck-graph-direct-v149.js?v=149',
-  'ck-graph-direct-v149.css?v=149','ck-study-charts-v79.js?v=149'];
- for(const f of files){A.ok(html.includes(f)||f.endsWith('ck-study-charts-v79.js?v=149'),f);A.ok(sw.includes(f),f)}
- A.match(html,/ck-release" content="v149-curve-grip-before-after"/);
- A.match(sw,/const CACHE='conceptknot-study-v149-curve-grip-before-after'/);
+ const files=['ck-graph-motion-v149.js?v=149','ck-graph-direct-v149.js?v=150',
+  'ck-graph-direct-v149.css?v=149','ck-study-charts-v79.js?v=150'];
+ for(const f of files){A.ok(html.includes(f)||f.endsWith('ck-study-charts-v79.js?v=150'),f);A.ok(sw.includes(f),f)}
+ A.match(html,/ck-release" content="v150-concept-scenario-learning"/);
+ A.match(sw,/const CACHE='conceptknot-study-v150-concept-scenario-learning'/);
  A.match(glue,/CK149GraphEnhance/);
  const critical=sw.match(/const CRITICAL=\[([\s\S]*?)\];/);
  A.equal([...critical[1].matchAll(/'\.\/[^']+'/g)].length,11);

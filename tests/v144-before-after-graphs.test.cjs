@@ -147,12 +147,12 @@ test('actual line drag changes u, rotate toggle changes b, previous state surviv
 });
 test('release is manual-only and offline core 11 unchanged',()=>{
  const html=read('index.html'),sw=read('sw.js'),glue=read('assets/ck-study-charts-v79.js');
- A.match(html,/ck-release" content="v149-curve-grip-before-after"/);
+ A.match(html,/ck-release" content="v150-concept-scenario-learning"/);
  A.match(html,/ck-study-charts-v79.js\?v=149/);
  for(const name of ['ck-concept-transition-v144.js?v=145','ck-concept-transition-view-v144.js?v=148','ck-concept-transition-v144.css?v=144']){
   A.ok(glue.includes(name));A.ok(sw.includes(name));
  }
- A.match(sw,/conceptknot-study-v149-curve-grip-before-after/);
+ A.match(sw,/conceptknot-study-v150-concept-scenario-learning/);
  const core=sw.match(/const CRITICAL=\[([\s\S]*?)\];/);
  A.ok(core);A.equal([...core[1].matchAll(/'\.\/[^']+'/g)].length,11);
  const vercel=JSON.parse(read('vercel.json'));

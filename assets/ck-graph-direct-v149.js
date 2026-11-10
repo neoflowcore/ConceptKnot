@@ -140,6 +140,7 @@ function sync(root,c,state){
  if(redo)redo.disabled=!tr?.canRedo;
  root.querySelectorAll?.('[data-ck149-select]')?.forEach?.(b=>
   b.setAttribute?.('aria-pressed',String(b.dataset.ck149Select===selectedCurve)));
+ window.CK150ScenarioUI?.mountLegacy?.(root,c);
 }
 function mount(root,c){
  if(!root||!c)return;
@@ -282,7 +283,24 @@ document.addEventListener('click',e=>{
  // The old click handler runs later; commit after its update in a microtask.
  Promise.resolve().then(()=>{const now=active();if(now&&now.chart.id===info.chart.id)done(before,now.chart,now.root)});
 },{capture:true});
-const api=Object.freeze({enabled:true,mount,afterUpdate,cancel,getState:()=>{
+function applyStudyCase(chartId,action){
+ const info=active(),m=math();if(!info||info.chart.id!==chartId||!action||drag||sliderDraft||!m)return false;
+ const tr=trackFor(info.chart);if(!tr)return false;
+ const before=tr.state,p=m.round(action.progress),next={...before,value:p};
+ if(['demand','supply'].includes(info.chart.type)){
+  if(![-1,1].includes(action.sign))return false;
+  next.sign=action.sign;next[info.chart.type]=p;next[info.chart.type+'Sign']=next.sign;
+ }else if(info.chart.type==='both'){
+  for(const side of ['demand','supply']){
+   if(!Number.isFinite(action[side])||![-1,1].includes(action[side+'Sign']))return false;
+   next[side]=m.round(action[side]);next[side+'Sign']=action[side+'Sign'];
+  }
+  next.value=Math.max(next.demand,next.supply);next.sign=next.demandSign;
+ }
+ if(JSON.stringify(next)===JSON.stringify(before))return false;
+ change(next,info.chart,info.root);done(before,info.chart,info.root);return true;
+}
+const api=Object.freeze({enabled:true,mount,afterUpdate,cancel,applyStudyCase,getState:()=>{
  const info=active(),tr=info&&trackFor(info.chart);return tr?
   {id:info.chart.id,...tr.state,past:tr.pastCount,future:tr.futureCount,selectedCurve}:null;
 },getAll:()=>[...tracks.keys()]});
