@@ -1,0 +1,64 @@
+{
+  "schemaVersion": "1.0.0",
+  "asOf": "2026-11-12",
+  "authority": "한국산업인력공단 Q-Net",
+  "scope": "2021-2025 공인중개사 1차 공식 기출문제지 게시글·최종정답 게시글 별도 분리",
+  "caveat": "URL과 Q-Net 게시글 제목을 확인했습니다. 첨부된 원본 PDF 내용과 400문항·2,000개 선지 법령/판례는 독립 검수하지 않았습니다.",
+  "years": [
+    {
+      "year": 2021,
+      "firstExamQuestions": 80,
+      "officialPaperNotice": "https://www.q-net.or.kr/cst003.do?artlSeq=5209170&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+      "mirrorPDF": "https://gosi24.com/wp-content/uploads/2026/10/2021-exam-2996-817ab1c7e992.pdf",
+      "officialFinalAnswerNotice": "https://www.q-net.or.kr/cst003.do?artlSeq=5209538&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00310",
+      "paperUrlStatus": "Q-Net 문제지 게시글 URL 확인",
+      "finalAnswerUrlStatus": "Q-Net 최종정답 게시글 URL 확인",
+      "attachedPDFContentCompared": false,
+      "eachOptionLegallyReviewed": false
+    },
+    {
+      "year": 2022,
+      "firstExamQuestions": 80,
+      "officialPaperNotice": "https://www.q-net.or.kr/cst003.do?artlSeq=5211107&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+      "mirrorPDF": "https://gosi24.com/wp-content/uploads/2026/10/2022-exam-2996-3e75d06e4d31.pdf",
+      "officialFinalAnswerNotice": "https://www.q-net.or.kr/cst003.do?artlSeq=5211208&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00310",
+      "paperUrlStatus": "Q-Net 문제지 게시글 URL 확인",
+      "finalAnswerUrlStatus": "Q-Net 최종정답 게시글 URL 확인",
+      "attachedPDFContentCompared": false,
+      "eachOptionLegallyReviewed": false
+    },
+    {
+      "year": 2023,
+      "firstExamQuestions": 80,
+      "officialPaperNotice": "https://www.q-net.or.kr/cst003.do?artlSeq=5212459&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+      "mirrorPDF": "https://gosi24.com/wp-content/uploads/2026/10/2023-exam-2996-e8775dd8b058.pdf",
+      "officialFinalAnswerNotice": "https://www.q-net.or.kr/cst003.do?artlSeq=5212816&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00310",
+      "paperUrlStatus": "Q-Net 문제지 게시글 URL 확인",
+      "finalAnswerUrlStatus": "Q-Net 최종정답 게시글 URL 확인",
+      "attachedPDFContentCompared": false,
+      "eachOptionLegallyReviewed": false
+    },
+    {
+      "year": 2024,
+      "firstExamQuestions": 80,
+      "officialPaperNotice": "https://www.q-net.or.kr/cst003.do?artlSeq=5214724&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+      "mirrorPDF": "https://gosi24.com/wp-content/uploads/2026/10/2024-exam-2996-90d1f2f12239.pdf",
+      "officialFinalAnswerNotice": "https://www.q-net.or.kr/cst003.do?artlSeq=5218527&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00310",
+      "paperUrlStatus": "Q-Net 문제지 게시글 URL 확인",
+      "finalAnswerUrlStatus": "Q-Net 최종정답 게시글 URL 확인",
+      "attachedPDFContentCompared": false,
+      "eachOptionLegallyReviewed": false
+    },
+    {
+      "year": 2025,
+      "firstExamQuestions": 80,
+      "officialPaperNotice": "https://www.q-net.or.kr/cst003.do?artlSeq=5247125&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+      "mirrorPDF": "https://gosi24.com/wp-content/uploads/2026/10/2025-exam-2996-78fb20b4cdfb.pdf",
+      "officialFinalAnswerNotice": "https://www.q-net.or.kr/cst003.do?artlSeq=5249925&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00310",
+      "paperUrlStatus": "Q-Net 문제지 게시글 URL 확인",
+      "finalAnswerUrlStatus": "Q-Net 최종정답 게시글 URL 확인",
+      "attachedPDFContentCompared": false,
+      "eachOptionLegallyReviewed": false
+    }
+  ]
+}

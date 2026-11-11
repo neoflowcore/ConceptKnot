@@ -195,6 +195,10 @@ function enriched(items,drafts=personalDrafts(),study=dueIds(),
    canonical:qa.status||'unavailable'};
  });
 }
+/* v159 priority hints are never substantive official review. */
+function p4PriorityRecord(item){
+ return window.CK159P4Review?.row?.(item)||null;
+}
 function matchingRows(items,filters=view){
  const terms=norm(filters.search).split(' ').filter(Boolean);
  return items.filter(x=>{
@@ -209,6 +213,8 @@ function matchingRows(items,filters=view){
   if(stage==='due'&&!x.isDue)return false;
   if(stage==='bookmark'&&!x.p.bookmark)return false;
   if(stage==='special'&&specialAnswer(q)==='일반')return false;
+  const p4Tier={'p4-special':1,'p4-law':2,'p4-calculation':3,'p4-other':4}[stage];
+  if(p4Tier&&p4PriorityRecord(x)?.tier!==p4Tier)return false;
   if(stage==='needs-source'&&x.visualReviewed&&x.reasonReviewed)return false;
   if(stage==='low-text'&&!(x.textScore!==null&&x.textScore<0.9))return false;
   if(stage==='not-reason-reviewed'&&x.reasonReviewed)return false;
@@ -234,6 +240,9 @@ function sortRows(items,sort=view.sort){
  if(sort==='number')sorted.sort((a,b)=>a.q.year-b.q.year||a.q.number-b.q.number);
  else if(sort==='progress')sorted.sort((a,b)=>b.assess.done-a.assess.done||b.q.year-a.q.year||a.q.number-b.q.number);
  else if(sort==='risk')sorted.sort((a,b)=>riskScore(b)-riskScore(a)||b.q.year-a.q.year||a.q.number-b.q.number);
+ else if(sort==='source-priority')sorted.sort((a,b)=>
+  (p4PriorityRecord(a)?.tier||5)-(p4PriorityRecord(b)?.tier||5)||
+  b.q.year-a.q.year||a.q.number-b.q.number);
  else sorted.sort((a,b)=>Number(b.p.bookmark)-Number(a.p.bookmark)||Number(b.isDue)-Number(a.isDue)||
   b.q.year-a.q.year||a.q.number-b.q.number);
  return sorted;
@@ -306,7 +315,7 @@ function researchPacket(ids,items=rows,max=5){
     (q.correct.length===5?' (전원정답 인정. 선지 모두 참이라는 뜻 아님)':
      q.correct.length>1?' (복수정답 인정)':''),
    '문제 PDF: '+String(q.paperUrl||q.originalUrl||'링크 미기재'),
-   '정답 출처: '+String(q.answerSourceUrl||q.originalUrl||'링크 미기재'),
+   'Q-Net 최종정답 공고: '+String(q.answerSourceUrl||window.CK160OptionAudit?.finalAnswerNotice?.(q.year)||'링크 미기재'),
    '시각 검토: '+(item.visualReviewed?'검토 완료 메타':'미검토 또는 미기재')+
    ' / 텍스트 유사도: '+(item.textScore===null?'미기재':item.textScore.toFixed(3)),
    '기본 해설: '+item.canonical+' / 근거 검수: '+(item.reasonReviewed?'표시 있음':'표시 없음'),
@@ -350,7 +359,8 @@ function draftReviewPacket(ids,items,limit=5){
    '시험 당시 법령·판례·적용일 검수: '+
     (r.quality?.sourceChecked?'검수 표기 있음 (원전 별도 확인 필요)':'미검수'),
    '원본 문제 PDF: '+String(q.paperUrl||'미기재'),
-   '공식 채점 출처: '+String(q.originalUrl||'미기재'),
+   'Q-Net 원문 문제지 게시글: '+String(q.originalUrl||'미기재'),
+   'Q-Net 최종정답 공고: '+String(window.CK160OptionAudit?.finalAnswerNotice?.(q.year)||'미기재'),
    '사람 검수 작성란: 조문/판례 번호 · 출처 쪽수 · 적용 기준일 · 각 선지 판단 이유 · 검수자/일시',
    '검수자 서명: [미작성] · 게시 가능: [아니오]','');
  }
@@ -364,8 +374,10 @@ function renderRows(items){
   const status=local.records[q.id]?.status||'backlog';
   const verdict=x.draft?' · 내 초안 '+x.assess.done+'/8':'';
   const question=String(q.question||'').replace(/\s+/g,' ').slice(0,170);
+  const p4=p4PriorityRecord(x);
   const paper=typeof q.paperUrl==='string'&&/^https:\/\/[A-Za-z0-9.-]+\//.test(q.paperUrl)?q.paperUrl:'';
   const original=typeof q.originalUrl==='string'&&/^https:\/\/[A-Za-z0-9.-]+\//.test(q.originalUrl)?q.originalUrl:'';
+  const answer=window.CK160OptionAudit?.finalAnswerNotice?.(q.year)||'';
   return '<article class="ck81-item" data-ck81-id="'+esc(q.id)+'">'+
    '<div class="ck81-item-top"><strong>'+q.year+'년 '+q.number+'번 · '+esc(SUBJECTS[q.subject])+
    '</strong><span>'+esc(canonical)+esc(verdict)+'</span></div>'+
@@ -373,6 +385,7 @@ function renderRows(items){
    '<div class="ck81-tags">'+
    (x.isDue?'<span>복습 예정</span>':'')+(x.isMistake?'<span>내 오답</span>':'')+
    (specialAnswer(q)!=='일반'?'<span>'+esc(specialAnswer(q))+'</span>':'')+
+   (p4?'<span class="ck159-p4-tag">원전검수 '+p4.tier+'단계 · '+esc(window.CK159P4Review.LABEL[p4.tier])+'</span>':'')+
    (!x.visualReviewed?'<span>시각 검토 미확인</span>':'')+
    (x.textScore!==null&&x.textScore<0.9?'<span>원문 유사도 0.90 미만</span>':'')+
    (x.reasonReviewed?'<span>해설 근거 검수 표시</span>':'')+
@@ -393,7 +406,8 @@ function renderRows(items){
    '<button type="button" data-ck81-choice-note="'+esc(q.id)+'">선지별 개인 근거</button>'+
    '<button type="button" data-ck81-prompt="'+esc(q.id)+'">대조 질문 복사</button>'+
    (paper?'<a class="ck81-paper" href="'+esc(paper)+'" target="_blank" rel="noopener noreferrer">시험지 PDF(외부)</a>':'')+
-   (original?'<a class="ck81-paper" href="'+esc(original)+'" target="_blank" rel="noopener noreferrer">Q-Net 공식 출처</a>':'')+
+   (original?'<a class="ck81-paper" href="'+esc(original)+'" target="_blank" rel="noopener noreferrer">Q-Net 문제지 공고</a>':'')+
+   (answer?'<a class="ck81-paper" href="'+esc(answer)+'" target="_blank" rel="noopener noreferrer">Q-Net 최종정답 공고</a>':'')+
    '</div></article>';
  }).join('')+'</div>';
 }
@@ -407,6 +421,25 @@ function render(){
  if(!shown||!panel())return;
  if(!rows){panel().innerHTML='<p role="status">등록 원문과 해설 목록을 확인 중입니다…</p>';return;}
  const data=enriched(rows),totals=summary(data);
+ const p4=window.CK159P4Review?.snapshot?.(rows);
+ const p4Status=p4?.ready?
+  '<section class="ck159-p4" aria-label="최근 5개년 공식 기출 원전 검수 우선순위">'+
+  '<div class="ck159-p4-head"><strong>최근 5개년 400문항 · 원전 검수 우선순위</strong>'+
+  '<small>위험도는 작업 순서용 키워드 분류입니다. 검수 완료/법리 판단이 아닙니다.</small></div>'+
+  '<div class="ck159-p4-metrics"><span>특수정답 <b>'+p4.totals.special+'</b></span>'+
+  '<span>법령·판례 <b>'+p4.totals.law+'</b></span>'+
+  '<span>계산·수치 <b>'+p4.totals.calculation+'</b></span>'+
+  '<span>기타 <b>'+p4.totals.other+'</b></span>'+
+  '<span>원전 근거 검수 <b>'+p4.totals.sourceReviewed+'/400</b></span>'+
+  '<span>선지별 검수 <b>'+p4.totals.optionReviewed+'/2000</b></span></div>'+
+  '<p>공식 인정정답과 각 선지의 참/거짓은 별도 검토 대상입니다. 전문가 대조 없이 공식 해설로 게시하지 않습니다.</p>'+
+  '<div class="ck159-p4-actions">'+
+  '<button type="button" data-ck159-focus>특수정답 7건부터 보기</button>'+
+  '<button type="button" data-ck159-p4-csv>400문항 원전 검수표 CSV</button>'+
+  '<button type="button" data-ck159-p4-packet>우선 5문항 해설 대조 TXT</button></div></section>':
+  '<section class="ck159-p4 ck159-p4-issue" role="status"><strong>P4 원전 검수표 준비 미완료</strong>'+
+  '<p>최근 5개년 400문항과 해설 초안의 문항·정답 연결을 확인할 수 없습니다. 잘못된 대조표는 내보내지 않습니다.</p>'+
+  '<p>'+esc((p4?.errors||['검수 모듈 로딩 전']).slice(0,4).join(' · '))+'</p></section>';
  const found=sortRows(matchingRows(data));
  const pages=Math.max(1,Math.ceil(found.length/view.pageSize));view.page=Math.min(pages-1,Math.max(0,view.page));
  const batch=found.slice(view.page*view.pageSize,(view.page+1)*view.pageSize);
@@ -425,7 +458,7 @@ function render(){
   ['내 개인 대조 준비',totals.ready],['복습 대기',totals.due],
   ['공식 해설 근거 검수',totals.reasonReviewed],['선지 5개 출처 검수',totals.fullyOptionReviewed]
  ].map(([name,val])=>'<div><dt>'+esc(name)+'</dt><dd>'+esc(val)+'</dd></div>').join('')+'</dl>'+
- renderMatrix(data)+
+ p4Status+(window.CK160OptionUI?.panel?.(rows)||'')+renderMatrix(data)+
  '<p class="ck81-disclaimer">개인 초안 입력 8/8은 출처 검증 완료를 의미하지 않으며 개인 출처는 별도 5/5로 확인합니다. 최근 5개년 미작성 해설 '+totals.unstarted+
   '건 · 과거 5개년 기본 해설 미제공 '+totals.legacyUnseeded+
   '건 · 유사도 0.90 미만 '+totals.lowText+'건 · 시각 검토 미완/표시 없음 '+
@@ -439,12 +472,15 @@ function render(){
  ['all','전체'],['unstarted','기본 해설 미작성'],['draft','기본/개인 초안'],
  ['incomplete','내 초안 입력 미완'],['ready','내 개인 대조 준비'],['hold','검토 보류'],
  ['due','내 복습 대기'],['bookmark','중요 표시'],['special','복수·전원정답'],
+ ['p4-special','P4 특수정답 1순위'],['p4-law','P4 법령·판례 2순위'],
+ ['p4-calculation','P4 계산·수치 3순위'],['p4-other','P4 기타 원전대조 4순위'],
  ['not-reason-reviewed','공식 해설 근거 미검수'],['no-personal-source','내 선지 출처 미작성'],
   ['low-text','원문 유사도 0.90 미만'],['needs-source','시각/해설 대조 필요']
  ].map(([v,label])=>option(v,label,view.stage)).join('')+'</select></label>'+
  '<label>정렬 <select data-ck81-filter="sort">'+option('priority','중요·복습 우선',view.sort)+
  option('number','연도/번호순',view.sort)+option('progress','내 입력 많은 순',view.sort)+
- option('risk','검수 위험·복습 우선',view.sort)+'</select></label>'+
+ option('risk','검수 위험·복습 우선',view.sort)+
+ option('source-priority','P4 원전대조 우선순위',view.sort)+'</select></label>'+
  '<label class="ck81-find">문제·선지 검색 <input type="search" data-ck81-search maxlength="120" value="'+esc(view.search)+
  '" placeholder="키워드 또는 문항 번호"></label>'+
  '</div><div class="ck100-research-tools"><label>묶음 개수 <select data-ck81-batch-size>'+
@@ -622,12 +658,49 @@ function copyPrompt(id){
 document.addEventListener('click',event=>{
  const target=event.target.closest?.('[data-ck81-toggle],[data-ck81-matrix],[data-ck81-page],'+
   '[data-ck81-pin],[data-ck81-open],[data-ck81-edit],[data-ck81-choice-note],[data-ck81-prompt],'+
+  '[data-ck159-focus],[data-ck159-p4-csv],[data-ck159-p4-packet],'+
+  '[data-ck160-toggle],[data-ck160-csv],[data-ck160-txt],[data-ck160-page],[data-ck160-personal],'+
   '[data-ck81-export],[data-ck81-import],[data-ck81-clear-filters],[data-ck81-batch-prompt],[data-ck81-batch-queue],[data-ck154-review-packet],[data-ck112-packet-txt],[data-ck112-voice],[data-ck112-voice-batch],[data-ck112-voice-stop],[data-ck81-retry]');
  if(!target||!document.getElementById('ck81-workbench')?.contains(target))return;
  if(target.hasAttribute('data-ck81-toggle')){toggle();return;}
  if(target.hasAttribute('data-ck81-retry')){
   message('해설 자료를 다시 확인하는 중입니다.');
   load(true).then(()=>render()).catch(e=>message('자료 재확인 실패: '+(e?.message||e)));
+  return;
+ }
+ if(target.matches?.('[data-ck160-toggle],[data-ck160-csv],[data-ck160-txt],[data-ck160-page],[data-ck160-personal]')){
+  const opened=id=>{
+   if(!window.CK83Links?.openQuestion)throw Error('선지별 개인 근거 편집기 준비 전');
+   const task=window.CK83Links.openQuestion(id);
+   if(task?.catch)task.catch(error=>message('선지별 근거 편집 실패: '+String(error?.message||error)));
+  };
+  const res=window.CK160OptionUI?.clicked?.(target,rows,download,message,opened);
+  if(res?.render)render();
+  return;
+ }
+ if(target.hasAttribute('data-ck159-focus')){
+  view.year=0;view.subject='all';view.stage='p4-special';
+  view.sort='source-priority';view.page=0;render();return;
+ }
+ if(target.hasAttribute('data-ck159-p4-csv')){
+  const result=window.CK159P4Review?.snapshot?.(rows);
+  if(!result?.ready){message('400문항 원전 연결이 확인되지 않아 CSV 내보내기를 차단했습니다.');return;}
+  const content=window.CK159P4Review.csv(result);
+  if(!content){message('원전 검수 CSV 생성에 실패했습니다.');return;}
+  download('ConceptKnot_P4_원전검수400문항_'+new Date().toISOString().slice(0,10)+'.csv',
+   content,'text/csv;charset=utf-8');
+  message('공식 인정정답·우선순위·선지 검수 상태가 포함된 400행 CSV를 생성했습니다. 전문가 판정은 미실시입니다.');
+  return;
+ }
+ if(target.hasAttribute('data-ck159-p4-packet')){
+  const result=window.CK159P4Review?.snapshot?.(rows);
+  if(!result?.ready){message('400문항 원전 연결이 확인되지 않아 TXT 내보내기를 차단했습니다.');return;}
+  const ids=result.rows.slice(0,5).map(x=>x.id);
+  const content=window.CK159P4Review.packet(result,ids,5);
+  if(!content){message('P4 대조 TXT를 생성하지 못했습니다.');return;}
+  download('ConceptKnot_P4_우선5문항_근거대조_'+new Date().toISOString().slice(0,10)+'.txt',
+   content,'text/plain;charset=utf-8');
+  message('특수정답 우선 '+ids.length+'건의 공식 원문/해설 후보 대조 자료를 내보냈습니다. 검수 결과는 변경되지 않습니다.');
   return;
  }
  if(target.hasAttribute('data-ck81-matrix')){
@@ -746,6 +819,7 @@ document.addEventListener('change',event=>{
    view[key]=key==='year'?Number(t.value):t.value;view.page=0;render();
   }
  }
+ if(window.CK160OptionUI?.changed?.(t)){render();return;}
  if(t.matches?.('[data-ck81-batch-size]')){researchBatch=[1,3,5].includes(Number(t.value))?Number(t.value):5;return;}
  if(t.matches?.('[data-ck81-progress]')){
   const id=t.dataset.ck81Progress;changeProgress(id,{status:t.value});render();
@@ -796,7 +870,7 @@ if(main&&window.MutationObserver)new MutationObserver(changes=>{
  alignToolsDock();
 }).observe(main,{subtree:true,childList:true});
 window.CK81Workbench=Object.freeze({sanitizeProgress,assessDraft,specialAnswer,matchingRows,summary,
- riskScore,researchPacket,draftReviewPacket,dueIds,markResearchBatch,
+ riskScore,researchPacket,draftReviewPacket,dueIds,markResearchBatch,p4PriorityRecord,
  getState:()=>({shown,loaded:rows?.length||0,loadErrors,legacyLoadError,
   filters:{...view},progress:Object.keys(local.records).length,storageIssue}),
  open:()=>{mount();const dock=document.getElementById('ck103-tools-dock');if(dock)dock.open=true;if(!shown)toggle();}});

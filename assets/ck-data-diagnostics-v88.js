@@ -245,12 +245,12 @@ function downloadRaw(){
 /* previous: conceptknot-study-v137-native-voice-guard */
 /* prior offline generation: conceptknot-study-v138-unified-voice-queue */
 /* previous core: conceptknot-study-v139-managed-model-guard */
-const OFFLINE_CACHE='conceptknot-study-v158-policy-floor-scenarios';
+const OFFLINE_CACHE='conceptknot-study-v160-option-evidence-audit';
 const OFFLINE_MINIMUM=Object.freeze([
  './index.html',
- './assets/ck-data-diagnostics-v88.js?v=158',
+ './assets/ck-data-diagnostics-v88.js?v=160',
  './assets/ck-data-diagnostics-v88.css?v=125',
- './assets/ck-manual-qa-v115.js?v=158',
+ './assets/ck-manual-qa-v115.js?v=160',
  './assets/ck-study-links-v83.js?v=115',
  './assets/ck-study-editor-v80.js?v=127',
  './assets/ck-data-integrity-v86.js?v=120',
@@ -270,17 +270,25 @@ const P2P6_OFFLINE=Object.freeze([
  './assets/ck-policy-lab-v158.js?v=158',
  './assets/ck-policy-lab-v158.css?v=158'
 ]);
+const P4_OFFLINE=Object.freeze([
+ './assets/ck-p4-review-priority-v159.js?v=159',
+ './assets/ck-study-workbench-v81.js?v=160',
+ './assets/ck-p4-review-v159.css?v=159',
+ './assets/ck-p4-option-audit-v160.js?v=160',
+ './assets/ck-p4-option-audit-ui-v160.js?v=160',
+ './assets/ck-p4-option-audit-v160.css?v=160'
+]);
 const MIXED_OFFLINE=Object.freeze(['./assets/ck-mixed-mock-v129.js?v=134','./assets/ck-mixed-mock-v129.css?v=130']);
 const REVIEW_OFFLINE=Object.freeze(['./assets/ck-mixed-review-v131.js?v=140','./assets/ck-mixed-review-v131.css?v=131']);
 const HUB_OFFLINE=Object.freeze(['./assets/ck-exam-hub-v133.js?v=134','./assets/ck-exam-hub-v133.css?v=133']);
 async function offlineHealth(cacheStorage,controlled=false){
  if(!cacheStorage?.keys||!cacheStorage?.open)
   return {supported:false,installed:false,controlled:Boolean(controlled),cached:0,
-   required:OFFLINE_MINIMUM.length,missing:OFFLINE_MINIMUM.slice(),ready:false,mixedCached:0,mixedRequired:MIXED_OFFLINE.length,mixedReady:false,reviewCached:0,reviewRequired:REVIEW_OFFLINE.length,reviewReady:false,hubCached:0,hubRequired:HUB_OFFLINE.length,hubReady:false,studyCached:0,studyRequired:P2P6_OFFLINE.length,studyReady:false};
+   required:OFFLINE_MINIMUM.length,missing:OFFLINE_MINIMUM.slice(),ready:false,mixedCached:0,mixedRequired:MIXED_OFFLINE.length,mixedReady:false,reviewCached:0,reviewRequired:REVIEW_OFFLINE.length,reviewReady:false,hubCached:0,hubRequired:HUB_OFFLINE.length,hubReady:false,studyCached:0,studyRequired:P2P6_OFFLINE.length,studyReady:false,p4Cached:0,p4Required:P4_OFFLINE.length,p4Ready:false};
  const keys=await cacheStorage.keys();
  if(!keys.includes(OFFLINE_CACHE))
   return {supported:true,installed:false,controlled:Boolean(controlled),cached:0,
-   required:OFFLINE_MINIMUM.length,missing:OFFLINE_MINIMUM.slice(),ready:false,mixedCached:0,mixedRequired:MIXED_OFFLINE.length,mixedReady:false,reviewCached:0,reviewRequired:REVIEW_OFFLINE.length,reviewReady:false,hubCached:0,hubRequired:HUB_OFFLINE.length,hubReady:false,studyCached:0,studyRequired:P2P6_OFFLINE.length,studyReady:false};
+   required:OFFLINE_MINIMUM.length,missing:OFFLINE_MINIMUM.slice(),ready:false,mixedCached:0,mixedRequired:MIXED_OFFLINE.length,mixedReady:false,reviewCached:0,reviewRequired:REVIEW_OFFLINE.length,reviewReady:false,hubCached:0,hubRequired:HUB_OFFLINE.length,hubReady:false,studyCached:0,studyRequired:P2P6_OFFLINE.length,studyReady:false,p4Cached:0,p4Required:P4_OFFLINE.length,p4Ready:false};
  // Opening only after keys confirms its existence avoids creating a misleading empty cache.
  const current=await cacheStorage.open(OFFLINE_CACHE);
  const matches=await Promise.all(OFFLINE_MINIMUM.map(async path=>{
@@ -316,6 +324,12 @@ async function offlineHealth(cacheStorage,controlled=false){
   return !/text\/html/i.test(String(response.headers?.get?.('content-type')||''));
  }));
  const studyCached=studyChecks.filter(Boolean).length;
+ const p4Checks=await Promise.all(P4_OFFLINE.map(async path=>{
+  const response=await current.match(path);
+  if(!response?.ok)return false;
+  return !/text\/html/i.test(String(response.headers?.get?.('content-type')||''));
+ }));
+ const p4Cached=p4Checks.filter(Boolean).length;
 
  return {supported:true,installed:true,controlled:Boolean(controlled),
   cached:OFFLINE_MINIMUM.length-missing.length,required:OFFLINE_MINIMUM.length,
@@ -324,7 +338,8 @@ async function offlineHealth(cacheStorage,controlled=false){
   reviewCached,reviewRequired:REVIEW_OFFLINE.length,reviewReady:reviewCached===REVIEW_OFFLINE.length&&Boolean(controlled),
   hubCached,hubRequired:HUB_OFFLINE.length,hubReady:hubCached===HUB_OFFLINE.length&&Boolean(controlled),
   studyCached,studyRequired:P2P6_OFFLINE.length,
-  studyReady:studyCached===P2P6_OFFLINE.length&&Boolean(controlled)};
+  studyReady:studyCached===P2P6_OFFLINE.length&&Boolean(controlled),
+  p4Cached,p4Required:P4_OFFLINE.length,p4Ready:p4Cached===P4_OFFLINE.length&&Boolean(controlled)};
 }
 /* Ask the currently controlling SW which generation it actually runs.
  * No caches are modified, no page navigation, and no network requests.
@@ -361,9 +376,9 @@ async function runOfflineHealth(){
   const activeCurrent=controller.cache===OFFLINE_CACHE;
   const result=await offlineHealth(window.caches,activeCurrent);
   message.textContent=!result.supported?'브라우저에서 캐시 읽기를 지원하지 않습니다.':
-   !result.installed?'v158 오프라인 캐시 없음 · 아직 미배포 또는 설치 미완료입니다.':
+   !result.installed?'v160 오프라인 캐시 없음 · 아직 미배포 또는 설치 미완료입니다.':
    '현재 캐시의 필수 파일 '+result.cached+'/'+result.required+'개 · '+
-   (activeCurrent?'현재 v158 서비스워커가 이 탭을 제어함':controller.controlled?
+   (activeCurrent?'현재 v160 서비스워커가 이 탭을 제어함':controller.controlled?
     '구형 또는 응답 없는 서비스워커가 제어 중 · 현재 세대 확인 불가':'서비스워커가 이 탭을 제어하지 않음')+
    (result.missing.length?' · 미저장: '+result.missing.slice(0,3).map(x=>x.split('/').pop()).join(', ')+
     (result.missing.length>3?' 외 '+(result.missing.length-3)+'개':''):
@@ -376,6 +391,8 @@ async function runOfflineHealth(){
     (result.hubReady?'선택 UI 준비':'선택 UI 오프라인 준비 미확인')+
     ' · 칠판·그래프·가격정책·한글입력 '+result.studyCached+'/'+result.studyRequired+'개 · '+
     (result.studyReady?'학습 도구 자산 확보(조작은 별도 검증)':'학습 도구 오프라인 준비 미확인')+
+    ' · P4 400문항·2,000선지 작업대 '+result.p4Cached+'/'+result.p4Required+'개 · '+
+    (result.p4Ready?'400문항·2,000선지 대조 UI 자산 준비(독립 근거 검수는 별도)':'검수 작업대 오프라인 준비 미확인')+
     ' · 실제 기기 동작은 별도 검사');
   return result.ready;
  }catch(error){

@@ -1,0 +1,90 @@
+{
+  "schemaVersion": "1.0.0",
+  "asOf": "2026-11-12",
+  "sourceCommit": "8f6b497d610365e4182a742be4b34f08a0135bee",
+  "scope": "2021-2025 공인중개사 1차 400문항/2000선지",
+  "sourceLinkNoticeAssembled": true,
+  "officialPDFContentCompared": false,
+  "expertSourceReviewStatus": "NOT_VERIFIED",
+  "expertVerifiedQuestions": 0,
+  "verifiedOptionTruths": 0,
+  "dataLinkedQuestions": 400,
+  "dataLinkedOptions": 2000,
+  "optionsWithPriorDraft": 830,
+  "optionsMissingPriorDraft": 1170,
+  "optionsWithSourceCheckFlag": 0,
+  "reviewTiers": {
+    "special": 7,
+    "law": 216,
+    "calculation": 57,
+    "other": 120
+  },
+  "auditFlagsMayOverlap": {
+    "law": 1366,
+    "calculation": 559,
+    "visual": 77,
+    "compound": 500
+  },
+  "sourceNoticeLinks": {
+    "officialPaperNotices": 400,
+    "mirrorPDFs": 400,
+    "officialFinalAnswerNotices": 400
+  },
+  "specialAnswers": [
+    {
+      "id": "2024-67",
+      "year": 2024,
+      "subject": "civil",
+      "number": 67,
+      "answers": "1/2/3/4/5"
+    },
+    {
+      "id": "2023-15",
+      "year": 2023,
+      "subject": "estate",
+      "number": 15,
+      "answers": "1/2/3/4/5"
+    },
+    {
+      "id": "2023-27",
+      "year": 2023,
+      "subject": "estate",
+      "number": 27,
+      "answers": "1/2/3/4/5"
+    },
+    {
+      "id": "2022-10",
+      "year": 2022,
+      "subject": "estate",
+      "number": 10,
+      "answers": "1/2/3/4/5"
+    },
+    {
+      "id": "2022-56",
+      "year": 2022,
+      "subject": "civil",
+      "number": 56,
+      "answers": "3/5"
+    },
+    {
+      "id": "2021-22",
+      "year": 2021,
+      "subject": "estate",
+      "number": 22,
+      "answers": "2/4"
+    },
+    {
+      "id": "2021-77",
+      "year": 2021,
+      "subject": "civil",
+      "number": 77,
+      "answers": "1/2/3/4/5"
+    }
+  ],
+  "outputFiles": [
+    "v160-option-source-audit-2000.csv",
+    "v160-question-source-review-400.csv",
+    "v160-primary-notice-map.json"
+  ],
+  "warning": "자료 연결과 원문 공고 URL 확인은 전문가 원전 검수 완료가 아닙니다. 선지별 법리·판례·시험 당시 시행일·첨부 PDF 원문은 별도 독립 대조가 필요합니다."
+}

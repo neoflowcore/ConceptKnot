@@ -1,0 +1,31 @@
+/* ConceptKnot P4 v159 — source-review priority ribbon, inherited dark design. */
+#main .ck159-p4{display:grid;gap:10px;padding:13px 14px;margin:12px 0 16px;border-radius:13px;
+ border:1px solid color-mix(in srgb,currentColor 24%,transparent);
+ background:color-mix(in srgb,currentColor 3%,transparent);color:inherit;min-width:0}
+#main .ck159-p4-head{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px}
+#main .ck159-p4-head strong{font-size:14px;letter-spacing:-.2px}
+#main .ck159-p4-head small{font-size:11px;line-height:1.6;opacity:.76}
+#main .ck159-p4-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+#main .ck159-p4-metrics span{display:flex;justify-content:space-between;align-items:center;gap:6px;
+ border:1px solid color-mix(in srgb,currentColor 15%,transparent);padding:8px 10px;border-radius:9px;
+ font-size:11px;line-height:1.5;min-width:0;background:color-mix(in srgb,currentColor 2%,transparent)}
+#main .ck159-p4-metrics b{font-size:14px;font-weight:800;font-variant-numeric:tabular-nums}
+#main .ck159-p4 p{font-size:12px;line-height:1.6;margin:0;overflow-wrap:anywhere}
+#main .ck159-p4-actions{display:flex;gap:7px;flex-wrap:wrap}
+#main .ck159-p4-actions button{flex:1 1 180px;min-height:43px;padding:9px 12px;font:inherit;
+ font-size:12px;font-weight:700;color:inherit;cursor:pointer;border-radius:9px;
+ border:1px solid color-mix(in srgb,currentColor 32%,transparent);
+ background:color-mix(in srgb,currentColor 4%,transparent)}
+#main .ck159-p4-actions button:is(:hover,:focus-visible){border-color:#9cbba9;outline-offset:2px}
+#main .ck159-p4-actions button:focus-visible{outline:2px solid #94cba5}
+#main .ck159-p4-tag{font-size:11px;font-weight:700;letter-spacing:-.1px;
+ border:1px solid color-mix(in srgb,currentColor 23%,transparent);border-radius:7px;padding:3px 7px}
+#main .ck159-p4-issue{border-style:dashed}
+@media(max-width:640px){
+ #main .ck159-p4{padding:9px 10px}
+ #main .ck159-p4-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #main .ck159-p4-actions button{flex-basis:100%}
+}
+@media(prefers-reduced-motion:reduce){
+ #main .ck159-p4 *,#main .ck159-p4-actions button{transition:none!important;animation:none!important}
+}

@@ -5,15 +5,15 @@ const {test}=require('node:test'),A=require('node:assert/strict'),
 const read=p=>fs.readFileSync(p,'utf8');
 test('HTML version, PWA generation and all three graph cache query URLs agree',()=>{
  const html=read('index.html'),sw=read('sw.js'),diag=read('assets/ck-data-diagnostics-v88.js');
- A.ok(html.includes('ck-release" content="v158-policy-floor-and-17-scenario-lessons"'));
+ A.ok(html.includes('ck-release" content="v160-p4-400x5-source-audit"'));
  for(const name of ['ck-graph-motion-v149.js','ck-graph-direct-v149.js',
   'ck-graph-direct-v149.css']){
   const url=name+'?v=158';
   A.ok(html.includes(url),'not in HTML '+url);
   A.ok(sw.includes('./assets/'+url),'not in PWA cache '+url);
  }
- A.ok(sw.includes("const CACHE='conceptknot-study-v158-policy-floor-scenarios'"));
- A.ok(diag.includes('conceptknot-study-v158-policy-floor-scenarios'));
+ A.ok(sw.includes("const CACHE='conceptknot-study-v160-option-evidence-audit'"));
+ A.ok(diag.includes('conceptknot-study-v160-option-evidence-audit'));
 });
 test('manual-install core remains 11 and official 800 source files byte identical to base commit',()=>{
  const sw=read('sw.js'),core=sw.match(/const CRITICAL=\[([\s\S]*?)\];/);

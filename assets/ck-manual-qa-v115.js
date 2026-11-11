@@ -51,7 +51,12 @@ const TASKS=Object.freeze([
  {id:'v157-visual-p6',group:'그래프',name:'Android/S Pen에서 8개 시장형 곡선의 가운데 D·S 및 끝 노란 기울기 손잡이; 9개 관찰형 그래프 전후 이론·Undo/Redo/키보드·모바일 스크롤 확인'},
  {id:'v157-expert-audit',group:'해설',name:'2021~2025년 학습용 초안 400건 중 법령/판례/선지별 전문가 검수 완료 기록은 0건이며 검증되지 않은 문장을 공식 해설로 게시하지 않는지 확인'},
  {id:'v158-floor-ceiling',group:'그래프',name:'최고가격제에서 균형 아래 정책선→초과수요, 최저가격제에서 균형 위 정책선→초과공급, 비구속 구간→부족·잉여 없음. Android 펜/터치 직접 조작과 빈 영역 스크롤 및 취소 복구 확인'},
- {id:'v158-scenarios',group:'그래프',name:'17종 그래프 생활 예시→쉬운 설명→심화→기출 함정 3단계 확인, 8종 시장형 가상 조건 버튼과 E0/E1·Undo/Redo, 기울기 키보드 조작 비교 확인'}
+ {id:'v158-scenarios',group:'그래프',name:'17종 그래프 생활 예시→쉬운 설명→심화→기출 함정 3단계 확인, 8종 시장형 가상 조건 버튼과 E0/E1·Undo/Redo, 기울기 키보드 조작 비교 확인'},
+ {id:'v159-p4-source-locked',group:'해설',name:'검수 작업대에서 최근 5개년 400문항·특수정답 7/법령 216/계산 57/기타 120과 공식 인정정답을 확인; CSV 400행, 최우선 TXT 5건, 개인 검토 진행 표시가 공식 검수로 승격되지 않음'},
+ {id:'v159-p4-offline',group:'오프라인',name:'P4 원전대조 작업대 3개 선택 파일이 활성 v159 서비스워커에 확보되는지 확인. 비행기 모드에서 필터·CSV·TXT를 직접 실행하고 기존 개인 기록을 보존'},
+ {id:'v160-2000-option-audit',group:'해설',name:'최근 5개년 400문항·2,000선지 사전 감사 2,000행 CSV, 근거 초안 작성 830/2,000 및 미작성 1,170/2,000 구분·과목·연도·법령·계산 필터·20개씩 표시 확인'},
+ {id:'v160-qnet-two-sources',group:'근거',name:'2021~2025 각 연도 Q-Net 공식 문제지 공고와 별개의 최종정답 공고 URL을 대조하고 문제지 공고를 최종정답으로 표시하지 않는지 확인. 실제 첨부 PDF 본문 내용 검수는 별도'},
+ {id:'v160-option-offline',group:'오프라인',name:'v160 서비스워커 현재 세대·P4 추가 선택 자산 6/6 및 2,000선지 필터·CSV·TXT 비행기 모드 직접 검증, 개인 기록 저장키 보존 확인'}
 ]);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const plain=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
@@ -141,7 +146,7 @@ function render(){
  const oldOpen=panel.querySelector('details')?.open===true;
  const c=summary();
  panel.innerHTML='<details class="ck115-qa-details"'+(oldOpen?' open':'')+'>'+
- '<summary><strong>실기검증표 v158 · 직접 PASS/FAIL 기록</strong><span data-ck115-counter>'+
+ '<summary><strong>실기검증표 v160 · 직접 PASS/FAIL 기록</strong><span data-ck115-counter>'+
  '수기 PASS '+c.pass+'/'+c.total+' · FAIL '+c.fail+' · 미확인 '+c.pending+'</span></summary>'+
  '<p class="ck115-qa-warning"><strong>필수 수기 검증:</strong> 이 항목은 자동으로 PASS 처리되지 않습니다. PC와 Android Brave, S Pen을 직접 사용해 재현한 경우에만 표시하세요. 모든 기록은 현재 브라우저에만 보관됩니다.</p>'+
  '<div class="ck115-qa-tools"><button type="button" data-ck115-diagnose>현재 기기 상태 확인</button>'+
@@ -184,7 +189,7 @@ function diagnose(){
 }
 function exportText(){
  const snap=gather(),c=summary(snap);
- const lines=['ConceptKnot v158 사용자 수기 실기검증표','개인 기기에서 수동으로 표시한 결과; 공식 검증 아님',
+ const lines=['ConceptKnot v160 사용자 수기 실기검증표','개인 기기에서 수동으로 표시한 결과; 공식 검증 아님',
   '작성일: '+new Date().toISOString(),'PASS '+c.pass+'/'+c.total+' · FAIL '+c.fail+
   ' · 미확인 '+c.pending+' · 해당 없음 '+c.skip,''];
  TASKS.forEach((task,i)=>{
@@ -195,7 +200,7 @@ function exportText(){
  try{
   const blob=new Blob(['\uFEFF',lines.join('\n')],{type:'text/plain;charset=utf-8'});
   const url=URL.createObjectURL(blob),a=document.createElement('a');
-  a.href=url;a.download='ConceptKnot_v158_수기실기검증_'+new Date().toISOString().slice(0,10)+'.txt';
+  a.href=url;a.download='ConceptKnot_v160_수기실기검증_'+new Date().toISOString().slice(0,10)+'.txt';
   document.body.appendChild(a);a.click();a.remove();
   setTimeout(()=>URL.revokeObjectURL(url),3000);
   announce('TXT 다운로드를 요청했습니다. 현재 입력을 포함하며 실제 파일 저장 여부는 다운로드 목록에서 확인하세요.');
