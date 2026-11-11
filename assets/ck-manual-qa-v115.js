@@ -56,7 +56,9 @@ const TASKS=Object.freeze([
  {id:'v159-p4-offline',group:'오프라인',name:'P4 원전대조 작업대 3개 선택 파일이 활성 v159 서비스워커에 확보되는지 확인. 비행기 모드에서 필터·CSV·TXT를 직접 실행하고 기존 개인 기록을 보존'},
  {id:'v160-2000-option-audit',group:'해설',name:'최근 5개년 400문항·2,000선지 사전 감사 2,000행 CSV, 근거 초안 작성 830/2,000 및 미작성 1,170/2,000 구분·과목·연도·법령·계산 필터·20개씩 표시 확인'},
  {id:'v160-qnet-two-sources',group:'근거',name:'2021~2025 각 연도 Q-Net 공식 문제지 공고와 별개의 최종정답 공고 URL을 대조하고 문제지 공고를 최종정답으로 표시하지 않는지 확인. 실제 첨부 PDF 본문 내용 검수는 별도'},
- {id:'v160-option-offline',group:'오프라인',name:'v160 서비스워커 현재 세대·P4 추가 선택 자산 6/6 및 2,000선지 필터·CSV·TXT 비행기 모드 직접 검증, 개인 기록 저장키 보존 확인'}
+ {id:'v160-option-offline',group:'오프라인',name:'v161 서비스워커 현재 세대·P4 선택 자산 8/8 및 2,000선지 필터·CSV·TXT 비행기 모드 직접 검증, 개인 기록 저장키 보존 확인'},
+ {id:'v161-ai-100-option-notes',group:'해설',name:'2025년도 1~15·41~45번 총 20문항×5선지=100건 학습용 AI 독립 근거 초안 표시·필터·TXT 내보내기·0/2000 전문가 검수 상태 고정·개인 기록 무변경 확인'},
+ {id:'v161-pdf-law-source',group:'근거',name:'2025년 3번 건축법 시행령 2025.10.1 별표1 및 44번 민법 120~123조 등 실제 법령 대조, Q-Net 시험지/최종정답 첨부 PDF는 별도 직접 개봉·검독 후 PASS 기록; 기존 링크만으로 PASS 처리 금지'}
 ]);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const plain=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
@@ -146,7 +148,7 @@ function render(){
  const oldOpen=panel.querySelector('details')?.open===true;
  const c=summary();
  panel.innerHTML='<details class="ck115-qa-details"'+(oldOpen?' open':'')+'>'+
- '<summary><strong>실기검증표 v160 · 직접 PASS/FAIL 기록</strong><span data-ck115-counter>'+
+ '<summary><strong>실기검증표 v161 · 직접 PASS/FAIL 기록</strong><span data-ck115-counter>'+
  '수기 PASS '+c.pass+'/'+c.total+' · FAIL '+c.fail+' · 미확인 '+c.pending+'</span></summary>'+
  '<p class="ck115-qa-warning"><strong>필수 수기 검증:</strong> 이 항목은 자동으로 PASS 처리되지 않습니다. PC와 Android Brave, S Pen을 직접 사용해 재현한 경우에만 표시하세요. 모든 기록은 현재 브라우저에만 보관됩니다.</p>'+
  '<div class="ck115-qa-tools"><button type="button" data-ck115-diagnose>현재 기기 상태 확인</button>'+
@@ -189,7 +191,7 @@ function diagnose(){
 }
 function exportText(){
  const snap=gather(),c=summary(snap);
- const lines=['ConceptKnot v160 사용자 수기 실기검증표','개인 기기에서 수동으로 표시한 결과; 공식 검증 아님',
+ const lines=['ConceptKnot v161 사용자 수기 실기검증표','개인 기기에서 수동으로 표시한 결과; 공식 검증 아님',
   '작성일: '+new Date().toISOString(),'PASS '+c.pass+'/'+c.total+' · FAIL '+c.fail+
   ' · 미확인 '+c.pending+' · 해당 없음 '+c.skip,''];
  TASKS.forEach((task,i)=>{
@@ -200,7 +202,7 @@ function exportText(){
  try{
   const blob=new Blob(['\uFEFF',lines.join('\n')],{type:'text/plain;charset=utf-8'});
   const url=URL.createObjectURL(blob),a=document.createElement('a');
-  a.href=url;a.download='ConceptKnot_v160_수기실기검증_'+new Date().toISOString().slice(0,10)+'.txt';
+  a.href=url;a.download='ConceptKnot_v161_수기실기검증_'+new Date().toISOString().slice(0,10)+'.txt';
   document.body.appendChild(a);a.click();a.remove();
   setTimeout(()=>URL.revokeObjectURL(url),3000);
   announce('TXT 다운로드를 요청했습니다. 현재 입력을 포함하며 실제 파일 저장 여부는 다운로드 목록에서 확인하세요.');

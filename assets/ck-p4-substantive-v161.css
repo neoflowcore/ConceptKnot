@@ -1,0 +1,8 @@
+/* ConceptKnot v161 preliminary reasoning: visibly distinct from verified official answers. */
+#main .ck161-substantive-draft{padding:10px 11px;border:1px solid color-mix(in srgb,currentColor 25%,transparent);border-radius:10px;margin:10px 0;background:color-mix(in srgb,currentColor 4%,transparent)}
+#main .ck161-substantive-draft summary{font-size:12px;font-weight:800;cursor:pointer;line-height:1.6;min-height:24px}
+#main .ck161-substantive-draft p{font-size:12px;line-height:1.75;white-space:pre-wrap;margin:7px 0;overflow-wrap:anywhere}
+#main .ck161-draft-refs{display:flex;gap:6px;flex-wrap:wrap;margin:9px 0}
+#main .ck161-draft-refs a{border:1px solid color-mix(in srgb,currentColor 30%,transparent);border-radius:8px;padding:7px 9px;font-size:11px;max-width:100%;overflow-wrap:anywhere}
+#main .ck161-substantive-draft summary:focus-visible,
+#main .ck161-draft-refs a:focus-visible{outline:2px solid #92c9aa;outline-offset:3px}

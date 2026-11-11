@@ -4,18 +4,19 @@ const {test}=require('node:test'),A=require('node:assert/strict'),fs=require('no
 const read=p=>fs.readFileSync(p,'utf8');
 test('index release, service worker and diagnostics version agree',()=>{
  const html=read('index.html'),sw=read('sw.js'),diag=read('assets/ck-data-diagnostics-v88.js');
- A.ok(html.includes('ck-release" content="v160-p4-400x5-source-audit"'));
- A.ok(sw.includes("const CACHE='conceptknot-study-v160-option-evidence-audit'"));
- A.ok(diag.includes("OFFLINE_CACHE='conceptknot-study-v160-option-evidence-audit'"));
+ A.ok(html.includes('ck-release" content="v161-first-100-independent-option-notes"'));
+ A.ok(sw.includes("const CACHE='conceptknot-study-v161-independent-option-batch'"));
+ A.ok(diag.includes("OFFLINE_CACHE='conceptknot-study-v161-independent-option-batch'"));
  const assets=[
   'ck-full-exam-v82.js?v=157','ck-mobile-board-v21.js?v=157',
-  'ck-manual-qa-v115.js?v=160','ck-data-diagnostics-v88.js?v=160',
+  'ck-manual-qa-v115.js?v=161','ck-data-diagnostics-v88.js?v=161',
   'ck-study-p6-v76.js?v=157','ck-graph-direct-v149.js?v=158',
   'ck-graph-direct-v149.css?v=158','ck-graph-motion-v149.js?v=158',
    'ck-p4-review-priority-v159.js?v=159','ck-study-workbench-v81.js?v=160',
    'ck-p4-review-v159.css?v=159',
-   'ck-p4-option-audit-v160.js?v=160','ck-p4-option-audit-ui-v160.js?v=160',
-   'ck-p4-option-audit-v160.css?v=160'
+   'ck-p4-option-audit-v160.js?v=160','ck-p4-option-audit-ui-v160.js?v=161',
+   'ck-p4-option-audit-v160.css?v=160','ck-p4-substantive-v161.js?v=161',
+   'ck-p4-substantive-v161.css?v=161'
  ];
  for(const a of assets){
   A.ok(html.includes(a),'missing HTML '+a);
@@ -35,7 +36,7 @@ test('official 800 bank source and 2021–2025 draft explanation source bytes un
 });
 test('P7 manual statuses cannot be auto-marked as hardware PASS by capability diagnosis',()=>{
  const qa=read('assets/ck-manual-qa-v115.js');
- for(const id of ['v160-2000-option-audit','v160-qnet-two-sources','v160-option-offline','v159-p4-source-locked','v159-p4-offline','v158-floor-ceiling','v158-scenarios','v157-offline-live','v157-ime-stylus-recovery',
+ for(const id of ['v161-ai-100-option-notes','v161-pdf-law-source','v160-2000-option-audit','v160-qnet-two-sources','v160-option-offline','v159-p4-source-locked','v159-p4-offline','v158-floor-ceiling','v158-scenarios','v157-offline-live','v157-ime-stylus-recovery',
   'v157-official-json-restore','v157-visual-p6','v157-expert-audit'])
    A.ok(qa.includes("id:'"+id+"'"));
  A.ok(qa.includes("key:'ck115-manual-device-verification-v1'")||

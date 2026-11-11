@@ -21,12 +21,12 @@ function fixture(missing=[],poison=[]){
  return {keys:async()=>[ctx.cache],open:async key=>{A.equal(key,ctx.cache);
   return {match:async p=>items.get(p)};}};
 }
-test('P0 v160 preserves original 11 critical and nine P2/P6 optional assets',()=>{
- A.equal(ctx.cache,'conceptknot-study-v160-option-evidence-audit');
+test('P0 v161 preserves original 11 critical and nine P2/P6 optional assets',()=>{
+ A.equal(ctx.cache,'conceptknot-study-v161-independent-option-batch');
  A.equal(required.length,11);A.equal(study.length,9);
- A.equal(p4.length,6);
+ A.equal(p4.length,8);
  const html=read('index.html'),sw=read('sw.js');
- A.ok(html.includes('content="v160-p4-400x5-source-audit"'));
+ A.ok(html.includes('content="v161-first-100-independent-option-notes"'));
  for(const p of p4){
   A.ok(sw.includes(p),'missing optional SW '+p);
   A.ok(html.includes(p.slice(2)),'missing P4 HTML '+p);
@@ -34,14 +34,14 @@ test('P0 v160 preserves original 11 critical and nine P2/P6 optional assets',()=
  A.equal(JSON.parse(read('vercel.json')).git.deploymentEnabled,false);
  A.equal(fs.existsSync('.github/workflows'),false);
 });
-test('P4 exact three assets and current controlling worker are required before reporting ready',async()=>{
+test('P4 exact eight assets and current controlling worker are required before reporting ready',async()=>{
  const good=await ctx.check(fixture(),true);
  A.equal(good.ready,true);A.equal(good.studyReady,true);
- A.equal(good.p4Cached,6);A.equal(good.p4Required,6);A.equal(good.p4Ready,true);
+ A.equal(good.p4Cached,8);A.equal(good.p4Required,8);A.equal(good.p4Ready,true);
  const missing=await ctx.check(fixture([p4[0]]),true);
- A.equal(missing.ready,true);A.equal(missing.p4Cached,5);A.equal(missing.p4Ready,false);
+ A.equal(missing.ready,true);A.equal(missing.p4Cached,7);A.equal(missing.p4Ready,false);
  const untrusted=await ctx.check(fixture([], [p4[2]]),true);
- A.equal(untrusted.p4Ready,false);A.equal(untrusted.p4Cached,5);
+ A.equal(untrusted.p4Ready,false);A.equal(untrusted.p4Cached,7);
  const wrongController=await ctx.check(fixture(),false);
  A.equal(wrongController.p4Ready,false);
 });

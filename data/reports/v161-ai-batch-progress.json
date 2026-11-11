@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "1.0.0",
+  "asOf": "2026-11-12",
+  "scope": "2021-2025 first exam 400 questions 2000 options",
+  "baseCommit": "464397df37ad707c8bdbc28ec0e981065522a8f7",
+  "originalRegisteredQuestions": 800,
+  "originalDraftQuestions": 400,
+  "optionsTotal": 2000,
+  "before": {
+    "optionsWithAnyCandidate": 830,
+    "optionsWithoutCandidate": 1170,
+    "independentOptionDrafts": 664,
+    "answerReasonFallbacks": 166
+  },
+  "batch": {
+    "questions": 20,
+    "options": 100,
+    "years": [
+      2025
+    ],
+    "estateQuestionNumbers": "1-15",
+    "civilQuestionNumbers": "41-45",
+    "existingCandidateReevaluated": 76,
+    "previouslyBlankNowAIDraft": 24,
+    "expertReviewApproval": 0,
+    "finalAnswerPdfCompared": false
+  },
+  "after": {
+    "optionsWithAnyCandidate": 854,
+    "optionsWithoutCandidate": 1146,
+    "expertSourceReviewedQuestions": 0,
+    "expertSourceReviewedOptions": 0,
+    "publishedExplanations": 0
+  },
+  "caveat": "새로운 100건은 AI가 작성한 비검수 학습용 후보(기존 후보 재작성 76, 신규 빈칸 24)이며 원전 PDF 전체 검독 및 독립 전문가 법률 감수 완료를 뜻하지 않는다."
+}

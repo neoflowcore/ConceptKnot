@@ -1,0 +1,1507 @@
+{
+  "schemaVersion": "1.0",
+  "scope": "official-2025-A-first-100-option-study-candidates",
+  "asOf": "2026-11-12",
+  "disclaimer": "본 자료는 AI가 별도로 쓴 근거·계산 예비 해설이며 PDF 원문 및 판례별 실제 전문을 모두 대조한 전문가 감수가 아니다. 공식 인정답·기존 출처·개인 기록 불변. 검수 완료 상태로 사용 불가.",
+  "stats": {
+    "questions": 20,
+    "options": 100,
+    "expertReviewed": 0,
+    "optionVerified": 0,
+    "pdfOriginalVisualCompared": 0
+  },
+  "records": [
+    {
+      "id": "2025-1",
+      "year": 2025,
+      "optionCount": 5,
+      "questionTextFingerprint": "다음에서 설명하고 있는 토지의 자연적 특성은?\n\n○ 최유효이용의 근거가 된다.\n○ 지대 또는 지가를 발생시킨",
+      "officialAccepted": [
+        1
+      ],
+      "status": "AI_SUBSTANTIVE_DRAFT_UNVERIFIED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "sourcePdfRead": false,
+      "independentExpertSignoff": false,
+      "sources": [
+        {
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5247125&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "type": "QNET_PAPER_NOTICE_NOT_PDF"
+        },
+        {
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2025-exam-2996-78fb20b4cdfb.pdf",
+          "type": "THIRD_PARTY_PDF_REFERENCE_NOT_INDEPENDENTLY_VERIFIED"
+        }
+      ],
+      "optionDrafts": [
+        {
+          "option": 1,
+          "text": "부증성은 인간이 토지를 물리적으로 새로 생산할 수 없다는 자연적 특성입니다. 부증성은 희소성·지가·지대 및 집약적 이용과 연결되므로 문제의 여러 단서와 부합합니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 2,
+          "text": "인접성은 다른 토지와 붙어 있고 공간적으로 영향을 주고받는 성질로, 토지 면적을 새로 생산할 수 없다는 진술의 중심 개념이 아닙니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 3,
+          "text": "개별성은 토지마다 위치·형상·환경이 달라 동일한 토지가 없다는 특성입니다. 물리적 공급의 불가능과는 구별해야 합니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 4,
+          "text": "영속성은 토지가 물리적으로 오래 존속한다는 성질로서, 새 토지 생산 불가(부증성)와 다른 개념입니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 5,
+          "text": "적재성은 시험의 통상적인 토지 자연적 특성인 부동성·부증성·영속성·개별성의 정답 항목이 아니며 제시된 핵심 단서와 연결되지 않습니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        }
+      ],
+      "optionTexts": [
+        "부증성",
+        "인접성",
+        "개별성",
+        "영속성",
+        "적재성"
+      ]
+    },
+    {
+      "id": "2025-2",
+      "year": 2025,
+      "optionCount": 5,
+      "questionTextFingerprint": "한국표준산업분류(KSIC)에 따라 부동산업을 분류할 경우 부동산관련 서비스업에 해당하지 않는 것은?",
+      "officialAccepted": [
+        1
+      ],
+      "status": "AI_SUBSTANTIVE_DRAFT_UNVERIFIED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "sourcePdfRead": false,
+      "independentExpertSignoff": false,
+      "sources": [
+        {
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5247125&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "type": "QNET_PAPER_NOTICE_NOT_PDF"
+        },
+        {
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2025-exam-2996-78fb20b4cdfb.pdf",
+          "type": "THIRD_PARTY_PDF_REFERENCE_NOT_INDEPENDENTLY_VERIFIED"
+        },
+        {
+          "url": "https://kostat.go.kr/boardDownload.es?bid=5185&list_no=435469&seq=1",
+          "type": "POTENTIAL_PRIMARY_LEGAL_OR_REFERENCE_LINK"
+        }
+      ],
+      "optionDrafts": [
+        {
+          "option": 1,
+          "text": "부동산 임대 및 공급업(681)은 부동산 관련 서비스업(682)과 별도의 산업분류 영역입니다. '서비스업에 해당하지 않는 것'을 찾는 발문이므로 ①이 채점 인정 답입니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 2,
+          "text": "부동산 중개 및 대리 활동은 부동산 관련 서비스 범주에 해당합니다. 임대·공급 활동 자체와 구별합니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 3,
+          "text": "부동산 감정평가업은 부동산 관련 전문 서비스에 해당합니다. 임대·공급업과 분류 성격이 다릅니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 4,
+          "text": "부동산 투자자문은 부동산 관련 자문 서비스로 다루어집니다. 정확한 세세분류 코드는 시험 적용판의 한국표준산업분류 자료를 추가 대조해야 합니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 5,
+          "text": "부동산 분양 대행은 부동산 관련 서비스 활동으로 다루어집니다. 실제 세세분류 코드는 시험 당시 분류표와 재대조가 필요합니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        }
+      ],
+      "optionTexts": [
+        "부동산 임대 및 공급업",
+        "부동산 중개 및 대리업",
+        "부동산 감정 평가업",
+        "부동산 투자 자문업",
+        "부동산 분양 대행업"
+      ]
+    },
+    {
+      "id": "2025-3",
+      "year": 2025,
+      "optionCount": 5,
+      "questionTextFingerprint": "건축법령상 용도별 건축물의 종류 중 단독주택에 해당하는 것은?",
+      "officialAccepted": [
+        3
+      ],
+      "status": "AI_SUBSTANTIVE_DRAFT_UNVERIFIED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "sourcePdfRead": false,
+      "independentExpertSignoff": false,
+      "sources": [
+        {
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5247125&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "type": "QNET_PAPER_NOTICE_NOT_PDF"
+        },
+        {
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2025-exam-2996-78fb20b4cdfb.pdf",
+          "type": "THIRD_PARTY_PDF_REFERENCE_NOT_INDEPENDENTLY_VERIFIED"
+        },
+        {
+          "url": "https://www.law.go.kr/flDownload.do?gubun=&flSeq=156922891&bylClsCd=110201",
+          "type": "POTENTIAL_PRIMARY_LEGAL_OR_REFERENCE_LINK"
+        }
+      ],
+      "optionDrafts": [
+        {
+          "option": 1,
+          "text": "아파트는 건축법 시행령 별표 1의 공동주택에 해당합니다. 단독주택 분류와 구별해야 합니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 2,
+          "text": "연립주택은 건축법 시행령 별표 1의 공동주택에 해당합니다. 단독주택이 아닙니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 3,
+          "text": "다중주택은 건축법 시행령 별표 1 제1호 나목의 단독주택 분류에 있습니다. 정답 ③의 법령상 근거입니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 4,
+          "text": "오피스텔은 건축법 시행령 별표 1의 일반업무시설 범주에서 규정됩니다. 단독주택이 아닙니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 5,
+          "text": "다세대주택은 건축법 시행령 별표 1의 공동주택에 해당합니다. 다중주택과 용어를 혼동하지 않도록 주의합니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        }
+      ],
+      "optionTexts": [
+        "아파트",
+        "연립주택",
+        "다중주택",
+        "오피스텔",
+        "다세대주택"
+      ]
+    },
+    {
+      "id": "2025-4",
+      "year": 2025,
+      "optionCount": 5,
+      "questionTextFingerprint": "부동산 용어에 관한 설명으로 옳은 것을 모두 고른 것은?\n\nㄱ. 주거용·상업용·공업용으로 이용되고 있거나 해",
+      "officialAccepted": [
+        3
+      ],
+      "status": "AI_SUBSTANTIVE_DRAFT_UNVERIFIED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "sourcePdfRead": false,
+      "independentExpertSignoff": false,
+      "sources": [
+        {
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5247125&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "type": "QNET_PAPER_NOTICE_NOT_PDF"
+        },
+        {
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2025-exam-2996-78fb20b4cdfb.pdf",
+          "type": "THIRD_PARTY_PDF_REFERENCE_NOT_INDEPENDENTLY_VERIFIED"
+        }
+      ],
+      "optionDrafts": [
+        {
+          "option": 1,
+          "text": "ㄱ은 택지의 설명에 부합하지만 ㄴ은 '필지'를 '획지'로 바꾼 오류입니다. ㄷ과 ㅁ을 빠뜨려 전체 정답 집합과 일치하지 않습니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 2,
+          "text": "ㄱ은 맞지만 ㄹ의 바다·육지 사이 해변 토지를 포락지라고 부른 부분이 틀립니다. 또한 ㄷ과 ㅁ을 빠뜨렸습니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 3,
+          "text": "ㄱ(택지), ㄷ(용도상 불가분의 일단지), ㅁ(용도전환 중인 후보지)은 모두 채점 기준상 맞는 진술로 구성됩니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 4,
+          "text": "ㄴ은 필지 정의를 획지로 바꿨으므로 옳지 않습니다. ㄷ·ㅁ이 맞더라도 ㄴ이 포함된 조합은 정답이 아닙니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 5,
+          "text": "ㄴ의 필지/획지 혼동과 ㄹ의 포락지/해변 토지 혼동이 함께 있어 옳은 진술만 묶은 조합이 아닙니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        }
+      ],
+      "optionTexts": [
+        "ㄱ, ㄴ",
+        "ㄱ, ㄹ",
+        "ㄱ, ㄷ, ㅁ",
+        "ㄴ, ㄷ, ㅁ",
+        "ㄴ, ㄹ, ㅁ"
+      ]
+    },
+    {
+      "id": "2025-5",
+      "year": 2025,
+      "optionCount": 5,
+      "questionTextFingerprint": "부동산마케팅에 관한 설명으로 틀린 것은?",
+      "officialAccepted": [
+        4
+      ],
+      "status": "AI_SUBSTANTIVE_DRAFT_UNVERIFIED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "sourcePdfRead": false,
+      "independentExpertSignoff": false,
+      "sources": [
+        {
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5247125&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "type": "QNET_PAPER_NOTICE_NOT_PDF"
+        },
+        {
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2025-exam-2996-78fb20b4cdfb.pdf",
+          "type": "THIRD_PARTY_PDF_REFERENCE_NOT_INDEPENDENTLY_VERIFIED"
+        }
+      ],
+      "optionDrafts": [
+        {
+          "option": 1,
+          "text": "4P는 제품(Product), 가격(Price), 유통(Place), 촉진(Promotion)으로 구분하는 기본 마케팅 틀입니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 2,
+          "text": "관계마케팅은 일회성 판매보다 고객과 지속적인 관계를 구축·유지하는 방향을 중시합니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 3,
+          "text": "AIDA는 Attention→Interest→Desire→Action의 인지·관심·욕구·행동 단계로 이해합니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 4,
+          "text": "STP의 마지막 P는 Partnership가 아니라 Positioning(포지셔닝)입니다. 따라서 틀린 설명을 찾는 문제의 ④가 채점 인정 답입니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 5,
+          "text": "Segmentation은 고객을 동질적 수요 성격의 집단으로 나누어 전략을 수립하는 과정입니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        }
+      ],
+      "optionTexts": [
+        "4P Mix전략에서 4P는 제품(Product), 가격(Price), 유통경로(Place), 판매촉진(Promotion)을 말한다.",
+        "관계 마케팅전략은 고객과 공급자의 관계를 일회적이 아닌 지속적인 관계로 유지함으로써 마케팅효과를 도모하는 전략이다.",
+        "고객점유 마케팅전략에서 AIDA는 주의(Attention), 관심(Interest), 욕구(Desire), 행동(Action)의 과정을 의미한다.",
+        "STP전략에서 STP는 시장세분화(Segmentation), 표적시장 선정(Targeting), 동반자관계(Partnership)로 구성된다.",
+        "STP전략에서 시장세분화는 부동산시장에서 마케팅활동을 수행하기 위하여 고객의 집단을 세분하는 것이다."
+      ]
+    },
+    {
+      "id": "2025-6",
+      "year": 2025,
+      "optionCount": 5,
+      "questionTextFingerprint": "부동산 수요와 공급의 변화에 관한 설명으로 틀린 것은?(단, X축은 수량, Y축은 가격, 수요곡선은 우하향,",
+      "officialAccepted": [
+        3
+      ],
+      "status": "AI_SUBSTANTIVE_DRAFT_UNVERIFIED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "sourcePdfRead": false,
+      "independentExpertSignoff": false,
+      "sources": [
+        {
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5247125&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "type": "QNET_PAPER_NOTICE_NOT_PDF"
+        },
+        {
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2025-exam-2996-78fb20b4cdfb.pdf",
+          "type": "THIRD_PARTY_PDF_REFERENCE_NOT_INDEPENDENTLY_VERIFIED"
+        }
+      ],
+      "optionDrafts": [
+        {
+          "option": 1,
+          "text": "주택담보대출 금리가 낮아지면 다른 조건 고정 시 자금 조달 비용이 줄어 주택 수요곡선이 우측으로 이동할 수 있습니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 2,
+          "text": "건축자재 가격 하락은 생산 비용을 줄이는 공급 증가 요인이며, 공급곡선이 우측(일정 가격의 공급량 증가)으로 이동할 수 있습니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 3,
+          "text": "대체재 가격이 상승하면 상대적으로 해당 부동산의 매력이 높아져 수요가 우측으로 증가하는 것이 기본 대체재 가정입니다. '좌측'이라는 방향이 반대이므로 ③은 틀립니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 4,
+          "text": "공급자 보조금은 단위당 비용을 낮추는 효과가 있으므로 다른 조건 고정 시 공급 증가(우측 이동) 요인입니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 5,
+          "text": "보완재 가격이 내려가면 결합 소비의 비용이 낮아져 해당 부동산 수요가 증가(우측 이동)할 수 있습니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        }
+      ],
+      "optionTexts": [
+        "담보대출금리의 인하는 부동산의 수요곡선을 우측(우상향)으로 이동하게 한다.",
+        "건축자재 가격의 하락은 부동산의 공급곡선을 우측(우하향)으로 이동하게 한다.",
+        "대체재 가격의 상승은 해당 부동산의 수요곡선을 좌측(좌하향)으로 이동하게 한다.",
+        "공급자에 대한 보조금 지급은 부동산의 공급곡선을 우측(우하향)으로 이동하게 한다.",
+        "보완재 가격의 하락은 해당 부동산의 수요곡선을 우측(우상향)으로 이동하게 한다."
+      ]
+    },
+    {
+      "id": "2025-7",
+      "year": 2025,
+      "optionCount": 5,
+      "questionTextFingerprint": "다음은 부동산관련 경제변수들이다. 유량(flow)과 저량(stock)의 경제변수로 옳게 묶인 것은?\n\nㄱ. ",
+      "officialAccepted": [
+        5
+      ],
+      "status": "AI_SUBSTANTIVE_DRAFT_UNVERIFIED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "sourcePdfRead": false,
+      "independentExpertSignoff": false,
+      "sources": [
+        {
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5247125&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "type": "QNET_PAPER_NOTICE_NOT_PDF"
+        },
+        {
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2025-exam-2996-78fb20b4cdfb.pdf",
+          "type": "THIRD_PARTY_PDF_REFERENCE_NOT_INDEPENDENTLY_VERIFIED"
+        }
+      ],
+      "optionDrafts": [
+        {
+          "option": 1,
+          "text": "통화량(ㄱ)은 특정 시점의 저량이고 신규주택 공급량(ㅁ)은 기간당 유량입니다. ①은 서로 혼동하여 틀립니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 2,
+          "text": "자본총량(ㄷ)과 재고주택(ㅂ)은 저량이며 연간 이자비용(ㄴ)은 유량입니다. ②는 유량·저량을 뒤바꿨습니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 3,
+          "text": "통화량(ㄱ)은 시점에 존재하는 저량이므로 ㄱ을 유량으로 묶은 ③은 틀립니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 4,
+          "text": "연간 이자비용(ㄴ)은 기간에 발생한 유량입니다. ④는 이 항목을 저량으로 묶고 자본총량(ㄷ)을 유량에 넣어 틀립니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 5,
+          "text": "유량은 기간을 수반하는 ㄴ(연간 이자비용), ㄹ(주택 거래량), ㅁ(신규주택 공급량)이며 저량은 ㄱ(통화량), ㄷ(자본총량), ㅂ(재고주택량)입니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        }
+      ],
+      "optionTexts": [
+        "유량변수: ㄱ, ㄴ, ㄹ / 저량변수: ㄷ, ㅁ, ㅂ",
+        "유량변수: ㄱ, ㄷ, ㅂ / 저량변수: ㄴ, ㄹ, ㅁ",
+        "유량변수: ㄱ, ㄹ, ㅁ / 저량변수: ㄴ, ㄷ, ㅂ",
+        "유량변수: ㄴ, ㄷ, ㅂ / 저량변수: ㄱ, ㄹ, ㅁ",
+        "유량변수: ㄴ, ㄹ, ㅁ / 저량변수: ㄱ, ㄷ, ㅂ"
+      ]
+    },
+    {
+      "id": "2025-8",
+      "year": 2025,
+      "optionCount": 5,
+      "questionTextFingerprint": "토지시장의 특성에 관한 설명으로 틀린 것은?",
+      "officialAccepted": [
+        1
+      ],
+      "status": "AI_SUBSTANTIVE_DRAFT_UNVERIFIED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "sourcePdfRead": false,
+      "independentExpertSignoff": false,
+      "sources": [
+        {
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5247125&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "type": "QNET_PAPER_NOTICE_NOT_PDF"
+        },
+        {
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2025-exam-2996-78fb20b4cdfb.pdf",
+          "type": "THIRD_PARTY_PDF_REFERENCE_NOT_INDEPENDENTLY_VERIFIED"
+        }
+      ],
+      "optionDrafts": [
+        {
+          "option": 1,
+          "text": "토지는 공급이 물리적·제도적으로 제한되고 개별성이 커 수급 조절이 용이하다고 일반화할 수 없습니다. '틀린 것'을 찾으므로 ①입니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 2,
+          "text": "토지는 토지이용계획·용도지역·개발행위 등의 법·제도적 규제가 많이 작용합니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 3,
+          "text": "서로 다른 위치·형상·환경 등으로 부동산은 이질적인 재화의 성격을 갖습니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 4,
+          "text": "부동산 거래는 탐색 비용과 개별성으로 정보의 불완전성·비대칭성이 생기기 쉽습니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 5,
+          "text": "토지는 위치를 옮길 수 없어 지역별 수급 조건이 구별되는 국지적 부분시장 성격이 나타납니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        }
+      ],
+      "optionTexts": [
+        "수급조절이 용이하다.",
+        "법·제도적 규제가 많다.",
+        "재화의 이질성을 보인다.",
+        "정보의 불완전성 및 비대칭성을 보인다.",
+        "부분시장으로 나눌 수 있는 국지성을 보인다."
+      ]
+    },
+    {
+      "id": "2025-9",
+      "year": 2025,
+      "optionCount": 5,
+      "questionTextFingerprint": "부동산의 수요와 공급이 동시에 변화할 때, 균형가격이 상승하고 균형거래량이 감소하는 경우는?(단, X축은 수",
+      "officialAccepted": [
+        3
+      ],
+      "status": "AI_SUBSTANTIVE_DRAFT_UNVERIFIED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "sourcePdfRead": false,
+      "independentExpertSignoff": false,
+      "sources": [
+        {
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5247125&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "type": "QNET_PAPER_NOTICE_NOT_PDF"
+        },
+        {
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2025-exam-2996-78fb20b4cdfb.pdf",
+          "type": "THIRD_PARTY_PDF_REFERENCE_NOT_INDEPENDENTLY_VERIFIED"
+        }
+      ],
+      "optionDrafts": [
+        {
+          "option": 1,
+          "text": "수요·공급이 함께 늘 때는 두 곡선의 변화 크기에 따라 가격은 달라질 수 있어도, 두 증가가 동시에 거래량 감소를 낳는다는 설명은 기본 기울기 가정에서 맞지 않습니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 2,
+          "text": "수요와 공급이 모두 감소하면 거래량은 감소하지만, 공급 감소의 영향보다 수요 감소폭이 크면 가격은 내려가는 방향이 됩니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 3,
+          "text": "공급 감소폭이 수요 증가폭보다 크면 공급 감소에 의한 가격 상승·거래량 감소 효과가 우세합니다. 기울기 절댓값이 같다는 조건에서 ③이 인정됩니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 4,
+          "text": "수요 감소와 공급 증가가 동시에 일어나면 두 변화가 모두 균형가격을 낮추는 방향으로 작용합니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 5,
+          "text": "수요·공급이 모두 증가하면 거래량은 감소가 아니라 증가하는 방향으로 움직입니다. 가격은 상대적 변화폭에 좌우됩니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        }
+      ],
+      "optionTexts": [
+        "수요의 증가폭이 공급의 증가폭보다 클 경우",
+        "수요의 감소폭이 공급의 감소폭보다 클 경우",
+        "수요의 증가폭이 공급의 감소폭보다 작을 경우",
+        "수요의 감소폭이 공급의 증가폭보다 작을 경우",
+        "수요의 증가폭이 공급의 증가폭보다 작을 경우"
+      ]
+    },
+    {
+      "id": "2025-10",
+      "year": 2025,
+      "optionCount": 5,
+      "questionTextFingerprint": "부동산매매시장의 수요와 공급에 관한 설명으로 옳은 것은?(단, 수요곡선은 우하향, 공급곡선은 우상향하며, 다",
+      "officialAccepted": [
+        5
+      ],
+      "status": "AI_SUBSTANTIVE_DRAFT_UNVERIFIED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "sourcePdfRead": false,
+      "independentExpertSignoff": false,
+      "sources": [
+        {
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5247125&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "type": "QNET_PAPER_NOTICE_NOT_PDF"
+        },
+        {
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2025-exam-2996-78fb20b4cdfb.pdf",
+          "type": "THIRD_PARTY_PDF_REFERENCE_NOT_INDEPENDENTLY_VERIFIED"
+        }
+      ],
+      "optionDrafts": [
+        {
+          "option": 1,
+          "text": "수요곡선은 일반적으로 소비자의 지불의사·한계편익과 연결됩니다. 한계비용곡선은 공급 쪽 개념입니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 2,
+          "text": "가격별 수요량은 해당 가격에서 소비자가 구매할 의사와 능력을 가진 양으로, '최소수량'으로 규정하지 않습니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 3,
+          "text": "상품 자체의 가격 변화에 따른 수요량 변화는 곡선상의 이동입니다. 수요곡선 자체의 이동은 소득·선호 등 비가격 요인의 수요 변화입니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 4,
+          "text": "공급곡선은 비용/한계비용과 연결되는 개념이며, 한계편익곡선은 수요 쪽 개념입니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 5,
+          "text": "공급함수는 가격·비용·기술·보조금 등 공급량에 영향을 미치는 요인과 공급량의 함수관계를 나타냅니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        }
+      ],
+      "optionTexts": [
+        "수요곡선은 한계비용곡선이다.",
+        "수요곡선상의 수요량은 주어진 가격에서 수요자들이 구입하고자 하는 부동산의 최소수량이다.",
+        "수요량의 변화는 수요 자체의 변화를 말하며, 수요곡선 자체를 이동시킨다.",
+        "공급곡선은 한계편익곡선이다.",
+        "공급함수는 부동산의 공급량에 영향을 미치는 요인들과 공급량의 관계를 나타내는 함수이다."
+      ]
+    },
+    {
+      "id": "2025-11",
+      "year": 2025,
+      "optionCount": 5,
+      "questionTextFingerprint": "C지역의 부동산시장에서 시장수요는 개인 A의 수요와 개인 B의 수요로만 구성되어 있고, 개인 A의 수요함수는",
+      "officialAccepted": [
+        1
+      ],
+      "status": "AI_SUBSTANTIVE_DRAFT_UNVERIFIED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "sourcePdfRead": false,
+      "independentExpertSignoff": false,
+      "sources": [
+        {
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5247125&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "type": "QNET_PAPER_NOTICE_NOT_PDF"
+        },
+        {
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2025-exam-2996-78fb20b4cdfb.pdf",
+          "type": "THIRD_PARTY_PDF_REFERENCE_NOT_INDEPENDENTLY_VERIFIED"
+        }
+      ],
+      "optionDrafts": [
+        {
+          "option": 1,
+          "text": "개별수요량은 QA=100−P, QB=(100−P)/2입니다. 시장수요량 QM=QA+QB=1.5(100−P)이므로 P=100−(2/3)QM입니다(0≤P≤100의 수요구간).",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 2,
+          "text": "②의 기울기 −3/2는 개별수요량을 가로로 합산한 결과가 아닙니다. 역수요함수의 기울기는 −2/3입니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 3,
+          "text": "개별수요의 절편이 모두 P=100이므로 시장수요의 가격절편도 100이지 200이 아닙니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 4,
+          "text": "④는 시장수요의 기울기 −2/3는 맞게 쓰더라도 가격절편을 200으로 잘못 두었습니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 5,
+          "text": "⑤는 가격절편 200과 기울기 −3/2가 모두 두 개인의 수량 가로합과 일치하지 않습니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        }
+      ],
+      "optionTexts": [
+        "P = 100 - (2/3)Qd_M",
+        "P = 100 - (3/2)Qd_M",
+        "P = 200 - (1/2)Qd_M",
+        "P = 200 - (2/3)Qd_M",
+        "P = 200 - (3/2)Qd_M"
+      ]
+    },
+    {
+      "id": "2025-12",
+      "year": 2025,
+      "optionCount": 5,
+      "questionTextFingerprint": "어느 지역 아파트시장에서 수요의 가격탄력성이 1.6이다. 아파트가격이 5% 하락할 때 수요량의 변화는?(단,",
+      "officialAccepted": [
+        5
+      ],
+      "status": "AI_SUBSTANTIVE_DRAFT_UNVERIFIED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "sourcePdfRead": false,
+      "independentExpertSignoff": false,
+      "sources": [
+        {
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5247125&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "type": "QNET_PAPER_NOTICE_NOT_PDF"
+        },
+        {
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2025-exam-2996-78fb20b4cdfb.pdf",
+          "type": "THIRD_PARTY_PDF_REFERENCE_NOT_INDEPENDENTLY_VERIFIED"
+        }
+      ],
+      "optionDrafts": [
+        {
+          "option": 1,
+          "text": "수요의 가격탄력성 절댓값 1.6에 가격변화율 −5%를 적용하면 수요량변화율은 (+)8%입니다. 4%가 아닙니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 2,
+          "text": "우하향 수요곡선이라는 가정에서는 가격 하락이 수요량 증가를 뜻합니다. 4% 하락은 방향부터 틀립니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 3,
+          "text": "6% 증가라면 탄력성 절댓값은 6/5=1.2이므로 주어진 1.6과 맞지 않습니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 4,
+          "text": "가격 하락에 수요량 하락을 결부한 방향이 틀리고, 변화율의 크기도 1.6×5%=8%와 맞지 않습니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 5,
+          "text": "수요량 변화율 절댓값은 |Ed|×|가격변화율|=1.6×5%=8%이고 가격이 내리므로 수요량은 8% 증가합니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        }
+      ],
+      "optionTexts": [
+        "4% 증가",
+        "4% 하락",
+        "6% 증가",
+        "6% 하락",
+        "8% 증가"
+      ]
+    },
+    {
+      "id": "2025-13",
+      "year": 2025,
+      "optionCount": 5,
+      "questionTextFingerprint": "베버(A. Weber)의 최소비용이론에 관한 설명으로 옳은 것은?(단, 기업은 단일 입지 공장이고, 다른 조",
+      "officialAccepted": [
+        2
+      ],
+      "status": "AI_SUBSTANTIVE_DRAFT_UNVERIFIED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "sourcePdfRead": false,
+      "independentExpertSignoff": false,
+      "sources": [
+        {
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5247125&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "type": "QNET_PAPER_NOTICE_NOT_PDF"
+        },
+        {
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2025-exam-2996-78fb20b4cdfb.pdf",
+          "type": "THIRD_PARTY_PDF_REFERENCE_NOT_INDEPENDENTLY_VERIFIED"
+        }
+      ],
+      "optionDrafts": [
+        {
+          "option": 1,
+          "text": "원료지수는 국지원료 중량/완제품 중량이므로 정상적인 양의 중량으로 계산하면 음수로 정의되지 않습니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 2,
+          "text": "등비용선(isodapane)은 최소운송비 지점에서 이동할 때 추가 운송비 부담이 동일한 위치의 집합으로 이해합니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 3,
+          "text": "임계등비용선은 노동비 절감·집적경제 효과 등과 추가 운송비의 비교가 관건인데, ③은 운송비 절감액과 추가 운송비를 단순 대조하여 개념을 잘못 제시합니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 4,
+          "text": "최소운송비지점은 우선 원료지와 시장, 투입·산출 중량에 따른 운송비로 정하며 노동비·집적이익은 추가적인 입지 조정 요인입니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 5,
+          "text": "최소비용 입지이론을 최대수익과 최소비용의 크기 비교만으로 규정할 수 없습니다. 수입과 비용의 차이에 따른 이윤 비교는 별개의 틀입니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        }
+      ],
+      "optionTexts": [
+        "국지원료의 중량이 제품의 중량보다 무거우면, 원료지수(material index)는 음(-)의 값을 갖는다.",
+        "등비용선(isodapane)은 최소운송비지점으로부터 기업이 입지를 바꿀 경우, 이에 따른 추가적인 운송비의 부담액이 동일한 지점을 연결한 것이다.",
+        "임계등비용선(critical isodapane)은 최소운송비지점을 중심으로 운송비 절감액과 운송비 추가 부담액이 동일한 등비용선을 말한다.",
+        "최소운송비지점은 원료 및 제품의 중량, 노동비, 집적이익에 따라 결정된다.",
+        "최소비용보다 최대수익이 더 큰 곳을 기업의 최적입지로 본다."
+      ]
+    },
+    {
+      "id": "2025-14",
+      "year": 2025,
+      "optionCount": 5,
+      "questionTextFingerprint": "지대이론에 관한 설명으로 옳은 것을 모두 고른 것은?\n\nㄱ. 리카도(D. Ricardo)는 지대 발생의 원인",
+      "officialAccepted": [
+        1
+      ],
+      "status": "AI_SUBSTANTIVE_DRAFT_UNVERIFIED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "sourcePdfRead": false,
+      "independentExpertSignoff": false,
+      "sources": [
+        {
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5247125&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "type": "QNET_PAPER_NOTICE_NOT_PDF"
+        },
+        {
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2025-exam-2996-78fb20b4cdfb.pdf",
+          "type": "THIRD_PARTY_PDF_REFERENCE_NOT_INDEPENDENTLY_VERIFIED"
+        }
+      ],
+      "optionDrafts": [
+        {
+          "option": 1,
+          "text": "ㄱ은 리카도의 차액지대론에서 토지의 비옥도 차이와 수확체감, 잉여로서의 지대라는 설명에 부합합니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 2,
+          "text": "ㄷ은 문제에서 제시한 '기울기에 따른 집약·조방' 결론의 정확한 이론 귀속이 추가 확인되어야 하므로, 공식 정답표상 ㄱ만 인정되는 이 문제에서 ㄷ만 있는 조합은 선택할 수 없습니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 3,
+          "text": "ㄱ은 옳으나 ㄷ의 구체 문구가 채점상 옳은 진술로 인정되지 않아 ㄱ·ㄷ 조합이 아닙니다. ㄷ 오류 이유는 원전 교재 대조 필요로 남깁니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 4,
+          "text": "ㄴ의 '토지소유 독점에 따른 지대'는 마르크스의 절대지대 등 다른 지대 논의와 혼동한 설명으로, 알론소의 입찰지대·도시 토지이용 모델에 곧바로 귀속할 수 없습니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 5,
+          "text": "ㄱ만 올바르므로 ㄴ과 ㄷ까지 모두 옳다고 묶은 조합은 인정되지 않습니다. 튀넨 관련 진술의 정확한 원문 근거 추가 대조가 필요합니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        }
+      ],
+      "optionTexts": [
+        "ㄱ",
+        "ㄷ",
+        "ㄱ, ㄷ",
+        "ㄴ, ㄷ",
+        "ㄱ, ㄴ, ㄷ"
+      ]
+    },
+    {
+      "id": "2025-15",
+      "year": 2025,
+      "optionCount": 5,
+      "questionTextFingerprint": "부동산시장에 관한 설명으로 틀린 것은?(단, 다른 조건은 동일함)",
+      "officialAccepted": [
+        4
+      ],
+      "status": "AI_SUBSTANTIVE_DRAFT_UNVERIFIED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "sourcePdfRead": false,
+      "independentExpertSignoff": false,
+      "sources": [
+        {
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5247125&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "type": "QNET_PAPER_NOTICE_NOT_PDF"
+        },
+        {
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2025-exam-2996-78fb20b4cdfb.pdf",
+          "type": "THIRD_PARTY_PDF_REFERENCE_NOT_INDEPENDENTLY_VERIFIED"
+        }
+      ],
+      "optionDrafts": [
+        {
+          "option": 1,
+          "text": "약형 효율시장에서는 과거 거래가격 등 과거 정보가 이미 가격에 반영되었다는 가정이므로 그 정보만의 기술적 분석으로 초과이윤을 지속하기 어렵습니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 2,
+          "text": "준강형 효율시장에서는 공개정보까지 가격에 반영된다는 가정이므로 공시정보 기반의 기본적 분석만으로 초과수익을 얻기 어렵습니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 3,
+          "text": "강형 효율시장에서는 공공·비공개 정보를 포함한 모든 정보가 반영된다는 이론적 가정이므로 정보 우위를 통한 초과이윤을 얻기 어렵습니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 4,
+          "text": "불완전경쟁이라고 해서 언제나 할당효율성이 불가능하다고 단정할 수 없습니다. 정보 반영과 시장구조 경쟁 정도는 다른 차원의 개념입니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 5,
+          "text": "불완전경쟁에서는 진입장벽이나 시장지배력 등이 존재할 때 초과이윤이 발생할 가능성이 있습니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        }
+      ],
+      "optionTexts": [
+        "약성 효율적 시장에서는 과거의 자료를 토대로 시장가치의 변동을 분석하는 기술적 분석으로 초과이윤을 얻을 수 없다.",
+        "준강성 효율적 시장에서는 공표된 사실을 토대로 시장가치의 변동을 분석하는 기본적 분석으로 초과이윤을 얻을 수 없다.",
+        "강성 효율적 시장에서는 어떠한 정보를 이용하더라도 초과이윤을 얻을 수 없다.",
+        "불완전경쟁시장은 할당효율적 시장이 될 수 없다.",
+        "불완전경쟁시장에서는 초과이윤이 발생할 수 있다."
+      ]
+    },
+    {
+      "id": "2025-41",
+      "year": 2025,
+      "optionCount": 5,
+      "questionTextFingerprint": "반사회질서의 법률행위에 관한 설명으로 틀린 것은?(다툼이 있으면 판례에 따름)",
+      "officialAccepted": [
+        2
+      ],
+      "status": "AI_SUBSTANTIVE_DRAFT_UNVERIFIED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "sourcePdfRead": false,
+      "independentExpertSignoff": false,
+      "sources": [
+        {
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5247125&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "type": "QNET_PAPER_NOTICE_NOT_PDF"
+        },
+        {
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2025-exam-2996-78fb20b4cdfb.pdf",
+          "type": "THIRD_PARTY_PDF_REFERENCE_NOT_INDEPENDENTLY_VERIFIED"
+        },
+        {
+          "url": "https://law.go.kr/LSW/precInfoP.do?evtNo=95%EB%8B%A41460",
+          "type": "POTENTIAL_PRIMARY_LEGAL_OR_REFERENCE_LINK"
+        }
+      ],
+      "optionDrafts": [
+        {
+          "option": 1,
+          "text": "법률행위가 민법 제103조의 반사회질서 법률행위인지 여부는 법률행위의 성립 당시 내용·동기 등 사정을 기준으로 판단한다는 판례의 기본 접근입니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 2,
+          "text": "민법 제103조의 무효에는 제108조 제2항의 선의의 제3자 보호를 그대로 적용하지 않습니다. 무효의 대세효가 원칙이므로 ②의 일반화가 틀립니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 3,
+          "text": "수사기관에 거짓 진술을 제공하기로 하고 대가를 받는 약정은 사회질서에 반하는 목적을 대가로 한 것이어서 제103조 문제로 다룹니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 4,
+          "text": "법률행위의 성립 과정에 강박이 쓰였다는 사실만으로 곧바로 제103조 무효가 되는 것은 아닙니다. 강박에 관한 별도의 취소·무효 판단이 필요합니다(대법원 95다1460).",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 5,
+          "text": "상대방에게 표시되거나 알려진 동기가 사회질서에 반하는 경우, 그 동기가 법률행위의 평가 대상이 되어 제103조 무효가 문제될 수 있습니다(대법원 95다1460).",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        }
+      ],
+      "optionTexts": [
+        "반사회질서의 법률행위인지 여부는 법률행위가 이루어진 때를 기준으로 판단한다.",
+        "반사회질서의 법률행위의 무효는 선의의 제3자에게 대항할 수 없다.",
+        "수사기관에 허위진술을 해주는 대가로 금전을 지급받기로 하는 약정은 반사회질서의 법률행위이다.",
+        "법률행위의 성립과정에 단지 강박이라는 불법적 방법이 사용된 데 불과한 때에는 반사회질서의 법률행위라고 할 수 없다.",
+        "상대방에게 표시된 법률행위의 동기가 반사회질서적인 경우, 그 법률행위는 무효이다."
+      ]
+    },
+    {
+      "id": "2025-42",
+      "year": 2025,
+      "optionCount": 5,
+      "questionTextFingerprint": "통정허위표시를 기초로 새로운 법률상 이해관계를 맺은 제3자에 해당하는 자를 모두 고른 것은?(다툼이 있으면 ",
+      "officialAccepted": [
+        3
+      ],
+      "status": "AI_SUBSTANTIVE_DRAFT_UNVERIFIED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "sourcePdfRead": false,
+      "independentExpertSignoff": false,
+      "sources": [
+        {
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5247125&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "type": "QNET_PAPER_NOTICE_NOT_PDF"
+        },
+        {
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2025-exam-2996-78fb20b4cdfb.pdf",
+          "type": "THIRD_PARTY_PDF_REFERENCE_NOT_INDEPENDENTLY_VERIFIED"
+        },
+        {
+          "url": "https://lx.scourt.go.kr/search/detail/precedent/0/2060543",
+          "type": "POTENTIAL_PRIMARY_LEGAL_OR_REFERENCE_LINK"
+        },
+        {
+          "url": "https://law.go.kr/LSW/precInfoP.do?precSeq=68322",
+          "type": "POTENTIAL_PRIMARY_LEGAL_OR_REFERENCE_LINK"
+        }
+      ],
+      "optionDrafts": [
+        {
+          "option": 1,
+          "text": "가장채권을 가압류한 채권자는 허위표시가 만든 외관을 기초로 새로운 법률상 이해관계를 형성한 제3자에 해당할 수 있습니다. 구체적 선의 여부는 별도로 판단합니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 2,
+          "text": "가장채권자의 파산관재인은 파산채권자 전체 이익의 지위에서 민법 제108조 제2항의 제3자에 해당할 수 있습니다(대법원 2004다10299 등).",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 3,
+          "text": "ㄱ(가압류권자), ㄴ(파산관재인)은 제108조 제2항의 제3자로 보호 가능성이 있습니다. ㄷ(가장계약상 지위 승계인)은 허위표시의 직접 당사자 지위 승계에 그쳐 별도의 제3자에 해당하지 않는다는 점을 구별합니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 4,
+          "text": "ㄴ은 포함되지만 ㄷ의 계약상 지위 이전받은 자까지 새로운 법률상 이해관계의 제3자로 보기는 어렵습니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 5,
+          "text": "ㄱ·ㄴ 외에 ㄷ까지 포함한 조합은 통정허위표시 당사자 지위의 승계와 제3자 보호 범위를 혼동합니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        }
+      ],
+      "optionTexts": [
+        "ㄱ",
+        "ㄷ",
+        "ㄱ, ㄴ",
+        "ㄴ, ㄷ",
+        "ㄱ, ㄴ, ㄷ"
+      ]
+    },
+    {
+      "id": "2025-43",
+      "year": 2025,
+      "optionCount": 5,
+      "questionTextFingerprint": "무권대리인 乙이 甲을 대리하여 매수인 丙과 매매계약을 체결하였고, 당시 丙은 乙이 무권대리인이라는 사실에 대",
+      "officialAccepted": [
+        1
+      ],
+      "status": "AI_SUBSTANTIVE_DRAFT_UNVERIFIED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "sourcePdfRead": false,
+      "independentExpertSignoff": false,
+      "sources": [
+        {
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5247125&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "type": "QNET_PAPER_NOTICE_NOT_PDF"
+        },
+        {
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2025-exam-2996-78fb20b4cdfb.pdf",
+          "type": "THIRD_PARTY_PDF_REFERENCE_NOT_INDEPENDENTLY_VERIFIED"
+        },
+        {
+          "url": "https://www.law.go.kr/LSW/lsInfoP.do?ancYnChk=0&chrClsCd=010202&efYd=20250131&joNo=100400&lsiSeq=265307&urlMode=lsInfoP",
+          "type": "POTENTIAL_PRIMARY_LEGAL_OR_REFERENCE_LINK"
+        }
+      ],
+      "optionDrafts": [
+        {
+          "option": 1,
+          "text": "무권대리 계약의 추인은 원칙적으로 전체에 대해 하여야 하므로, 일부만을 추인하려면 상대방의 동의가 필요합니다. 동의가 없더라도 효력 있다는 ①이 틀립니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 2,
+          "text": "본인이 상대방의 지급대금을 무권대리인으로부터 받아 이익을 귀속시킨 경우에는 사정에 따라 묵시적인 추인으로 해석될 수 있습니다. 사실관계가 추인의사에 부합하는지 검토합니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 3,
+          "text": "무권대리인이 본인을 단독상속하여 본인 지위까지 승계한 경우에는 기존 자기 행위를 본인 지위에서 거절하는 것이 신의성실 원칙에 반한다고 보는 판례 태도를 따릅니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 4,
+          "text": "민법 제131조는 상대방이 상당기간을 정하여 추인 여부의 확답을 최고하고, 본인이 기간 내 확답하지 않으면 거절한 것으로 봅니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 5,
+          "text": "민법 제132조상 추인이 상대방에게 대항되려면 상대방에게 표시하거나 상대방이 알아야 합니다. 상대방이 모르는 동안은 제134조의 철회권이 문제될 수 있습니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        }
+      ],
+      "optionTexts": [
+        "甲이 무권대리행위의 일부를 추인한 경우, 丙의 동의가 없더라도 추인의 효력이 있다.",
+        "甲이 乙로부터 丙이 지급한 매매대금을 수령한 경우, 특별한 사정이 없는 한 甲은 매매계약을 추인한 것으로 본다.",
+        "甲을 단독상속한 乙이 본인 甲의 지위에서 무권대리행위의 추인을 거절하는 것은 신의칙에 반한다.",
+        "丙이 상당한 기간을 정하여 甲에게 추인 여부의 확답을 최고한 경우, 甲이 그 기간 내에 확답을 발하지 않은 때에는 추인을 거절한 것으로 본다.",
+        "甲이 乙에게 무권대리행위를 추인한 경우, 이를 알지 못한 丙은 매매계약을 철회할 수 있다."
+      ]
+    },
+    {
+      "id": "2025-44",
+      "year": 2025,
+      "optionCount": 5,
+      "questionTextFingerprint": "민법상 복대리에 관한 설명으로 옳은 것은?",
+      "officialAccepted": [
+        5
+      ],
+      "status": "AI_SUBSTANTIVE_DRAFT_UNVERIFIED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "sourcePdfRead": false,
+      "independentExpertSignoff": false,
+      "sources": [
+        {
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5247125&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "type": "QNET_PAPER_NOTICE_NOT_PDF"
+        },
+        {
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2025-exam-2996-78fb20b4cdfb.pdf",
+          "type": "THIRD_PARTY_PDF_REFERENCE_NOT_INDEPENDENTLY_VERIFIED"
+        },
+        {
+          "url": "https://www.law.go.kr/LSW/lsInfoP.do?ancYnChk=0&chrClsCd=010202&efYd=20250131&joNo=100400&lsiSeq=265307&urlMode=lsInfoP",
+          "type": "POTENTIAL_PRIMARY_LEGAL_OR_REFERENCE_LINK"
+        }
+      ],
+      "optionDrafts": [
+        {
+          "option": 1,
+          "text": "복대리인은 대리인의 대리인이 아니라 본인의 대리인입니다(민법 제123조). 대리인이 선정했다는 이유로 법률상 본인이 바뀌지 않습니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 2,
+          "text": "복대리인을 선임해도 원대리인의 대리권이 자동으로 소멸하지 않습니다. 복대리와 원대리는 권한 범위 내에서 병존할 수 있습니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 3,
+          "text": "임의대리인이 본인의 승낙으로 복대리인을 선임했더라도 민법 제121조 제1항의 선임·감독 책임이 원칙입니다. 본인의 '지명'은 별도의 제121조 제2항 예외입니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 4,
+          "text": "법정대리인은 민법 제122조에 따라 자기 책임으로 복대리인을 선임할 수 있으므로 본인 승낙·부득이한 사유가 일반적 필수요건은 아닙니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 5,
+          "text": "민법 제122조 단서는 부득이한 사유로 복대리인을 선임했다면 제121조 제1항의 선임·감독에 관한 책임만 부담한다고 규정합니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        }
+      ],
+      "optionTexts": [
+        "복대리인은 대리인이 자신의 이름으로 선임한 대리인의 대리인이다.",
+        "대리인이 복대리인을 선임한 때에는 대리인의 대리권은 소멸한다.",
+        "임의대리인이 본인의 승낙을 얻어서 복대리인을 선임한 경우, 본인에 대하여 그 선임감독에 관한 책임이 없다.",
+        "법정대리인은 본인의 승낙이나 부득이한 사유가 없으면 복대리인을 선임할 수 없다.",
+        "법정대리인이 부득이한 사유로 복대리인을 선임한 경우, 본인에 대하여 그 선임감독에 관해서만 책임이 있다."
+      ]
+    },
+    {
+      "id": "2025-45",
+      "year": 2025,
+      "optionCount": 5,
+      "questionTextFingerprint": "의사표시에 관한 설명으로 틀린 것은?(다툼이 있으면 판례에 따름)",
+      "officialAccepted": [
+        3
+      ],
+      "status": "AI_SUBSTANTIVE_DRAFT_UNVERIFIED",
+      "reviewedBy": null,
+      "reviewedAt": null,
+      "sourcePdfRead": false,
+      "independentExpertSignoff": false,
+      "sources": [
+        {
+          "url": "https://www.q-net.or.kr/cst003.do?artlSeq=5247125&boardId=Q004&gId=08&gSite=L&id=cst00302&menuType=cst00309",
+          "type": "QNET_PAPER_NOTICE_NOT_PDF"
+        },
+        {
+          "url": "https://gosi24.com/wp-content/uploads/2026/10/2025-exam-2996-78fb20b4cdfb.pdf",
+          "type": "THIRD_PARTY_PDF_REFERENCE_NOT_INDEPENDENTLY_VERIFIED"
+        },
+        {
+          "url": "https://www.law.go.kr/lsInfoP.do?efYd=20250131&lsiSeq=265307",
+          "type": "POTENTIAL_PRIMARY_LEGAL_OR_REFERENCE_LINK"
+        }
+      ],
+      "optionDrafts": [
+        {
+          "option": 1,
+          "text": "민법 제112조는 제한능력자가 의사표시를 받은 경우 원칙적으로 의사표시로써 대항하지 못하도록 하고 법정대리인의 도달 인식이라는 예외를 둡니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 2,
+          "text": "민법 제107조의 비진의표시에서 진의는 의사표시 자체를 할 생각이 있었는지에 관한 것으로, 표시 내용에 따른 결과를 마음속으로 원했는지와 엄밀하게 구별합니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 3,
+          "text": "경과실로 착오 취소를 했다는 사실만으로 민법상 불법행위 손해배상책임이 자동 발생하지는 않습니다. 단순 착오취소와 별도 위법·고의과실·인과관계 판단이 필요합니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 4,
+          "text": "통정허위표시에 따라 외형상 이루어진 재산처분도 사해행위취소권의 대상이 될 수 있는지는 허위표시 외관·제3자 보호 및 채권자취소 법리에 따라 판단합니다. 판례 원문 세부 확인이 필요합니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        },
+        {
+          "option": 5,
+          "text": "공무원의 사직 의사표시 등 사인의 공법행위에는 민법 제107조 비진의표시 규정이 그대로 적용되지 않는다고 보는 판례 태도가 있습니다. 해당 판례 원문 추가 대조가 필요합니다.",
+          "status": "AI_INDEPENDENT_REASONING_DRAFT",
+          "expertVerdict": "unreviewed",
+          "legalAsOfVerified": false,
+          "sourcePinpointVerified": false
+        }
+      ],
+      "optionTexts": [
+        "의사표시의 상대방이 의사표시를 받은 때에 제한능력자인 경우, 표의자는 원칙적으로 그 의사표시로써 대항할 수 없다.",
+        "비진의표시에서 진의란 특정한 내용의 의사표시를 하고자 하는 표의자의 생각을 말한다.",
+        "경과실로 착오에 빠진 표의자가 착오를 이유로 의사표시를 취소한 경우, 표의자는 그로 인해 손해를 입은 상대방에 대하여 불법행위로 인한 손해배상책임을 진다.",
+        "통정허위표시로서 무효인 법률행위도 채권자취소권의 대상이 될 수 있다.",
+        "공무원의 사직 의사표시와 같은 사인의 공법행위에는 비진의표시에 관한 민법 규정이 준용되지 않는다."
+      ]
+    }
+  ]
+}
