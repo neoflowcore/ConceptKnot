@@ -213,6 +213,18 @@
   * suggest an equilibrium price when the figure is PV, rent, policy or stock.
   * The marker percentage is merely lesson progress, never observed data.
   */
+ /* v158: hypothetical examples are NOT the sourced exam's actual facts. */
+ const OBSERVATION_EXAMPLES=Object.freeze({
+  'price-along':'예: 같은 상품 가격이 10에서 8로 내려가고 다른 조건이 같다면 기존 D선 위에서 수요량이 늘어납니다. D선 자체가 우측으로 옮겨가는 것이 아닙니다.',
+  'elasticity':'예: 가격이 10% 변할 때 수요량 변화율이 20%면 탄력성 절댓값 2, 5%면 0.5입니다. 그림의 기울기만으로 이 값이 정해지지는 않습니다.',
+  'ceiling':'예: 균형가격 10에서 최고가격을 8로 제한할 때만(나머지 조건 고정) Qd가 Qs보다 클 수 있습니다. 최저가격제의 초과공급은 아래 별도 실험실에서 비교합니다.',
+  'cobweb':'예: 지난 수확기 가격이 올라 올해 재배 면적을 늘리면 수확기 공급 증가로 가격이 다시 움직일 수 있습니다. 수렴·발산은 기울기에 따라 다릅니다.',
+  'rent-distance':'예: 그 밖의 조건이 같다면 중심지에서 2km 떨어진 곳보다 10km 떨어진 곳은 접근성 때문에 입찰지대가 낮을 수 있습니다.',
+  'present-value':'예: 1년 뒤 110만원을 받는 경우 할인율 10%면 현재가치는 100만원, 5%면 약 104.8만원입니다. 미래금액·기간은 같습니다.',
+  'stock-flow':'예: 연초 재고주택 100호, 1년간 준공 10호와 멸실 2호라면 연말 저량은 108호입니다. 10호/년은 유량입니다.',
+  'cap-rate':'예: 연 순영업소득 1,200만원이 일정하면 환원율 6%일 때 수익가격 2억원, 8%라면 1억 5천만원입니다.',
+  'huff':'예: 다른 점포의 매력도와 경쟁 조건이 같다면 거리가 늘어난 점포의 상대적 선택 유인력이 낮아질 수 있습니다. 실제 방문 확률은 별도 계산이 필요합니다.'
+ });
  const OBSERVATION_LESSONS=Object.freeze({
   'price-along':[
    '재화 자신의 가격만 달라지면 수요곡선은 그대로이며, 곡선 위의 수요량만 이동합니다.',
@@ -274,9 +286,26 @@
    slope:'관찰 진행률은 실제 가격·수익률·거래량 변화율이 아닙니다.',
    equilibrium:'교점 변화를 계산하는 도식이 아닙니다.',
    easy:base[0]+' '+(changed?'움직인 지점과 처음 지점을 비교하세요.':'관찰점을 움직여 변화를 확인하세요.'),
+   example:(OBSERVATION_EXAMPLES[chart.id]||'이 그림은 학습용 가상 사례입니다.')+
+    (changed?' 현재 관찰 단계 '+progress+'/100은 경제적 변화율이 아닙니다.':' 직접 조작해 비교할 수 있습니다.'),
    advanced:base[1],
    exam:baseline+base[2],
    original:'관찰 시작점',now:'관찰 단계 '+progress,schematic:true};
+ }
+ /* One-tap reversible market-condition examples; official chart remains unchanged. */
+ function scenarioState(chart,s,name){
+  const cases={
+   'income-up':['demand',1],'population-down':['demand',-1],
+   'cost-up':['supply',-1],'technology-up':['supply',1]
+  };
+  const rule=cases[name];
+  if(!chart||!s||!rule||!['demand','supply','both'].includes(chart.type)||
+   (chart.type!=='both'&&chart.type!==rule[0]))return null;
+  const next=copy(s),kind=rule[0];
+  next[kind]=60;next[kind+'Sign']=rule[1];
+  next.value=chart.type==='both'?Math.max(next.demand,next.supply):60;
+  if(chart.type!=='both')next.sign=rule[1];
+  return next;
  }
  function explain(chart,s){
   if(!chart||!s)return null;
@@ -324,7 +353,17 @@
    '경제학적 가격탄력성은 (수량 변화율)/(가격 변화율)로 계산합니다. '+
    '기울기 또는 기울기 변경 % 하나만으로 탄력성을 확정할 수 없습니다. '+
    '두 곡선이 동시에 움직이거나 기울기도 바뀌면 한쪽 조건만의 효과로 결과를 일반화하면 안 됩니다.';
-  return {action,moved,tilted,shifted,slope,equilibrium:outcomeText,
+  const exampleParts=[];
+  if(activeD)exampleParts.push(shift.demand>0?
+   '정상재라는 가정에서 소득 증가로 수요가 늘어난 상황':'인구 감소 등으로 수요가 줄어든 상황');
+  if(activeS)exampleParts.push(shift.supply>0?
+   '기술 발전으로 공급이 늘어난 상황':'건축비 상승으로 공급이 줄어든 상황');
+  if(tilted)exampleParts.push('가격에 대한 반응 정도를 도식상 기울기로 바꾼 상황');
+  const example=exampleParts.length?'가상 생활 예시: '+exampleParts.join('과(와) ')+'을(를) 따로 가정합니다. '+
+   '이 그림에서는 균형가격 '+out.price+', 균형거래량 '+out.quantity+
+   '입니다. 원래 기출의 실제 조건을 바꾼 것이며 정답 근거를 자동 검증한 것은 아닙니다.':
+   '가상 생활 예시: 소득·인구·생산비·기술이 일정하면 수요·공급곡선의 위치는 그대로입니다. 물건 자체의 가격이 변하는 것은 곡선 위 수요량 변화입니다.';
+  return {action,moved,tilted,shifted,slope,equilibrium:outcomeText,example,
    easy:simple+' '+directionalRule,advanced,
    exam:baselineExample+exerciseCaution+concept,
    original:'E₀: '+out.start.x.toFixed(1)+','+out.start.y.toFixed(1),
@@ -333,5 +372,5 @@
  }
  return Object.freeze({SIZE,round,direction,defaultSnapshot,copy,same,timeline,
   boxPoint,polylines,nearest,drag,nudge,adjustSlope,slopePercent,
-  curveGeometry,offsets,equilibrium,outcome,explain});
+  curveGeometry,offsets,equilibrium,outcome,explain,scenarioState});
 });

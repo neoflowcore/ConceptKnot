@@ -206,6 +206,7 @@ function sync(root,c,state){
    if(el&&el.textContent!==value)el.textContent=value};
   put('[data-ck156-action]',lesson.action+' · '+lesson.equilibrium);
   put('[data-ck156-easy]',lesson.easy);
+  put('[data-ck158-example]',lesson.example||'가상 예시를 준비 중입니다.');
   put('[data-ck156-advanced]',lesson.advanced);
   put('[data-ck156-exam]',lesson.exam);
   put('[data-ck156-status]',lesson.slope+' '+lesson.shifted);
@@ -222,12 +223,50 @@ function sync(root,c,state){
   b.setAttribute?.('aria-pressed',String(b.dataset.ck149Select===selectedCurve)));
  window.CK150ScenarioUI?.mountLegacy?.(root,c);
 }
+let policyPromise=null;
+function ensurePolicy(root,c){
+ if(c?.id!=='ceiling')return;
+ if(window.CK158PolicyLab?.mount){window.CK158PolicyLab.mount(root,c);return}
+ if(policyPromise||!document.head?.appendChild)return;
+ if(!document.querySelector?.('[data-ck158-policy-style]')){
+  const sheet=document.createElement('link');
+  sheet.rel='stylesheet';sheet.href='./assets/ck-policy-lab-v158.css?v=158';
+  sheet.dataset.ck158PolicyStyle='';document.head.appendChild(sheet);
+ }
+ const load=src=>new Promise((resolve,reject)=>{
+  const script=document.createElement('script');script.src=src;script.async=false;
+  script.onload=resolve;script.onerror=()=>reject(new Error(src));
+  document.head.appendChild(script);
+ });
+ policyPromise=load('./assets/ck-policy-math-v158.js?v=158')
+  .then(()=>load('./assets/ck-policy-lab-v158.js?v=158'))
+  .then(()=>{const current=active();if(current?.chart?.id==='ceiling')
+    window.CK158PolicyLab?.mount(current.root,current.chart);return true})
+  .catch(()=>{policyPromise=null;const current=active();
+   if(current?.chart?.id==='ceiling'&&!current.root.querySelector?.('[data-ck158-policy-error]')){
+    const error=document.createElement('p');error.dataset.ck158PolicyError='';
+    error.setAttribute('role','alert');
+    error.textContent='가격상한·하한 실험실 파일을 불러오지 못했습니다. 온라인에서 새로고침해 주세요.';
+    current.root.querySelector?.('[data-ck79-chart-modes]')?.appendChild(error);
+   }
+   return false;
+  });
+}
 function mount(root,c){
  if(!root||!c)return;
  const tr=trackFor(c,Boolean(window.CK21Charts?.getState?.()?.phase));
  const controls=root.querySelector?.('[data-ck79-chart-modes]');
  if(controls&&!controls.querySelector?.('[data-ck149-tools]')&&document.createElement){
   const tools=document.createElement('div');tools.className='ck149-tools';tools.dataset.ck149Tools='';
+  const examples=['demand','supply','both'].includes(c.type)?
+   '<div class="ck149-tools-row" role="group" aria-label="생활 속 가상 상황 적용">'+
+   (c.type!=='supply'?'<button type="button" data-ck158-scenario="income-up">정상재 소득↑ · 수요↑</button>'+
+    '<button type="button" data-ck158-scenario="population-down">인구↓ · 수요↓</button>':'')+
+   (c.type!=='demand'?'<button type="button" data-ck158-scenario="cost-up">건축비↑ · 공급↓</button>'+
+    '<button type="button" data-ck158-scenario="technology-up">기술발전 · 공급↑</button>':'')+
+   '</div>':
+   '<div class="ck149-tools-row" role="group" aria-label="도식 관찰 예시">'+
+   '<button type="button" data-ck158-observe>관찰점 예시 65/100 보기</button></div>';
   tools.innerHTML='<div class="ck149-tools-row" role="group" aria-label="도식 실험 되돌리기">'+
    '<button type="button" data-ck149-action="undo">↶ 이전</button>'+
    '<button type="button" data-ck149-action="redo">↷ 다시</button>'+
@@ -244,6 +283,7 @@ function mount(root,c){
    (c.type==='both'?'<div class="ck149-tools-row" role="group" aria-label="함께 이동하는 선 선택">'+
     '<button type="button" data-ck149-select="demand" aria-pressed="true">수요 D 선</button>'+
     '<button type="button" data-ck149-select="supply" aria-pressed="false">공급 S 선</button></div>':'')+
+   examples+
    '<p class="ck149-tools-status"><strong>직접 조작</strong> 곡선 위 D/S 동그란 손잡이 또는 두꺼운 터치영역을 잡고 이동하세요.'+
    ' 빈 공간은 조작 시작 지점이 아닙니다. <output data-ck149-current></output></p>'+
    '<small>이전 점선 · 현재 실선 / 도식 진행률은 실제 가격 변동률이 아닙니다.</small>';
@@ -257,6 +297,7 @@ function mount(root,c){
     '<p class="ck157-sr-status" role="status" aria-live="polite" data-ck157-final-status></p>'+
     '<p data-ck156-status></p>'+
     '<details open><summary>쉬운 설명</summary><p data-ck156-easy></p></details>'+
+    '<details open><summary>생활 예시 · 변화 원인</summary><p data-ck158-example></p></details>'+
     '<details><summary>심화 설명 · 비례·반비례</summary>'+
     '<p data-ck156-advanced></p></details>'+
     '<details><summary>기출 개념 연결 · 자주 틀리는 구분</summary>'+
@@ -269,6 +310,7 @@ function mount(root,c){
   if(current?.value!==tr.state.value||current?.sign!==tr.state.sign)apply(tr.state,root,c);
   else sync(root,c,tr.state);
  }
+ ensurePolicy(root,c);
 }
 function afterUpdate(info,obs){
  const c=info?.chart,root=info?.root;if(!c||!root)return;
@@ -355,13 +397,25 @@ document.addEventListener('lostpointercapture',e=>{if(drag&&drag.pointerId===e.p
 window.addEventListener?.('blur',cancel);
 document.addEventListener('visibilitychange',()=>{if(document.hidden)cancel()});
 document.addEventListener('click',e=>{
- const target=e.target.closest?.('[data-ck149-action],[data-ck149-select],[data-ck155-nudge],[data-ck156-slope]');if(!target)return;
+ const target=e.target.closest?.('[data-ck149-action],[data-ck149-select],[data-ck155-nudge],[data-ck156-slope],[data-ck158-scenario],[data-ck158-observe]');if(!target)return;
  const info=active();if(!info)return;
  const root=target.closest?.('.ck21-chart-section');if(root&&root!==info.root)return;
  const tr=trackFor(info.chart);if(!tr)return;
  const select=target.dataset.ck149Select;
  if(select){selectedCurve=select;sync(info.root,info.chart,tr.state);return}
  const action=target.dataset.ck149Action,was=tr.state;
+ if(target.hasAttribute?.('data-ck158-scenario')){
+  const next=math()?.scenarioState?.(info.chart,was,target.dataset.ck158Scenario);
+  if(next){change(next,info.chart,info.root);done(was,info.chart,info.root)}
+  return;
+ }
+ if(target.hasAttribute?.('data-ck158-observe')){
+  if(!['demand','supply','both'].includes(info.chart.type)){
+   const next={...was,value:65};
+   change(next,info.chart,info.root);done(was,info.chart,info.root);
+  }
+  return;
+ }
  if(target.hasAttribute?.('data-ck156-slope')){
   const amount=Number(target.dataset.ck156Slope);
   if(Math.abs(amount)===15&&math()?.adjustSlope){
@@ -407,6 +461,14 @@ document.addEventListener('keydown',e=>{
    e.preventDefault();e.stopImmediatePropagation?.();
    return;
   }
+  if(e.key==='Home'||e.key==='End'){
+   const now=m.slopePercent(start,selectedCurve);
+   const next=m.adjustSlope(start,info.chart,selectedCurve,(e.key==='Home'?100:160)-now);
+   if(next){change(next,info.chart,info.root);done(start,info.chart,info.root)}
+  }
+  // Endpoint grip is a slope control, never horizontal translation.
+  e.preventDefault();e.stopImmediatePropagation?.();
+  return;
  }
  let target=e.key==='Home'?0:e.key==='End'?100:start.value+(e.key==='ArrowLeft'?-5:5);
  target=m.round(target);

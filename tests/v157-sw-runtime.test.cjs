@@ -13,7 +13,7 @@ function Response(body='',options={}){
 }
 function fixture(){
  const handlers={},names=new Map();let offline=false,htmlPoison=false,skip=0,claim=0;
- const current='conceptknot-study-v157-resume-offline-omr-ime';
+ const current='conceptknot-study-v158-policy-floor-scenarios';
  const responseFor=input=>{
   const path=new URL(canonical(input)).pathname;
   const ct=path.endsWith('.html')?'text/html':path.endsWith('.json')?'application/json':
@@ -85,7 +85,7 @@ test('P0 offline critical JS and navigation HTML load from exact v157 cache',asy
  A.equal(js.status,200);A.equal(js.headers.get('content-type'),'application/javascript');
  A.equal(html.status,200);A.equal(html.headers.get('content-type'),'text/html');
 });
-test('P0 offline unknown v156 JS query never silently maps to v157 JS cache',async()=>{
+test('P0 offline unknown v156 JS query never silently maps to v158 JS cache',async()=>{
  const w=fixture();await w.install();w.offline(true);
  const out=await w.request('./assets/ck-full-exam-v82.js?v=156');
  A.equal(out.status,503);A.match(out.body,/오프라인 자산이 없습니다/);

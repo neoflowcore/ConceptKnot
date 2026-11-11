@@ -1,4 +1,4 @@
-/* v157 P0 offline readiness: local-only cache and controller evidence, not hardware PASS. */
+/* v158 P0 offline readiness: local-only cache and controller evidence, not hardware PASS. */
 'use strict';
 const {test}=require('node:test'),A=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 const read=f=>fs.readFileSync(f,'utf8');
@@ -19,27 +19,31 @@ function cacheFixture(omitted=[]){
   open:async name=>{A.equal(name,ctx.cache);return {match:async url=>items.get(url)}}};
  return {storage,items};
 }
-test('P0 current cache label and exact 11 required, six optional P2/P6 assets',()=>{
- A.equal(ctx.cache,'conceptknot-study-v157-resume-offline-omr-ime');
- A.equal(CRIT.length,11);A.equal(STUDY.length,6);
+test('P0 current cache label and exact 11 required, nine optional P2/P6 assets including policy lab',()=>{
+ A.equal(ctx.cache,'conceptknot-study-v158-policy-floor-scenarios');
+ A.equal(CRIT.length,11);A.equal(STUDY.length,9);
  const html=read('index.html'),sw=read('sw.js');
- A.ok(html.includes('content="v157-phase-remaining-offline-restore-ime-board"'));
- for(const name of ['ck-full-exam-v82.js','ck-manual-qa-v115.js','ck-data-diagnostics-v88.js',
-  'ck-mobile-board-v21.js','ck-study-p6-v76.js'])
-  A.ok(html.includes(name+'?v=157'),name);
- for(const name of ['ck-typing-ime-guard-v155.js','ck-study-p6-v76.js','ck-mobile-board-v21.js'])
-  A.ok(sw.includes(name+'?v=157'),name);
+ A.ok(html.includes('content="v158-policy-floor-and-17-scenario-lessons"'));
+ A.ok(html.includes('ck-full-exam-v82.js?v=157'));
+ for(const name of ['ck-manual-qa-v115.js','ck-data-diagnostics-v88.js'])
+  A.ok(html.includes(name+'?v=158'),name);
+ for(const name of ['ck-typing-ime-guard-v155.js?v=157','ck-study-p6-v76.js?v=157',
+  'ck-mobile-board-v21.js?v=157', 'ck-policy-math-v158.js?v=158',
+  'ck-policy-lab-v158.js?v=158','ck-policy-lab-v158.css?v=158'])
+  A.ok(sw.includes(name),name);
  A.ok(read('assets/ck-study-p6-v76.js').includes('ck-typing-ime-guard-v155.js?v=157'));
+ for(const suffix of ['ck-policy-math-v158.js','ck-policy-lab-v158.js','ck-policy-lab-v158.css'])
+  A.ok(sw.includes(suffix+'?v=158'));
 });
-test('P0 SW controlled and all 11+6 cached -> two separate ready statuses',async()=>{
+test('P0 SW controlled and all 11+9 cached -> two separate ready statuses',async()=>{
  const result=await ctx.check(cacheFixture().storage,true);
  A.equal(result.required,11);A.equal(result.cached,11);
- A.equal(result.ready,true);A.equal(result.studyCached,6);A.equal(result.studyReady,true);
+ A.equal(result.ready,true);A.equal(result.studyCached,9);A.equal(result.studyReady,true);
 });
 test('P0 missing graph offline asset does not falsely mark P2/P6 prepared',async()=>{
  const absent=STUDY[2],result=await ctx.check(cacheFixture([absent]).storage,true);
  A.equal(result.ready,true);
- A.equal(result.studyCached,5);
+ A.equal(result.studyCached,8);
  A.equal(result.studyReady,false);
 });
 test('P0 missing or HTML-corrupted core blocks true offline readiness',async()=>{
@@ -53,7 +57,7 @@ test('P0 missing or HTML-corrupted core blocks true offline readiness',async()=>
 });
 test('P0 all assets present but wrong service worker remains unverified',async()=>{
  const result=await ctx.check(cacheFixture().storage,false);
- A.equal(result.cached,11);A.equal(result.studyCached,6);
+ A.equal(result.cached,11);A.equal(result.studyCached,9);
  A.equal(result.ready,false);A.equal(result.studyReady,false);
 });
 test('P0 11 core SW source matches live diagnostics exact resource version strings',()=>{
@@ -66,7 +70,7 @@ test('P0 offline version and warnings are truthful without user hardware confirm
  const s=read('assets/ck-data-diagnostics-v88.js');
  A.ok(s.includes('학습 도구 자산 확보(조작은 별도 검증)'));
  A.ok(s.includes('실제 기기 동작은 별도 검사'));
- A.ok(s.includes('현재 v157 서비스워커가 이 탭을 제어함'));
+ A.ok(s.includes('현재 v158 서비스워커가 이 탭을 제어함'));
  A.doesNotMatch(s,/현재 v140 서비스워커가 이 탭을 제어함/);
 });
 

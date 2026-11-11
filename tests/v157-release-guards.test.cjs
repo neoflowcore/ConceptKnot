@@ -4,14 +4,14 @@ const {test}=require('node:test'),A=require('node:assert/strict'),fs=require('no
 const read=p=>fs.readFileSync(p,'utf8');
 test('index release, service worker and diagnostics version agree',()=>{
  const html=read('index.html'),sw=read('sw.js'),diag=read('assets/ck-data-diagnostics-v88.js');
- A.ok(html.includes('ck-release" content="v157-phase-remaining-offline-restore-ime-board"'));
- A.ok(sw.includes("const CACHE='conceptknot-study-v157-resume-offline-omr-ime'"));
- A.ok(diag.includes("OFFLINE_CACHE='conceptknot-study-v157-resume-offline-omr-ime'"));
+ A.ok(html.includes('ck-release" content="v158-policy-floor-and-17-scenario-lessons"'));
+ A.ok(sw.includes("const CACHE='conceptknot-study-v158-policy-floor-scenarios'"));
+ A.ok(diag.includes("OFFLINE_CACHE='conceptknot-study-v158-policy-floor-scenarios'"));
  const assets=[
   'ck-full-exam-v82.js?v=157','ck-mobile-board-v21.js?v=157',
-  'ck-manual-qa-v115.js?v=157','ck-data-diagnostics-v88.js?v=157',
-  'ck-study-p6-v76.js?v=157','ck-graph-direct-v149.js?v=157',
-  'ck-graph-direct-v149.css?v=157'
+  'ck-manual-qa-v115.js?v=158','ck-data-diagnostics-v88.js?v=158',
+  'ck-study-p6-v76.js?v=157','ck-graph-direct-v149.js?v=158',
+  'ck-graph-direct-v149.css?v=158','ck-graph-motion-v149.js?v=158'
  ];
  for(const a of assets){
   A.ok(html.includes(a),'missing HTML '+a);
@@ -31,7 +31,7 @@ test('official 800 bank source and 2021–2025 draft explanation source bytes un
 });
 test('P7 manual statuses cannot be auto-marked as hardware PASS by capability diagnosis',()=>{
  const qa=read('assets/ck-manual-qa-v115.js');
- for(const id of ['v157-offline-live','v157-ime-stylus-recovery',
+ for(const id of ['v158-floor-ceiling','v158-scenarios','v157-offline-live','v157-ime-stylus-recovery',
   'v157-official-json-restore','v157-visual-p6','v157-expert-audit'])
    A.ok(qa.includes("id:'"+id+"'"));
  A.ok(qa.includes("key:'ck115-manual-device-verification-v1'")||
@@ -54,6 +54,8 @@ test('P6 live-region does not issue continuous screenreader narration per pointe
  A.ok(js.includes("function done(before,c,root)"));
  A.ok(js.includes("speech.textContent=lesson.action"));
  A.ok(!js.includes('<p data-ck156-action role="status"></p>'));
+ A.ok(js.includes('data-ck158-example'));
+ A.ok(js.includes('ensurePolicy(root,c)'));
  A.ok(read('assets/ck-graph-direct-v149.css').includes('.ck157-sr-status'));
 });
 

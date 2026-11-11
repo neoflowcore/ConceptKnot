@@ -49,7 +49,9 @@ const TASKS=Object.freeze([
  {id:'v157-ime-stylus-recovery',group:'타이핑',name:'Android Brave에서 한글 조합→마지막 자모 지연 반영, 손바닥 접촉으로 칠판 크기 조절 중단, 포인터 취소 시 원래 높이 및 S Pen 자동 해제 확인'},
  {id:'v157-official-json-restore',group:'모의고사',name:'공식 80문항 진행 중 답안 보존 상태로 JSON 백업 병합 복원, 다른 탭 변경/같은 응시 중복/20회 이력 한도 초과는 변경 없이 차단'},
  {id:'v157-visual-p6',group:'그래프',name:'Android/S Pen에서 8개 시장형 곡선의 가운데 D·S 및 끝 노란 기울기 손잡이; 9개 관찰형 그래프 전후 이론·Undo/Redo/키보드·모바일 스크롤 확인'},
- {id:'v157-expert-audit',group:'해설',name:'2021~2025년 학습용 초안 400건 중 법령/판례/선지별 전문가 검수 완료 기록은 0건이며 검증되지 않은 문장을 공식 해설로 게시하지 않는지 확인'}
+ {id:'v157-expert-audit',group:'해설',name:'2021~2025년 학습용 초안 400건 중 법령/판례/선지별 전문가 검수 완료 기록은 0건이며 검증되지 않은 문장을 공식 해설로 게시하지 않는지 확인'},
+ {id:'v158-floor-ceiling',group:'그래프',name:'최고가격제에서 균형 아래 정책선→초과수요, 최저가격제에서 균형 위 정책선→초과공급, 비구속 구간→부족·잉여 없음. Android 펜/터치 직접 조작과 빈 영역 스크롤 및 취소 복구 확인'},
+ {id:'v158-scenarios',group:'그래프',name:'17종 그래프 생활 예시→쉬운 설명→심화→기출 함정 3단계 확인, 8종 시장형 가상 조건 버튼과 E0/E1·Undo/Redo, 기울기 키보드 조작 비교 확인'}
 ]);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const plain=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
@@ -139,7 +141,7 @@ function render(){
  const oldOpen=panel.querySelector('details')?.open===true;
  const c=summary();
  panel.innerHTML='<details class="ck115-qa-details"'+(oldOpen?' open':'')+'>'+
- '<summary><strong>실기검증표 v157 · 직접 PASS/FAIL 기록</strong><span data-ck115-counter>'+
+ '<summary><strong>실기검증표 v158 · 직접 PASS/FAIL 기록</strong><span data-ck115-counter>'+
  '수기 PASS '+c.pass+'/'+c.total+' · FAIL '+c.fail+' · 미확인 '+c.pending+'</span></summary>'+
  '<p class="ck115-qa-warning"><strong>필수 수기 검증:</strong> 이 항목은 자동으로 PASS 처리되지 않습니다. PC와 Android Brave, S Pen을 직접 사용해 재현한 경우에만 표시하세요. 모든 기록은 현재 브라우저에만 보관됩니다.</p>'+
  '<div class="ck115-qa-tools"><button type="button" data-ck115-diagnose>현재 기기 상태 확인</button>'+
@@ -182,7 +184,7 @@ function diagnose(){
 }
 function exportText(){
  const snap=gather(),c=summary(snap);
- const lines=['ConceptKnot v157 사용자 수기 실기검증표','개인 기기에서 수동으로 표시한 결과; 공식 검증 아님',
+ const lines=['ConceptKnot v158 사용자 수기 실기검증표','개인 기기에서 수동으로 표시한 결과; 공식 검증 아님',
   '작성일: '+new Date().toISOString(),'PASS '+c.pass+'/'+c.total+' · FAIL '+c.fail+
   ' · 미확인 '+c.pending+' · 해당 없음 '+c.skip,''];
  TASKS.forEach((task,i)=>{
@@ -193,7 +195,7 @@ function exportText(){
  try{
   const blob=new Blob(['\uFEFF',lines.join('\n')],{type:'text/plain;charset=utf-8'});
   const url=URL.createObjectURL(blob),a=document.createElement('a');
-  a.href=url;a.download='ConceptKnot_v157_수기실기검증_'+new Date().toISOString().slice(0,10)+'.txt';
+  a.href=url;a.download='ConceptKnot_v158_수기실기검증_'+new Date().toISOString().slice(0,10)+'.txt';
   document.body.appendChild(a);a.click();a.remove();
   setTimeout(()=>URL.revokeObjectURL(url),3000);
   announce('TXT 다운로드를 요청했습니다. 현재 입력을 포함하며 실제 파일 저장 여부는 다운로드 목록에서 확인하세요.');
