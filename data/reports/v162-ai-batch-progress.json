@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "1.0",
+  "asOf": "2026-11-13",
+  "scope": "2021–2025 400 official questions × 5 options",
+  "baseHead": "3da6a76bc532fdfb3b0f8f332a3f8801ee75348c",
+  "officialQuestions": 400,
+  "optionsTotal": 2000,
+  "initialPriorCandidateCoverage": 830,
+  "v161": {
+    "questions": 20,
+    "options": 100,
+    "previouslyBlankNowAIDraft": 24
+  },
+  "v162": {
+    "questions": 20,
+    "options": 100,
+    "previouslyBlankNowAIDraft": 32,
+    "previousExistingCandidateRewritten": 68,
+    "mathQuestionsRecomputed": 5
+  },
+  "after": {
+    "aiIndependentlyAuthoredOptionDrafts": 200,
+    "optionsWithAnyCandidate": 886,
+    "optionsWithoutCandidate": 1114,
+    "sourcePdfReadConfirmed": 0,
+    "expertSourceReviewedQuestions": 0,
+    "expertSourceReviewedOptions": 0,
+    "publishedExplanations": 0
+  },
+  "remainingOriginalReview": {
+    "questions": 400,
+    "options": 2000
+  },
+  "caveat": "수식 검산은 원전 PDF 검독·법령 시험일자 판례 전문 감수나 전문 검수자의 서명을 뜻하지 않습니다. 무검수 후보는 정답·판정·출시 해설로 승격하지 않습니다."
+}
