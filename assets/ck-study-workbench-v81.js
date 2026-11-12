@@ -458,7 +458,7 @@ function render(){
   ['내 개인 대조 준비',totals.ready],['복습 대기',totals.due],
   ['공식 해설 근거 검수',totals.reasonReviewed],['선지 5개 출처 검수',totals.fullyOptionReviewed]
  ].map(([name,val])=>'<div><dt>'+esc(name)+'</dt><dd>'+esc(val)+'</dd></div>').join('')+'</dl>'+
- p4Status+(window.CK160OptionUI?.panel?.(rows)||'')+renderMatrix(data)+
+ p4Status+(window.CK163PublicStudy?.panel?.(rows)||'')+(window.CK160OptionUI?.panel?.(rows)||'')+renderMatrix(data)+
  '<p class="ck81-disclaimer">개인 초안 입력 8/8은 출처 검증 완료를 의미하지 않으며 개인 출처는 별도 5/5로 확인합니다. 최근 5개년 미작성 해설 '+totals.unstarted+
   '건 · 과거 5개년 기본 해설 미제공 '+totals.legacyUnseeded+
   '건 · 유사도 0.90 미만 '+totals.lowText+'건 · 시각 검토 미완/표시 없음 '+
@@ -659,7 +659,8 @@ document.addEventListener('click',event=>{
  const target=event.target.closest?.('[data-ck81-toggle],[data-ck81-matrix],[data-ck81-page],'+
   '[data-ck81-pin],[data-ck81-open],[data-ck81-edit],[data-ck81-choice-note],[data-ck81-prompt],'+
   '[data-ck159-focus],[data-ck159-p4-csv],[data-ck159-p4-packet],'+
-  '[data-ck160-toggle],[data-ck160-csv],[data-ck160-txt],[data-ck160-page],[data-ck160-personal],'+
+  '[data-ck160-toggle],[data-ck160-csv],[data-ck160-txt],[data-ck161-ai-txt],[data-ck160-page],[data-ck160-personal],'+
+  '[data-ck163-toggle],[data-ck163-page],[data-ck163-export],[data-ck163-open],'+
   '[data-ck81-export],[data-ck81-import],[data-ck81-clear-filters],[data-ck81-batch-prompt],[data-ck81-batch-queue],[data-ck154-review-packet],[data-ck112-packet-txt],[data-ck112-voice],[data-ck112-voice-batch],[data-ck112-voice-stop],[data-ck81-retry]');
  if(!target||!document.getElementById('ck81-workbench')?.contains(target))return;
  if(target.hasAttribute('data-ck81-toggle')){toggle();return;}
@@ -668,7 +669,7 @@ document.addEventListener('click',event=>{
   load(true).then(()=>render()).catch(e=>message('자료 재확인 실패: '+(e?.message||e)));
   return;
  }
- if(target.matches?.('[data-ck160-toggle],[data-ck160-csv],[data-ck160-txt],[data-ck160-page],[data-ck160-personal]')){
+ if(target.matches?.('[data-ck160-toggle],[data-ck160-csv],[data-ck160-txt],[data-ck161-ai-txt],[data-ck160-page],[data-ck160-personal]')){
   const opened=id=>{
    if(!window.CK83Links?.openQuestion)throw Error('선지별 개인 근거 편집기 준비 전');
    const task=window.CK83Links.openQuestion(id);
@@ -677,6 +678,13 @@ document.addEventListener('click',event=>{
   const res=window.CK160OptionUI?.clicked?.(target,rows,download,message,opened);
   if(res?.render)render();
   return;
+ }
+ if(target.matches?.('[data-ck163-toggle],[data-ck163-page],[data-ck163-export],[data-ck163-open]')){
+  const res=window.CK163PublicStudy?.clicked?.(target,rows,download,message,(year,number,trigger)=>{
+   const opened=window.CK78Analysis?.open?.(year,number,trigger);
+   if(opened?.catch)opened.catch(error=>message('학습용 해설 문항 열기 실패: '+String(error?.message||error)));
+  });
+  if(res?.render)render();return;
  }
  if(target.hasAttribute('data-ck159-focus')){
   view.year=0;view.subject='all';view.stage='p4-special';
@@ -820,6 +828,7 @@ document.addEventListener('change',event=>{
   }
  }
  if(window.CK160OptionUI?.changed?.(t)){render();return;}
+ if(window.CK163PublicStudy?.changed?.(t)){render();return;}
  if(t.matches?.('[data-ck81-batch-size]')){researchBatch=[1,3,5].includes(Number(t.value))?Number(t.value):5;return;}
  if(t.matches?.('[data-ck81-progress]')){
   const id=t.dataset.ck81Progress;changeProgress(id,{status:t.value});render();

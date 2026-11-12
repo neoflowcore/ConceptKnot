@@ -65,7 +65,7 @@ test('P4 v161 UI has notes, strict unverified labels, filters, keyboard and down
  const ui=fs.readFileSync('assets/ck-p4-option-audit-ui-v160.js','utf8');
  const sw=fs.readFileSync('sw.js','utf8');
  A.ok(html.indexOf('ck-p4-substantive-v161.js?v=161')<
-       html.indexOf('ck-p4-option-audit-ui-v160.js?v=162'));
+       html.indexOf('ck-p4-option-audit-ui-v160.js?v=163'));
  for(const field of ['data-ck161-ai-txt','AI 독립 근거 초안 · 미검수',
    'sourcePinpointVerified','ck161-substantive-draft'].slice(0,3))
   A.ok(ui.includes(field)||field==='sourcePinpointVerified');

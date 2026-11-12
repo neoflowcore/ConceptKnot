@@ -146,7 +146,7 @@ function clicked(t,rows,download,message,openPersonal){
    '원문: '+r.optionText,
    'AI 대조 초안: '+n.text,
    (n.calculation?.equation?'계산 검산식: '+n.calculation.equation+' (공식 원본 PDF 대조와 별개)':''),
-   '자료: +n.sources.filter(x=>x.type==='POTENTIAL_PRIMARY_LEGAL_OR_REFERENCE_LINK').map(x=>x.url).join(' · '),
+   '자료: '+n.sources.filter(x=>x.type==='POTENTIAL_PRIMARY_LEGAL_OR_REFERENCE_LINK').map(x=>x.url).join(' · '),
    '원전 PDF 대조: 미완료 / 개별 근거 핀포인트: 미확인 / 전문가 검수: 미완료');
   download('ConceptKnot_v162_AI선지근거_'+batch.length+'건_미검수_'+new Date().toISOString().slice(0,10)+'.txt',
    lines.join('\n'),'text/plain;charset=utf-8');

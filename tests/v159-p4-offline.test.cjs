@@ -22,11 +22,11 @@ function fixture(missing=[],poison=[]){
   return {match:async p=>items.get(p)};}};
 }
 test('P0 v161 preserves original 11 critical and nine P2/P6 optional assets',()=>{
- A.equal(ctx.cache,'conceptknot-study-v161-independent-option-batch');
+ A.equal(ctx.cache,'conceptknot-study-v163-p4-full-study-preflight');
  A.equal(required.length,11);A.equal(study.length,9);
- A.equal(p4.length,8);
+ A.equal(p4.length,11);
  const html=read('index.html'),sw=read('sw.js');
- A.ok(html.includes('content="v161-first-100-independent-option-notes"'));
+ A.ok(html.includes('content="v163-full-study-publication-structural-audit"'));
  for(const p of p4){
   A.ok(sw.includes(p),'missing optional SW '+p);
   A.ok(html.includes(p.slice(2)),'missing P4 HTML '+p);
@@ -34,14 +34,14 @@ test('P0 v161 preserves original 11 critical and nine P2/P6 optional assets',()=
  A.equal(JSON.parse(read('vercel.json')).git.deploymentEnabled,false);
  A.equal(fs.existsSync('.github/workflows'),false);
 });
-test('P4 exact eight assets and current controlling worker are required before reporting ready',async()=>{
+test('P4 exact eleven assets and current controlling worker are required before reporting ready',async()=>{
  const good=await ctx.check(fixture(),true);
  A.equal(good.ready,true);A.equal(good.studyReady,true);
- A.equal(good.p4Cached,8);A.equal(good.p4Required,8);A.equal(good.p4Ready,true);
+ A.equal(good.p4Cached,11);A.equal(good.p4Required,11);A.equal(good.p4Ready,true);
  const missing=await ctx.check(fixture([p4[0]]),true);
- A.equal(missing.ready,true);A.equal(missing.p4Cached,7);A.equal(missing.p4Ready,false);
+ A.equal(missing.ready,true);A.equal(missing.p4Cached,10);A.equal(missing.p4Ready,false);
  const untrusted=await ctx.check(fixture([], [p4[2]]),true);
- A.equal(untrusted.p4Ready,false);A.equal(untrusted.p4Cached,7);
+ A.equal(untrusted.p4Ready,false);A.equal(untrusted.p4Cached,10);
  const wrongController=await ctx.check(fixture(),false);
  A.equal(wrongController.p4Ready,false);
 });
