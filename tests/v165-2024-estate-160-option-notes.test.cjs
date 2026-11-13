@@ -105,7 +105,7 @@ test('v165 P4 UI, caching and manual QA all carry the same version and no auto-d
  A.ok(html.includes('v167-2021-2023-126-option-rationales'));
  A.ok(sw.includes('conceptknot-study-v167-2021-2023-126-option-drafts'));
  const cfg=parse('vercel.json');A.equal(cfg.git.deploymentEnabled,false);
- A.ok(cfg.buildCommand.length<=256);A.ok(cfg.buildCommand.includes('verify-p4-release-v165.cjs'));
+ A.ok(cfg.buildCommand.length<=256);A.ok(cfg.buildCommand.includes('verify-p4-release-v167.cjs'));
  for(const p of ['assets/ck-p4-substantive-v165.js','assets/ck-p4-public-study-v163.js',
  'assets/ck-p4-option-audit-ui-v160.js','assets/ck-study-workbench-v81.js','sw.js'])
   A.doesNotThrow(()=>new vm.Script(read(p),{filename:p}));
