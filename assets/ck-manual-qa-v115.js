@@ -6,6 +6,7 @@
 'use strict';
 const KEY='ck115-manual-device-verification-v1',NOTE_MAX=480;
 const choices=['pending','pass','fail','skip'];
+let filterMode='p4';
 const labels={pending:'미확인',pass:'PASS (직접 확인)',fail:'FAIL (재현)',skip:'해당 없음'};
 const TASKS=Object.freeze([
  {id:'backup',group:'기록',name:'기존 학습 데이터 JSON 백업·복원 확인'},
@@ -56,7 +57,7 @@ const TASKS=Object.freeze([
  {id:'v159-p4-offline',group:'오프라인',name:'P4 원전대조 작업대 3개 선택 파일이 활성 v159 서비스워커에 확보되는지 확인. 비행기 모드에서 필터·CSV·TXT를 직접 실행하고 기존 개인 기록을 보존'},
  {id:'v160-2000-option-audit',group:'해설',name:'최근 5개년 400문항·2,000선지 사전 감사 2,000행 CSV, 근거 초안 작성 830/2,000 및 미작성 1,170/2,000 구분·과목·연도·법령·계산 필터·20개씩 표시 확인'},
  {id:'v160-qnet-two-sources',group:'근거',name:'2021~2025 각 연도 Q-Net 공식 문제지 공고와 별개의 최종정답 공고 URL을 대조하고 문제지 공고를 최종정답으로 표시하지 않는지 확인. 실제 첨부 PDF 본문 내용 검수는 별도'},
- {id:'v160-option-offline',group:'오프라인',name:'v168 서비스워커 현재 세대·P4 선택 자산 15/15 및 2,000선지 필터·CSV·TXT 비행기 모드 직접 검증, 개인 기록 저장키 보존 확인'},
+ {id:'v160-option-offline',group:'오프라인',name:'v170 서비스워커 현재 세대·P4 선택 자산 15/15 및 2,000선지 필터·CSV·TXT 비행기 모드 직접 검증, 개인 기록 저장키 보존 확인'},
  {id:'v168-2021-2023-122-option-notes',group:'해설',name:'2021 학개론 11~20번 50선지·2022 학개론 11~20번 36개·2023 학개론 11~20번 36개, 신규 122개 학습용 선지 근거 초안과 전문가 검수 0 확인'},
  {id:'v167-2021-2023-126-option-notes',group:'해설',name:'2021 학개론 1~10번 50선지·2022 학개론 1~9번 36개 빈선지·2023 학개론 1~10번 40개 빈선지, 총 126개 학습용 AI 근거 초안·기존 해설 불변·실제 전문가 0 확인'},
  {id:'v161-ai-100-option-notes',group:'해설',name:'2025년도 1~15·41~45번 총 20문항×5선지=100건 학습용 AI 독립 근거 초안 표시·필터·TXT 내보내기·0/2000 전문가 검수 상태 고정·개인 기록 무변경 확인'},
@@ -159,17 +160,21 @@ function render(){
  if(!panel)return;
  const oldOpen=panel.querySelector('details')?.open===true;
  const c=summary();
+ panel.dataset.ck115Filter=filterMode;
  panel.innerHTML='<details class="ck115-qa-details"'+(oldOpen?' open':'')+'>'+
- '<summary><strong>실기검증표 v165 · 직접 PASS/FAIL 기록</strong><span data-ck115-counter>'+
+ '<summary><strong>수기검증표 · 직접 PASS/FAIL 기록</strong><span data-ck115-counter>'+
  '수기 PASS '+c.pass+'/'+c.total+' · FAIL '+c.fail+' · 미확인 '+c.pending+'</span></summary>'+
  '<p class="ck115-qa-warning"><strong>필수 수기 검증:</strong> 이 항목은 자동으로 PASS 처리되지 않습니다. PC와 Android Brave, S Pen을 직접 사용해 재현한 경우에만 표시하세요. 모든 기록은 현재 브라우저에만 보관됩니다.</p>'+
- '<div class="ck115-qa-tools"><button type="button" data-ck115-diagnose>현재 기기 상태 확인</button>'+
+ '<div class="ck115-qa-views" role="group" aria-label="표시할 검증 항목">'+
+['p4','offline','all'].map(k=>'<button type="button" data-ck115-filter="'+k+'" aria-pressed="'+(filterMode===k)+'">'+({p4:'기출·해설',offline:'오프라인',all:'전체 항목'}[k])+'</button>').join('')+'</div>'+
+'<p class="ck115-qa-filter-hint">직접 동작을 확인하고 아래 PASS/FAIL을 선택하세요. 다른 항목의 기존 기록은 유지됩니다.</p>'+
+'<div class="ck115-qa-tools"><button type="button" data-ck115-diagnose>현재 기기 상태 확인</button>'+
  '<button type="button" data-ck115-export>수기 검증 TXT 저장</button>'+
  '<button type="button" data-ck115-clear>검증 표시 초기화</button></div>'+
  '<p class="ck115-qa-diagnostics" data-ck115-diag>실제 환경 확인은 버튼을 눌러 갱신합니다.</p>'+
  '<div class="ck115-qa-items">'+TASKS.map((item,i)=>{
   const saved=data.entries[item.id]||{status:'pending',note:''};
-  return '<section class="ck115-qa-item"><div class="ck115-qa-item-heading">'+
+  return '<section class="ck115-qa-item" data-ck115-p4="'+(['해설','근거','오프라인'].includes(item.group)||/p4|source|option/i.test(item.id))+'" data-ck115-offline="'+(item.group==='오프라인')+'"><div class="ck115-qa-item-heading">'+
    '<strong>'+(i+1)+'. '+esc(item.name)+'</strong><small>'+esc(item.group)+'</small></div>'+
    '<label>직접 확인 결과<select data-ck115-check="'+item.id+'" aria-label="'+esc(item.name)+' 검증 결과">'+
    choices.map(k=>'<option value="'+k+'"'+(k===saved.status?' selected':'')+'>'+labels[k]+'</option>').join('')+
@@ -203,7 +208,7 @@ function diagnose(){
 }
 function exportText(){
  const snap=gather(),c=summary(snap);
- const lines=['ConceptKnot v165 사용자 수기 실기검증표','개인 기기에서 수동으로 표시한 결과; 공식 검증 아님',
+ const lines=['ConceptKnot v170 사용자 수기 실기검증표','개인 기기에서 수동으로 표시한 결과; 공식 검증 아님',
   '작성일: '+new Date().toISOString(),'PASS '+c.pass+'/'+c.total+' · FAIL '+c.fail+
   ' · 미확인 '+c.pending+' · 해당 없음 '+c.skip,''];
  TASKS.forEach((task,i)=>{
@@ -226,12 +231,18 @@ function clearResults(){
  if(!persist(blank())){announce(issue||status||'수기 검증표 초기화 실패');return false;}
  dirty=false;render();announce('수기 검증표만 초기화했습니다. 학습기록은 변경하지 않았습니다.');return true;
 }
-function mount(){
+function mount(preferDock=false){
  const settingsVisible=document.body?.dataset.ckV8Tab==='settings'||
   Boolean(document.querySelector('#main .settings-grid'));
- if(!settingsVisible)return false;
- const slot=document.querySelector('#main .board-content');
+ const dockSlot=document.querySelector('#ck103-tools-dock .ck103-tools-content');
+ const slot=(preferDock&&dockSlot)||
+  (settingsVisible&&document.querySelector('#main .board-content'));
  if(!slot)return false;
+ if(panel?.isConnected){
+  if(panel.parentElement===slot)return true;
+  if(dirty&&!flush())return false;
+  slot.appendChild(panel);return true;
+ }
  const existing=slot.querySelector('#ck115-manual-qa');
  if(existing){panel=existing;return true;}
  panel=document.createElement('section');panel.id='ck115-manual-qa';panel.className='ck115-manual-qa';
@@ -253,8 +264,16 @@ document.addEventListener('input',event=>{
  timer=setTimeout(()=>flush(),550);
 });
 document.addEventListener('click',event=>{
- const t=event.target?.closest?.('[data-ck115-export],[data-ck115-clear],[data-ck115-diagnose]');
+ const t=event.target?.closest?.('[data-ck115-export],[data-ck115-clear],[data-ck115-diagnose],[data-ck115-filter]');
  if(!t||!panel?.contains(t))return;
+ if(t.hasAttribute('data-ck115-filter')){
+  const mode=t.dataset.ck115Filter;
+  if(!['p4','offline','all'].includes(mode))return;
+  filterMode=mode;panel.dataset.ck115Filter=mode;
+  for(const button of panel.querySelectorAll('[data-ck115-filter]'))
+   button.setAttribute('aria-pressed',String(button===t));
+  return;
+ }
  if(t.hasAttribute('data-ck115-export')){exportText();return;}
  if(t.hasAttribute('data-ck115-clear')){clearResults();return;}
  if(t.hasAttribute('data-ck115-diagnose'))diagnose();
@@ -279,6 +298,6 @@ window.CK115QA=Object.freeze({
  tasks:TASKS.map(x=>({id:x.id,group:x.group,name:x.name})),
  sanitize,summary,flush,mount,diagnose,exportText,
  getState:()=>({...summary(),dirty,issue,connected:Boolean(panel?.isConnected)}),
- open:()=>{if(mount()){const d=panel.querySelector('details');if(d)d.open=true;return true;}return false;}
+ open:()=>{if(mount(true)){const d=panel.querySelector('details');if(d)d.open=true;return true;}return false;}
 });
 })();

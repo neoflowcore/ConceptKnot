@@ -63,6 +63,6 @@ test('P4 workbench integrates review ribbons, filters, queue CSV, TXT with user 
   'source-priority','p4-calculation','P4 원전대조 우선순위','p4PriorityRecord'])
   A.ok(js.includes(required),required);
  const first=html.indexOf('ck-p4-review-priority-v159.js?v=159');
- const second=html.indexOf('ck-study-workbench-v81.js?v=163');
+ const second=html.indexOf('ck-study-workbench-v81.js?v=170');
  A.ok(first>=0&&second>first,'pure model must load before workbench');
 });

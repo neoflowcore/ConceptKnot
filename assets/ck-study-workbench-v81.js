@@ -417,10 +417,15 @@ function message(text){
  const el=root?.querySelector('[data-ck81-status]');
  if(el)el.textContent=text;
 }
+let recentP4Input=null,recentP4Subset=[];
+function recentP4Rows(items){
+ if(items!==recentP4Input){recentP4Input=items;recentP4Subset=Array.isArray(items)?items.filter(x=>x?.q?.year>=2021&&x?.q?.year<=2025):[];}
+ return recentP4Subset;
+}
 function render(){
  if(!shown||!panel())return;
  if(!rows){panel().innerHTML='<p role="status">등록 원문과 해설 목록을 확인 중입니다…</p>';return;}
- const data=enriched(rows),totals=summary(data);
+ const data=enriched(rows),totals=summary(data),p4Rows=recentP4Rows(rows);
  const p4=window.CK159P4Review?.snapshot?.(rows);
  const p4Status=p4?.ready?
   '<section class="ck159-p4" aria-label="최근 5개년 공식 기출 원전 검수 우선순위">'+
@@ -458,7 +463,7 @@ function render(){
   ['내 개인 대조 준비',totals.ready],['복습 대기',totals.due],
   ['공식 해설 근거 검수',totals.reasonReviewed],['선지 5개 출처 검수',totals.fullyOptionReviewed]
  ].map(([name,val])=>'<div><dt>'+esc(name)+'</dt><dd>'+esc(val)+'</dd></div>').join('')+'</dl>'+
- p4Status+(window.CK163PublicStudy?.panel?.(rows)||'')+(window.CK160OptionUI?.panel?.(rows)||'')+renderMatrix(data)+
+ p4Status+(window.CK163PublicStudy?.panel?.(p4Rows)||'')+(window.CK160OptionUI?.panel?.(p4Rows)||'')+renderMatrix(data)+
  '<p class="ck81-disclaimer">개인 초안 입력 8/8은 출처 검증 완료를 의미하지 않으며 개인 출처는 별도 5/5로 확인합니다. 최근 5개년 미작성 해설 '+totals.unstarted+
   '건 · 과거 5개년 기본 해설 미제공 '+totals.legacyUnseeded+
   '건 · 유사도 0.90 미만 '+totals.lowText+'건 · 시각 검토 미완/표시 없음 '+
@@ -519,7 +524,7 @@ function ensureToolsDock(){
  if(!dock){
   dock=document.createElement('details');
   dock.id='ck103-tools-dock';dock.className='ck103-tools-dock';
-  dock.innerHTML='<summary aria-label="학습 자료 및 분석 도구">자료·분석</summary>'+
+  dock.innerHTML='<summary aria-label="학습 검증 및 자료 도구">검증·자료</summary>'+
    '<div class="ck103-tools-content" role="region" aria-label="학습 자료 및 분석 도구"></div>';
   body.append(dock);
   document.addEventListener('pointerdown',event=>{
@@ -529,7 +534,23 @@ function ensureToolsDock(){
    if(changes.some(change=>change.target?.getAttribute?.('aria-expanded')==='true'))dock.open=true;
   }).observe(dock,{subtree:true,attributes:true,attributeFilter:['aria-expanded']});
  }
- return dock.querySelector('.ck103-tools-content');
+ 
+const content=dock.querySelector('.ck103-tools-content');
+if(content&&!content.querySelector('.ck170-qa-hub')){
+ const nav=document.createElement('section');nav.className='ck170-qa-hub';
+ nav.setAttribute('aria-label','수기 검증 바로가기');
+ nav.innerHTML='<div class="ck170-qa-header"><strong>검증센터 · 바로 시작</strong><small>공식·전문가 검수와 구분</small></div>'+
+ '<p>아래 항목을 누르면 바로 검사 화면이 열립니다.</p>'+
+ '<div class="ck170-qa-actions">'+
+ '<button type="button" data-ck170-action="study">① 기출 400문항 해설</button>'+
+ '<button type="button" data-ck170-action="options">② 선지 2,000개 검토</button>'+
+ '<button type="button" data-ck170-action="offline">③ 오프라인 상태 검사</button>'+
+ '<button type="button" data-ck170-action="manual">④ 수기 PASS/FAIL 기록</button></div>'+
+ '<div class="ck170-qa-footer"><button type="button" data-ck170-action="all">전체 자료 메뉴</button>'+
+ '<span data-ck170-status role="status" aria-live="polite">검사 선택 전 · 직접 확인한 결과만 PASS로 기록하세요.</span></div>';
+ content.prepend(nav);
+}
+return content;
 }
 function alignToolsDock(){
  const content=ensureToolsDock();
@@ -655,6 +676,69 @@ function copyPrompt(id){
   ()=>message('문항 원문·선지·검토 질문이 복사되었습니다.'),fallback);
  else fallback();
 }
+
+async function openP4Review(section){
+ mount();const dock=document.getElementById('ck103-tools-dock');
+ if(dock)dock.open=true;
+ if(!shown)toggle();
+ await load();
+ if(!shown)return false;
+ render();
+ const block=panel()?.querySelector(section==='study'?'.ck163-publish':'.ck160-option-panel');
+ if(!block||block.classList.contains('ck163-error')||block.classList.contains('ck160-option-error'))return false;
+ const control=block.querySelector(section==='study'?'[data-ck163-toggle]':'[data-ck160-toggle]');
+ if(!control)return false;
+ if(control.getAttribute('aria-expanded')!=='true')control.click();
+ return true;
+}
+function showValidationView(mode){
+ const dock=document.getElementById('ck103-tools-dock');if(!dock)return;
+ dock.open=true;dock.dataset.ck170View=mode;
+ for(const button of dock.querySelectorAll('[data-ck170-action]'))
+  button.setAttribute('aria-pressed',String(button.dataset.ck170Action===mode));
+ const area=dock.querySelector('.ck103-tools-content');if(area)area.scrollTop=0;
+}
+function validationStatus(value){
+ const target=document.querySelector('#ck103-tools-dock [data-ck170-status]');
+ if(target)target.textContent=value;
+}
+document.addEventListener('click',async event=>{
+ const target=event.target?.closest?.('[data-ck170-action]'),
+  dock=document.getElementById('ck103-tools-dock');
+ if(!target||!dock?.contains(target)||target.disabled)return;
+ const action=target.dataset.ck170Action;
+ if(!['study','options','offline','manual','all'].includes(action))return;
+ target.disabled=true;showValidationView(action);
+ try{
+  if(action==='all'){validationStatus('모든 자료 도구를 표시했습니다. 위의 검사 버튼으로 바로 이동할 수 있습니다.');return;}
+  if(action==='manual'){
+   const ok=window.CK115QA?.open?.();
+   validationStatus(ok?'수기검증표가 열렸습니다. 직접 조작한 항목만 PASS/FAIL로 표시하세요.':'수기검증표를 열 수 없습니다. 새로고침 후 다시 시도하세요.');
+   return;
+  }
+  if(action==='offline'){
+   const api=window.CK88Diagnostics;
+   if(!api?.offlineHealth||!api?.controllerCacheInfo){validationStatus('오프라인 검사 모듈을 읽지 못했습니다. 새로고침 후 다시 시도하세요.');return;}
+   validationStatus('현재 기기의 서비스워커와 파일 캐시를 읽는 중입니다.');
+   const controller=await api.controllerCacheInfo(),active=controller?.cache===api.OFFLINE_CACHE;
+   const result=await api.offlineHealth(window.caches,active);
+   if(!result?.supported){validationStatus('브라우저가 캐시 읽기를 지원하지 않습니다.');return;}
+   if(!result.installed){validationStatus('최신 오프라인 캐시가 없습니다. 온라인 새로고침 후 다시 검사하세요.');return;}
+   validationStatus('파일 확인 · 필수 '+result.cached+'/'+result.required+
+    ' · P4 '+result.p4Cached+'/'+result.p4Required+
+    ' · '+(active?'현재 서비스워커 적용':'구형/미확인 서비스워커')+
+    ' · '+(result.p4Ready?'P4 자산 준비':'P4 업데이트/누락 확인 필요')+
+    ' · 실제 오프라인 조작은 ④에서 직접 검증하세요.');
+   return;
+  }
+  validationStatus('기출 데이터를 불러오는 중입니다...');
+  const ok=await openP4Review(action);
+  validationStatus(ok?(action==='study'?'400문항 해설을 열었습니다. 연도·과목을 선택하세요.':'2,000선지 검토 화면을 열었습니다. 연도·과목을 선택하세요.')+
+   ' 자동 구조검사와 공식·전문가 감수는 다릅니다.':'최근 5개년 자료 연결을 확인할 수 없습니다. 아래 오류 안내를 확인하세요.');
+ }catch(error){validationStatus('검사 실행 오류: '+String(error?.message||error).slice(0,160));}
+ finally{target.disabled=false;}
+});
+
 document.addEventListener('click',event=>{
  const target=event.target.closest?.('[data-ck81-toggle],[data-ck81-matrix],[data-ck81-page],'+
   '[data-ck81-pin],[data-ck81-open],[data-ck81-edit],[data-ck81-choice-note],[data-ck81-prompt],'+
@@ -675,12 +759,12 @@ document.addEventListener('click',event=>{
    const task=window.CK83Links.openQuestion(id);
    if(task?.catch)task.catch(error=>message('선지별 근거 편집 실패: '+String(error?.message||error)));
   };
-  const res=window.CK160OptionUI?.clicked?.(target,rows,download,message,opened);
+  const res=window.CK160OptionUI?.clicked?.(target,recentP4Rows(rows),download,message,opened);
   if(res?.render)render();
   return;
  }
  if(target.matches?.('[data-ck163-toggle],[data-ck163-page],[data-ck163-export],[data-ck163-open]')){
-  const res=window.CK163PublicStudy?.clicked?.(target,rows,download,message,(year,number,trigger)=>{
+  const res=window.CK163PublicStudy?.clicked?.(target,recentP4Rows(rows),download,message,(year,number,trigger)=>{
    const opened=window.CK78Analysis?.open?.(year,number,trigger);
    if(opened?.catch)opened.catch(error=>message('학습용 해설 문항 열기 실패: '+String(error?.message||error)));
   });

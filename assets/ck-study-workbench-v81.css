@@ -58,3 +58,43 @@ html body[data-ck-v8-tab="landing"] #ck103-tools-dock:not([open]){display:none!i
  html body #ck103-tools-dock{top:calc(env(safe-area-inset-top,0px) + 62px);right:9px;width:calc(100vw - 18px)}
  html body #ck103-tools-dock > .ck103-tools-content{max-height:calc(100dvh - 114px)}
 }
+
+/* v170: pinned, keyboard accessible manual verification launcher */
+html body #ck103-tools-dock .ck170-qa-hub{
+ position:sticky;top:0;z-index:12;box-sizing:border-box;
+ background:var(--ck170-nav-bg,rgba(235,247,240,.99));color:inherit;
+ border:1px solid rgba(43,135,107,.48);border-radius:13px;
+ padding:10px 12px;margin:0 0 9px;box-shadow:0 5px 16px rgba(20,74,55,.15);
+}
+#ck103-tools-dock .ck170-qa-header{display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap}
+#ck103-tools-dock .ck170-qa-header strong{font-size:15px;font-weight:800}
+#ck103-tools-dock .ck170-qa-header small{font-size:10px;opacity:.77}
+#ck103-tools-dock .ck170-qa-hub p{font-size:11px;line-height:1.45;margin:6px 0 9px}
+#ck103-tools-dock .ck170-qa-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+#ck103-tools-dock .ck170-qa-actions button{
+ min-width:0;padding:10px 8px;font:inherit;font-size:12px;font-weight:750;cursor:pointer;
+ border-radius:10px;text-align:left;border:1px solid rgba(32,132,100,.35);
+ color:#194a3e;background:rgba(255,255,255,.88);
+}
+#ck103-tools-dock .ck170-qa-actions button[aria-pressed="true"]{border-color:#188866;background:rgba(34,156,118,.17)}
+#ck103-tools-dock .ck170-qa-actions button:disabled{opacity:.6;cursor:progress}
+#ck103-tools-dock .ck170-qa-actions button:focus-visible,
+#ck103-tools-dock .ck170-qa-footer button:focus-visible{outline:2px solid #209875;outline-offset:2px}
+#ck103-tools-dock .ck170-qa-footer{display:flex;gap:8px;align-items:center;margin-top:9px;flex-wrap:wrap}
+#ck103-tools-dock .ck170-qa-footer>button{border:0;background:none;color:inherit;text-decoration:underline;cursor:pointer;font-size:11px;padding:4px}
+#ck103-tools-dock [data-ck170-status]{flex:1 1 230px;font-size:11px;line-height:1.5;overflow-wrap:anywhere}
+html[data-ck-theme="dark"] #ck103-tools-dock .ck170-qa-hub{--ck170-nav-bg:rgba(28,54,49,.99);border-color:rgba(122,177,153,.46)}
+html[data-ck-theme="dark"] #ck103-tools-dock .ck170-qa-actions button{background:rgba(20,44,38,.95);color:#e4f3e8;border-color:rgba(122,177,153,.45)}
+html body #ck103-tools-dock[data-ck170-view="study"] .ck103-tools-content>:not(.ck170-qa-hub):not(#ck81-workbench),
+html body #ck103-tools-dock[data-ck170-view="options"] .ck103-tools-content>:not(.ck170-qa-hub):not(#ck81-workbench),
+html body #ck103-tools-dock[data-ck170-view="manual"] .ck103-tools-content>:not(.ck170-qa-hub):not(#ck115-manual-qa),
+html body #ck103-tools-dock[data-ck170-view="offline"] .ck103-tools-content>:not(.ck170-qa-hub){display:none!important}
+html body #ck103-tools-dock[data-ck170-view="study"] #ck81-workbench [data-ck81-panel]>:not(.ck163-publish),
+html body #ck103-tools-dock[data-ck170-view="options"] #ck81-workbench [data-ck81-panel]>:not(.ck160-option-panel):not(.ck160-option-issue){display:none!important}
+html body #ck103-tools-dock[data-ck170-view="study"] #ck81-workbench .ck81-heading,
+html body #ck103-tools-dock[data-ck170-view="options"] #ck81-workbench .ck81-heading{display:none!important}
+@media(max-width:520px){
+ #ck103-tools-dock .ck170-qa-hub{padding:8px 9px}
+ #ck103-tools-dock .ck170-qa-actions button{font-size:11px;padding:10px 7px}
+ #ck103-tools-dock .ck170-qa-header strong{font-size:14px}
+}

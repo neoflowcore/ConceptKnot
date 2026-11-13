@@ -245,12 +245,12 @@ function downloadRaw(){
 /* previous: conceptknot-study-v137-native-voice-guard */
 /* prior offline generation: conceptknot-study-v138-unified-voice-queue */
 /* previous core: conceptknot-study-v139-managed-model-guard */
-const OFFLINE_CACHE='conceptknot-study-v168-2021-2023-122-option-drafts';
+const OFFLINE_CACHE='conceptknot-study-v170-p4-manual-qa-hub';
 const OFFLINE_MINIMUM=Object.freeze([
  './index.html',
- './assets/ck-data-diagnostics-v88.js?v=165',
+ './assets/ck-data-diagnostics-v88.js?v=170',
  './assets/ck-data-diagnostics-v88.css?v=125',
- './assets/ck-manual-qa-v115.js?v=165',
+ './assets/ck-manual-qa-v115.js?v=170',
  './assets/ck-study-links-v83.js?v=115',
  './assets/ck-study-editor-v80.js?v=127',
  './assets/ck-data-integrity-v86.js?v=120',
@@ -272,7 +272,7 @@ const P2P6_OFFLINE=Object.freeze([
 ]);
 const P4_OFFLINE=Object.freeze([
  './assets/ck-p4-review-priority-v159.js?v=159',
- './assets/ck-study-workbench-v81.js?v=163',
+ './assets/ck-study-workbench-v81.js?v=170',
  './assets/ck-p4-review-v159.css?v=159',
  './assets/ck-p4-option-audit-v160.js?v=160',
  './assets/ck-p4-option-audit-ui-v160.js?v=165',
@@ -383,9 +383,9 @@ async function runOfflineHealth(){
   const activeCurrent=controller.cache===OFFLINE_CACHE;
   const result=await offlineHealth(window.caches,activeCurrent);
   message.textContent=!result.supported?'브라우저에서 캐시 읽기를 지원하지 않습니다.':
-   !result.installed?'v168 오프라인 캐시 없음 · 아직 미배포 또는 설치 미완료입니다.':
+   !result.installed?'v170 오프라인 캐시 없음 · 아직 미배포 또는 설치 미완료입니다.':
    '현재 캐시의 필수 파일 '+result.cached+'/'+result.required+'개 · '+
-   (activeCurrent?'현재 v168 서비스워커가 이 탭을 제어함':controller.controlled?
+   (activeCurrent?'현재 v170 서비스워커가 이 탭을 제어함':controller.controlled?
     '구형 또는 응답 없는 서비스워커가 제어 중 · 현재 세대 확인 불가':'서비스워커가 이 탭을 제어하지 않음')+
    (result.missing.length?' · 미저장: '+result.missing.slice(0,3).map(x=>x.split('/').pop()).join(', ')+
     (result.missing.length>3?' 외 '+(result.missing.length-3)+'개':''):
@@ -1029,7 +1029,7 @@ function mount(){
   '<p data-v122-status role="status"></p><div data-v122-result></div></details>'+
  '<details class="ck88-audit-matrix ck125-offline-health" data-v125-offline>'+
  '<summary>오프라인 필수 파일 준비도 · 수동 읽기 전용</summary>'+
- '<p>버튼을 누르면 현재 브라우저의 v125 캐시에 있는 최소 11개 파일만 확인합니다. 모든 기능이 오프라인에서 작동한다는 보증은 아닙니다.</p>'+
+ '<p>버튼을 누르면 현재 서비스워커의 필수 파일과 선택 도구, P4 검증 자산을 읽기 전용으로 확인합니다. 모든 기능이 오프라인에서 작동한다는 보증은 아닙니다.</p>'+
  '<button type="button" data-v125-offline-run>이 기기의 오프라인 캐시 검사</button>'+
  '<p role="status" data-v125-offline-status>미검사 · 온라인에서 최신 버전을 연 뒤 확인하세요.</p></details>';
  host.append(root);render();renderAudit();renderCrossAudit();
@@ -1156,5 +1156,5 @@ if(target&&window.MutationObserver)new MutationObserver(()=>{
   document.querySelector('#main [data-action="backup"]'))mount();
 }).observe(target,{childList:true});
 window.addEventListener('ck:official-bank-ready',()=>{if(root)render();});
-window.CK88Diagnostics=Object.freeze({controllerCacheInfo,inspect,bankQuality,visualQueue,exportVisualQueue,loadOlderYear,mount,reviewRows,reviewMatrix,csvCell,makeReviewCsv,exportReviewCsv,auditStatic,auditText,runAudit,crossEvidenceAudit,makeCrossCsv,runCrossAudit,exportCrossCsv,optionEvidenceDetails,makeCrossPacket,exportCrossPacket,crossReportFresh,offlineHealth,runOfflineHealth,OFFLINE_MINIMUM});
+window.CK88Diagnostics=Object.freeze({controllerCacheInfo,inspect,bankQuality,visualQueue,exportVisualQueue,loadOlderYear,mount,reviewRows,reviewMatrix,csvCell,makeReviewCsv,exportReviewCsv,auditStatic,auditText,runAudit,crossEvidenceAudit,makeCrossCsv,runCrossAudit,exportCrossCsv,optionEvidenceDetails,makeCrossPacket,exportCrossPacket,crossReportFresh,offlineHealth,runOfflineHealth,OFFLINE_MINIMUM,OFFLINE_CACHE});
 })();

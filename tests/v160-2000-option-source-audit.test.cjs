@@ -85,11 +85,11 @@ test('v160 model and UI integrate with source priority workbench without writing
  const html=read('index.html'),workbench=read('assets/ck-study-workbench-v81.js'),
   ui=read('assets/ck-p4-option-audit-ui-v160.js');
  for(const src of ['ck-p4-review-priority-v159.js?v=159','ck-p4-option-audit-v160.js?v=160',
-   'ck-p4-option-audit-ui-v160.js?v=165','ck-study-workbench-v81.js?v=163','ck-p4-substantive-v161.js?v=161','ck-p4-substantive-v162.js?v=162']){
+   'ck-p4-option-audit-ui-v160.js?v=165','ck-study-workbench-v81.js?v=170','ck-p4-substantive-v161.js?v=161','ck-p4-substantive-v162.js?v=162']){
   A.ok(html.includes(src),src);
  }
  A.ok(html.indexOf('ck-p4-option-audit-v160.js?v=160')<
-  html.indexOf('ck-study-workbench-v81.js?v=163'));
+  html.indexOf('ck-study-workbench-v81.js?v=170'));
  for(const tag of ['data-ck160-csv','data-ck160-txt','data-ck160-personal','data-ck160-filter'])
   A.ok(ui.includes(tag),tag);
  A.ok(workbench.includes('window.CK160OptionUI?.panel?.(rows)'));

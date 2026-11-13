@@ -54,8 +54,8 @@ test('all changed P4 JS modules parse; previously broken 200-note TXT dispatch i
  }
  const html=read('index.html'),work=read('assets/ck-study-workbench-v81.js'),ui=read('assets/ck-p4-option-audit-ui-v160.js');
  for(const k of ['ck-p4-public-study-v163.js?v=165','ck-p4-public-study-v163.css?v=163',
- 'ck-p4-option-audit-ui-v160.js?v=165','ck-study-workbench-v81.js?v=163'])A.ok(html.includes(k),k);
- A.ok(html.indexOf('ck-p4-public-study-v163.js?v=165')<html.indexOf('ck-study-workbench-v81.js?v=163'));
+ 'ck-p4-option-audit-ui-v160.js?v=165','ck-study-workbench-v81.js?v=170'])A.ok(html.includes(k),k);
+ A.ok(html.indexOf('ck-p4-public-study-v163.js?v=165')<html.indexOf('ck-study-workbench-v81.js?v=170'));
  A.ok(work.includes('data-ck161-ai-txt'));A.ok(work.includes('data-ck163-export'));
  A.ok(work.includes('CK163PublicStudy?.panel?.(rows)'));
  A.ok(ui.includes("'자료: '+n.sources.filter"));

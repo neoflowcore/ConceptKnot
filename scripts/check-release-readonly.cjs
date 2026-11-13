@@ -18,7 +18,7 @@ function run(){
  const html=read('index.html'),service=read('sw.js'),vc=JSON.parse(read('vercel.json'));
  check(vc.git?.deploymentEnabled===false,'Vercel Git 자동배포가 비활성이 아닙니다.');
  check(!fs.existsSync(path.join(ROOT,'.github/workflows')),'GitHub Actions workflow 디렉터리가 존재합니다.');
- check(service.includes('conceptknot-study-v168-2021-2023-122-option-drafts'),'서비스 워커 v168 캐시 버전 불일치');
+ check(service.includes('conceptknot-study-v170-p4-manual-qa-hub'),'서비스 워커 v170 캐시 버전 불일치');
  const {scripts,css}=pathsFromHtml(html);
  for(const src of [...scripts,...css]){
   if(!isLocal(src))continue;
@@ -65,7 +65,7 @@ function run(){
  check(diag.includes('controllerCacheInfo()'),'실제 활성 SW 세대 확인 로직이 없습니다.');
  check(diag.includes('await current.match(path)'),'오프라인 자산 쿼리 버전 정확 비교 누락');
  check(!diag.includes("current.match(path,{ignoreSearch:true})"),'오프라인 진단이 버전 쿼리를 무시합니다.');
- for(const suffix of ['ck-data-diagnostics-v88.js?v=165','ck-data-diagnostics-v88.css?v=125','ck-manual-qa-v115.js?v=165']){
+ for(const suffix of ['ck-data-diagnostics-v88.js?v=170','ck-data-diagnostics-v88.css?v=125','ck-manual-qa-v115.js?v=170']){
   check(html.includes(suffix),'HTML 진단 자산 누락: '+suffix);
   check(service.includes('./assets/'+suffix),'SW 진단 자산 누락: '+suffix);
  }

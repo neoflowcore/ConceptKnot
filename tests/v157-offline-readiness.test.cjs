@@ -20,13 +20,13 @@ function cacheFixture(omitted=[]){
  return {storage,items};
 }
 test('P0 current cache label and exact 11 required, nine optional P2/P6 assets including policy lab',()=>{
- A.equal(ctx.cache,'conceptknot-study-v168-2021-2023-122-option-drafts');
+ A.equal(ctx.cache,'conceptknot-study-v170-p4-manual-qa-hub');
  A.equal(CRIT.length,11);A.equal(STUDY.length,9);
  const html=read('index.html'),sw=read('sw.js');
- A.ok(html.includes('content="v168-2021-2023-122-option-rationales"'));
+ A.ok(html.includes('content="v170-p4-manual-qa-hub"'));
  A.ok(html.includes('ck-full-exam-v82.js?v=157'));
  A.ok(html.includes('ck-p4-review-priority-v159.js?v=159'));
- A.ok(html.includes('ck-study-workbench-v81.js?v=163'));
+ A.ok(html.includes('ck-study-workbench-v81.js?v=170'));
  A.ok(html.includes('ck-p4-option-audit-v160.js?v=160'));
  A.ok(html.includes('ck-p4-option-audit-ui-v160.js?v=165'));
  A.ok(html.includes('ck-p4-option-audit-v160.css?v=160'));
@@ -78,7 +78,7 @@ test('P0 offline version and warnings are truthful without user hardware confirm
  const s=read('assets/ck-data-diagnostics-v88.js');
  A.ok(s.includes('학습 도구 자산 확보(조작은 별도 검증)'));
  A.ok(s.includes('실제 기기 동작은 별도 검사'));
- A.ok(s.includes('현재 v168 서비스워커가 이 탭을 제어함'));
+ A.ok(s.includes('현재 v170 서비스워커가 이 탭을 제어함'));
  A.doesNotMatch(s,/현재 v140 서비스워커가 이 탭을 제어함/);
 });
 
