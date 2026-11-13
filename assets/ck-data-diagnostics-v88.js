@@ -245,7 +245,7 @@ function downloadRaw(){
 /* previous: conceptknot-study-v137-native-voice-guard */
 /* prior offline generation: conceptknot-study-v138-unified-voice-queue */
 /* previous core: conceptknot-study-v139-managed-model-guard */
-const OFFLINE_CACHE='conceptknot-study-v165-2024-estate-160-option-notes';
+const OFFLINE_CACHE='conceptknot-study-v167-2021-2023-126-option-drafts';
 const OFFLINE_MINIMUM=Object.freeze([
  './index.html',
  './assets/ck-data-diagnostics-v88.js?v=165',
@@ -280,7 +280,7 @@ const P4_OFFLINE=Object.freeze([
  './assets/ck-p4-substantive-v161.js?v=161',
  './assets/ck-p4-substantive-v162.js?v=162',
  './assets/ck-p4-substantive-v164.js?v=164',
- './assets/ck-p4-substantive-v165.js?v=165',
+ './assets/ck-p4-substantive-v165.js?v=165','./assets/ck-p4-substantive-v167.js?v=167',
  './assets/ck-p4-public-study-v163.js?v=165',
  './assets/ck-p4-public-study-v163.css?v=163',
  './assets/ck-p4-substantive-v161.css?v=161'
