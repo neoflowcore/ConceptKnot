@@ -22,11 +22,11 @@ function fixture(missing=[],poison=[]){
   return {match:async p=>items.get(p)};}};
 }
 test('P0 v161 preserves original 11 critical and nine P2/P6 optional assets',()=>{
- A.equal(ctx.cache,'conceptknot-study-v164-full-2025-option-notes');
+ A.equal(ctx.cache,'conceptknot-study-v165-2024-estate-160-option-notes');
  A.equal(required.length,11);A.equal(study.length,9);
- A.equal(p4.length,12);
+ A.equal(p4.length,13);
  const html=read('index.html'),sw=read('sw.js');
- A.ok(html.includes('content="v164-final-2025-option-drafts"'));
+ A.ok(html.includes('content="v165-2024-estate-independent-options"'));
  for(const p of p4){
   A.ok(sw.includes(p),'missing optional SW '+p);
   A.ok(html.includes(p.slice(2)),'missing P4 HTML '+p);
@@ -37,11 +37,11 @@ test('P0 v161 preserves original 11 critical and nine P2/P6 optional assets',()=
 test('P4 exact eleven assets and current controlling worker are required before reporting ready',async()=>{
  const good=await ctx.check(fixture(),true);
  A.equal(good.ready,true);A.equal(good.studyReady,true);
- A.equal(good.p4Cached,12);A.equal(good.p4Required,12);A.equal(good.p4Ready,true);
+ A.equal(good.p4Cached,13);A.equal(good.p4Required,13);A.equal(good.p4Ready,true);
  const missing=await ctx.check(fixture([p4[0]]),true);
- A.equal(missing.ready,true);A.equal(missing.p4Cached,11);A.equal(missing.p4Ready,false);
+ A.equal(missing.ready,true);A.equal(missing.p4Cached,12);A.equal(missing.p4Ready,false);
  const untrusted=await ctx.check(fixture([], [p4[2]]),true);
- A.equal(untrusted.p4Ready,false);A.equal(untrusted.p4Cached,11);
+ A.equal(untrusted.p4Ready,false);A.equal(untrusted.p4Cached,12);
  const wrongController=await ctx.check(fixture(),false);
  A.equal(wrongController.p4Ready,false);
 });

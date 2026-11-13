@@ -8,7 +8,7 @@ const api=require('../assets/ck-p4-substantive-v164.js'),old=require('../assets/
 const study=require('../assets/ck-p4-public-study-v163.js'),audit=require('../assets/ck-p4-option-audit-v160.js');
 const explanations=[2021,2022,2023,2024,2025].flatMap(y=>parse('data/explanations/official-'+y+'.json').records);
 const rows=explanations.map(entry=>({q:byId.get(entry.questionId),entry}));
-const deps={optionAudit:audit,v161:old,v162:mid,v164:api};
+const deps={optionAudit:audit,v161:old,v162:mid,v164:api,v165:require('../assets/ck-p4-substantive-v165.js')};
 test('2025 31–40, 51–80 40 canonical questions and 200 individual authored option notes',()=>{
  const expected=[...Array.from({length:10},(_,i)=>31+i),...Array.from({length:30},(_,i)=>51+i)].map(n=>'2025-'+n);
  A.deepEqual(authored.records.map(r=>r.id),expected);
@@ -58,9 +58,9 @@ test('2025 all 80 questions now have five candidate texts; 2021–24 blanks rema
  const out=study.build(rows,deps);
  A.equal(out.ready,true);
  A.equal(out.stats.structuralQuestionsChecked,400);A.equal(out.stats.structuralOptionsChecked,2000);
- A.equal(out.stats.aiOptionCandidates,400);A.equal(out.stats.existingOptionCandidates,332);
- A.equal(out.stats.answerContextOnly,166);A.equal(out.stats.optionsWithoutIndependentCandidate,1102);
- A.equal(out.stats.independentCandidateCoverage,732);A.equal(out.stats.allCandidateCoverage,898);
+ A.equal(out.stats.aiOptionCandidates,560);A.equal(out.stats.existingOptionCandidates,332);
+ A.equal(out.stats.answerContextOnly,166);A.equal(out.stats.optionsWithoutIndependentCandidate,942);
+ A.equal(out.stats.independentCandidateCoverage,892);A.equal(out.stats.allCandidateCoverage,1058);
  A.equal(out.stats.expertVerifiedQuestions,0);A.equal(out.stats.expertVerifiedOptions,0);A.equal(out.stats.officialExplanationsPublished,0);
  for(let n=1;n<=80;n++){
   const q=out.questions.find(x=>x.id==='2025-'+n);
@@ -72,13 +72,13 @@ test('P4 UI, PWA v164 and offline asset counters loaded before workbench',()=>{
  const ui=read('assets/ck-p4-option-audit-ui-v160.js'),html=read('index.html'),
   diag=read('assets/ck-data-diagnostics-v88.js'),sw=read('sw.js'),manual=read('assets/ck-manual-qa-v115.js');
  A.ok(ui.includes('CK164SubstantiveReview?.get?.(r)'));
- A.ok(html.indexOf('ck-p4-substantive-v164.js?v=164')<html.indexOf('ck-p4-option-audit-ui-v160.js?v=164'));
- A.ok(html.indexOf('ck-p4-substantive-v164.js?v=164')<html.indexOf('ck-p4-public-study-v163.js?v=164'));
+ A.ok(html.indexOf('ck-p4-substantive-v164.js?v=164')<html.indexOf('ck-p4-option-audit-ui-v160.js?v=165'));
+ A.ok(html.indexOf('ck-p4-substantive-v164.js?v=164')<html.indexOf('ck-p4-public-study-v163.js?v=165'));
  A.ok(sw.includes('ck-p4-substantive-v164.js?v=164'));
  A.ok(diag.includes('ck-p4-substantive-v164.js?v=164'));
- A.match(manual,/P4 선택 자산 12\/12/);
- A.ok(html.includes('v164-final-2025-option-drafts'));
- A.ok(sw.includes('conceptknot-study-v164-full-2025-option-notes'));
+ A.match(manual,/P4 선택 자산 13\/13/);
+ A.ok(html.includes('v165-2024-estate-independent-options'));
+ A.ok(sw.includes('conceptknot-study-v165-2024-estate-160-option-notes'));
  A.equal(parse('vercel.json').git.deploymentEnabled,false);
  for(const p of ['assets/ck-p4-substantive-v164.js','assets/ck-p4-public-study-v163.js',
   'assets/ck-p4-option-audit-ui-v160.js','assets/ck-study-workbench-v81.js','sw.js'])

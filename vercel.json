@@ -1,7 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
-  "buildCommand": "node scripts/verify-p4-release-v164.cjs",
+  "buildCommand": "node scripts/verify-p4-release-v165.cjs",
   "installCommand": "",
   "outputDirectory": ".",
   "git": {

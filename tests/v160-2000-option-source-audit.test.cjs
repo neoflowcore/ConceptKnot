@@ -85,7 +85,7 @@ test('v160 model and UI integrate with source priority workbench without writing
  const html=read('index.html'),workbench=read('assets/ck-study-workbench-v81.js'),
   ui=read('assets/ck-p4-option-audit-ui-v160.js');
  for(const src of ['ck-p4-review-priority-v159.js?v=159','ck-p4-option-audit-v160.js?v=160',
-   'ck-p4-option-audit-ui-v160.js?v=164','ck-study-workbench-v81.js?v=163','ck-p4-substantive-v161.js?v=161','ck-p4-substantive-v162.js?v=162']){
+   'ck-p4-option-audit-ui-v160.js?v=165','ck-study-workbench-v81.js?v=163','ck-p4-substantive-v161.js?v=161','ck-p4-substantive-v162.js?v=162']){
   A.ok(html.includes(src),src);
  }
  A.ok(html.indexOf('ck-p4-option-audit-v160.js?v=160')<
@@ -94,7 +94,7 @@ test('v160 model and UI integrate with source priority workbench without writing
   A.ok(ui.includes(tag),tag);
  A.ok(workbench.includes('window.CK160OptionUI?.panel?.(rows)'));
  A.ok(ui.includes('CK161SubstantiveReview'));
- A.ok(html.includes('ck-p4-option-audit-ui-v160.js?v=164'));
+ A.ok(html.includes('ck-p4-option-audit-ui-v160.js?v=165'));
  A.doesNotMatch(ui,/localStorage\.setItem|quality\.sourceChecked\s*=/);
  A.doesNotMatch(read('assets/ck-p4-option-audit-v160.js'),/localStorage\.setItem|quality\.status\s*=/);
 });

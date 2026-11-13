@@ -12,13 +12,14 @@ const result=Study.build(rows,{
  optionAudit:require('../assets/ck-p4-option-audit-v160.js'),
  v161:require('../assets/ck-p4-substantive-v161.js'),
  v162:require('../assets/ck-p4-substantive-v162.js'),
- v164:require('../assets/ck-p4-substantive-v164.js')
+ v164:require('../assets/ck-p4-substantive-v164.js'),
+ v165:require('../assets/ck-p4-substantive-v165.js')
 });
 const errors=[...result.errors],s=result.stats;
 if(result.ready&&(s.structuralQuestionsChecked!==400||s.structuralOptionsChecked!==2000||
- s.questionLevelStudyDrafts!==400||s.aiOptionCandidates!==400||
- s.allCandidateCoverage!==898||s.optionsWithoutIndependentCandidate!==1102))
- errors.push('Source-lock coverage counts disagree with v162 baseline');
+ s.questionLevelStudyDrafts!==400||s.aiOptionCandidates!==560||
+ s.allCandidateCoverage!==1058||s.optionsWithoutIndependentCandidate!==942))
+ errors.push('Source-lock coverage counts disagree with v165 evidence baseline');
 const gates={
  structure:result.ready&&errors.length===0&&s.structuralOptionsChecked===2000,
  study:result.ready&&errors.length===0&&s.questionLevelStudyDrafts===400,
@@ -30,7 +31,7 @@ const requested=(process.argv.find(a=>a.startsWith('--gate='))||'--gate=structur
 const isKnown=Object.hasOwn(gates,requested);
 const report={kind:'source-locked-preflight-NOT-expert-content-verification',scope:'2021–2025 official first exam',
  gates,selectedGate:requested,selectedGatePass:isKnown?gates[requested]:false,
- stats:s,errors,warnings:['1102 independent option explanations still unwritten; 2025 all 80 questions have unreviewed five-option drafts',
+ stats:s,errors,warnings:['942 independent option explanations remain missing in 2021–2023; 2024–2025 all options have unreviewed rationale candidates',
  'Q-Net announcement != attachment PDF independent review',
  'Historic statutes/case law and independent reviewer evidence not recorded'],
  githubActionsRun:false,localDeviceQA:'NOT_RUN',sourceMutation:false};

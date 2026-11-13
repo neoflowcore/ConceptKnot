@@ -1,0 +1,84 @@
+{
+  "schemaVersion": "1.0",
+  "asOf": "2026-11-13",
+  "release": "v165",
+  "baseCommit": "1a91265a527974ea6febdb03b12b139e3f5deaf1",
+  "scope": "2021-2025 original A-form first-exam 400 questions/2000 options",
+  "previous": {
+    "aiOptionCandidates": 400,
+    "allCandidates": 898,
+    "missing": 1102
+  },
+  "newWork": {
+    "year": 2024,
+    "subject": "estate",
+    "questions": 40,
+    "newNotes": 160,
+    "originalAcceptedAnswerOptionsOverwritten": 0,
+    "sourcePdfIndependentlyRead": false,
+    "recomputedMathQuestions": [
+      9,
+      11,
+      14,
+      17,
+      23,
+      24,
+      28,
+      29,
+      36,
+      37
+    ],
+    "expertVerified": 0
+  },
+  "totals": {
+    "aiOptionCandidates": 560,
+    "existingOptionCandidates": 332,
+    "answerContextOnly": 166,
+    "missingIndividualRationales": 942,
+    "allCandidates": 1058,
+    "total": 2000
+  },
+  "perYear": {
+    "2021": {
+      "ai": 0,
+      "legacy": 0,
+      "answerContext": 85,
+      "missing": 315
+    },
+    "2022": {
+      "ai": 0,
+      "legacy": 44,
+      "answerContext": 41,
+      "missing": 315
+    },
+    "2023": {
+      "ai": 0,
+      "legacy": 48,
+      "answerContext": 40,
+      "missing": 312
+    },
+    "2024": {
+      "ai": 160,
+      "legacy": 240,
+      "answerContext": 0,
+      "missing": 0
+    },
+    "2025": {
+      "ai": 400,
+      "legacy": 0,
+      "answerContext": 0,
+      "missing": 0
+    }
+  },
+  "status": {
+    "structuralQuestionMatch": 400,
+    "structuralOptionMatch": 2000,
+    "questionLevelStudyDrafts": 400,
+    "aiDrafts": 560,
+    "questionLevelExpertSigned": 0,
+    "optionLevelExpertSigned": 0,
+    "governmentCertifiedExplanationPublished": 0,
+    "officialPdfAttachmentReviewed": 0
+  },
+  "warning": "Study candidates are not certified truth, legal evidence or original PDF read receipts. Q-Net question-paper notice and final-answer notice are not the attached originals."
+}
