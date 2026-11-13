@@ -34,7 +34,7 @@ test('P0 current cache label and exact 11 required, nine optional P2/P6 assets i
  A.ok(html.includes('ck-p4-substantive-v161.css?v=161'));
  A.ok(html.includes('ck-p4-review-v159.css?v=159'));
  for(const name of ['ck-manual-qa-v115.js','ck-data-diagnostics-v88.js'])
-  A.ok(html.includes(name+'?v=165'),name);
+  A.ok(html.includes(name+'?v=170'),name);
  for(const name of ['ck-typing-ime-guard-v155.js?v=157','ck-study-p6-v76.js?v=157',
   'ck-mobile-board-v21.js?v=157', 'ck-policy-math-v158.js?v=158',
   'ck-policy-lab-v158.js?v=158','ck-policy-lab-v158.css?v=158'])
