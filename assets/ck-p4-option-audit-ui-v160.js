@@ -15,7 +15,7 @@ function result(rows){
  }
  return cacheResult;
 }
-function aiNote(r){return window.CK162SubstantiveReview?.get?.(r)||window.CK161SubstantiveReview?.get?.(r)||null}
+function aiNote(r){return window.CK164SubstantiveReview?.get?.(r)||window.CK162SubstantiveReview?.get?.(r)||window.CK161SubstantiveReview?.get?.(r)||null}
 function matching(a){
  return (a?.rows||[]).filter(r=>
   (!state.year||r.year===state.year)&&
@@ -138,7 +138,7 @@ function clicked(t,rows,download,message,openPersonal){
   if(!a?.ready){message('기출 원전 자료 연결이 불완전해 AI 근거 초안을 내보내지 않습니다.');return {handled:true};}
   const batch=a.rows.map(r=>({r,n:aiNote(r)})).filter(x=>x.n);
   if(!batch.length){message('AI 독립 근거 초안이 없습니다.');return {handled:true};}
-  const lines=['ConceptKnot v162 · 독립 선지 근거 학습용 AI 초안',
+  const lines=['ConceptKnot v164 · 2025 전체 선지별 AI 학습용 미검수 초안',
    '중요: 공식 원전 PDF·시험 당시 법령 및 판례 전체를 전문가가 검수한 자료가 아닙니다. 모든 선지의 정식 검수 상태는 미검수입니다.',
    '공식 인정답은 채점 정보일 뿐 모든 선지 참/거짓 확정 근거가 아닙니다.'];
   for(const {r,n} of batch)lines.push('',
@@ -148,7 +148,7 @@ function clicked(t,rows,download,message,openPersonal){
    (n.calculation?.equation?'계산 검산식: '+n.calculation.equation+' (공식 원본 PDF 대조와 별개)':''),
    '자료: '+n.sources.filter(x=>x.type==='POTENTIAL_PRIMARY_LEGAL_OR_REFERENCE_LINK').map(x=>x.url).join(' · '),
    '원전 PDF 대조: 미완료 / 개별 근거 핀포인트: 미확인 / 전문가 검수: 미완료');
-  download('ConceptKnot_v162_AI선지근거_'+batch.length+'건_미검수_'+new Date().toISOString().slice(0,10)+'.txt',
+  download('ConceptKnot_v164_AI선지근거_'+batch.length+'건_미검수_'+new Date().toISOString().slice(0,10)+'.txt',
    lines.join('\n'),'text/plain;charset=utf-8');
   message('AI 독립 근거 학습 초안 '+batch.length+'건을 TXT로 내보냈습니다. 수식 자체의 독립 검산 외 전문 원전 검수·공식 해설은 아닙니다.');
   return {handled:true};

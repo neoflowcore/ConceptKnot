@@ -4,20 +4,21 @@ const {test}=require('node:test'),A=require('node:assert/strict'),fs=require('no
 const read=p=>fs.readFileSync(p,'utf8');
 test('index release, service worker and diagnostics version agree',()=>{
  const html=read('index.html'),sw=read('sw.js'),diag=read('assets/ck-data-diagnostics-v88.js');
- A.ok(html.includes('ck-release" content="v163-full-study-publication-structural-audit"'));
- A.ok(sw.includes("const CACHE='conceptknot-study-v163-p4-full-study-preflight'"));
- A.ok(diag.includes("OFFLINE_CACHE='conceptknot-study-v163-p4-full-study-preflight'"));
+ A.ok(html.includes('ck-release" content="v164-final-2025-option-drafts"'));
+ A.ok(sw.includes("const CACHE='conceptknot-study-v164-full-2025-option-notes'"));
+ A.ok(diag.includes("OFFLINE_CACHE='conceptknot-study-v164-full-2025-option-notes'"));
  const assets=[
   'ck-full-exam-v82.js?v=157','ck-mobile-board-v21.js?v=157',
-  'ck-manual-qa-v115.js?v=163','ck-data-diagnostics-v88.js?v=163',
+  'ck-manual-qa-v115.js?v=164','ck-data-diagnostics-v88.js?v=164',
   'ck-study-p6-v76.js?v=157','ck-graph-direct-v149.js?v=158',
   'ck-graph-direct-v149.css?v=158','ck-graph-motion-v149.js?v=158',
    'ck-p4-review-priority-v159.js?v=159','ck-study-workbench-v81.js?v=163',
    'ck-p4-review-v159.css?v=159',
-   'ck-p4-option-audit-v160.js?v=160','ck-p4-option-audit-ui-v160.js?v=163',
+   'ck-p4-option-audit-v160.js?v=160','ck-p4-option-audit-ui-v160.js?v=164',
    'ck-p4-option-audit-v160.css?v=160','ck-p4-substantive-v161.js?v=161',
    'ck-p4-substantive-v161.css?v=161','ck-p4-substantive-v162.js?v=162',
-   'ck-p4-public-study-v163.js?v=163','ck-p4-public-study-v163.css?v=163'
+   'ck-p4-public-study-v163.js?v=164','ck-p4-public-study-v163.css?v=163',
+   'ck-p4-substantive-v164.js?v=164'
  ];
  for(const a of assets){
   A.ok(html.includes(a),'missing HTML '+a);

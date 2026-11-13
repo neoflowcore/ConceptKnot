@@ -1,0 +1,76 @@
+{
+  "schemaVersion": "1.0",
+  "asOf": "2026-11-13",
+  "scope": "ConceptKnot P4 2021–2025 official A-form first exam 400 questions 2000 options",
+  "baseHead": "fb85a32446398a28e79bc8c4fd50fd5585062f19",
+  "original": {
+    "questions": 400,
+    "options": 2000,
+    "fullEasyAndAnswerExplanationDrafts": 400,
+    "registeredTenYearQuestions": 800
+  },
+  "batch": {
+    "year2025Estate31to40": 50,
+    "year2025Civil51to80": 150,
+    "addedQuestions": 40,
+    "addedOptionAIDrafts": 200,
+    "previousOptionAIDrafts": 200,
+    "totalAIDrafts": 400,
+    "existingCandidateRewritten": 188,
+    "previouslyBlankNowWritten": 12,
+    "newIndependentMathSolutions": [
+      31,
+      32,
+      37,
+      39
+    ]
+  },
+  "coverage": {
+    "aiOptionCandidates": 400,
+    "existingOptionCandidates": 332,
+    "answerContextOnly": 166,
+    "missingIndependentOptionCandidate": 1102,
+    "totalWithSomeCandidate": 898,
+    "nonOverlappingOptionCount": 2000,
+    "yearBreakdown": {
+      "2021": {
+        "ai": 0,
+        "legacy": 0,
+        "answerContextOnly": 85,
+        "missing": 315
+      },
+      "2022": {
+        "ai": 0,
+        "legacy": 44,
+        "answerContextOnly": 41,
+        "missing": 315
+      },
+      "2023": {
+        "ai": 0,
+        "legacy": 48,
+        "answerContextOnly": 40,
+        "missing": 312
+      },
+      "2024": {
+        "ai": 0,
+        "legacy": 240,
+        "answerContextOnly": 0,
+        "missing": 160
+      },
+      "2025": {
+        "ai": 400,
+        "legacy": 0,
+        "answerContextOnly": 0,
+        "missing": 0
+      }
+    }
+  },
+  "quality": {
+    "expertReviewedQuestions": 0,
+    "expertReviewedOptions": 0,
+    "officialCertifiedExplanationsPublished": 0,
+    "attachedQNetPdfIndependentlyRead": 0,
+    "historicLawsAndCaseLawIndependentlyVerified": 0
+  },
+  "warning": "2025년 400개 선지 AI 설명은 구조적 연결 및 일부 계산 검산일 뿐 시험지 PDF/당시 법령/판례 감수 결과가 아니다. Q-Net은 문제지/최종정답 공고이며 해설은 ConceptKnot 자체 학습용이다. 자동 검증은 전문가 판정에 사용 불가."
+}

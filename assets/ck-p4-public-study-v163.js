@@ -29,14 +29,15 @@
   return h.toString(16).padStart(16,'0');
  }
  const state={open:false,year:0,subject:'all',focus:'all',page:0,pageSize:10};
- let cachedInput=null,cachedResult=null,cachedAudit=null,cachedV161=null,cachedV162=null;
+ let cachedInput=null,cachedResult=null,cachedAudit=null,cachedV161=null,cachedV162=null,cachedV164=null;
  function fail(errors){return {ready:false,errors,stats:null,questions:[],options:[],sourcePreflightPassed:0}}
  function build(input,deps){
   const audit=(deps?.optionAudit||root?.CK160OptionAudit);
   if(!Array.isArray(input)||typeof audit?.build!=='function')return fail(['공식 원문 또는 2,000선지 감사 엔진 없음']);
   const optionReview=audit.build(input);
   if(!optionReview?.ready||optionReview.rows?.length!==2000)return fail(optionReview?.errors?.length?optionReview.errors:['2,000선지 원문 대조 실패']);
-  const v161=deps?.v161||root?.CK161SubstantiveReview, v162=deps?.v162||root?.CK162SubstantiveReview;
+  const v161=deps?.v161||root?.CK161SubstantiveReview, v162=deps?.v162||root?.CK162SubstantiveReview,
+   v164=deps?.v164||root?.CK164SubstantiveReview;
   const matches=input.filter(x=>x?.q?.year>=2021&&x?.q?.year<=2025),errors=[];
   const qMap=new Map();
   for(const pair of matches){
@@ -59,7 +60,7 @@
     officialAnswers:q.correct.join('/'),index:r.index,optionText:r.optionText};
    // Candidate is only used if all original fields and an unreviewed status match.
    let note=null;
-   for(const v of [v162,v161]){
+   for(const v of [v164,v162,v161]){
     const n=v?.get?.(inputNote);
     if(n&&n.id===q.id&&n.option===r.index&&n.expertVerdict==='unreviewed'&&n.signedOff===false&&
       typeof n.text==='string'&&n.text.trim().length>=30){note=n;break}
@@ -108,6 +109,7 @@
    baselineQuestionFingerprintsChecked:list.length,
    questionLevelStudyDrafts:list.filter(q=>q.easy.trim()&&q.answerReason.trim()).length,
    publiclyReadableStudyDrafts:list.length,aiOptionCandidates:aiCount,
+   year2025FiveOptionAIDraftQuestions:list.filter(q=>q.year===2025&&q.options.every(o=>o.tier==='ai_option_candidate')).length,
    existingOptionCandidates:legacyCount,answerContextOnly:fallback,
    optionsWithoutIndependentCandidate:noReason,
    independentCandidateCoverage:aiCount+legacyCount,
@@ -120,9 +122,9 @@
  }
  function snapshot(rows){
   if(cachedInput!==rows||cachedAudit!==root?.CK160OptionAudit||cachedV161!==root?.CK161SubstantiveReview||
-   cachedV162!==root?.CK162SubstantiveReview){
+   cachedV162!==root?.CK162SubstantiveReview||cachedV164!==root?.CK164SubstantiveReview){
    cachedInput=rows;cachedAudit=root?.CK160OptionAudit;cachedV161=root?.CK161SubstantiveReview;
-   cachedV162=root?.CK162SubstantiveReview;cachedResult=build(rows);
+   cachedV162=root?.CK162SubstantiveReview;cachedV164=root?.CK164SubstantiveReview;cachedResult=build(rows);
   }
   return cachedResult;
  }
@@ -185,6 +187,7 @@
    '<small>공식 정답과 자체 풀이를 구분하며 Q-Net 공식 해설로 표시하지 않습니다.</small></header>'+
    '<dl class="ck163-metrics">'+[
     ['문항별 설명·정답근거',st.questionLevelStudyDrafts+'/400'],
+    ['2025년 5선지 AI 초안',st.year2025FiveOptionAIDraftQuestions+'/80'],
     ['원문·정답·선지 자동 구조 대조',st.structuralOptionsChecked+'/2000'],
     ['독립 AI 개별 선지 후보',st.aiOptionCandidates+'/2000'],
     ['기존 선지 근거 후보',st.existingOptionCandidates+'/2000'],

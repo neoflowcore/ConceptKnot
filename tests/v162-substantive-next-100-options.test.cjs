@@ -109,7 +109,7 @@ test('Q-Net paper and answer announcements stay distinct, no fake PDF/legal/expe
 test('P4 UI/HTML/offline counters and manual QA integrate batch B after batch A',()=>{
  const html=read('index.html'),ui=read('assets/ck-p4-option-audit-ui-v160.js');
  const diag=read('assets/ck-data-diagnostics-v88.js'),sw=read('sw.js'),manual=read('assets/ck-manual-qa-v115.js');
- const scripts=['ck-p4-substantive-v161.js?v=161','ck-p4-substantive-v162.js?v=162','ck-p4-option-audit-ui-v160.js?v=163'];
+ const scripts=['ck-p4-substantive-v161.js?v=161','ck-p4-substantive-v162.js?v=162','ck-p4-option-audit-ui-v160.js?v=164'];
  A.ok(scripts.every(x=>html.includes(x)));
  A.ok(html.indexOf(scripts[0])<html.indexOf(scripts[1]));
  A.ok(html.indexOf(scripts[1])<html.indexOf(scripts[2]));
@@ -122,9 +122,9 @@ test('P4 UI/HTML/offline counters and manual QA integrate batch B after batch A'
  A.match(diag,/ck-p4-substantive-v162\.js\?v=162/);
  A.match(sw,/ck-p4-substantive-v162\.js\?v=162/);
  A.match(manual,/v162-ai-200-option-notes/);
- A.match(manual,/P4 선택 자산 11\/11/);
- A.ok(diag.includes('conceptknot-study-v163-p4-full-study-preflight'));
- A.ok(sw.includes('conceptknot-study-v163-p4-full-study-preflight'));
+ A.match(manual,/P4 선택 자산 12\/12/);
+ A.ok(diag.includes('conceptknot-study-v164-full-2025-option-notes'));
+ A.ok(sw.includes('conceptknot-study-v164-full-2025-option-notes'));
  A.equal(JSON.parse(read('vercel.json')).git.deploymentEnabled,false);
  A.doesNotMatch(ui,/localStorage\.setItem|quality\.sourceChecked\s*=/);
 });
