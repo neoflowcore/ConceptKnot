@@ -22,11 +22,11 @@ function fixture(missing=[],poison=[]){
   return {match:async p=>items.get(p)};}};
 }
 test('P0 v161 preserves original 11 critical and nine P2/P6 optional assets',()=>{
- A.equal(ctx.cache,'conceptknot-study-v165-2024-estate-160-option-notes');
+ A.equal(ctx.cache,'conceptknot-study-v167-2021-2023-126-option-drafts');
  A.equal(required.length,11);A.equal(study.length,9);
- A.equal(p4.length,13);
+ A.equal(p4.length,14);
  const html=read('index.html'),sw=read('sw.js');
- A.ok(html.includes('content="v165-2024-estate-independent-options"'));
+ A.ok(html.includes('content="v167-2021-2023-126-option-rationales"'));
  for(const p of p4){
   A.ok(sw.includes(p),'missing optional SW '+p);
   A.ok(html.includes(p.slice(2)),'missing P4 HTML '+p);
