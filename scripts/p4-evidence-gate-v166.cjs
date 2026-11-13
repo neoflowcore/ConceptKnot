@@ -89,6 +89,8 @@ function validate(ledger){
  return {passed:errors.length===0,errors,verifiedOptions,reviewedQuestions,authorizedQuestions,
   officialCertifiedQuestions:0,warning:'Authorization is internal only; no Q-Net or governmental certification is implied.'};
 }
+module.exports={baseline,validate};
+if(require.main===module){
 const arg=process.argv[2];
 if(arg==='--init'){process.stdout.write(JSON.stringify(baseline(),null,2)+'\n')}
 else if(arg==='--check'){
@@ -107,3 +109,5 @@ else if(arg==='--check'){
  assert.equal(validate(promoted).passed,false);
  console.log('P4 evidence gate v166 self-test: 6 checks PASS (schema, empty, missing, drift, forged review, signoff guard)');
 }else {console.error('Usage: --init | --check FILE | --self-test');process.exitCode=2}
+
+}
