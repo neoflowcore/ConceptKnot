@@ -92,7 +92,7 @@ test('v160 model and UI integrate with source priority workbench without writing
   html.indexOf('ck-study-workbench-v81.js?v=170'));
  for(const tag of ['data-ck160-csv','data-ck160-txt','data-ck160-personal','data-ck160-filter'])
   A.ok(ui.includes(tag),tag);
- A.ok(workbench.includes('window.CK160OptionUI?.panel?.(rows)'));
+ A.ok(workbench.includes('window.CK160OptionUI?.panel?.(p4Rows)'));
  A.ok(ui.includes('CK161SubstantiveReview'));
  A.ok(html.includes('ck-p4-option-audit-ui-v160.js?v=165'));
  A.doesNotMatch(ui,/localStorage\.setItem|quality\.sourceChecked\s*=/);

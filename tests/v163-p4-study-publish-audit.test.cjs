@@ -57,7 +57,7 @@ test('all changed P4 JS modules parse; previously broken 200-note TXT dispatch i
  'ck-p4-option-audit-ui-v160.js?v=165','ck-study-workbench-v81.js?v=170'])A.ok(html.includes(k),k);
  A.ok(html.indexOf('ck-p4-public-study-v163.js?v=165')<html.indexOf('ck-study-workbench-v81.js?v=170'));
  A.ok(work.includes('data-ck161-ai-txt'));A.ok(work.includes('data-ck163-export'));
- A.ok(work.includes('CK163PublicStudy?.panel?.(rows)'));
+ A.ok(work.includes('CK163PublicStudy?.panel?.(p4Rows)'));
  A.ok(ui.includes("'자료: '+n.sources.filter"));
  A.equal(JSON.parse(read('vercel.json')).git.deploymentEnabled,false);
 });
