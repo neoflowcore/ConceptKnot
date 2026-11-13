@@ -101,9 +101,9 @@ test('v165 P4 UI, caching and manual QA all carry the same version and no auto-d
  A.ok(html.indexOf('ck-p4-substantive-v165.js?v=165')<html.indexOf('ck-p4-public-study-v163.js?v=165'));
  A.ok(sw.includes('ck-p4-substantive-v165.js?v=165'));
  A.ok(diag.includes('ck-p4-substantive-v165.js?v=165'));
- A.match(qa,/P4 선택 자산 13\/13/);
- A.ok(html.includes('v165-2024-estate-independent-options'));
- A.ok(sw.includes('conceptknot-study-v165-2024-estate-160-option-notes'));
+ A.match(qa,/P4 선택 자산 14\/14/);
+ A.ok(html.includes('v167-2021-2023-126-option-rationales'));
+ A.ok(sw.includes('conceptknot-study-v167-2021-2023-126-option-drafts'));
  const cfg=parse('vercel.json');A.equal(cfg.git.deploymentEnabled,false);
  A.ok(cfg.buildCommand.length<=256);A.ok(cfg.buildCommand.includes('verify-p4-release-v165.cjs'));
  for(const p of ['assets/ck-p4-substantive-v165.js','assets/ck-p4-public-study-v163.js',
