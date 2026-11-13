@@ -39,9 +39,9 @@ test('v167 total coverage and independent expert stats remain distinct',()=>{
  const r=Study.build(rows,deps);A.equal(r.ready,true,r.errors?.join(' | '));
  A.equal(r.stats.aiOptionCandidates,686);
  A.equal(r.stats.existingOptionCandidates,332);
- A.equal(r.stats.answerContextOnly,166);
- A.equal(r.stats.optionsWithoutIndependentCandidate,816);
- A.equal(r.stats.allCandidateCoverage,1184);
+ A.equal(r.stats.answerContextOnly,156);
+ A.equal(r.stats.optionsWithoutIndependentCandidate,826);
+ A.equal(r.stats.allCandidateCoverage,1174);
  A.equal(r.stats.expertVerifiedOptions,0);
  A.equal(r.stats.expertVerifiedQuestions,0);
  A.equal(r.stats.officialExplanationsPublished,0);
@@ -98,6 +98,6 @@ test('P4 v167 frontend and offline optional assets match no-autodeploy policy',(
  A.ok(html.indexOf(script)<html.indexOf('ck-p4-option-audit-ui-v160.js?v=165'));
  A.ok(html.indexOf(script)<html.indexOf('ck-p4-public-study-v163.js?v=165'));
  A.ok(ui.includes('CK167SubstantiveReview?.get?.(r)'));
- A.ok(sw.includes('conceptknot-study-v167-2021-2023-126-option-drafts'));
+ A.ok(sw.includes('conceptknot-study-v168-2021-2023-122-option-drafts'));
  A.equal(read('vercel.json').git.deploymentEnabled,false);
 });

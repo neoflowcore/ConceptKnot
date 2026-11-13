@@ -245,7 +245,7 @@ function downloadRaw(){
 /* previous: conceptknot-study-v137-native-voice-guard */
 /* prior offline generation: conceptknot-study-v138-unified-voice-queue */
 /* previous core: conceptknot-study-v139-managed-model-guard */
-const OFFLINE_CACHE='conceptknot-study-v167-2021-2023-126-option-drafts';
+const OFFLINE_CACHE='conceptknot-study-v168-2021-2023-122-option-drafts';
 const OFFLINE_MINIMUM=Object.freeze([
  './index.html',
  './assets/ck-data-diagnostics-v88.js?v=165',
@@ -280,7 +280,7 @@ const P4_OFFLINE=Object.freeze([
  './assets/ck-p4-substantive-v161.js?v=161',
  './assets/ck-p4-substantive-v162.js?v=162',
  './assets/ck-p4-substantive-v164.js?v=164',
- './assets/ck-p4-substantive-v165.js?v=165','./assets/ck-p4-substantive-v167.js?v=167',
+ './assets/ck-p4-substantive-v165.js?v=165','./assets/ck-p4-substantive-v167.js?v=167','./assets/ck-p4-substantive-v168.js?v=168',
  './assets/ck-p4-public-study-v163.js?v=165',
  './assets/ck-p4-public-study-v163.css?v=163',
  './assets/ck-p4-substantive-v161.css?v=161'
@@ -383,9 +383,9 @@ async function runOfflineHealth(){
   const activeCurrent=controller.cache===OFFLINE_CACHE;
   const result=await offlineHealth(window.caches,activeCurrent);
   message.textContent=!result.supported?'브라우저에서 캐시 읽기를 지원하지 않습니다.':
-   !result.installed?'v165 오프라인 캐시 없음 · 아직 미배포 또는 설치 미완료입니다.':
+   !result.installed?'v168 오프라인 캐시 없음 · 아직 미배포 또는 설치 미완료입니다.':
    '현재 캐시의 필수 파일 '+result.cached+'/'+result.required+'개 · '+
-   (activeCurrent?'현재 v165 서비스워커가 이 탭을 제어함':controller.controlled?
+   (activeCurrent?'현재 v168 서비스워커가 이 탭을 제어함':controller.controlled?
     '구형 또는 응답 없는 서비스워커가 제어 중 · 현재 세대 확인 불가':'서비스워커가 이 탭을 제어하지 않음')+
    (result.missing.length?' · 미저장: '+result.missing.slice(0,3).map(x=>x.split('/').pop()).join(', ')+
     (result.missing.length>3?' 외 '+(result.missing.length-3)+'개':''):

@@ -15,7 +15,7 @@ function result(rows){
  }
  return cacheResult;
 }
-function aiNote(r){return window.CK167SubstantiveReview?.get?.(r)||window.CK165SubstantiveReview?.get?.(r)||window.CK164SubstantiveReview?.get?.(r)||window.CK162SubstantiveReview?.get?.(r)||window.CK161SubstantiveReview?.get?.(r)||null}
+function aiNote(r){return window.CK168SubstantiveReview?.get?.(r)||window.CK167SubstantiveReview?.get?.(r)||window.CK165SubstantiveReview?.get?.(r)||window.CK164SubstantiveReview?.get?.(r)||window.CK162SubstantiveReview?.get?.(r)||window.CK161SubstantiveReview?.get?.(r)||null}
 function matching(a){
  return (a?.rows||[]).filter(r=>
   (!state.year||r.year===state.year)&&
@@ -138,7 +138,7 @@ function clicked(t,rows,download,message,openPersonal){
   if(!a?.ready){message('기출 원전 자료 연결이 불완전해 AI 근거 초안을 내보내지 않습니다.');return {handled:true};}
   const batch=a.rows.map(r=>({r,n:aiNote(r)})).filter(x=>x.n);
   if(!batch.length){message('AI 독립 근거 초안이 없습니다.');return {handled:true};}
-  const lines=['ConceptKnot v167 · 2021~2025 선지별 AI 학습용 미검수 초안',
+  const lines=['ConceptKnot v168 · 2021~2025 선지별 AI 학습용 미검수 초안',
    '중요: 공식 원전 PDF·시험 당시 법령 및 판례 전체를 전문가가 검수한 자료가 아닙니다. 모든 선지의 정식 검수 상태는 미검수입니다.',
    '공식 인정답은 채점 정보일 뿐 모든 선지 참/거짓 확정 근거가 아닙니다.'];
   for(const {r,n} of batch)lines.push('',

@@ -1,0 +1,61 @@
+{
+  "schemaVersion": "1.0",
+  "release": "v168",
+  "asOf": "2026-11-13",
+  "scope": "2021–2025 A-form 400 questions / 2000 options",
+  "baseCommit": "80600e57d46c0266ccf1f06ddd2ca777981758c1",
+  "previous": {
+    "aiOptionCandidates": 686,
+    "existingIndividualCandidates": 332,
+    "answerContextOnly": 156,
+    "missing": 826,
+    "allCandidateCoverage": 1174
+  },
+  "newStudyDrafts": {
+    "questions": 28,
+    "options": 122,
+    "byYear": {
+      "2021": 50,
+      "2022": 36,
+      "2023": 36
+    },
+    "deferred": [
+      {
+        "questionId": "2022-12",
+        "reason": "Question answer and standalone information-value formula require further verification; explanation intentionally withheld"
+      }
+    ]
+  },
+  "current": {
+    "aiOptionCandidates": 808,
+    "existingIndividualCandidates": 332,
+    "answerContextOnly": 146,
+    "missing": 714,
+    "anyCandidate": 1286,
+    "individualCandidates": 1140,
+    "missingByYear": {
+      "2021": 235,
+      "2022": 243,
+      "2023": 236
+    }
+  },
+  "verification": {
+    "qnetPdfIndependentlyComparedOptions": 0,
+    "independentHistoricLawCaseCheckedOptions": 0,
+    "expertSignedOptions": 0,
+    "expertSignedQuestions": 0,
+    "officialCertifiedExplanations": 0,
+    "nodeRuntimeTests": "NOT_RUN",
+    "manualDeviceQA": "NOT_RUN",
+    "productionDeployment": "NOT_RUN"
+  },
+  "guards": {
+    "canonicalOriginalAndKeyPreserved": true,
+    "personalLearningRecordsUntouched": true,
+    "gitAutoDeploymentDisabled": true
+  },
+  "reconciliation": {
+    "issue": "v167 checkpoint counted 10 correct-answer contexts twice after 2021 1-10 AI options were introduced; verified runtime-tier counts displace context, so true v167 baseline was 686+332+156+826=2000, not 686+332+166+816. v168 adds 122 AI drafts including ten formerly answer-context-only options, yielding 808+332+146+714=2000.",
+    "verifiedBy": "remote GitHub staged code in-memory execution of CK163PublicStudy.build 400 questions/2000 options"
+  }
+}

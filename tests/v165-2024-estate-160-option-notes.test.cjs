@@ -101,11 +101,11 @@ test('v165 P4 UI, caching and manual QA all carry the same version and no auto-d
  A.ok(html.indexOf('ck-p4-substantive-v165.js?v=165')<html.indexOf('ck-p4-public-study-v163.js?v=165'));
  A.ok(sw.includes('ck-p4-substantive-v165.js?v=165'));
  A.ok(diag.includes('ck-p4-substantive-v165.js?v=165'));
- A.match(qa,/P4 선택 자산 14\/14/);
- A.ok(html.includes('v167-2021-2023-126-option-rationales'));
- A.ok(sw.includes('conceptknot-study-v167-2021-2023-126-option-drafts'));
+ A.match(qa,/P4 선택 자산 15\/15/);
+ A.ok(html.includes('v168-2021-2023-122-option-rationales'));
+ A.ok(sw.includes('conceptknot-study-v168-2021-2023-122-option-drafts'));
  const cfg=parse('vercel.json');A.equal(cfg.git.deploymentEnabled,false);
- A.ok(cfg.buildCommand.length<=256);A.ok(cfg.buildCommand.includes('verify-p4-release-v167.cjs'));
+ A.ok(cfg.buildCommand.length<=256);A.ok(cfg.buildCommand.includes('verify-p4-release-v168.cjs'));
  for(const p of ['assets/ck-p4-substantive-v165.js','assets/ck-p4-public-study-v163.js',
  'assets/ck-p4-option-audit-ui-v160.js','assets/ck-study-workbench-v81.js','sw.js'])
   A.doesNotThrow(()=>new vm.Script(read(p),{filename:p}));
