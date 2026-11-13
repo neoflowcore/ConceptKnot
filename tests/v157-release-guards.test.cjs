@@ -4,9 +4,9 @@ const {test}=require('node:test'),A=require('node:assert/strict'),fs=require('no
 const read=p=>fs.readFileSync(p,'utf8');
 test('index release, service worker and diagnostics version agree',()=>{
  const html=read('index.html'),sw=read('sw.js'),diag=read('assets/ck-data-diagnostics-v88.js');
- A.ok(html.includes('ck-release" content="v170-p4-manual-qa-hub"'));
- A.ok(sw.includes("const CACHE='conceptknot-study-v170-p4-manual-qa-hub'"));
- A.ok(diag.includes("OFFLINE_CACHE='conceptknot-study-v170-p4-manual-qa-hub'"));
+ A.ok(html.includes('ck-release" content="v171-p4-mvp-tts-theory-graph"'));
+ A.ok(sw.includes("const CACHE='conceptknot-study-v171-p4-mvp-tts-theory-graph'"));
+ A.ok(diag.includes("OFFLINE_CACHE='conceptknot-study-v171-p4-mvp-tts-theory-graph'"));
  const assets=[
   'ck-full-exam-v82.js?v=157','ck-mobile-board-v21.js?v=157',
   'ck-manual-qa-v115.js?v=170','ck-data-diagnostics-v88.js?v=170',

@@ -84,7 +84,8 @@ function voiceToolbar(){
   '<button type="button" data-ck109-due>▶ 내 오답·복습 대기 듣기</button>'+
   '<button type="button" data-ck111-open>선지 근거 검토 대기열</button>'+
   '<button type="button" data-ck107-voice-pause>일시정지 / 계속</button>'+
-  '<button type="button" data-ck107-voice-stop>■ 정지</button></div>'+
+  '<button type="button" data-ck107-voice-stop>■ 정지</button>'+ 
+  '<button type="button" data-ck107-voice-retry>↻ 끊긴 문장 재시도</button></div>'+
   '<p class="ck107-voice-status" data-ck107-voice-status role="status" aria-live="polite">'+
   '장시간 재생·백그라운드·AI 모델 음색은 실제 기기 검증 전입니다.</p></section>';
 }
@@ -331,7 +332,7 @@ document.addEventListener('click',e=>{
   else status('저장 실패 · 현재 문항을 다시 확인하세요.');
  }
  if(target.closest('[data-ck78-ai-copy]'))copyPrompt();
- const voice=target.closest('[data-ck107-voice],[data-ck107-voice-scope],[data-ck107-voice-resume],[data-ck107-voice-pause],[data-ck107-voice-stop],[data-ck109-due]');
+ const voice=target.closest('[data-ck107-voice],[data-ck107-voice-scope],[data-ck107-voice-resume],[data-ck107-voice-pause],[data-ck107-voice-stop],[data-ck107-voice-retry],[data-ck109-due]');
  if(voice&&dialog?.contains(voice)){
   const line=dialog.querySelector('[data-ck107-voice-status]');
   if(voice.hasAttribute('data-ck107-voice-stop')){
@@ -339,6 +340,13 @@ document.addEventListener('click',e=>{
   }
   if(voice.hasAttribute('data-ck107-voice-pause')){
    window.CK76Voice?.pause?.();return;
+  }
+  if(voice.hasAttribute('data-ck107-voice-retry')){
+   const result=window.CK76Voice?.retryFailed?.();
+   if(line)line.textContent=result?.ok?
+    '중단된 문장부터 재생을 다시 요청했습니다. 실제 소리는 기기에서 확인하세요.':
+    '재시도할 오류 문장이 없습니다. 먼저 해당 문항을 재생하세요.';
+   return;
   }
   const q=lookup(selected);
   if(!q){if(line)line.textContent='공식 문항을 불러오지 못했습니다.';return;}

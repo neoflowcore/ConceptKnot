@@ -20,10 +20,10 @@ function cacheFixture(omitted=[]){
  return {storage,items};
 }
 test('P0 current cache label and exact 11 required, nine optional P2/P6 assets including policy lab',()=>{
- A.equal(ctx.cache,'conceptknot-study-v170-p4-manual-qa-hub');
+ A.equal(ctx.cache,'conceptknot-study-v171-p4-mvp-tts-theory-graph');
  A.equal(CRIT.length,11);A.equal(STUDY.length,9);
  const html=read('index.html'),sw=read('sw.js');
- A.ok(html.includes('content="v170-p4-manual-qa-hub"'));
+ A.ok(html.includes('content="v171-p4-mvp-tts-theory-graph"'));
  A.ok(html.includes('ck-full-exam-v82.js?v=157'));
  A.ok(html.includes('ck-p4-review-priority-v159.js?v=159'));
  A.ok(html.includes('ck-study-workbench-v81.js?v=170'));

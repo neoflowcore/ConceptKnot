@@ -65,13 +65,13 @@ test('v168 HTML, offline, manual QA and production release are version-locked an
  A.ok(h.includes(script));A.ok(sw.includes(script));A.ok(d.includes(script));
  A.ok(h.indexOf(script)<h.indexOf('ck-p4-option-audit-ui-v160.js?v=165'));
  A.ok(h.indexOf(script)<h.indexOf('ck-p4-public-study-v163.js?v=165'));
- A.ok(h.includes('content="v170-p4-manual-qa-hub"'));
- A.ok(sw.includes('conceptknot-study-v170-p4-manual-qa-hub'));
- A.ok(d.includes('conceptknot-study-v170-p4-manual-qa-hub'));
+ A.ok(h.includes('content="v171-p4-mvp-tts-theory-graph"'));
+ A.ok(sw.includes('conceptknot-study-v171-p4-mvp-tts-theory-graph'));
+ A.ok(d.includes('conceptknot-study-v171-p4-mvp-tts-theory-graph'));
  A.ok(ui.includes('CK168SubstantiveReview?.get?.(r)'));
  A.ok(qa.includes('P4 선택 자산 15/15'));
  A.equal(parse('vercel.json').git.deploymentEnabled,false);
- A.ok(parse('vercel.json').buildCommand.includes('verify-p4-release-v170.cjs'));
+ A.ok(parse('vercel.json').buildCommand.includes('verify-p4-release-v171.cjs'));
  for(const file of ['assets/ck-p4-substantive-v168.js','assets/ck-p4-public-study-v163.js',
   'assets/ck-p4-option-audit-ui-v160.js','assets/ck-data-diagnostics-v88.js','sw.js'])
   A.doesNotThrow(()=>new vm.Script(read(file),{filename:file}));

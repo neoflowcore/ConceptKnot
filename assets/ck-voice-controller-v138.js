@@ -8,11 +8,12 @@
   let generation = 0, items = [], index = 0, completed = 0, engine = 'native';
   let utterance = null, beginWatch = null, endWatch = null, isPaused = false;
   let deferredNext = false, finished = false, splitAttempts = 0, activeRate = 1.5;
-  let status = 'idle', reason = '', chosenLabel = '';
+  let status = 'idle', reason = '', chosenLabel = '', lastFailureCode = '';
   let suspendEndWatch = null, resumeEndWatch = null;
   function snapshot() {
    return {status, reason, engine, label: chosenLabel, generation, position: index,
-    completed, total: items.length, paused: isPaused, failedIndex: status === 'error' ? index : null};
+    completed, total: items.length, paused: isPaused, failedIndex: status === 'error' ? index : null,
+    lastFailureCode: status==='error'?lastFailureCode:''};
   }
   function report(nextStatus, message = '') {
    status = nextStatus; reason = message;
@@ -30,12 +31,12 @@
    try {options.synthesis?.()?.cancel?.();} catch (ignored) {}
    try {options.stopAI?.();} catch (ignored) {}
    items = []; index = 0; completed = 0; finished = false; splitAttempts = 0;
-   deferredNext = false; isPaused = false; chosenLabel = '';
+   deferredNext = false; isPaused = false; chosenLabel = ''; lastFailureCode = '';
    report('idle', announce ? '재생을 정지했습니다.' : '');
   }
   function fail(code, message) {
    if (finished) return;
-   finished = true; clearTimers();
+   finished = true; lastFailureCode = String(code||'unknown'); clearTimers();
    try {options.synthesis?.()?.cancel?.();} catch (ignored) {}
    try {options.stopAI?.();} catch (ignored) {}
    report('error', message);
@@ -180,6 +181,18 @@
    }
    return {ok:status !== 'error',items:items.length,engine};
   }
+  function retryFailed() {
+   // Retry only on an explicit user gesture, never advance a failed segment.
+   // Leave prior completed count, source words, engine and speed untouched.
+   if(status!=='error'||index>=items.length||!items.length)return {ok:false,reason:'nothing-to-retry'};
+   if(engine==='neural'&&!options.aiReady?.())return {ok:false,reason:'ai-not-ready'};
+   generation++;
+   const own=generation;
+   clearTimers();finished=false;isPaused=false;deferredNext=false;
+   report('preparing','실패한 '+(index+1)+'번째 문장을 같은 위치에서 재시도합니다.');
+   if(engine==='native')nativeNext(own);else void aiNext(own);
+   return {ok:status!=='error',position:index,completed,total:items.length};
+  }
   function togglePause() {
    if (status !== 'speaking' && status !== 'paused') return false;
    try {
@@ -197,7 +210,7 @@
    }
    return true;
   }
-  return Object.freeze({play, stop, togglePause, getState: snapshot});
+  return Object.freeze({play, stop, togglePause, retryFailed, getState: snapshot});
  }
  root.CKVoiceControllerFactory = Object.freeze({version: '138', create});
 })(typeof window === 'object' ? window : globalThis);

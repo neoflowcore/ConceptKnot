@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="ck-release" content="v170-p4-manual-qa-hub">
+<meta name="ck-release" content="v171-p4-mvp-tts-theory-graph">
 <script id="ck74-theme-before-paint">(()=>{try{document.documentElement.dataset.ckTheme=localStorage.getItem("conceptknot-theme-v14")==="dark"?"dark":"light";}catch{}})();</script>
 <meta name="theme-color" content="#fcfcf9">
 <meta name="color-scheme" content="only light">
@@ -269,7 +269,8 @@ window.RECALL_CONTENT = {
 <script src="./assets/ck-gpu-guard-v21.js?v=128" defer></script>
 <script src="./assets/ck-mobile-board-v21.js?v=157" defer></script>
 <script src="./assets/ck-tts-model-manager-v139.js?v=139"></script>
-<script src="./assets/ck-voice-controller-v138.js?v=138"></script>
+<script src="./assets/ck-voice-controller-v138.js?v=171"></script>
+<script src="./assets/ck-tts-chunks-v171.js?v=171"></script>
 <script>
 /* RECALLGRAPH First-Exam Sprint. Browser-only, no analytics/server/API. */
 (() => {
@@ -1194,13 +1195,15 @@ function speechSegments(items,mode='qa'){
   const all=q.special==='allAccepted';
   if(mode==='all')return [q.label+'. '+q.question,
    ...(q.options||q.answers).map((a,i)=>(i+1)+'번 선지. '+a),
-   ...(all?['전원정답 인정: 채점상 모두 인정되지만 다 옳다는 뜻은 아닙니다.']:[])];
+   ...(all?['전원정답 인정: 채점상 모두 인정되지만 다 옳다는 뜻은 아닙니다.']:
+    ['공식 채점상 인정 정답 지문. '+q.answers.join(' 또는 ')])];
   if(all)return [q.label+'. 전원정답 처리 문항. 특정 정답 지문은 없습니다.'];
   if(mode==='answer')return [q.label+'. 정답 문장. '+q.answers.join(' 또는 ')];
   return [q.label+'. '+q.question,...q.answers.map(a=>'정답 지문. '+a)];
  });
 }
 function splitSpeechText(text){
+ if(window.CK171TTSChunks?.split)return window.CK171TTSChunks.split(text,112);
  const pieces=[];
  let remainder=String(text||'').trim();
  while(remainder.length>190){
@@ -1418,7 +1421,8 @@ ttsStop=function(announce=true){
  ck76VoiceState('idle',announce?'재생을 정지했습니다.':'');
 };
 function ck76AudioText(str){
- return String(str||'').replace(/(\d)\s*%/g,'$1 퍼센트').replace(/(\d)\s*㎡/g,'$1 제곱미터')
+ const text=window.CK171TTSChunks?.normalize?.(str)||String(str||'');
+ return text.replace(/(\d)\s*%/g,'$1 퍼센트').replace(/(\d)\s*㎡/g,'$1 제곱미터')
   .replace(/(\d)\s*㎥/g,'$1 세제곱미터').replace(/[₩]/g,'원 ');
 }
 function officialAudioEntry(y,n){
@@ -1829,6 +1833,7 @@ window.CK76Voice=Object.freeze({
  getBookmark:ck108Bookmark,
  stop:()=>ttsStop(true),
  pause:voiceTogglePause,
+ retryFailed:()=>ck138Voice?.retryFailed?.()||{ok:false,reason:'controller-unavailable'},
  officialAudioEntry,
  segments:ck76Segments
 });
@@ -4264,7 +4269,9 @@ render();setInterval(timerTick,500);
 <script src="./assets/ck-experience-v9.js" defer></script>
 <script src="./assets/ck-study-extensions-v10.js?v=59" defer></script>
 <script src="./assets/ck-study-p6-v76.js?v=157" defer></script>
-<script src="./assets/ck-study-p4-v78.js?v=114" defer></script>
+<script src="./assets/ck-study-p4-v78.js?v=171" defer></script>
+<link rel="stylesheet" href="./assets/ck-exam-theory-bridge-v171.css?v=171">
+<script src="./assets/ck-exam-theory-bridge-v171.js?v=171" defer></script>
 <script src="./assets/ck-study-review-v79.js?v=79" defer></script>
 <script src="./assets/ck-study-final-v79.js?v=79" defer></script>
 <script src="./assets/ck-three-step-v148.js?v=149" defer></script>

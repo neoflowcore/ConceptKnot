@@ -98,6 +98,6 @@ test('P4 v167 frontend and offline optional assets match no-autodeploy policy',(
  A.ok(html.indexOf(script)<html.indexOf('ck-p4-option-audit-ui-v160.js?v=165'));
  A.ok(html.indexOf(script)<html.indexOf('ck-p4-public-study-v163.js?v=165'));
  A.ok(ui.includes('CK167SubstantiveReview?.get?.(r)'));
- A.ok(sw.includes('conceptknot-study-v170-p4-manual-qa-hub'));
+ A.ok(sw.includes('conceptknot-study-v171-p4-mvp-tts-theory-graph'));
  A.equal(read('vercel.json').git.deploymentEnabled,false);
 });

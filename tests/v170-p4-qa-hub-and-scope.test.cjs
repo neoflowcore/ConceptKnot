@@ -65,8 +65,8 @@ test('verification drawer provides direct one-click study, 2000-option, offline 
 test('versioned read-only offline / SPA release and manual deploy guards are coherent',()=>{
  const html=read('index.html'),sw=read('sw.js'),diag=read('assets/ck-data-diagnostics-v88.js'),
   cfg=parse('vercel.json');
- A.ok(html.includes('ck-release" content="v170-p4-manual-qa-hub"'));
- const cache='conceptknot-study-v170-p4-manual-qa-hub';
+ A.ok(html.includes('ck-release" content="v171-p4-mvp-tts-theory-graph"'));
+ const cache='conceptknot-study-v171-p4-mvp-tts-theory-graph';
  A.ok(sw.includes("const CACHE='"+cache+"'"));
  A.ok(diag.includes("OFFLINE_CACHE='"+cache+"'"));
  for(const asset of ['ck-study-workbench-v81.js?v=170','ck-study-workbench-v81.css?v=170',
@@ -78,7 +78,7 @@ test('versioned read-only offline / SPA release and manual deploy guards are coh
  A.ok(diag.includes('ck-manual-qa-v115.js?v=170'));
  A.ok(diag.includes('OFFLINE_CACHE});'));
  A.equal(cfg.git.deploymentEnabled,false);
- A.ok(cfg.buildCommand.includes('verify-p4-release-v170.cjs'));
+ A.ok(cfg.buildCommand.includes('verify-p4-release-v171.cjs'));
  A.equal(fs.existsSync('.github/workflows'),false);
  for(const path of ['assets/ck-study-workbench-v81.js','assets/ck-manual-qa-v115.js',
     'assets/ck-data-diagnostics-v88.js','sw.js'])
