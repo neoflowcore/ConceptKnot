@@ -76,9 +76,9 @@ test('P4 UI, PWA v164 and offline asset counters loaded before workbench',()=>{
  A.ok(html.indexOf('ck-p4-substantive-v164.js?v=164')<html.indexOf('ck-p4-public-study-v163.js?v=165'));
  A.ok(sw.includes('ck-p4-substantive-v164.js?v=164'));
  A.ok(diag.includes('ck-p4-substantive-v164.js?v=164'));
- A.match(manual,/P4 선택 자산 13\/13/);
- A.ok(html.includes('v165-2024-estate-independent-options'));
- A.ok(sw.includes('conceptknot-study-v165-2024-estate-160-option-notes'));
+ A.match(manual,/P4 선택 자산 14\/14/);
+ A.ok(html.includes('v167-2021-2023-126-option-rationales'));
+ A.ok(sw.includes('conceptknot-study-v167-2021-2023-126-option-drafts'));
  A.equal(parse('vercel.json').git.deploymentEnabled,false);
  for(const p of ['assets/ck-p4-substantive-v164.js','assets/ck-p4-public-study-v163.js',
   'assets/ck-p4-option-audit-ui-v160.js','assets/ck-study-workbench-v81.js','sw.js'])
