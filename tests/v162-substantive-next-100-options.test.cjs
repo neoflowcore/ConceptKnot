@@ -122,7 +122,7 @@ test('P4 UI/HTML/offline counters and manual QA integrate batch B after batch A'
  A.match(diag,/ck-p4-substantive-v162\.js\?v=162/);
  A.match(sw,/ck-p4-substantive-v162\.js\?v=162/);
  A.match(manual,/v162-ai-200-option-notes/);
- A.match(manual,/P4 선택 자산 13\/13/);
+ A.match(manual,/P4 선택 자산 15\/15/);
  A.ok(diag.includes('conceptknot-study-v168-2021-2023-122-option-drafts'));
  A.ok(sw.includes('conceptknot-study-v168-2021-2023-122-option-drafts'));
  A.equal(JSON.parse(read('vercel.json')).git.deploymentEnabled,false);
