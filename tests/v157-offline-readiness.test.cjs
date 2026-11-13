@@ -34,7 +34,7 @@ test('P0 current cache label and exact 11 required, nine optional P2/P6 assets i
  A.ok(html.includes('ck-p4-substantive-v161.css?v=161'));
  A.ok(html.includes('ck-p4-review-v159.css?v=159'));
  for(const name of ['ck-manual-qa-v115.js','ck-data-diagnostics-v88.js'])
-  A.ok(html.includes(name+'?v=163'),name);
+  A.ok(html.includes(name+'?v=164'),name);
  for(const name of ['ck-typing-ime-guard-v155.js?v=157','ck-study-p6-v76.js?v=157',
   'ck-mobile-board-v21.js?v=157', 'ck-policy-math-v158.js?v=158',
   'ck-policy-lab-v158.js?v=158','ck-policy-lab-v158.css?v=158'])
@@ -72,7 +72,7 @@ test('P0 11 core SW source matches live diagnostics exact resource version strin
  const sw=read('sw.js');
  for(const p of CRIT)A.ok(sw.includes("'"+p+"'"),'missing core '+p);
  for(const p of STUDY)A.ok(sw.includes(p),'missing optional '+p);
- A.equal(read('vercel.json').includes('"deploymentEnabled": false'),true);
+ A.equal(JSON.parse(read('vercel.json')).git.deploymentEnabled,false);
 });
 test('P0 offline version and warnings are truthful without user hardware confirmation',()=>{
  const s=read('assets/ck-data-diagnostics-v88.js');
