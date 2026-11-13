@@ -56,9 +56,9 @@ function validate(ledger){
    Number.isInteger(pdf.page)&&pdf.page>0&&required(pdf.quotedAnchor)&&
    answer.checked===true&&https(answer.url)&&Number.isInteger(answer.page)&&answer.page>0&&
    rule.checked===true&&['statute','precedent','official-data','textbook-principle','calculation'].includes(rule.kind)&&
-   https(rule.primaryUrl)&&required(rule.pinpoint)&&/^20\\d\\d-\\d\\d-\\d\\d$/.test(rule.effectiveOn)&&
+   https(rule.primaryUrl)&&required(rule.pinpoint)&&/^20\d\d-\d\d-\d\d$/.test(rule.effectiveOn)&&
    required(rev.name)&&!/^ai|automated$/i.test(rev.name.trim())&&
-   /^20\\d\\d-\\d\\d-\\d\\d$/.test(rev.reviewedAt)&&rev.independentOfAuthor===true;
+   /^20\d\d-\d\d-\d\d$/.test(rev.reviewedAt)&&rev.independentOfAuthor===true;
   if(!valid){fail(id,'missing source page, historic rule, independent reviewer, or dated evidence');continue}
   verifiedOptions++;
   issues.set(e.questionId,(issues.get(e.questionId)||0)+1);
@@ -74,7 +74,7 @@ function validate(ledger){
   const special=original.correct.length!==1;
   if(q.allOptionEvidenceReviewed===true||required(q.signedAt)||required(q.expertReviewer)||required(q.officialPublicationAuthorization)){
    if(!allReviewed||q.allOptionEvidenceReviewed!==true||!required(q.expertReviewer)||
-      !/^20\\d\\d-\\d\\d-\\d\\d$/.test(q.signedAt||'')||
+      !/^20\d\d-\d\d-\d\d$/.test(q.signedAt||'')||
       (special&&q.specialAnswerReasonChecked!==true)){
     fail(id,'question signoff without five verified options or special-answer evidence');continue}
    reviewedQuestions++;
@@ -105,5 +105,5 @@ else if(arg==='--check'){
  const forged=structuredClone(a);forged.options[0].verdict='true';assert.equal(validate(forged).passed,false);
  const promoted=structuredClone(a);promoted.questions[0].allOptionEvidenceReviewed=true;
  assert.equal(validate(promoted).passed,false);
- console.log('P4 evidence gate v166 self-test: 5 checks PASS (schema, empty, missing, drift, forged review, signoff guard)');
+ console.log('P4 evidence gate v166 self-test: 6 checks PASS (schema, empty, missing, drift, forged review, signoff guard)');
 }else {console.error('Usage: --init | --check FILE | --self-test');process.exitCode=2}
