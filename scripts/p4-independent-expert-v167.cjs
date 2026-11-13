@@ -12,12 +12,27 @@ function claim(option){
  return JSON.stringify(['P4-INDEPENDENT-EXPERT-OPTION-v1',option.optionId,option.canonicalSha256,
   option.optionSha256,option.verdict,option.explanation,option.examPdf,option.finalAnswer,option.rule]);
 }
-function assess(ledger,roster,attestations){
+function assess(ledger,roster,attestations,opts={}){
  const structural=validate(ledger);
  const problems=structural.errors.slice(),verified=new Set();
  if(!structural.passed)return {passed:false,verifiedOptions:0,expertApprovedQuestions:0,errors:problems};
  if(!Array.isArray(roster?.reviewers)||!Array.isArray(attestations?.records))
   return {passed:false,verifiedOptions:0,expertApprovedQuestions:0,errors:['Missing independent reviewer registry or attestation records']};
+ // No one can self-register as an expert: external authority must sign the roster.
+ const trusted=opts.trustedAuthorityPublicKey||process.env.CK_P4_TRUSTED_REVIEW_AUTHORITY_PUBLIC_KEY;
+ if(attestations.records.length){
+  if(!trusted||typeof roster.authoritySignatureBase64!=='string'||!iso(roster.authoritySignedAt))
+   return {passed:false,verifiedOptions:0,expertApprovedQuestions:0,errors:['External trusted reviewer-registry attestation is missing']};
+  try{
+   const key=crypto.createPublicKey(trusted);
+   const message=Buffer.from(JSON.stringify(['P4-REVIEWER-REGISTRY-v1',roster.authoritySignedAt,roster.reviewers]));
+   const sig=Buffer.from(roster.authoritySignatureBase64,'base64');
+   if(key.asymmetricKeyType!=='ed25519'||sig.length!==64||!crypto.verify(null,message,key,sig))
+    throw Error('invalid authority signature');
+  }catch{
+   return {passed:false,verifiedOptions:0,expertApprovedQuestions:0,errors:['Reviewer registry is not signed by trusted external authority']};
+  }
+ }
  const keys=new Map();
  for(const person of roster.reviewers){
   if(!person||typeof person.id!=='string'||keys.has(person.id)||!person.id.trim()||
@@ -45,7 +60,8 @@ function assess(ledger,roster,attestations){
     !iso(entry.signedAt)||!entry.noConflictOfInterest||entry.authorId===entry.reviewerId||
     entry.authorId===undefined||!entry.authorId||!entry.reviewedPrimaryDocumentIndependently||
     !entry.noSharedDrafting||!entry.reviewedHistoricLawAndCases||
-    !entry.independentOfOriginalAuthor||!entry.humanReviewer){
+    !entry.independentOfOriginalAuthor||!entry.humanReviewer||
+    option.reviewer?.name!==entry.reviewerId||entry.signedAt<option.reviewer?.reviewedAt){
    problems.push('Independent review prerequisites missing for '+id);continue;
   }
   const data=Buffer.from(claim(option)+'\n'+entry.reviewerId+'\n'+entry.authorId+'\n'+entry.signedAt,'utf8');
