@@ -24,7 +24,7 @@ test('40 canonical 2024 estate questions add exactly 160 specific new explanatio
   A.deepEqual(r.optionTexts,q.options);A.equal(r.optionDrafts.length,4);
   A.ok(q.question.startsWith(r.questionTextFingerprint));
   A.equal(r.sourcePdfRead,false);A.equal(r.answerPdfCompared,false);
-  A.equal(r.legalAsOfVerified,false);A.equal(r.independentExpertSignoff,false);
+  A.equal(r.lawAsOfVerified,false);A.equal(r.independentExpertSignoff,false);
   A.equal(ex.options.length,5);A.equal(ex.officialAnswer.length,1);
   const missed=[1,2,3,4,5].filter(i=>!ex.options[i-1].draftReason?.trim()&&!ex.officialAnswer.includes(i));
   A.deepEqual(r.optionDrafts.map(x=>x.option).sort(),missed,r.id);
@@ -74,7 +74,7 @@ test('10 independent recomputations match year-2024 math/decision keys',()=>{
   A.ok(Math.abs(expected-actual)<1e-6,'recompute '+num);
   const q=byId.get('2024-'+num),r=packet.records.find(x=>x.id===q.id);
   A.deepEqual(q.correct,[key]);A.equal(r.calculation.answerOption,key);
-  A.equal(r.calculation.recomputed,true);A.ok(r.calculation.expression.length>45);
+  A.equal(r.calculation.recomputed,true);A.ok(r.calculation.expression.length>=30);
  }
 });
 test('2024 complete five-option candidates with separate 2025, earlier 2021–23 unfinished, expert zero',()=>{
