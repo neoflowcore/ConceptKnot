@@ -55,11 +55,16 @@ test('expert gate rejects unregistered, self-authored, unsigned, edited and dupl
  const before=expert.assess(empty,{reviewers:[]},{records:[]});
  A.equal(before.passed,true);A.equal(before.verifiedOptions,0);
  const {publicKey,privateKey}=crypto.generateKeyPairSync('ed25519');
+ const {publicKey:authorityKey,privateKey:authorityPrivate}=crypto.generateKeyPairSync('ed25519');
  const roster={reviewers:[{id:'reviewer-1',status:'externally-checked',
    qualificationType:'independent-law-professional',qualificationReference:'external-check-required',
    credentialCheckedAt:'2026-11-13',independenceCheckedBy:'manual-review-committee',
    independenceCheckedAt:'2026-11-13',
    publicKeyPem:publicKey.export({type:'spki',format:'pem'})}]};
+ roster.authoritySignedAt='2026-11-13';
+ const registryMessage=Buffer.from(JSON.stringify(['P4-REVIEWER-REGISTRY-v1',roster.authoritySignedAt,roster.reviewers]));
+ roster.authoritySignatureBase64=crypto.sign(null,registryMessage,authorityPrivate).toString('base64');
+ const trusted={trustedAuthorityPublicKey:authorityKey.export({type:'spki',format:'pem'})};
  const a=structuredClone(empty),o=a.options[0];o.verdict='true';o.explanation='Evidence-backed option verdict awaiting human independent review';
  o.examPdf={url:'https://www.q-net.or.kr/example.pdf',page:1,quotedAnchor:'test',checked:true};
  o.finalAnswer={url:'https://www.q-net.or.kr/answer.pdf',page:1,checked:true};
@@ -72,14 +77,17 @@ test('expert gate rejects unregistered, self-authored, unsigned, edited and dupl
  const entry={optionId:o.optionId,reviewerId:id,authorId:author,signedAt:stamp,
  signatureBase64:proof,noConflictOfInterest:true,reviewedPrimaryDocumentIndependently:true,
  noSharedDrafting:true,reviewedHistoricLawAndCases:true,independentOfOriginalAuthor:true,humanReviewer:true};
- const good=expert.assess(a,roster,{records:[entry]});
+ A.equal(expert.assess(a,roster,{records:[entry]}).passed,false);
+ const good=expert.assess(a,roster,{records:[entry]},trusted);
  A.equal(good.passed,true,good.errors.join(' | '));A.equal(good.verifiedOptions,1);
  A.equal(good.expertApprovedQuestions,0);
  const altered=structuredClone(a);altered.options[0].explanation+=' tampered';
- A.equal(expert.assess(altered,roster,{records:[entry]}).passed,false);
- A.equal(expert.assess(a,roster,{records:[{...entry,authorId:id}]}).passed,false);
- A.equal(expert.assess(a,roster,{records:[entry,entry]}).passed,false);
- A.equal(expert.assess(a,{reviewers:[]},{records:[entry]}).passed,false);
+ A.equal(expert.assess(altered,roster,{records:[entry]},trusted).passed,false);
+ A.equal(expert.assess(a,roster,{records:[{...entry,authorId:id}]},trusted).passed,false);
+ A.equal(expert.assess(a,roster,{records:[entry,entry]},trusted).passed,false);
+ A.equal(expert.assess(a,{reviewers:[]},{records:[entry]},trusted).passed,false);
+ const badRoster=structuredClone(roster);badRoster.reviewers[0].qualificationReference='unverified-change';
+ A.equal(expert.assess(a,badRoster,{records:[entry]},trusted).passed,false);
 });
 test('P4 v167 frontend and offline optional assets match no-autodeploy policy',()=>{
  const html=fs.readFileSync('index.html','utf8'),sw=fs.readFileSync('sw.js','utf8');
