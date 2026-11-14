@@ -2,6 +2,7 @@
 'use strict';
 const {spawnSync}=require('node:child_process');
 const files=[
+ 'tests/v172-dual-tts-contract.test.cjs',
  'tests/v171-tts-graph-bridge.test.cjs',
  'tests/v138-voice-controller.test.cjs',
  'tests/v170-p4-qa-hub-and-scope.test.cjs',
