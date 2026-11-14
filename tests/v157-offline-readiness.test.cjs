@@ -78,7 +78,7 @@ test('P0 offline version and warnings are truthful without user hardware confirm
  const s=read('assets/ck-data-diagnostics-v88.js');
  A.ok(s.includes('학습 도구 자산 확보(조작은 별도 검증)'));
  A.ok(s.includes('실제 기기 동작은 별도 검사'));
- A.ok(s.includes('현재 v170 서비스워커가 이 탭을 제어함'));
+ A.ok(s.includes('현재 v171 서비스워커가 이 탭을 제어함'));
  A.doesNotMatch(s,/현재 v140 서비스워커가 이 탭을 제어함/);
 });
 
