@@ -1,3 +1,5 @@
+> **SUPERSEDED 2026-11-14:** Brave neural TTS is paused; Android APK-first native TTS is active. See [v173 decision checkpoint](V173_TTS_ANDROID_APK_FIRST_CHECKPOINT.md). Existing web code remains unchanged.
+
 # ConceptKnot v172 — Dual Local TTS Development Plan (Android + Brave)
 
 ## Decision
