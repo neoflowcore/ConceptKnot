@@ -1,6 +1,6 @@
 package org.conceptknot.app
 
-/** Product roadmap is explicit: source scaffolding is not a completed Android build. */
+/** Source availability never implies physical Android/device validation. */
 enum class StageStatus { SOURCE_ONLY, PENDING }
 
 data class Stage(
@@ -12,8 +12,8 @@ data class Stage(
 
 object Roadmap {
     val stages: List<Stage> = listOf(
-        Stage("A0", "Android 앱 기반", "Gradle·Compose 소스 구성 / 빌드 및 실기검증 대기", StageStatus.SOURCE_ONLY),
-        Stage("A1", "로컬 AI 음성", "sherpa-onnx 한국어 모델 검증·1회 설치"),
+        Stage("A0", "Android 앱 기반", "공식 Gradle Wrapper 준비 · Android 빌드 검증", StageStatus.SOURCE_ONLY),
+        Stage("A1", "로컬 AI 음성", "한국어 여성 F1 · 1회 다운로드 및 SHA-256 검증 · 실기검증 대기", StageStatus.SOURCE_ONLY),
         Stage("A2", "긴 글 완독", "문장 대기열·재시도·이어듣기·1.5배속"),
         Stage("A3", "10개년 기출", "800문항 실제 데이터·정답·검수상태 이관"),
         Stage("A4", "모의고사·오답", "80문항 100분·채점·약점 복습"),

@@ -8,9 +8,8 @@ class RoadmapTest {
     @Test fun allEightStagesHaveStableIds() {
         assertEquals((0..7).map { "A$it" }, Roadmap.stages.map { it.code })
     }
-
-    @Test fun unimplementedStagesAreNotAdvertisedAsReady() {
-        assertEquals(StageStatus.SOURCE_ONLY, Roadmap.stages.first().status)
-        assertTrue(Roadmap.stages.drop(1).all { it.status == StageStatus.PENDING })
+    @Test fun implementationAndDeviceValidationAreDistinguished() {
+        assertTrue(Roadmap.stages.take(2).all { it.status == StageStatus.SOURCE_ONLY })
+        assertTrue(Roadmap.stages.drop(2).all { it.status == StageStatus.PENDING })
     }
 }

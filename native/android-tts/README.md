@@ -1,44 +1,35 @@
-# ConceptKnot Android native application (A0 source bootstrap)
+# ConceptKnot Android native APK — A0/A1
 
-This directory is the **Android Gradle project root**, not a WebView wrapper.
-The v172 Kotlin queue remains at
-[src/main/kotlin/org/conceptknot/tts/LocalReadingQueue.kt](src/main/kotlin/org/conceptknot/tts/LocalReadingQueue.kt)
-and is referenced by the app module's main source set without copying it.
+Root: native/android-tts. Kotlin + Jetpack Compose, not a WebView. The paused Brave website and its study data remain untouched.
 
-## A0 configuration
+## Build
+- JDK 17, Android SDK 36 / build-tools 35.0.0.
+- Gradle Wrapper 8.13 (official JAR checksum 81a82aaea5abcc8ff68b3dfcb58b3c3c429378efd98e7433460610fecd7ae45f).
+- Android Gradle Plugin 8.13.2 / Kotlin 2.2.21.
+- First execute: sh scripts/prepare-sherpa-sdk.sh
+- Then execute: ./gradlew :app:compileDebugKotlin :app:testDebugUnitTest --no-daemon
+- No APK or automatic Actions workflow should be produced before device validation authorization.
 
-- Module: app, package: org.conceptknot.android, native Kotlin + Jetpack Compose.
-- Android Gradle Plugin 8.13.2, Kotlin/Compose compiler 2.2.21, Gradle 8.13, JDK 17.
-- compileSdk 36, targetSdk 35, minSdk 26; Compose BOM 2025.10.00.
-- Local confirmation is stored only in app-private SharedPreferences. No web storage is accessed.
-- AndroidManifest contains no INTERNET permission. No neural model has been installed.
-- No web source or PWA deployment is modified by this phase.
+## Native local voice A1
+Model: Supertonic 3 INT8 Korean, female F1 / sid 0, preview default 1.5x speed.
+Official archive size 128774318 bytes, SHA-256 82fa96f91c4ef8abaae3a14a3f4153facf88bed821d1f7331cec2700f432c427.
+Official sherpa-onnx Android AAR v2.0.1 is 49441341 bytes,
+SHA-256 a8d09d1d32f3eb8520482c6d3d43fae674681c5b050385967c70a3c2c9bf0ee7.
+The setup script downloads the AAR to app/libs and verifies its digest; the binary is ignored by git.
 
-## Build/test status
+The model download starts ONLY when the user selects the install button. The app verifies
+the size and archive digest before extracting seven named files to staged app-private
+storage. A per-file digest receipt is written and the verified directory is promoted
+atomically. Existing matching versions are fully rehashed without making a network call.
+Partial installs and failed downloads are not marked as successful.
+A valid model persists over ordinary app restarts and updates. Uninstall or data clearing
+removes it; it is not a cloud backup or permanent through uninstall.
 
-**Gradle/Android SDK and device execution are not available in the development session that created this source.**
-Source-level Kotlin validation is separate from a genuine Android build and is not sufficient to
-declare A0 complete. No APK, artifact or CI workflow is created.
+Read test text is processed locally through sherpa-onnx native Android APIs. The UI
+identifies AI-generated speech and cites the OpenRAIL-M terms. Model weight terms:
+https://github.com/supertone-oss-archive/supertonic
+https://github.com/k2-fsa/sherpa-onnx/releases/tag/tts-models
 
-The distribution checksum is pinned in gradle/wrapper/gradle-wrapper.properties, but
-the standard Gradle wrapper scripts/JAR could not be generated in this environment.
-To finish bootstrapping on a trusted Android development machine, use a local Gradle
-installation to generate the *official* wrapper (Gradle 8.13), verify its JAR against
-https://gradle.org/release-checksums/ (expected Gradle 8.13 wrapper checksum:
-81a82aaea5abcc8ff68b3dfcb58b3c3c429378efd98e7433460610fecd7ae45f),
-then commit the generated wrapper files. Do not substitute an unverified downloaded JAR.
-
-After the wrapper is in place, sync the native/android-tts project in Android Studio,
-run :app:compileDebugKotlin and :app:testDebugUnitTest, and run the
-LaunchSmokeTest instrumentation on a real/emulated Android device. Only create an
-APK when the user explicitly requests a device-validation/install artifact.
-
-## Roadmap
-
-- A0: source scaffolding added; actual Gradle compilation and device launch pending.
-- A1: verify a Korean female sherpa-onnx-compatible voice, redistribution license,
-  official SDK API and exact checksums; then implement local model installation.
-- A2-A7: see [Android master plan](../../docs/V174_ANDROID_APK_MASTER_PLAN.md).
-- Web: see [preservation policy](../../docs/V174_WEB_APP_PAUSE_AND_PRESERVATION.md).
-
-Current checkpoint: [V175](../../docs/V175_ANDROID_A0_BOOTSTRAP_CHECKPOINT.md).
+A1 does not yet provide the full A2 background media service, audio-focus handling,
+40-question continuous real-device playback or verified mobile speech performance.
+See ../../docs/V176_ANDROID_A0_A1_CHECKPOINT.md.

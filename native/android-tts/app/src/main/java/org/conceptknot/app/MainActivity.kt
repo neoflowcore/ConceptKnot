@@ -110,12 +110,14 @@ fun ConceptKnotHome() {
                     style = MaterialTheme.typography.bodyLarge
                 )
                 Text(
-                    "현재 상태: 소스 구성. Gradle 빌드·기기 실행·음성 모델은 아직 검증되지 않았습니다.",
+                    "Android 네이티브 기반과 A1 로컬 TTS 모델 설치 기능을 연결했습니다. 실제 기기 낭독 검증은 별도 단계입니다.",
                     style = MaterialTheme.typography.bodySmall,
                     color = secondaryText
                 )
             }
         }
+
+        OfflineVoicePanel()
 
         Text("개발 단계", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
