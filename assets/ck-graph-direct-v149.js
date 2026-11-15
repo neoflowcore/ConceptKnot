@@ -196,11 +196,13 @@ function sync(root,c,state){
  root.classList?.toggle?.('ck21-revealed',p>0||slopeChanged);
  const cards=root.querySelector?.('[data-ck148-legacy]');
  const steps=window.CK148LearningSteps;
- if(cards&&steps&&m&&(c.type==='both'||window.CK178GraphCompact)){
+ if(cards&&steps&&m&&(c.type==='both'||window.CK179ChartLearning)){
   const model=steps.legacy(c,p,sign,state);
   if(model){
    const out=['demand','supply','both'].includes(c.type)?m.outcome(c,state):null;
-   cards.innerHTML=window.CK178GraphCompact?.renderLegacy?.(c,model,out,state)||steps.render(model);
+   if(!window.CK179ChartLearning?.paint?.(cards,c,model,out,state,
+     m.explain(c,state),window.CK21Charts?.problems))
+    cards.innerHTML=steps.render(model);
   }
  }
  const lesson=m?.explain?.(c,state);
@@ -290,7 +292,10 @@ function mount(root,c){
    '<p class="ck149-tools-status"><strong>직접 조작</strong> 곡선 위 D/S 동그란 손잡이 또는 두꺼운 터치영역을 잡고 이동하세요.'+
    ' 빈 공간은 조작 시작 지점이 아닙니다. <output data-ck149-current></output></p>'+
    '<small>이전 점선 · 현재 실선 / 도식 진행률은 실제 가격 변동률이 아닙니다.</small>';
-  controls.append?.(tools);
+  // Put the compact manipulation toolbar above the three learning steps.
+  const resultHost=controls.querySelector?.('[data-ck148-legacy]');
+  if(resultHost&&typeof controls.insertBefore==='function')controls.insertBefore(tools,resultHost);
+  else controls.append?.(tools);
   const rows=tools.querySelectorAll?.('.ck149-tools-row');
   if(rows?.length>1&&document.createElement){
    const extra=document.createElement('details');extra.className='ck178-extra';

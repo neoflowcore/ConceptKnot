@@ -91,7 +91,10 @@ function update(value,options={}){
    const snapshot=window.CK149GraphEnhance?.getState?.();
    const outcome=snapshot?.id===c.id&&['demand','supply','both'].includes(c.type)?
     window.CK149GraphMotion?.outcome?.(c,snapshot):null;
-   cards.innerHTML=window.CK178GraphCompact?.renderLegacy?.(c,model,outcome,snapshot)||steps.render(model);
+   const active=snapshot?.id===c.id?snapshot:{value:p,sign};
+   if(!window.CK179ChartLearning?.paint?.(cards,c,model,outcome,active,
+     window.CK149GraphMotion?.explain?.(c,active),window.CK21Charts?.problems))
+    cards.innerHTML=steps.render(model);
   }
  }
  const out=root.querySelector('[data-ck79-chart-percentage]');
@@ -215,25 +218,25 @@ if(main&&window.MutationObserver)new MutationObserver(records=>{
    n.querySelector?.('.ck21-chart-section,.ck76-chart-control')))))queueMount();
 }).observe(main,{subtree:true,childList:true});
 window.CK79Charts=Object.freeze({update,narrative,getState:()=>({id:lastChart,value:lastValue,sign:override})});
-/* v178 optional compact presentation layer; preserve legacy fallback. */
-function ck178Load(){
+/* v179 visual-only three-stage lesson layer, with legacy fallback. */
+function ck179Load(){
  if(!document.head||!document.createElement)return;
- if(!document.querySelector?.('[data-ck178-style]')){
+ if(!document.querySelector?.('[data-ck179-style]')){
   const sheet=document.createElement('link');sheet.rel='stylesheet';
-  sheet.href='./assets/ck-graph-compact-v178.css?v=178';sheet.dataset.ck178Style='';
+  sheet.href='./assets/ck-chart-learning-v179.css?v=179';sheet.dataset.ck179Style='';
   document.head.appendChild(sheet);
  }
- if(window.CK178GraphCompact||document.querySelector?.('[data-ck178-script]'))return;
- const script=document.createElement('script');script.src='./assets/ck-graph-compact-v178.js?v=178';
- script.async=false;script.dataset.ck178Script='';
+ if(window.CK179ChartLearning||document.querySelector?.('[data-ck179-script]'))return;
+ const script=document.createElement('script');script.src='./assets/ck-chart-learning-v179.js?v=179';
+ script.async=false;script.dataset.ck179Script='';
  script.onload=()=>{
   const current=window.CK79Charts?.getState?.();
   if(current?.id)window.CK79Charts.update(current.value,{direction:current.sign});
  };
  document.head.appendChild(script);
 }
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ck178Load,{once:true});
-else ck178Load();
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ck179Load,{once:true});
+else ck179Load();
 
 /* P6-B v141 separately loads the verified numeric model and opt-in laboratory. */
 let ck141Promise=null;

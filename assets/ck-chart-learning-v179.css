@@ -1,0 +1,117 @@
+/* ConceptKnot v179 — one chart at top, three learning steps below it.
+ * Calculators/legacy simulators remain in code but duplicate canvases are hidden.
+ */
+#main .ck21-chart-section .ck21-chart-card{
+ display:flex!important;flex-direction:column!important;align-items:stretch!important;
+ grid-template-columns:none!important;gap:8px!important;min-width:0;
+}
+#main .ck21-chart-section .ck21-chart-stage{
+ order:0!important;width:100%!important;max-width:850px!important;min-width:0!important;
+ margin-inline:auto!important;
+}
+#main .ck21-chart-section .ck21-chart-stage .ck21-chart-svg{display:block;max-width:100%;width:100%;height:auto}
+#main .ck21-chart-section .ck21-chart-copy{
+ order:1!important;width:100%!important;max-width:850px!important;min-width:0!important;
+ margin-inline:auto!important;box-sizing:border-box;
+}
+#main .ck21-chart-section .ck21-chart-tabs{
+ display:flex!important;flex-wrap:nowrap!important;overflow-x:auto!important;max-width:100%;
+ overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;
+}
+#main .ck21-chart-section .ck21-chart-tabs button{flex:0 0 auto!important;white-space:nowrap}
+#main .ck21-chart-section .ck21-chart-head>p,
+#main .ck21-chart-section .ck21-chart-copy>p:first-of-type,
+#main .ck21-chart-section .ck21-chart-copy>.ck21-chart-explanation,
+#main .ck21-chart-section .ck21-chart-copy>.ck21-equilibrium-outcome,
+#main .ck21-chart-section .ck21-chart-copy>small,
+#main .ck21-chart-section .ck79-chart-condition,
+#main .ck21-chart-section .ck79-chart-instruction,
+#main .ck21-chart-section [data-ck79-chart-note],
+#main .ck21-chart-section .ck149-tools-status,
+#main .ck21-chart-section .ck149-tools>small,
+#main .ck21-chart-section .ck148-guide,
+#main .ck21-chart-section .ck143-insight,
+#main .ck21-chart-section .ck150-scenarios,
+#main .ck21-chart-section [data-ck145-open-lab],
+#main .ck21-chart-section #ck141-concept-lab,
+#main .ck21-chart-section #ck142-theory-studio,
+#main .ck21-chart-section .ck158-policy-lab{display:none!important}
+/* Keep screen-reader final drag announcement, not redundant long theory cards. */
+#main .ck21-chart-section .ck156-theory{
+ position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;
+ margin:-1px!important;padding:0!important;clip-path:inset(50%)!important;white-space:nowrap!important;
+}
+#main .ck21-chart-section .ck149-tools{gap:6px!important;margin:5px 0!important;padding:7px!important}
+#main .ck21-chart-section .ck178-extra{margin:4px 0;padding:5px 8px;border:1px solid color-mix(in srgb,currentColor 20%,transparent);border-radius:9px}
+#main .ck21-chart-section .ck178-extra>summary{font-size:12px;font-weight:700;cursor:pointer}
+#main .ck21-chart-section .ck179-summary{min-width:0;display:grid;gap:9px;margin:6px 0 8px;color:inherit}
+#main .ck21-chart-section .ck179-summary *{box-sizing:border-box}
+#main .ck21-chart-section .ck179-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+#main .ck21-chart-section .ck179-metric{
+ display:flex;min-width:0;flex-direction:column;gap:4px;padding:11px 12px;
+ background:color-mix(in srgb,currentColor 4%,transparent);
+ border:1px solid color-mix(in srgb,currentColor 19%,transparent);border-radius:11px;
+}
+#main .ck21-chart-section .ck179-metric>span{font-size:11px;opacity:.75}
+#main .ck21-chart-section .ck179-metric strong{font-size:clamp(15px,2.4vw,21px);line-height:1.4;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+#main .ck21-chart-section .ck179-metric strong i{font-style:normal;opacity:.6}
+#main .ck21-chart-section .ck179-metric small{font-size:11px;opacity:.76}
+#main .ck21-chart-section .ck179-headline{
+ margin:0!important;font-size:13px;font-weight:750;line-height:1.5;overflow-wrap:anywhere;
+}
+#main .ck21-chart-section .ck179-step{
+ padding:12px 13px;border:1px solid color-mix(in srgb,currentColor 20%,transparent);
+ border-radius:12px;background:color-mix(in srgb,currentColor 3%,transparent);min-width:0;
+}
+#main .ck21-chart-section .ck179-step h4,
+#main .ck21-chart-section .ck179-step>summary{
+ display:flex;align-items:center;gap:8px;cursor:pointer;
+ margin:0!important;padding:0!important;list-style:none;font-size:14px;font-weight:800;line-height:1.5;
+}
+#main .ck21-chart-section .ck179-step>summary::-webkit-details-marker{display:none}
+#main .ck21-chart-section .ck179-step>summary:after{content:"⌄";margin-left:auto;opacity:.65}
+#main .ck21-chart-section .ck179-step[open]>summary:after{content:"⌃"}
+#main .ck21-chart-section .ck179-step :is(h4,summary)>span{
+ display:grid;place-items:center;flex:none;width:23px;height:23px;border-radius:50%;
+ color:inherit;background:color-mix(in srgb,currentColor 13%,transparent);
+ font-size:12px;font-weight:850;
+}
+#main .ck21-chart-section .ck179-step p{
+ margin:7px 0 0!important;font-size:12px;line-height:1.62;word-break:keep-all;overflow-wrap:anywhere;
+}
+#main .ck21-chart-section .ck179-step small{display:block;font-size:10px;opacity:.65;margin-top:7px}
+#main .ck21-chart-section .ck179-choices{
+ display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:7px;margin:9px 0;
+}
+#main .ck21-chart-section .ck179-choices button,
+#main .ck21-chart-section [data-ck179-retry]{
+ min-height:40px;padding:8px;border:1px solid color-mix(in srgb,currentColor 22%,transparent);
+ border-radius:9px;background:color-mix(in srgb,currentColor 6%,transparent);
+ color:inherit;font:inherit;font-size:12px;cursor:pointer;white-space:normal;text-align:center;
+}
+#main .ck21-chart-section .ck179-choices button[aria-pressed="true"]{
+ border-color:#539b79;background:color-mix(in srgb,#61a786 18%,transparent);font-weight:800;
+}
+#main .ck21-chart-section .ck179-choices button:disabled{cursor:default;opacity:.8}
+#main .ck21-chart-section .ck179-step button:focus-visible,
+#main .ck21-chart-section .ck179-step summary:focus-visible{outline:2px solid #76aeb0;outline-offset:2px}
+#main .ck21-chart-section .ck179-step [hidden]{display:none!important}
+#main .ck21-chart-section .ck179-footnote{font-size:10px;opacity:.65;line-height:1.5}
+@media(max-width:480px){
+ #main .ck21-chart-section .ck179-metrics{gap:6px}
+ #main .ck21-chart-section .ck179-metric{padding:8px}
+ #main .ck21-chart-section .ck179-metric strong{font-size:14px}
+ #main .ck21-chart-section .ck179-step{padding:10px}
+ #main .ck21-chart-section .ck179-choices{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #main .ck21-chart-section .ck21-chart-head h2{font-size:16px!important}
+}
+@media(prefers-reduced-motion:reduce){
+ #main .ck21-chart-section .ck179-summary *{transition:none!important;animation:none!important}
+}
+
+/* v179 compact layout refinements: keep slider and actions; remove repeated notes. */
+#main .ck21-chart-section .ck76-chart-control>p,
+#main .ck21-chart-section .ck21-chart-copy>span:first-child{display:none!important}
+#main .ck21-chart-section .ck21-chart-copy h3{margin:3px 0 7px!important;font-size:clamp(15px,2.6vw,19px)!important}
+#main .ck21-chart-section .ck76-chart-control{margin:7px 0 9px!important}
+#main .ck21-chart-section .ck76-chart-control>label{font-size:11px!important;margin-bottom:5px!important}

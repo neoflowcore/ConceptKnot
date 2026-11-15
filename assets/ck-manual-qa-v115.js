@@ -235,7 +235,7 @@ function mount(preferDock=false){
  const settingsVisible=document.body?.dataset.ckV8Tab==='settings'||
   Boolean(document.querySelector('#main .settings-grid'));
  const dockSlot=document.querySelector('#ck103-tools-dock .ck103-tools-content');
- const slot=(preferDock&&dockSlot)||
+ const slot=((preferDock||settingsVisible)&&dockSlot)||
   (settingsVisible&&document.querySelector('#main .board-content'));
  if(!slot)return false;
  if(panel?.isConnected){
@@ -298,6 +298,12 @@ window.CK115QA=Object.freeze({
  tasks:TASKS.map(x=>({id:x.id,group:x.group,name:x.name})),
  sanitize,summary,flush,mount,diagnose,exportText,
  getState:()=>({...summary(),dirty,issue,connected:Boolean(panel?.isConnected)}),
- open:()=>{if(mount(true)){const d=panel.querySelector('details');if(d)d.open=true;return true;}return false;}
+ open:()=>{
+  if(document.body?.dataset.ckV8Tab!=='settings')
+   document.querySelector('#main [data-go="settings"]')?.click();
+  if(mount(true)){
+  const dock=panel.closest?.('#ck103-tools-dock');if(dock)dock.open=true;
+  const d=panel.querySelector('details');if(d)d.open=true;return true;
+ }return false;}
 });
 })();

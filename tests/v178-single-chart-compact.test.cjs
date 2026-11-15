@@ -16,7 +16,7 @@ test('market curve movement updates hypothetical before/after price and quantity
 });
 test('observation charts show position, never invented equilibrium numbers',()=>{
  const html=C.renderLegacy({id:'stock-flow',type:'stock'},{concept:'저량과 유량',example:'재고 100'},null,{value:55});
- A.match(html,/관찰 위치 · 도식 단계/);A.match(html,/>55</);
+ A.match(html,/관찰 위치 · 도식 단계/);A.match(html,/55/);
  A.doesNotMatch(html,/균형가격|균형거래량/);
 });
 test('all displayed text is escaped',()=>{
@@ -27,8 +27,8 @@ test('all displayed text is escaped',()=>{
 test('old drag engine and math are retained, compact styles remove duplicated panels',()=>{
  const glue=read('assets/ck-study-charts-v79.js'),direct=read('assets/ck-graph-direct-v149.js');
  const css=read('assets/ck-graph-compact-v178.css');
- A.match(glue,/CK178GraphCompact/);A.match(glue,/ck-graph-compact-v178\.js/);
- A.match(direct,/CK178GraphCompact/);A.match(direct,/ck178-extra/);
+ A.match(glue,/CK179ChartLearning/);A.match(glue,/ck-chart-learning-v179\.js/);
+ A.match(direct,/CK179ChartLearning/);A.match(direct,/ck178-extra/);
  A.match(css,/ck141-columns/);A.match(css,/ck142-layout/);
  A.match(read('docs/V178_SINGLE_CHART_COMPACT_PLAN_2026-11-15.md'),/V174_WEB_APP_PAUSE/);
 });

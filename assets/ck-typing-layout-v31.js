@@ -460,11 +460,18 @@ function updateModeButtons(){
 }
 function updateDock(stage){
  if(!stage)return;
+ const narrow=window.matchMedia?.('(max-width:850px)')?.matches===true;
+ // On a single-column screen, hidden collapse state must not strand the board.
+ if(narrow&&state.ck31BoardCollapsed===true){state.ck31BoardCollapsed=false;save();}
  stage.classList.toggle('ck31-board-bottom',state.ck31BoardBottom===true);
  stage.classList.toggle('ck32-board-top',state.ck32BoardTop===true);
  stage.classList.toggle('ck31-board-collapsed',state.ck31BoardCollapsed===true);
  const bottom=stage.querySelector('[data-ck31-board-bottom]'),collapse=stage.querySelector('[data-ck31-board-collapse]');
- if(bottom)bottom.setAttribute('aria-pressed',String(state.ck31BoardBottom===true));
+ const top=stage.querySelector('[data-ck32-board-top]');
+ if(top){top.setAttribute('aria-pressed',String(state.ck32BoardTop===true));
+  top.setAttribute('aria-label','칠판을 본문 위에 배치');top.title='칠판 위로';}
+ if(bottom){bottom.setAttribute('aria-pressed',String(narrow?state.ck32BoardTop!==true:state.ck31BoardBottom===true));
+  bottom.setAttribute('aria-label','칠판을 본문 아래에 배치');bottom.title='칠판 아래로';}
  const drag=stage.querySelector('[data-ck-v7-resize]');
  if(drag)drag.setAttribute('aria-disabled',String(state.ck31BoardBottom===true||state.ck31BoardCollapsed===true));
  if(collapse){
@@ -502,10 +509,11 @@ document.addEventListener('click',e=>{
  const stage=control.closest('.ck-v7-stage');
  if(!stage)return;
  stage.querySelector('.ck-v7-board')?.__ckV7Finish?.();
+ const narrow=window.matchMedia?.('(max-width:850px)')?.matches===true;
  if(control.hasAttribute('data-ck31-board-bottom')){
-  state.ck31BoardBottom=!state.ck31BoardBottom;state.ck32BoardTop=false;state.ck31BoardCollapsed=false;
+  state.ck31BoardBottom=narrow?true:!state.ck31BoardBottom;state.ck32BoardTop=false;state.ck31BoardCollapsed=false;
  }else if(control.hasAttribute('data-ck32-board-top')){
-  state.ck32BoardTop=!state.ck32BoardTop;state.ck31BoardBottom=false;state.ck31BoardCollapsed=false;
+  state.ck32BoardTop=narrow?true:!state.ck32BoardTop;state.ck31BoardBottom=false;state.ck31BoardCollapsed=false;
  }else state.ck31BoardCollapsed=!state.ck31BoardCollapsed;
  const top=stage.querySelector('[data-ck32-board-top]');
  if(top)top.setAttribute('aria-pressed',String(state.ck32BoardTop===true));

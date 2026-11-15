@@ -516,11 +516,13 @@ function render(){
 }
 
 /* v103: preserve personal-tool DOM in a compact dock instead of prepending to the header. */
-const TOOL_DOCK_IDS=['ck76-search','ck79-review','ck81-workbench','ck111-review-queue','ck83-link-tools','ck83-analytics','ck84-materials'];
+const TOOL_DOCK_IDS=['ck76-search','ck79-review','ck81-workbench','ck111-review-queue','ck83-link-tools','ck83-analytics','ck84-materials','ck115-manual-qa'];
+/* v179: preserve the same dock DOM while settings routes replace their grid. */
+let settingsDockRef=null;
 function ensureToolsDock(){
  const main=document.getElementById('main'),body=document.body;
  if(!main||!body||typeof body.append!=='function')return null;
- let dock=document.getElementById('ck103-tools-dock');
+ let dock=document.getElementById('ck103-tools-dock')||settingsDockRef;
  if(!dock){
   dock=document.createElement('details');
   dock.id='ck103-tools-dock';dock.className='ck103-tools-dock';
@@ -535,6 +537,7 @@ function ensureToolsDock(){
   }).observe(dock,{subtree:true,attributes:true,attributeFilter:['aria-expanded']});
  }
  
+settingsDockRef=dock;
 const content=dock.querySelector('.ck103-tools-content');
 if(content&&!content.querySelector('.ck170-qa-hub')){
  const nav=document.createElement('section');nav.className='ck170-qa-hub';
@@ -558,6 +561,15 @@ function alignToolsDock(){
  for(const id of TOOL_DOCK_IDS){
   const node=document.getElementById(id);
   if(node&&node.parentElement!==content)content.append(node);
+ }
+ // The former floating '검증·자료' control now lives in Settings only.
+ // Do not re-create it on route changes or lose personal draft/QA DOM state.
+ const dock=settingsDockRef;
+ const section=document.querySelector('#main .settings-grid');
+ const host=section||document.body;
+ if(dock&&host&&dock.parentElement!==host){
+  if(!section)dock.open=false;
+  host.append(dock);
  }
 }
 
@@ -966,5 +978,10 @@ window.CK81Workbench=Object.freeze({sanitizeProgress,assessDraft,specialAnswer,m
  riskScore,researchPacket,draftReviewPacket,dueIds,markResearchBatch,p4PriorityRecord,
  getState:()=>({shown,loaded:rows?.length||0,loadErrors,legacyLoadError,
   filters:{...view},progress:Object.keys(local.records).length,storageIssue}),
- open:()=>{mount();const dock=document.getElementById('ck103-tools-dock');if(dock)dock.open=true;if(!shown)toggle();}});
+ open:()=>{
+  if(document.body?.dataset.ckV8Tab!=='settings')
+   document.querySelector('#main [data-go="settings"]')?.click();
+  mount();const dock=document.getElementById('ck103-tools-dock')||settingsDockRef;
+  if(dock)dock.open=true;if(!shown)toggle();
+ }});
 })();
