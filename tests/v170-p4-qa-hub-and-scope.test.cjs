@@ -70,7 +70,7 @@ test('versioned read-only offline / SPA release and manual deploy guards are coh
  A.ok(sw.includes("const CACHE='"+cache+"'"));
  A.ok(diag.includes("OFFLINE_CACHE='"+cache+"'"));
  for(const asset of ['ck-study-workbench-v81.js?v=180','ck-study-workbench-v81.css?v=180',
-   'ck-manual-qa-v115.js?v=180','ck-manual-qa-v115.css?v=180','ck-data-diagnostics-v88.js?v=180']){
+   'ck-manual-qa-v115.js?v=180','ck-manual-qa-v115.css?v=170','ck-data-diagnostics-v88.js?v=180']){
   A.ok(html.includes(asset),'HTML missing '+asset);
   A.ok(sw.includes(asset),'SW missing '+asset);
  }

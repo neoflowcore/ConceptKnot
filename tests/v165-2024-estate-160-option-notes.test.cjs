@@ -102,10 +102,10 @@ test('v165 P4 UI, caching and manual QA all carry the same version and no auto-d
  A.ok(sw.includes('ck-p4-substantive-v165.js?v=165'));
  A.ok(diag.includes('ck-p4-substantive-v165.js?v=165'));
  A.match(qa,/P4 선택 자산 15\/15/);
- A.ok(html.includes('v171-p4-mvp-tts-theory-graph'));
- A.ok(sw.includes('conceptknot-study-v171-p4-mvp-tts-theory-graph'));
+ A.ok(html.includes('v180-single-chart-qa-release'));
+ A.ok(sw.includes('conceptknot-study-v180-single-chart-qa-release'));
  const cfg=parse('vercel.json');A.equal(cfg.git.deploymentEnabled,false);
- A.ok(cfg.buildCommand.length<=256);A.ok(cfg.buildCommand.includes('verify-p4-release-v171.cjs'));
+ A.ok(cfg.buildCommand.length<=256);A.ok(cfg.buildCommand.includes('verify-p4-release-v180.cjs'));
  for(const p of ['assets/ck-p4-substantive-v165.js','assets/ck-p4-public-study-v163.js',
  'assets/ck-p4-option-audit-ui-v160.js','assets/ck-study-workbench-v81.js','sw.js'])
   A.doesNotThrow(()=>new vm.Script(read(p),{filename:p}));

@@ -261,7 +261,7 @@ const OFFLINE_MINIMUM=Object.freeze([
 ]);
 const P2P6_OFFLINE=Object.freeze([
  './assets/ck-graph-motion-v149.js?v=158',
- './assets/ck-graph-direct-v149.js?v=158',
+ './assets/ck-graph-direct-v149.js?v=180',
  './assets/ck-graph-direct-v149.css?v=158',
  './assets/ck-mobile-board-v21.js?v=157',
  './assets/ck-study-p6-v76.js?v=157',

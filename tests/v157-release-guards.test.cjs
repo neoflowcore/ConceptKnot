@@ -9,10 +9,10 @@ test('index release, service worker and diagnostics version agree',()=>{
  A.ok(diag.includes("OFFLINE_CACHE='conceptknot-study-v180-single-chart-qa-release'"));
  const assets=[
   'ck-full-exam-v82.js?v=157','ck-mobile-board-v21.js?v=157',
-  'ck-manual-qa-v115.js?v=170','ck-data-diagnostics-v88.js?v=170',
-  'ck-study-p6-v76.js?v=157','ck-graph-direct-v149.js?v=158',
+  'ck-manual-qa-v115.js?v=180','ck-data-diagnostics-v88.js?v=180',
+  'ck-study-p6-v76.js?v=157','ck-graph-direct-v149.js?v=180',
   'ck-graph-direct-v149.css?v=158','ck-graph-motion-v149.js?v=158',
-   'ck-p4-review-priority-v159.js?v=159','ck-study-workbench-v81.js?v=170',
+   'ck-p4-review-priority-v159.js?v=159','ck-study-workbench-v81.js?v=180',
    'ck-p4-review-v159.css?v=159',
    'ck-p4-option-audit-v160.js?v=160','ck-p4-option-audit-ui-v160.js?v=165',
    'ck-p4-option-audit-v160.css?v=160','ck-p4-substantive-v161.js?v=161',
