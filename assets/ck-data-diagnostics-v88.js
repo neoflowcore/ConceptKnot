@@ -245,12 +245,12 @@ function downloadRaw(){
 /* previous: conceptknot-study-v137-native-voice-guard */
 /* prior offline generation: conceptknot-study-v138-unified-voice-queue */
 /* previous core: conceptknot-study-v139-managed-model-guard */
-const OFFLINE_CACHE='conceptknot-study-v171-p4-mvp-tts-theory-graph';
+const OFFLINE_CACHE='conceptknot-study-v180-single-chart-qa-release';
 const OFFLINE_MINIMUM=Object.freeze([
  './index.html',
- './assets/ck-data-diagnostics-v88.js?v=170',
+ './assets/ck-data-diagnostics-v88.js?v=180',
  './assets/ck-data-diagnostics-v88.css?v=125',
- './assets/ck-manual-qa-v115.js?v=170',
+ './assets/ck-manual-qa-v115.js?v=180',
  './assets/ck-study-links-v83.js?v=115',
  './assets/ck-study-editor-v80.js?v=127',
  './assets/ck-data-integrity-v86.js?v=120',
@@ -272,7 +272,7 @@ const P2P6_OFFLINE=Object.freeze([
 ]);
 const P4_OFFLINE=Object.freeze([
  './assets/ck-p4-review-priority-v159.js?v=159',
- './assets/ck-study-workbench-v81.js?v=170',
+ './assets/ck-study-workbench-v81.js?v=180',
  './assets/ck-p4-review-v159.css?v=159',
  './assets/ck-p4-option-audit-v160.js?v=160',
  './assets/ck-p4-option-audit-ui-v160.js?v=165',
@@ -385,7 +385,7 @@ async function runOfflineHealth(){
   message.textContent=!result.supported?'브라우저에서 캐시 읽기를 지원하지 않습니다.':
    !result.installed?'v170 오프라인 캐시 없음 · 아직 미배포 또는 설치 미완료입니다.':
    '현재 캐시의 필수 파일 '+result.cached+'/'+result.required+'개 · '+
-   (activeCurrent?'현재 v171 서비스워커가 이 탭을 제어함':controller.controlled?
+   (activeCurrent?'현재 v180 서비스워커가 이 탭을 제어함':controller.controlled?
     '구형 또는 응답 없는 서비스워커가 제어 중 · 현재 세대 확인 불가':'서비스워커가 이 탭을 제어하지 않음')+
    (result.missing.length?' · 미저장: '+result.missing.slice(0,3).map(x=>x.split('/').pop()).join(', ')+
     (result.missing.length>3?' 외 '+(result.missing.length-3)+'개':''):

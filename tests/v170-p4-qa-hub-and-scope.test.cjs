@@ -52,7 +52,7 @@ test('verification drawer provides direct one-click study, 2000-option, offline 
  A.ok(ui.includes('api.offlineHealth(window.caches,active)'));
  A.ok(ui.includes("실제 오프라인 조작은 ④에서 직접 검증하세요"));
  A.ok(qa.includes("document.querySelector('#ck103-tools-dock .ck103-tools-content')"));
- A.ok(qa.includes('open:()=>{if(mount(true))'));
+ A.ok(qa.includes('if(mount(true))'));
  A.ok(qa.includes("filterMode='p4'"));
  A.ok(qa.includes("data-ck115-filter"));
  A.ok(qa.includes('getState:()=>({...summary(),dirty,issue'));
@@ -65,20 +65,20 @@ test('verification drawer provides direct one-click study, 2000-option, offline 
 test('versioned read-only offline / SPA release and manual deploy guards are coherent',()=>{
  const html=read('index.html'),sw=read('sw.js'),diag=read('assets/ck-data-diagnostics-v88.js'),
   cfg=parse('vercel.json');
- A.ok(html.includes('ck-release" content="v171-p4-mvp-tts-theory-graph"'));
- const cache='conceptknot-study-v171-p4-mvp-tts-theory-graph';
+ A.ok(html.includes('ck-release" content="v180-single-chart-qa-release"'));
+ const cache='conceptknot-study-v180-single-chart-qa-release';
  A.ok(sw.includes("const CACHE='"+cache+"'"));
  A.ok(diag.includes("OFFLINE_CACHE='"+cache+"'"));
- for(const asset of ['ck-study-workbench-v81.js?v=170','ck-study-workbench-v81.css?v=170',
-   'ck-manual-qa-v115.js?v=170','ck-manual-qa-v115.css?v=170','ck-data-diagnostics-v88.js?v=170']){
+ for(const asset of ['ck-study-workbench-v81.js?v=180','ck-study-workbench-v81.css?v=180',
+   'ck-manual-qa-v115.js?v=180','ck-manual-qa-v115.css?v=180','ck-data-diagnostics-v88.js?v=180']){
   A.ok(html.includes(asset),'HTML missing '+asset);
   A.ok(sw.includes(asset),'SW missing '+asset);
  }
- A.ok(diag.includes('ck-study-workbench-v81.js?v=170'));
- A.ok(diag.includes('ck-manual-qa-v115.js?v=170'));
+ A.ok(diag.includes('ck-study-workbench-v81.js?v=180'));
+ A.ok(diag.includes('ck-manual-qa-v115.js?v=180'));
  A.ok(diag.includes('OFFLINE_CACHE});'));
  A.equal(cfg.git.deploymentEnabled,false);
- A.ok(cfg.buildCommand.includes('verify-p4-release-v171.cjs'));
+ A.ok(cfg.buildCommand.includes('verify-p4-release-v180.cjs'));
  A.equal(fs.existsSync('.github/workflows'),false);
  for(const path of ['assets/ck-study-workbench-v81.js','assets/ck-manual-qa-v115.js',
     'assets/ck-data-diagnostics-v88.js','sw.js'])

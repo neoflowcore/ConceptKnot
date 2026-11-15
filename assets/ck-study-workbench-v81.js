@@ -974,6 +974,14 @@ if(main&&window.MutationObserver)new MutationObserver(changes=>{
  if(!document.getElementById('ck81-workbench'))scheduleMount();
  alignToolsDock();
 }).observe(main,{subtree:true,childList:true});
+/* v180: settings SPA routing may not replace #main's direct child.
+ * Move the existing dock after navigation, retaining draft and QA state. */
+if(document.body&&window.MutationObserver){
+ new MutationObserver(records=>{
+  if(records.some(r=>r.attributeName==='data-ck-v8-tab'))
+   requestAnimationFrame(()=>requestAnimationFrame(alignToolsDock));
+ }).observe(document.body,{attributes:true,attributeFilter:['data-ck-v8-tab']});
+}
 window.CK81Workbench=Object.freeze({sanitizeProgress,assessDraft,specialAnswer,matchingRows,summary,
  riskScore,researchPacket,draftReviewPacket,dueIds,markResearchBatch,p4PriorityRecord,
  getState:()=>({shown,loaded:rows?.length||0,loadErrors,legacyLoadError,

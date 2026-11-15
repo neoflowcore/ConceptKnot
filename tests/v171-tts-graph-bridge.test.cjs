@@ -5,7 +5,7 @@ const read=p=>fs.readFileSync(p,'utf8'),parse=p=>JSON.parse(read(p));
 const bank=parse('data/official-2021-2025.json'),byId=new Map(bank.map(x=>[x.id,x]));
 const bridge=require('../assets/ck-exam-theory-bridge-v171.js');
 const chunks=require('../assets/ck-tts-chunks-v171.js');
-const cache='conceptknot-study-v171-p4-mvp-tts-theory-graph';
+const cache='conceptknot-study-v180-single-chart-qa-release';
 test('canonical 400 question matching yields provisional theory/graph suggestions, not legal signoff',()=>{
  A.equal(bank.length,400);
  let suggested=0,graph=0;
@@ -87,7 +87,7 @@ test('OS synthesis failure remains at original index; explicit retry resumes sam
 test('v171 HTML/SW/manual release lock and 3 reading modes are explicitly connected',()=>{
  const html=read('index.html'),sw=read('sw.js'),diag=read('assets/ck-data-diagnostics-v88.js');
  const ui=read('assets/ck-study-p4-v78.js'),c=read('assets/ck-voice-controller-v138.js'),v=parse('vercel.json');
- A.ok(html.includes('content="v171-p4-mvp-tts-theory-graph"'));
+ A.ok(html.includes('content="v180-single-chart-qa-release"'));
  A.ok(sw.includes("const CACHE='"+cache+"'"));
  A.ok(diag.includes("OFFLINE_CACHE='"+cache+"'"));
  for(const a of ['ck-exam-theory-bridge-v171.js?v=171','ck-exam-theory-bridge-v171.css?v=171',
@@ -102,7 +102,7 @@ test('v171 HTML/SW/manual release lock and 3 reading modes are explicitly connec
  A.ok(ui.includes('data-ck107-voice-retry'));
  A.ok(c.includes('function retryFailed()'));
  A.equal(v.git.deploymentEnabled,false);
- A.ok(v.buildCommand.includes('verify-p4-release-v171.cjs'));
+ A.ok(v.buildCommand.includes('verify-p4-release-v180.cjs'));
  A.equal(fs.existsSync('.github/workflows'),false);
  for(const m of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g))
   if(m[1].trim())A.doesNotThrow(()=>new vm.Script(m[1]));
