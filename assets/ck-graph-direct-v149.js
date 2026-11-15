@@ -196,9 +196,12 @@ function sync(root,c,state){
  root.classList?.toggle?.('ck21-revealed',p>0||slopeChanged);
  const cards=root.querySelector?.('[data-ck148-legacy]');
  const steps=window.CK148LearningSteps;
- if(cards&&steps&&m&&c.type==='both'){
+ if(cards&&steps&&m&&(c.type==='both'||window.CK178GraphCompact)){
   const model=steps.legacy(c,p,sign,state);
-  if(model)cards.innerHTML=steps.render(model);
+  if(model){
+   const out=['demand','supply','both'].includes(c.type)?m.outcome(c,state):null;
+   cards.innerHTML=window.CK178GraphCompact?.renderLegacy?.(c,model,out,state)||steps.render(model);
+  }
  }
  const lesson=m?.explain?.(c,state);
  if(lesson){
@@ -288,6 +291,14 @@ function mount(root,c){
    ' 빈 공간은 조작 시작 지점이 아닙니다. <output data-ck149-current></output></p>'+
    '<small>이전 점선 · 현재 실선 / 도식 진행률은 실제 가격 변동률이 아닙니다.</small>';
   controls.append?.(tools);
+  const rows=tools.querySelectorAll?.('.ck149-tools-row');
+  if(rows?.length>1&&document.createElement){
+   const extra=document.createElement('details');extra.className='ck178-extra';
+   const label=document.createElement('summary');label.textContent='추가 조작';
+   extra.append?.(label);
+   Array.from(rows).slice(1).forEach(row=>extra.append?.(row));
+   tools.append?.(extra);
+  }
   if(!controls.querySelector?.('[data-ck156-theory]')){
    const theory=document.createElement('section');
    theory.className='ck156-theory';theory.dataset.ck156Theory='';

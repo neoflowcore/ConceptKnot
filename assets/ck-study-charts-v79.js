@@ -87,7 +87,12 @@ function update(value,options={}){
  const steps=window.CK148LearningSteps;
  const cards=root.querySelector('[data-ck148-legacy]');
  if(cards&&steps&&!(c.type==='both'&&window.CK149GraphEnhance?.enabled)){const model=steps.legacy(c,p,sign);
-  if(model)cards.innerHTML=steps.render(model);
+  if(model){
+   const snapshot=window.CK149GraphEnhance?.getState?.();
+   const outcome=snapshot?.id===c.id&&['demand','supply','both'].includes(c.type)?
+    window.CK149GraphMotion?.outcome?.(c,snapshot):null;
+   cards.innerHTML=window.CK178GraphCompact?.renderLegacy?.(c,model,outcome,snapshot)||steps.render(model);
+  }
  }
  const out=root.querySelector('[data-ck79-chart-percentage]');
  if(out)out.textContent=p+'%';
@@ -210,6 +215,25 @@ if(main&&window.MutationObserver)new MutationObserver(records=>{
    n.querySelector?.('.ck21-chart-section,.ck76-chart-control')))))queueMount();
 }).observe(main,{subtree:true,childList:true});
 window.CK79Charts=Object.freeze({update,narrative,getState:()=>({id:lastChart,value:lastValue,sign:override})});
+/* v178 optional compact presentation layer; preserve legacy fallback. */
+function ck178Load(){
+ if(!document.head||!document.createElement)return;
+ if(!document.querySelector?.('[data-ck178-style]')){
+  const sheet=document.createElement('link');sheet.rel='stylesheet';
+  sheet.href='./assets/ck-graph-compact-v178.css?v=178';sheet.dataset.ck178Style='';
+  document.head.appendChild(sheet);
+ }
+ if(window.CK178GraphCompact||document.querySelector?.('[data-ck178-script]'))return;
+ const script=document.createElement('script');script.src='./assets/ck-graph-compact-v178.js?v=178';
+ script.async=false;script.dataset.ck178Script='';
+ script.onload=()=>{
+  const current=window.CK79Charts?.getState?.();
+  if(current?.id)window.CK79Charts.update(current.value,{direction:current.sign});
+ };
+ document.head.appendChild(script);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ck178Load,{once:true});
+else ck178Load();
 
 /* P6-B v141 separately loads the verified numeric model and opt-in laboratory. */
 let ck141Promise=null;

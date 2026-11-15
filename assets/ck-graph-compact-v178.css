@@ -1,0 +1,48 @@
+/* ConceptKnot v178: one drawable chart with a compact result. */
+#main .ck21-chart-section .ck178-result{box-sizing:border-box;min-width:0;margin:8px 0 10px;padding:12px;border-radius:13px;border:1px solid color-mix(in srgb,currentColor 22%,transparent);background:color-mix(in srgb,currentColor 3%,transparent);color:inherit}
+#main .ck21-chart-section .ck178-result *{box-sizing:border-box}
+#main .ck21-chart-section .ck178-values{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+#main .ck21-chart-section .ck178-value{min-width:0;display:flex;flex-direction:column;gap:4px;padding:11px;border-radius:10px;border:1px solid color-mix(in srgb,currentColor 15%,transparent);background:color-mix(in srgb,currentColor 4%,transparent)}
+#main .ck21-chart-section .ck178-value>span{font-size:11px;opacity:.76}
+#main .ck21-chart-section .ck178-value strong{font-size:clamp(15px,2vw,21px);line-height:1.35;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+#main .ck21-chart-section .ck178-value i{font-style:normal;opacity:.55;margin:0 2px}
+#main .ck21-chart-section .ck178-value small{font-size:11px;opacity:.78}
+#main .ck21-chart-section .ck178-change{font-size:13px;font-weight:750;line-height:1.45;margin:9px 0 4px!important;overflow-wrap:anywhere}
+#main .ck21-chart-section .ck178-example{font-size:12px;line-height:1.55;margin:0!important;overflow-wrap:anywhere;word-break:keep-all}
+#main .ck21-chart-section .ck178-example b{font-weight:750;opacity:.78;margin-right:4px}
+#main .ck21-chart-section .ck178-note{display:block;font-size:10px;line-height:1.45;opacity:.64;margin-top:5px}
+#main .ck21-chart-section .ck145-live-brief{margin:8px 0 10px;max-width:100%;padding:12px;border-radius:13px}
+#main .ck21-chart-section .ck145-live-brief .ck145-metric-pair{grid-template-columns:repeat(2,minmax(0,1fr))}
+#main .ck21-chart-section .ck149-tools{padding:8px;margin:5px 0;gap:5px}
+#main .ck21-chart-section .ck178-extra{margin:5px 0;padding:6px 8px;border-radius:9px;border:1px solid color-mix(in srgb,currentColor 18%,transparent)}
+#main .ck21-chart-section .ck178-extra summary{cursor:pointer;font-size:12px;line-height:1.8;font-weight:650}
+#main .ck21-chart-section .ck178-extra .ck149-tools-row{margin-top:6px}
+#main .ck21-chart-section .ck141-columns,#main .ck21-chart-section .ck142-layout{grid-template-columns:minmax(0,1fr)}
+/* Existing scenario data, math, exam links and user storage stay intact, but
+ * the default learning screen no longer repeats lessons and quizzes. */
+#main .ck21-chart-section .ck79-chart-condition,
+#main .ck21-chart-section .ck79-chart-instruction,
+#main .ck21-chart-section [data-ck79-chart-note],
+#main .ck21-chart-section .ck21-chart-explanation,
+#main .ck21-chart-section .ck150-scenarios,
+#main .ck21-chart-section .ck143-insight,
+#main .ck21-chart-section .ck148-guide,
+#main .ck21-chart-section .ck143-level-toggle,
+#main .ck21-chart-section .ck141-modes,
+#main .ck21-chart-section .ck142-modes,
+#main .ck21-chart-section .ck141-task-holder,
+#main .ck21-chart-section .ck142-tip,
+#main .ck21-chart-section .ck145-example-block,
+#main .ck21-chart-section #ck141-concept-lab .ck141-explain,
+#main .ck21-chart-section #ck142-theory-studio .ck142-right{display:none!important}
+/* Hide long theory readouts visually, preserving completed-drag announcements. */
+#main .ck21-chart-section .ck156-theory{position:absolute!important;overflow:hidden!important;width:1px!important;height:1px!important;margin:-1px!important;padding:0!important;clip-path:inset(50%)!important;white-space:nowrap!important}
+#main .ck21-chart-section .ck149-tools>small{display:none}
+@media(max-width:440px){
+ #main .ck21-chart-section .ck178-result{padding:9px}
+ #main .ck21-chart-section .ck178-values{gap:6px}
+ #main .ck21-chart-section .ck178-value{padding:8px}
+ #main .ck21-chart-section .ck178-value strong{font-size:14px}
+ #main .ck21-chart-section .ck141-columns,#main .ck21-chart-section .ck142-layout{gap:8px}
+}
+@media(prefers-reduced-motion:reduce){#main .ck21-chart-section .ck178-result *,#main .ck21-chart-section .ck178-extra *{animation:none!important;transition:none!important}}
